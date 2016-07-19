@@ -25,8 +25,6 @@ class Data
     public static $guid = 0;
     public $basename;
     public $data;
-    public $coclasses;
-    public $coinstances;
     public $lockcount;
     public $table;
 
@@ -47,10 +45,8 @@ class Data
 
     public function __construct()
     {
+        $this->data = [];
         $this->lockcount = 0;
-        $this->data = array();
-        $this->coinstances = array();
-        $this->coclasses = array();
 
         if (!$this->basename) {
             $class = get_class($this);
@@ -86,15 +82,14 @@ $this->free();
         } elseif (array_key_exists($name, $this->data)) {
             return $this->data[$name];
         } else {
-            foreach ($this->coinstances as $coinstance) {
-                if (isset($coinstance->$name)) {
-                    return $coinstance->$name;
-                }
-            }
-
-            throw new PropException(get_class($this), $name);
+return $this->getProp($name);
         }
     }
+
+protected function getProp(string $name)
+{
+            throw new PropException(get_class($this), $name);
+}
 
     public function __set($name, $value)
     {
@@ -103,57 +98,20 @@ $this->free();
         } elseif (key_exists($name, $this->data)) {
             $this->data[$name] = $value;
         } else {
-            foreach ($this->coinstances as $coinstance) {
-                if (isset($coinstance->$name)) {
-                    $coinstance->$name = $value;
-                    return true;
-                }
-            }
-
-            return false;
+return $this->setProp($name, $value);
         }
 
         return true;
     }
 
-    public function __call($name, $params)
-    {
-        if (method_exists($this, strtolower($name))) {
-            return call_user_func_array(
-                array(
-                $this,
-                strtolower($name)
-                ), $params
-            );
-        }
-
-        foreach ($this->coinstances as $coinstance) {
-            if (method_exists($coinstance, $name) || $coinstance->method_exists($name)) {
-                return call_user_func_array(
-                    array(
-                    $coinstance,
-                    $name
-                    ), $params
-                );
-            }
-        }
-
-        $this->error("The requested method $name not found in class " . get_class($this));
-    }
+protected function setProp(string $name, $value)
+{
+return false;
+}
 
     public function __isset($name)
     {
-        if (array_key_exists($name, $this->data) || method_exists($this, "get$name") || method_exists($this, "Get$name")) {
-            return true;
-        }
-
-        foreach ($this->coinstances as $coinstance) {
-            if (isset($coinstance->$name)) {
-                return true;
-            }
-        }
-
-        return false;
+return array_key_exists($name, $this->data) || method_exists($this, "get$name") || method_exists($this, "Get$name");
     }
 
     public function method_exists($name)
@@ -271,16 +229,6 @@ $this->free();
 
     public function afterLoad()
     {
-        $this->coInstanceCall('afterLoad', []);
-    }
-
-    public function coInstanceCall(string $method, array $args)
-    {
-        foreach ($this->coinstances as $coinstance) {
-            if (method_exists($coinstance, $method)) {
-                call_user_func_array([$coinstance, $method], $args);
-            }
-        }
     }
 
     public function lock()
