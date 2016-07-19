@@ -91,28 +91,12 @@ class Options extends Events
         }
     }
 
-    public function __set($name, $value)
+protected function setProp(string $name, $value)
     {
-        if (in_array($name, $this->eventnames)) {
-            $this->addevent($name, $value['class'], $value['func']);
-            return true;
-        }
-
-        if (method_exists($this, $set = 'set' . $name)) {
-            $this->$set($value);
-            return true;
-        }
-
-        if (!array_key_exists($name, $this->data) || ($this->data[$name] != $value)) {
             $this->data[$name] = $value;
-            if ($name == 'solt') {
-                $this->data['emptyhash'] = $this->hash('');
-            }
             $this->save();
             $this->changed(['name' => $name, 'value' => $value]);
             $this->getApp()->cache->clear();
-        }
-        return true;
     }
 
     public function delete(string $name)
@@ -353,6 +337,12 @@ class Options extends Events
     {
         return Str::basemd5((string)$s . $this->solt . Config::$secret);
     }
+
+public function setSolt(string $value)
+{
+$this->setProp('solt', $this->hash(''));
+$this->setProp('solt', $this->hash(''));
+}
 
     public function inGroup($groupname)
     {

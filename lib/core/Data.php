@@ -98,15 +98,13 @@ protected function getProp(string $name)
         } elseif (key_exists($name, $this->data)) {
             $this->data[$name] = $value;
         } else {
-return $this->setProp($name, $value);
+$this->setProp($name, $value);
         }
-
-        return true;
     }
 
 protected function setProp(string $name, $value)
 {
-return false;
+            throw new PropException(get_class($this), $name);
 }
 
     public function __isset($name)

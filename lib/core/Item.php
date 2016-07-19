@@ -40,6 +40,13 @@ class Item extends Data
         return $self->loadData($id);
     }
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->data['id'] = 0;
+    }
+
+
     public function loadData($id)
     {
         $this->data['id'] = $id;
@@ -58,26 +65,6 @@ class Item extends Data
     public function free()
     {
         unset(static ::$instances[$this->getinstancename() ][$this->id]);
-    }
-
-    public function __construct()
-    {
-        parent::__construct();
-        $this->data['id'] = 0;
-    }
-
-    public function __destruct()
-    {
-        $this->free();
-    }
-
-    public function __set($name, $value)
-    {
-        if (parent::__set($name, $value)) {
-            return true;
-        }
-
-        return $this->Error("Field $name not exists in class " . get_class($this));
     }
 
     public function setId($id)
