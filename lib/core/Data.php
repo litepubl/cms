@@ -70,6 +70,15 @@ class Data
     {
     }
 
+    public function __destruct()
+    {
+$this->free();
+    }
+
+    public function free()
+{
+}
+
     public function __get($name)
     {
         if (method_exists($this, $get = 'get' . $name)) {

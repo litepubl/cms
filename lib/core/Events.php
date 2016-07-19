@@ -34,11 +34,6 @@ use EventsTrait;
         $this->load();
     }
 
-    public function __destruct()
-    {
-        unset($this->data, $this->events, $this->eventnames, $this->map);
-    }
-
     protected function create()
     {
         parent::create();
@@ -69,22 +64,6 @@ use EventsTrait;
         $this->map[$name] = $name;
         $this->data[$name] = $value;
         $this->$name = & $this->data[$name];
-    }
-
-    public function free()
-    {
-        unset($this->getApp()->classes->instances[get_class($this) ]);
-        foreach ($this->coinstances as $coinstance) {
-            $coinstance->free();
-        }
-    }
-
-    protected function addEvents()
-    {
-        $a = func_get_args();
-        foreach ($a as $name) {
-                $this->eventnames[] = strtolower($name);
-        }
     }
 
 }

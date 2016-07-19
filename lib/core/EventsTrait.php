@@ -55,6 +55,14 @@ use Callbacks;
         return in_array(strtolower($name), $this->eventnames);
     }
 
+    protected function addEvents()
+    {
+        $a = func_get_args();
+        foreach ($a as $name) {
+                $this->eventnames[] = strtolower($name);
+        }
+    }
+
 protected function reIndexEvents()
 {
 foreach ($this->data['events'] as $name => $events) {
@@ -211,26 +219,4 @@ $this->reIndexEvents();
         $this->save();
     }
 
-    private function indexofcoclass($class)
-    {
-        return array_search($class, $this->coclasses);
-    }
-
-    public function addcoclass($class)
-    {
-        if ($this->indexofcoclass($class) === false) {
-            $this->coclasses[] = $class;
-            $this->save();
-            $this->coinstances = static ::iGet($class);
-        }
-    }
-
-    public function deletecoclass($class)
-    {
-        $i = $this->indexofcoclass($class);
-        if (is_int($i)) {
-            array_splice($this->coclasses, $i, 1);
-            $this->save();
-        }
-    }
 }
