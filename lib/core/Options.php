@@ -83,7 +83,7 @@ class Options extends Events
 
     public function afterLoad()
     {
-        parent::afterload();
+        parent::afterLoad();
         date_default_timezone_set($this->timezone);
         $this->gmt = date('Z');
         if (!defined('dbversion')) {
@@ -91,12 +91,19 @@ class Options extends Events
         }
     }
 
-protected function setProp(string $name, $value)
+    public function __set($name, $value)
     {
-            $this->data[$name] = $value;
+try {
+parent::__set($name, $value);
+} catch(PropException $e) {
+$this->data[$name] = $value;
+}
+
+if (array_key_exists($name, $this->data)) {
             $this->save();
             $this->changed(['name' => $name, 'value' => $value]);
             $this->getApp()->cache->clear();
+}
     }
 
     public function delete(string $name)
@@ -162,7 +169,7 @@ protected function setProp(string $name, $value)
     public function findUser(int $iduser, string $cookie): bool
     {
         if ($iduser == 1) {
-            return $this->compare_cookie($cookie);
+            return $this->compareCookie($cookie);
         }
         if (!$this->usersenabled) {
             return 0;
@@ -181,7 +188,7 @@ protected function setProp(string $name, $value)
         return ($cookie == $item['cookie']) && (strtotime($item['expired']) > time());
     }
 
-    private function compare_cookie($cookie)
+    private function compareCookie($cookie)
     {
         return !empty($this->cookiehash) && ($this->cookiehash == $cookie) && ($this->cookieexpired > time());
     }
@@ -262,13 +269,13 @@ protected function setProp(string $name, $value)
         return $users->getValue($this->user, 'password');
     }
 
-    public function changePassword($newpassword)
+    public function changePassword(string $newpassword)
     {
         $this->data['password'] = $this->hash($newpassword);
         $this->save();
     }
 
-    public function getDBPassword()
+    public function getDBPassword(): string
     {
         if (function_exists('mcrypt_encrypt')) {
             return static ::decrypt($this->data['dbconfig']['password'], $this->solt . Config::$secret);
@@ -277,7 +284,7 @@ protected function setProp(string $name, $value)
         }
     }
 
-    public function setDBPassword($password)
+    public function setDBPassword(string $password)
     {
         if (function_exists('mcrypt_encrypt')) {
             $this->data['dbconfig']['password'] = static ::encrypt($password, $this->solt . Config::$secret);
@@ -293,7 +300,7 @@ protected function setProp(string $name, $value)
         $this->setcookies('', 0);
     }
 
-    public function setcookie($name, $value, $expired)
+    public function setCookie(string $name, string $value, int $expired)
     {
         setcookie($name, $value, $expired, $this->getApp()->site->subdir . '/', false, '', $this->securecookie);
     }
@@ -305,46 +312,41 @@ protected function setProp(string $name, $value)
         $this->setcookie('litepubl_user_flag', $cookie && ('admin' == $this->group) ? 'true' : '', $expired);
 
         if ($this->idUser == 1) {
-            $this->save_cookie($cookie, $expired);
+            $this->saveCookie($cookie, $expired);
         } elseif ($this->idUser) {
             Users::i()->setCookie($this->idUser, $cookie, $expired);
         }
     }
 
-    public function Getinstalled()
-    {
-        return isset($this->data['email']);
-    }
-
-    public function settimezone($value)
+    public function setTimeZone(string $value)
     {
         if (!isset($this->data['timezone']) || ($this->timezone != $value)) {
             $this->data['timezone'] = $value;
-            $this->save();
             date_default_timezone_set($this->timezone);
             $this->gmt = date('Z');
+$this->save();
         }
     }
 
-    public function save_cookie($cookie, $expired)
+    public function saveCookie($cookie, $expired)
     {
         $this->data['cookiehash'] = $cookie ? $this->hash($cookie) : '';
         $this->cookieexpired = $expired;
         $this->save();
     }
 
-    public function hash($s)
+    public function hash(string $s): string
     {
-        return Str::basemd5((string)$s . $this->solt . Config::$secret);
+        return Str::baseMD5($s . $this->solt . Config::$secret);
     }
 
 public function setSolt(string $value)
 {
-$this->setProp('solt', $this->hash(''));
-$this->setProp('solt', $this->hash(''));
+$this->data['solt'] = $value;
+                $this->data['emptyhash'] = $this->hash('');
 }
 
-    public function inGroup($groupname)
+    public function inGroup(string $groupname): bool
     {
         //admin has all rights
         if ($this->user == 1) {

@@ -43,44 +43,38 @@ class Site extends Events
         ));
     }
 
-    public function __get($name)
+    protected function getProp(string $name)
     {
         if (isset($this->mapoptions[$name])) {
             $prop = $this->mapoptions[$name];
             if (is_array($prop)) {
                 list($classname, $method) = $prop;
-                return call_user_func_array(array(
-                static ::iGet($classname) ,
-                    $method
-                ), array(
-                    $name
-                ));
-            }
-
+                return call_user_func_array([static ::iGet($classname),                      $method], [$name]);
+            } else {
             return $this->getApp()->options->data[$prop];
+}
         }
 
-        return parent::__get($name);
+        return parent::getProp($name);
     }
 
-    public function __set($name, $value)
+    protected function setProp(string $name, $value)
     {
-        if ($name == 'url') {
-            return $this->seturl($value);
-        }
-
-        if (in_array($name, $this->eventnames)) {
-            $this->addevent($name, $value['class'], $value['func']);
-        } elseif (isset($this->mapoptions[$name])) {
+if (isset($this->mapoptions[$name])) {
             $prop = $this->mapoptions[$name];
             if (is_string($prop)) {
                 $this->getApp()->options->{$prop} = $value;
+return;
             }
-        } elseif (!array_key_exists($name, $this->data) || ($this->data[$name] != $value)) {
+}
+
+try {
+parent::setProp($name, $value);
+} catch(PropException $e) {
             $this->data[$name] = $value;
+}
+
             $this->save();
-        }
-        return true;
     }
 
     public function getUrl(): string

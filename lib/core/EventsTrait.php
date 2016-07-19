@@ -6,28 +6,23 @@ trait EventsTrait
 {
 use Callbacks;
 
-    public function __get($name)
+protected function getProp(string $name)
     {
         if (method_exists($this, $name)) {
             return [get_class($this) ,                 $name];
         }
 
-        return parent::__get($name);
+        return parent::getProp($name);
     }
 
-    public function __set($name, $value)
+protected function setProp(string $name, $value)
     {
-        if (parent::__set($name, $value)) {
-            return true;
-        }
-
         $eventName = strtolower($name);
         if (in_array($eventName, $this->eventnames)) {
             $this->addEvent($eventName, $value);
-            return true;
+} else {
+parent::setProp($name, $value);
         }
-
-            throw new PropException(get_class($this), $name);
     }
 
     public function __call($name, $params)

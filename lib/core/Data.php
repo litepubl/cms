@@ -95,7 +95,7 @@ protected function getProp(string $name)
     {
         if (method_exists($this, $set = 'set' . $name)) {
             $this->$set($value);
-        } elseif (key_exists($name, $this->data)) {
+        } elseif (array_key_exists($name, $this->data)) {
             $this->data[$name] = $value;
         } else {
 $this->setProp($name, $value);
