@@ -174,7 +174,7 @@ if (!is_callable($callable)) {
 }
 
 if (!is_array($callable) || !is_string($callable[0])) {
-return $this->addCallback($name, $callback);
+return $this->addCallback($name, $callable);
 }
 
         if (!isset($this->data['events'][$name])) {
@@ -183,12 +183,12 @@ $this->save();
         } else {
         //check if event already added
         foreach ($this->data['events'][$name] as $item) {
-            if ($callback == $item) {
+            if ($callable == $item) {
                 return false;
             }
         }
 
-            Arr::append($this->data['events'][$name], 500, callback);
+            Arr::append($this->data['events'][$name], 500, $callable);
             $this->save();
         }
     }

@@ -167,13 +167,14 @@ $params['slave']['method'],
         $response->setJson(Str::toJson($result));
     }
 
-    public function addevent($name, $class, $func, $once = false)
+    public function addEvent(string $name, $callable, $method = null)
     {
+$name = strtolower($name);
         if (!in_array($name, $this->eventnames)) {
             $this->eventnames[] = $name;
         }
 
-        return parent::addevent($name, $class, $func, $once);
+        return parent::addEvent($name, $callable, $method);
     }
 
     public function delete_event($name)

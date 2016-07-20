@@ -24,6 +24,7 @@ use litepubl\view\Schemes;
 
 class TagAjax extends Ajax
 {
+use \litepubl\utils\CoInstances;
 
     public function install()
     {

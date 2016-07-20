@@ -21,7 +21,12 @@ if (method_exists($this, 'addMap')) {
         parent::afterload();
 
         foreach ($this->coclasses as $coclass) {
-            $this->coinstances[] = static ::iGet($coclass);
+$instance = static ::iGet($coclass);
+if (method_exists($instance, 'afterLoad')) {
+$instance->afterLoad();
+}
+
+            $this->coinstances[] = $instance;
         }
 }
 
@@ -96,12 +101,6 @@ return true;
         }
     }
 
-
-    public function afterLoad()
-    {
-parent::afterLoad();
-        $this->coInstanceCall('afterLoad', []);
-    }
 
     private function indexofcoclass($class)
     {
