@@ -15,6 +15,8 @@ parent::createData();
 
 if (method_exists($this, 'addMap')) {
         $this->addMap('events', []);
+} else {
+$this->data['events'] = [];
 }
 }
 
@@ -99,7 +101,7 @@ public function getEventCount(string $name): int
 return isset($this->data['events'][$name]) ? count($this->data['events'][$name]) : 0;
 }
 
-protected function newEvent(string $name): Event
+public function newEvent(string $name): Event
 {
 return new Event($this, $name);
 }

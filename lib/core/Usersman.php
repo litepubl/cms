@@ -17,7 +17,7 @@ class Usersman extends Data
     {
         $users = Users::i();
         $email = trim($values['email']);
-        if ($users->emailexists($email)) {
+        if ($users->emailExists($email)) {
             return false;
         }
 
@@ -53,7 +53,7 @@ class Usersman extends Data
             $users->pages->add($id);
         }
 
-        $users->added($id);
+        $users->added(['id' => $id]);
         return $id;
     }
 
@@ -64,7 +64,7 @@ class Usersman extends Data
             return false;
         }
 
-        $item = $users->getitem($id);
+        $item = $users->getItem($id);
         foreach ($item as $k => $v) {
             if (!isset($values[$k])) {
                 continue;
@@ -91,15 +91,15 @@ class Usersman extends Data
         $users->items[$id] = $item;
         $item['id'] = $id;
 
-        $users->setgroups($id, $item['idgroups']);
+        $users->setGroups($id, $item['idgroups']);
         $item['idgroups'] = implode(',', $item['idgroups']);
         $users->db->updateassoc($item);
 
-        $pages = $users->pates;
+        $pages = $users->pages;
         if (isset($values['status']) && ('approved' == $values['status']) && ($item['status'] != $values['status'])) {
             if ($pages->itemExists($id)) {
                 if ($pages->createpage) {
-                    $pages->addpage($id);
+                    $pages->addPage($id);
                 }
             } else {
                 $pages->add($id);

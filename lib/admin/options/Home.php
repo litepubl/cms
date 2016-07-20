@@ -92,7 +92,7 @@ class Home extends \litepubl\admin\Menu
         $home->includecats = $this->admintheme->check2array('category-');
         $home->excludecats = $this->admintheme->check2array('exclude_category-');
         $home->showpagenator = isset($showpagenator);
-        $home->postschanged();
+        $home->postschanged($home->newEvent('postsChanged'));
         $home->unlock();
 
         $menus = Menus::i();

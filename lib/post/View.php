@@ -14,6 +14,7 @@ use litepubl\comments\Templates;
 use litepubl\core\Context;
 use litepubl\core\Str;
 use litepubl\view\Args;
+use litepubl\view\MainView;
 use litepubl\view\Theme;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
