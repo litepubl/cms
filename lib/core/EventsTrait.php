@@ -7,6 +7,16 @@ trait EventsTrait
 use Callbacks;
 
     protected $eventnames = [];
+    protected $events;
+
+    protected function createData()
+{
+parent::createData;
+
+if (method_exists($this, 'addMap')) {
+        $this->addMap('events', []);
+}
+}
 
 protected function getProp(string $name)
     {

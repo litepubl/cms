@@ -14,25 +14,18 @@ class Events extends Data
 {
 use EventsTrait;
 
-    protected $events;
     protected $map;
 
     public function __construct()
     {
         if (!is_array($this->map)) {
-            $this->map = array();
+            $this->map = [];
         }
 
         parent::__construct();
 
         $this->assignmap();
         $this->load();
-    }
-
-    protected function create()
-    {
-        parent::create();
-        $this->addmap('events', array());
     }
 
     public function assignMap()
@@ -45,11 +38,6 @@ use EventsTrait;
     public function afterLoad()
     {
         $this->assignMap();
-
-        foreach ($this->coclasses as $coclass) {
-            $this->coinstances[] = static ::iGet($coclass);
-        }
-
         parent::afterload();
     }
 

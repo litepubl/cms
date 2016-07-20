@@ -16,6 +16,15 @@ if (method_exists($this, 'addMap')) {
 }
 }
 
+    public function afterLoad()
+    {
+        parent::afterload();
+
+        foreach ($this->coclasses as $coclass) {
+            $this->coinstances[] = static ::iGet($coclass);
+        }
+}
+
 protected function getProp(string $name)
 {
             foreach ($this->coinstances as $coinstance) {
