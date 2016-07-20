@@ -91,4 +91,15 @@ return $result;
 
         $iterator = new StorageIterator(litepubl::$app->storage, $func);
         $iterator->dir(litepubl::$app->paths->data);
+
+
+foreach (litepubl::$app->poolStorage->data as $name => $data) {
+$std = new \StdClass();
+$std->data = $data;
+$func($std);
+litepubl::$app->poolStorage->data[$name] = $std->data;
+}
+
+litepubl::$app->poolStorage->save(litepubl::$app->options);
+litepubl::$app->poolStorage->commit();
 }

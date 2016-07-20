@@ -188,7 +188,7 @@ $name = strtolower($name);
 
 public function callMethod(string $method, array $params)
 {
-$item = $this->data['events'][$method][0];
+foreach ($this->data['events'][$method] as $item) {
 if (class_exists($item[0])) {
                 $callback = [$this->getApp()->classes->getInstance($item[0]), $item[1]];
 return call_user_func_array($callback, [$params]);
@@ -199,6 +199,7 @@ return ['error' => [
 'message' => $mesg,
 'code' => 500
 ]];
+}
 }
 }
 }

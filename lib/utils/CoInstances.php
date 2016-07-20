@@ -84,7 +84,7 @@ return true;
         return false;
 }
 
-    public function coInstanceCall(string $method, array $args)
+    public function coInstanceCall(string $method, array $args = [])
     {
         foreach ($this->coinstances as $coinstance) {
             if (method_exists($coinstance, $method)) {

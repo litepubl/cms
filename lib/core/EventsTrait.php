@@ -149,7 +149,7 @@ unset($this->data['events'][$eventName]);
 }
 
 $this->save();
-$app->getLogger()->warning(sprintf('Event subscriber has been removed from %s:%s', get_class($this), $eventName), $item);
+$app->getLogger()->warning(sprintf('Event subscriber has been removed from %s:%s', get_class($this), $eventName), is_array($item) ? $item : []);
 }
         }
 

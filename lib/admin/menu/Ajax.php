@@ -12,7 +12,6 @@ namespace litepubl\admin\menu;
 
 use litepubl\admin\GetSchema;
 use litepubl\core\Context;
-use litepubl\core\TempProps;
 use litepubl\pages\Menu;
 use litepubl\pages\Menus;
 use litepubl\view\Args;
@@ -22,6 +21,7 @@ use litepubl\view\Schemes;
 
 class Ajax extends \litepubl\admin\posts\Ajax
 {
+use \litepubl\utils\Props;
 
     //to prevent call parent method
     public function install()
@@ -34,7 +34,7 @@ class Ajax extends \litepubl\admin\posts\Ajax
         $response = $context->response;
         $this->auth($context);
         if ($response->status == 200) {
-            $temp = new TempProps($this);
+            $temp = $this->newProps();
             $temp->response = $response;
             $response->body = $this->getContent();
         }

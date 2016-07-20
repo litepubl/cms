@@ -332,7 +332,7 @@ return $this->dirNames;
 
 public function exists(string $name): bool
 {
-$list = $this->getDirList();
+$list = $this->getDirNames();
 return isset($list[$name]);
 }
 

@@ -13,7 +13,6 @@ namespace litepubl\comments;
 use litepubl\core\Context;
 use litepubl\core\Session;
 use litepubl\core\Str;
-use litepubl\core\TempProps;
 use litepubl\core\UserOptions;
 use litepubl\core\Users;
 use litepubl\pages\Simple;
@@ -33,6 +32,8 @@ use litepubl\view\Vars;
 
 class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
+use \litepubl\utils\Props;
+
     public $helper;
 
     protected function create()
@@ -59,7 +60,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             return;
         }
 
-        $temp = new TempProps($this);
+        $temp = $this->newProps();
         $temp->context = $context;
         $response->body = $this->doRequest($context->request->getPost());
     }
