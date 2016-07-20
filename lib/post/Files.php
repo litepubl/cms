@@ -334,7 +334,7 @@ $r = $this->onGetFilelist(['list' => $list, 'excerpt' => $excerpt, 'result' => f
     public function postEdited(Event $event)
     {
         $post = Post::i($event->id);
-        $this->itemsposts->setitems($idpost, $post->files);
+        $this->itemsposts->setitems($event->id, $post->files);
     }
 
     public function getFirstimage(array $items)

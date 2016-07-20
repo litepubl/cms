@@ -8,7 +8,9 @@
  * @version   7.00
   */
 
-namespace litepubl\core;
+namespace litepubl\utils;
+
+use litepubl\core\Data;
 
 class TempProps extends \ArrayObject
 {

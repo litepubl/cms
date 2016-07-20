@@ -1,6 +1,6 @@
 <?php
 
-namespace litepubl\core;
+namespace litepubl\utils;
 
 trait CoInstances
 {
@@ -9,7 +9,7 @@ trait CoInstances
 
     protected function createData()
 {
-parent::createData;
+parent::createData();
 
 if (method_exists($this, 'addMap')) {
         $this->addMap('coclasses', []);
@@ -95,12 +95,9 @@ return true;
 
     public function free()
     {
-        unset($this->getApp()->classes->instances[get_class($this) ]);
-        foreach ($this->coinstances as $coinstance) {
-            $coinstance->free();
-        }
+parent::free();
+$this->coInstanceCall('free');
     }
-
 
     private function indexofcoclass($class)
     {

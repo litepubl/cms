@@ -10,7 +10,7 @@
 
 namespace litepubl\comments;
 
-use litepubl\core\TempProps;
+use litepubl\utils\TempProps;
 use litepubl\post\Post;
 use litepubl\post\View as PostView;
 use litepubl\view\Args;

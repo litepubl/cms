@@ -28,13 +28,13 @@ class ItemsPosts extends Items
 
     public function add(int $idpost, int $iditem)
     {
-        $this->db->insert(
-            array(
+$item = [
             $this->postprop => $idpost,
             $this->itemprop => $iditem
-            )
-        );
-        $this->added();
+        ];
+
+        $this->db->insert($item);
+        $this->added($item);
     }
 
     public function exists(int $idpost, int $iditem): bool
@@ -63,7 +63,7 @@ class ItemsPosts extends Items
     public function deleteItem(int $iditem)
     {
         $this->db->delete("$this->itemprop = $iditem");
-        $this->deleted();
+        $this->deleted([$this->itemprop => $id]);
     }
 
     public function setItems(int $idpost, array $items)

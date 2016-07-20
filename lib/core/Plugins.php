@@ -151,7 +151,7 @@ $this->error('Plugin class must have namespace');
 
         $this->unlock();
         $classes->unlock();
-        $this->added($name);
+        $this->added(['name' => $name]);
         return $name;
     }
 
@@ -200,7 +200,7 @@ $this->error('Plugin class must have namespace');
             $this->getApp()->storage->remove($datafile);
         }
 
-        $this->deleted($name);
+        $this->deleted(['name' => $name]);
         return true;
     }
 

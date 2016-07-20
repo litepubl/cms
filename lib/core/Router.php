@@ -248,7 +248,7 @@ class Router extends Items
         }
 
         $this->clearcache();
-        $this->deleted($id);
+        $this->deleted(['id' => $id]);
         return true;
     }
 
@@ -257,7 +257,7 @@ class Router extends Items
         if ($items = $this->db->getItems('class = ' . Str::quote($class))) {
             foreach ($items as $item) {
                 $this->db->idDelete($item['id']);
-                $this->deleted($item['id']);
+                $this->deleted(['id' => $item['id']]);
             }
         }
 
@@ -268,7 +268,7 @@ class Router extends Items
     {
         if ($this->db->getitem($id)) {
             $this->db->idDelete($id);
-            $this->deleted($id);
+            $this->deleted(['id' => $id]);
         }
 
         $this->clearcache();

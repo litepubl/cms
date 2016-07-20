@@ -48,4 +48,10 @@ use EventsTrait;
         $this->$name = & $this->data[$name];
     }
 
+    public function free()
+{
+parent::free();
+        unset($this->getApp()->classes->instances[get_class($this) ]);
+}
+
 }

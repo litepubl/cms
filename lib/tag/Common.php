@@ -112,7 +112,7 @@ class Common extends \litepubl\core\Items
             $items = $this->db->idSelect(sprintf('id in (%s)', implode(',', $items)));
         }
 
-        $changed = $this->itemsposts->setItems($idpost, $items);
+        $changed = $this->itemsposts->setItems($event->id, $items);
         $this->updateCount($changed);
     }
 

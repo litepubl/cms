@@ -13,7 +13,7 @@ namespace litepubl\admin\posts;
 use litepubl\admin\GetPerm;
 use litepubl\admin\GetSchema;
 use litepubl\core\Context;
-use litepubl\core\TempProps;
+use litepubl\utils\TempProps;
 use litepubl\tag\Cats;
 use litepubl\tag\Tags as TagItems;
 use litepubl\view\Admin;
