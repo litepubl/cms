@@ -10,7 +10,6 @@
 
 namespace litepubl\pages;
 
-use litepubl\core\CoEvents;
 use litepubl\core\Event;
 use litepubl\core\Context;
 use litepubl\post\Announce;
@@ -22,8 +21,29 @@ use litepubl\view\Schema;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
 
+/**
+ * Home page
+ *
+ * @property string $image
+ * @property string $smallimage
+ * @property bool $showmidle
+ * @property int $midlecat
+ * @property bool $showposts
+ * @property array $includecats
+ * @property array $excludecats
+ * @property bool $showpagenator
+ * @property int $archcount
+ * @property bool $parsetags
+ * @property-write callable $onBeforeGetItems
+ * @property-write callable $onGetItems
+ * @method array onBeforeGetItems(array $params)
+ * @method array onGetItems(array $params)
+ */
+
 class Home extends SingleMenu
 {
+use \litepubl\core\EventsTrait;
+
     public $cacheposts;
     public $midleposts;
     public $page;
@@ -32,6 +52,7 @@ class Home extends SingleMenu
     {
         parent::create();
         $this->basename = 'homepage';
+$this->addEvents('onbeforegetitems', 'ongetitems');
         $this->data['image'] = '';
         $this->data['smallimage'] = '';
         $this->data['showmidle'] = false;
@@ -42,7 +63,7 @@ class Home extends SingleMenu
         $this->data['showpagenator'] = true;
         $this->data['archcount'] = 0;
         $this->data['parsetags'] = false;
-        $this->coinstances[] = new CoEvents($this, 'onbeforegetitems', 'ongetitems');
+
         $this->cacheposts = false;
         $this->midleposts = false;
     }
@@ -144,8 +165,9 @@ $theme = $schema->theme;
             return $this->cacheposts;
         }
 
-        if ($result = $this->onbeforegetitems()) {
-            return $result;
+$r = $this->onBeforeGetItems(['items' => []]);
+if (count($r['items'])) {
+            return $r['items'];
         }
 
         $posts = Posts::i();
@@ -173,12 +195,9 @@ $theme = $schema->theme;
             $result = $posts->getpage(0, $this->page, $perpage, $schema->invertorder);
         }
 
-        $this->callevent(
-            'ongetitems', array(&$result
-            )
-        );
-        $this->cacheposts = $result;
-        return $result;
+        $r = $this->onGetItems('items' => $result]);
+        $this->cacheposts = $r['items'];
+        return $r['items'];
     }
 
     public function getWhere(): string

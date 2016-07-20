@@ -85,16 +85,4 @@ class Factory
     {
         return View::i();
     }
-
-    /*
-    * sample code 
-    *        $posts = $this->posts;
-    *        foreach ($posts->itemcoclasses as $class) {
-    *            $post->coinstances[] = new $class($post);
-    *        }
-    */
-
-    public function createCoInstances(Post $post)
-    {
-    }
 }

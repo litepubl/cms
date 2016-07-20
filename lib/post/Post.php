@@ -226,7 +226,6 @@ use \litepubl\core\Callbacks;
         ];
         
         $this->factory = $this->getfactory();
-        $this->factory->createCoInstances($this);
     }
 
     public function getFactory()
@@ -325,8 +324,6 @@ use \litepubl\core\Callbacks;
         }
         
         $this->saveToDB();
-        
-        $this->coInstanceCall('save', []);
     }
 
     protected function saveToDB()
@@ -366,8 +363,6 @@ use \litepubl\core\Callbacks;
         
         $this->idurl = $this->createUrl();
         $this->db->setValue($id, 'idurl', $this->idurl);
-        
-        $this->coInstanceCall('add', []);
 $this->triggerOnId();
         return $id;
     }
@@ -412,8 +407,6 @@ $this->clearCallbacks('onid');
 
     public function free()
     {
-        $this->coInstanceCall('free', []);
-        
         if (isset($this->metaInstance)) {
             $this->metaInstance->free();
         }

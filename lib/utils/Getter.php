@@ -23,20 +23,11 @@ class Getter
 
     public function __get($name)
     {
-        return call_user_func_array(
-            $this->get, array(
-            $name
-            )
-        );
+        return call_user_func_array($this->get, [$name]);
     }
 
     public function __set($name, $value)
     {
-        call_user_func_array(
-            $this->set, array(
-            $name,
-            $value
-            )
-        );
+        call_user_func_array($this->set, [$name, $value]);
     }
 }

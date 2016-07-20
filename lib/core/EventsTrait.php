@@ -123,7 +123,7 @@ protected function trigger(Event $event)
 $app = $this->getApp();
 $eventName = $event->getName();
 
-        foreach ($this->events[$eventName] as $i => $item) {
+        foreach ($this->data['events'][$eventName] as $i => $item) {
 if ($event->isPropagationStopped()) {
 break;
 }
@@ -134,16 +134,16 @@ if (class_exists($item[0])) {
 call_user_func_array($callback, [$event]);
 if ($event->once) {
 $event->once = false;
-unset($this->events[$eventName][$i]);
+unset($this->data['events'][$eventName][$i]);
 $this->save();
 }
         } catch (\Throwable $e) {
             $app->logException($e);
                 }
 } else {
-unset($this->events[$eventName][$i]);
-if (!count($this->events[$eventName])) {
-unset($this->events[$eventName]);
+unset($this->data['events'][$eventName][$i]);
+if (!count($this->data['events'][$eventName])) {
+unset($this->data['events'][$eventName]);
 }
 
 $this->save();

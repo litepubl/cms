@@ -242,7 +242,6 @@ class Posts extends \litepubl\core\Items
         $id = $post->add();
 
         $this->updated($post);
-        $this->coInstanceCall('add', [$post]);
         $this->added(['id' => $id]);
         $this->changed([]);
         $this->getApp()->cache->clear();
@@ -267,7 +266,6 @@ class Posts extends \litepubl\core\Items
         $this->lock();
         $post->save();
         $this->updated($post);
-        $this->coInstanceCall('edit', [$post]);
         $this->unlock();
         $this->edited(['id' => $post->id]);
         $this->changed([]);
@@ -290,7 +288,6 @@ class Posts extends \litepubl\core\Items
         $this->lock();
         $this->PublishFuture();
         $this->UpdateArchives();
-        $this->coInstanceCall('delete', [$id]);
         $this->unlock();
         $this->deleted(['id' => $id]);
         $this->changed([]);

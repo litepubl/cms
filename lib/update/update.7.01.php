@@ -81,6 +81,11 @@ $std->data['events'][$name][$i][1] = $map[$event[0]][$event[1]];
 }
 }
 
+                if (isset($std->data['coclasses'])) {
+unset($std->data['coclasses']);
+$result = true;
+}
+
 return $result;
 };
 
