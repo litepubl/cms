@@ -82,7 +82,7 @@ $view->setTheme($theme);
             $result = str_replace('$excerpt', $result, $this->theme->parse($tmlContainer));
         }
 
-$r = $this->after(['content' => $result, 'items' => $items, 'schema' => $sechama]);
+$r = $this->after(['content' => $result, 'items' => $items, 'schema' => $schema]);
         return $r['content'];
     }
 
@@ -93,10 +93,10 @@ $r = $this->after(['content' => $result, 'items' => $items, 'schema' => $sechama
         $app = $this->getApp();
         if ($schema->perpage) {
 $perpage = $schema->perpage;
-} else 
+} else { 
             $perpage = $app->options->perpage;
         }
-
+        
         $result.= $schema->theme->getPages($url, $app->context->request->page, ceil($count / $perpage));
         return $result;
     }

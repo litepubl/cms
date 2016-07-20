@@ -39,7 +39,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
 use \litepubl\core\PoolStorage;
 
-    ublic $post;
+    public $post;
     public $context;
     private $prevPost;
     private $nextPost;
@@ -552,7 +552,7 @@ $r = $this->beforeExcerpt(['post' => $this->post, 'content' => $this->excerpt]);
     {
         $more = $this->parseTml($excerpt ? 'content.excerpts.excerpt.morelink' : 'content.post.more');
         $tag = '<!--more-->';
-        if ($i = strpos($content, $tag)) {
+        if (strpos($content, $tag)) {
             return str_replace($tag, $more, $content);
         } else {
             return $excerpt ? $content : $more . $content;
@@ -657,7 +657,4 @@ $result = $r['content'];
             return sprintf('<a href="%s%s" title="%3$s" rel="author"><%3$s</a>', $this->getApp()->site->url, $pages->url, $pages->name);
         }
     }
-}
-{
-
 }

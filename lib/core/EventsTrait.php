@@ -194,11 +194,11 @@ $this->save();
     public function detach(string $name, callable $callback): bool
     {
 $name = strtolower($name);
-$this->deleteCallback($callback);
+$this->deleteCallback($name, $callback);
         if (isset($this->data['events'][$name])) {
 foreach ($this->data['events'][$name] as $i => $item) {
-if ($item == $callable) {
-unset($this->data['events'][$name][$i];
+if ($item == $callback) {
+unset($this->data['events'][$name][$i]);
 $this->reIndexEvents();
             $this->save();
 return true;
@@ -218,10 +218,8 @@ if ($class == $item[0]) {
 unset($this->data['events'][$name][$i]);
 }
 }
-}
             }
-        }
-
+        
 $this->reIndexEvents();
         $this->save();
     }

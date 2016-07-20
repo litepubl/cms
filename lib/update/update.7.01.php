@@ -44,7 +44,7 @@ foreach ($schemes->items as $id => $item) {
 if (isset($item['postanounce'])) {
 $item['postannounce'] = $item['postanounce'];
 unset($item['postanounce']);
-if (!in_array($item['postannounce'], ['excerpt'', 'card', 'lite'])) {
+if (!in_array($item['postannounce'], ['excerpt', 'card', 'lite'])) {
 $item['postannounce'] = 'excerpt';
 }
 $schemes->items[$id] = $item;
