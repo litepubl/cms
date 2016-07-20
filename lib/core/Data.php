@@ -112,6 +112,11 @@ protected function setProp(string $name, $value)
 return array_key_exists($name, $this->data) || method_exists($this, "get$name") || method_exists($this, "Get$name");
     }
 
+public function __call($name, $params)
+{
+            throw new \UnexpectedValueException(sprintf('Call unknown method %s in %s', $name, get_class($this)));
+}
+
     public function method_exists($name)
     {
         return false;

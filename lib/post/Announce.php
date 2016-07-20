@@ -27,7 +27,7 @@ use litepubl\view\Schema;
 
 class Announce extends \litepubl\core\Events
 {
-use \litepubl\core\PoolStorage;
+use \litepubl\core\PoolStorageTrait;
 
     protected function create()
     {
@@ -79,7 +79,7 @@ $view->setTheme($theme);
 }
 
         if ($tmlContainer = $theme->templates['content.excerpts' . ($schema->postannounce == 'excerpt' ? '' : '.' . $schema->postannounce) ]) {
-            $result = str_replace('$excerpt', $result, $this->theme->parse($tmlContainer));
+            $result = str_replace('$excerpt', $result, $theme->parse($tmlContainer));
         }
 
 $r = $this->after(['content' => $result, 'items' => $items, 'schema' => $schema]);

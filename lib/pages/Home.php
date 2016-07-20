@@ -93,7 +93,7 @@ $this->addEvents('onbeforegetitems', 'ongetitems');
     {
         $result = parent::gethead();
 
-$schema = Schema::getSchema($this)->theme;
+$schema = Schema::getSchema($this);
 $theme = $schema->theme;
         $result.= $theme->templates['head.home'];
 
@@ -195,7 +195,7 @@ if (count($r['items'])) {
             $result = $posts->getpage(0, $this->page, $perpage, $schema->invertorder);
         }
 
-        $r = $this->onGetItems('items' => $result]);
+        $r = $this->onGetItems(['items' => $result]);
         $this->cacheposts = $r['items'];
         return $r['items'];
     }

@@ -391,7 +391,7 @@ $this->save();
             $theme = Theme::i();
             $args = new Args();
             if ($r['hover']) {
-                $items = $this->getSubMenu($this->tree, $r['current'], $r['hover '] === 'bootstrap');
+                $items = $this->getSubMenu($this->tree, $r['current'], $r['hover'] === 'bootstrap');
             } else {
                 $items = '';
                 $tml = $theme->templates['menu.item'];

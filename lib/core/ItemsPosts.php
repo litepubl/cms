@@ -47,7 +47,7 @@ class ItemsPosts extends Items
         return $this->db->delete("$this->postprop = $idpost and $this->itemprop = $iditem");
     }
 
-    public function delete(int $idpost)
+    public function delete($idpost)
     {
         return $this->deletePost($idpost);
     }

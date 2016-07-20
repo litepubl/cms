@@ -212,11 +212,11 @@ if ($a['return']) {
         return $result;
     }
 
-    public function getMenu()
+    public function getMenu(): string
     {
-$r = $this->ongetmenu(['menu' => '', 'return' => false]);
-if ($r['return']) {
-            return $r['menu'];
+$r = $this->onGetMenu(['content' => '', 'cancel' => false]);
+if ($r['cancel']) {
+            return $r['content'];
         }
 
         $app = $this->getApp();
@@ -286,9 +286,9 @@ if ($r['return']) {
         return $a['head'];
     }
 
-    public function getContent()
+    public function getContent(): string
     {
-        $result = $this->beforecontent(['content' => $result]);
+        $result = $this->beforecontent(['content' => '']);
         $result['content'] .= $this->view->getCont();
         $result = $this->aftercontent($result);
         return $result['content'];

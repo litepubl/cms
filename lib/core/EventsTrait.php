@@ -11,7 +11,7 @@ use Callbacks;
 
     protected function createData()
 {
-parent::createData;
+parent::createData();
 
 if (method_exists($this, 'addMap')) {
         $this->addMap('events', []);

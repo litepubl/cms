@@ -37,7 +37,7 @@ use litepubl\view\Schema;
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
-use \litepubl\core\PoolStorage;
+use \litepubl\core\PoolStorageTrait;
 
     public $post;
     public $context;
@@ -49,7 +49,7 @@ use \litepubl\core\PoolStorage;
     {
         parent::create();
 $this->basename = 'postview';
-        $this->addEvents('beforecontent', 'aftercontent', 'beforeexcerpt', 'afterexcerpt', 'onhead');
+        $this->addEvents('beforecontent', 'aftercontent', 'beforeexcerpt', 'afterexcerpt', 'onhead', 'ontags');
         $this->table = 'posts';
     }
 
