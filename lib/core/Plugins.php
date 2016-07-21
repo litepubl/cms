@@ -166,45 +166,45 @@ $this->error('Plugin class must have namespace');
             return false;
         }
 
-        $namespace = isset($this->items[$name]['namespace']) ? $this->items[$name]['namespace'] : false;
         unset($this->items[$name]);
         $this->save();
 
         $about = static ::getabout($name);
         $datafile = false;
+$app = $this->getApp();
         if (class_exists($about['classname'])) {
-            $plugin = $this->getApp()->classes->getinstance($about['classname']);
-            if ($plugin instanceof tplugin) {
-                $datafile = $this->getApp()->paths->data . $plugin->getbasename();
+            $plugin = $app->classes->getInstance($about['classname']);
+            if ($plugin instanceof Plugin) {
+                $datafile = $app->paths->data . $plugin->getbasename();
             }
         }
 
-        $this->getApp()->classes->lock();
-        if ($namespace) {
+        $app->classes->lock();
+if (strrpos($about['classname'], '\\')) {
             if ($about['adminclassname']) {
-                $this->getApp()->classes->uninstallClass($about['adminclassname']);
+                $app->classes->uninstallClass($about['adminclassname']);
             }
 
-            $this->getApp()->classes->uninstallClass($about['classname']);
+            $app->classes->uninstallClass($about['classname']);
         } else {
-            if (($about['adminclassname'])) {
-                $this->getApp()->classes->delete($about['adminclassname']);
+            if ($about['adminclassname']) {
+                $app->classes->delete($about['adminclassname']);
             }
 
-            $this->getApp()->classes->delete($about['classname']);
+            $app->classes->delete($about['classname']);
         }
 
-        $this->getApp()->classes->unlock();
+        $app->classes->unlock();
 
         if ($datafile) {
-            $this->getApp()->storage->remove($datafile);
+            $app->storage->remove($datafile);
         }
 
         $this->deleted(['name' => $name]);
         return true;
     }
 
-    public function deleteclass($class)
+    public function deleteClass($class)
     {
         foreach ($this->items as $name => $item) {
             if ($item['class'] == $class) {
