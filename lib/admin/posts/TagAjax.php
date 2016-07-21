@@ -13,7 +13,6 @@ namespace litepubl\admin\posts;
 use litepubl\admin\GetPerm;
 use litepubl\admin\GetSchema;
 use litepubl\core\Context;
-use litepubl\utils\TempProps;
 use litepubl\tag\Cats;
 use litepubl\tag\Tags as TagItems;
 use litepubl\view\Admin;
@@ -24,7 +23,7 @@ use litepubl\view\Schemes;
 
 class TagAjax extends Ajax
 {
-use \litepubl\utils\CoInstances;
+use \litepubl\utils\TempProps;
 
     public function install()
     {
@@ -38,7 +37,7 @@ use \litepubl\utils\CoInstances;
 
         $this->auth($context);
         if ($response->status == 200) {
-            $temp = new TempProps($this);
+            $temp = $this->newProps();
             $temp->response = $response;
             $response->body = $this->getContent();
         }

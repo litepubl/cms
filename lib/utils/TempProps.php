@@ -10,27 +10,64 @@
 
 namespace litepubl\utils;
 
-use litepubl\core\Data;
-
-class TempProps extends \ArrayObject
+trait Props
 {
-    private $owner;
+    private $props = [];
 
-    public function __construct(Data $owner)
-    {
-        parent::__construct([], \ArrayObject::ARRAY_AS_PROPS);
-        $this->owner = $owner;
-        $owner->coinstances[] = $this;
-    }
+protected function newProps()
+{
+return new class ($this) {
+private $owner;
+private $props = [];
 
-    public function __destruct()
-    {
-        foreach ($this->owner->coinstances as $i => $obj) {
-            if ($this == $obj) {
-                unset($this->owner->coinstances[$i]);
-            }
-        }
+public function __construct($owner)
+{
+$this->owner = $owner;
+}
 
-        $this->owner = null;
-    }
+public function __destruct()
+{
+foreach ($this->props as $name) {
+$this->owner->removeTempProp($name);
+}
+}
+
+public function __set($name, $value)
+{
+$this->props[] = $name;
+$this->owner->addTempProp($name, $value);
+}
+};
+}
+
+protected function getProp(string $name)
+{
+if (isset($this->props[$name])) {
+return $this->props[$name];
+}
+
+return parent::getProp($name);
+}
+
+protected function setProp(string $name, $value)
+{
+if (isset($this->props[$name])) {
+$this->props[$name] = $value;
+} else {
+parent::getProp($name);
+}
+}
+
+public function addTempProp(string $name, $value)
+{
+$this->props[$name] = $value;
+}
+
+public function removeTempProp(string $name)
+{
+if (isset($this->props[$name])) {
+unset($this->props[$name]);
+}
+}
+
 }

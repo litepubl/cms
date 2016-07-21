@@ -32,7 +32,7 @@ use litepubl\view\Vars;
 
 class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
-use \litepubl\utils\Props;
+use \litepubl\utils\TempProps;
 
     public $helper;
 

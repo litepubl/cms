@@ -10,7 +10,6 @@
 
 namespace litepubl\comments;
 
-use litepubl\utils\TempProps;
 use litepubl\post\Post;
 use litepubl\post\View as PostView;
 use litepubl\view\Args;
@@ -19,7 +18,7 @@ use litepubl\view\Theme;
 
 class Templates extends \litepubl\core\Events
 {
-use \litepubl\utils\CoInstances;
+use \litepubl\utils\TempProps;
 
     protected function create()
     {
@@ -31,7 +30,7 @@ use \litepubl\utils\CoInstances;
     {
         $result = '';
         $idpost = (int)$view->id;
-        $props = new TempProps($this);
+        $props = $this->newProps();
         $props->view = $view;
         $lang = Lang::i('comment');
         $comments = Comments::i();

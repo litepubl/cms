@@ -21,7 +21,7 @@ use litepubl\view\Schemes;
 
 class Ajax extends \litepubl\admin\posts\Ajax
 {
-use \litepubl\utils\Props;
+use \litepubl\utils\TempProps;
 
     //to prevent call parent method
     public function install()
