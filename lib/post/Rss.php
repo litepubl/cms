@@ -267,12 +267,12 @@ header('Location: $this->feedburnercomments');
             Node::addcdata($item, 'category', $name);
         }
 
-        $r = $this->beforePost(['id' => $post->id, 'content' => $content]);
+        $r = $this->beforePost(['id' => $post->id, 'content' => '']);
 
         if (!$this->template) {
             $r['content'] .= $post->view->replaceMore($post->rss, true);
         } else {
-            $r['content'] .= Theme::parsevar('post', $post, $this->template);
+            $r['content'] .= Theme::parsevar('post', $post->view, $this->template);
         }
 
         $r = $this->afterPost($r);
