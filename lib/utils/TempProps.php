@@ -10,7 +10,7 @@
 
 namespace litepubl\utils;
 
-trait Props
+trait TempProps
 {
     private $props = [];
 

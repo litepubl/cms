@@ -303,7 +303,7 @@ $paths = $this->readPaths();
         ksort($this->dirNames);
 
 $pluginsDir = $this->getApp()->paths->plugins;
-foreach ($paths as $path) {
+foreach ($paths as $namePath => $path) {
 $path = trim($path, '\/');
 if (is_dir($pluginsDir . $path)) {
 $dirNames = [];
@@ -315,14 +315,14 @@ continue;
 }
 
 if (is_dir($dir . '/' . $filename)) {
-$dirNames[$filename] = $path;
+$dirNames[$filename] = $namePath;
 }
 }
 
 $list->close();
 
 ksort($dirNames);
-$this->dirNames = $dirNames + $this->dirNames;
+$this->dirNames = $this->dirNames + $dirNames;
 }
 }
 }

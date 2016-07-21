@@ -222,6 +222,7 @@ class Wiki extends \litepubl\core\Items
     public function createWords(string $content, Post $post): string
     {
         if (preg_match_all('/\[wiki\:(.*?)\]/im', $content, $m, PREG_SET_ORDER)) {
+$theme = $post->view->theme;
             foreach ($m as $item) {
                 $word = $item[1];
                 if ($id = $this->add($word, $post->id)) {
@@ -232,7 +233,8 @@ $this->fixPost($event->getTarget());
 });
                     }
 
-            $wikiWord = str_replace('$word', $word, Theme::i()->templates['wiki.word']);
+
+            $wikiWord = str_replace('$word', $word, $theme->templates['wiki.word']);
                     $content = str_replace($item[0], $wikiWord, $content);
                 }
             }

@@ -203,7 +203,7 @@ if ($r['result']) {
             return $this->getErrorContent($lang->holduser);
         }
 
-        if (!$cm->canadd($iduser)) {
+        if (!$cm->canAdd($iduser)) {
             return $this->getErrorContent($lang->toomany);
         }
 

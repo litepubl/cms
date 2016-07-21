@@ -208,7 +208,7 @@ $status = $r['status'];
     public function canAdd(int $idauthor): bool
     {
 $r = $this->isSpamer(['author' => $idauthor, 'spamer' => false]);
-        return $r['spamer'];
+        return !$r['spamer'];
     }
 
     public function is_duplicate($idpost, $content)
