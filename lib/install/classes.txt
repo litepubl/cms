@@ -35,7 +35,6 @@ tag\Tags
 post\Files
 post\FilesItems
 post\Archives
-pages\Appcache
 perms\Perm
 perms\Groups
 perms\Password

@@ -30,6 +30,7 @@ function update701()
     }
     $sitemap->save();
 
+    litepubl::$app->router->delete('/manifest.appcache');
     litepubl::$app->router->updateFilter();
 
     $css = Css::i();
