@@ -352,19 +352,24 @@ $this->data['solt'] = $value;
         if ($this->user == 1) {
             return true;
         }
+
         if (in_array($this->groupnames['admin'], $this->idgroups)) {
             return true;
         }
+
         if (!$groupname) {
             return true;
         }
+
         $groupname = trim($groupname);
         if ($groupname == 'admin') {
             return false;
         }
+
         if (!isset($this->groupnames[$groupname])) {
             $this->error(sprintf('The "%s" group not found', $groupname));
         }
+
         $idgroup = $this->groupnames[$groupname];
         return in_array($idgroup, $this->idgroups);
     }

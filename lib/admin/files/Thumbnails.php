@@ -102,8 +102,8 @@ class Thumbnails extends \litepubl\admin\Menu
             return $admin->geterr(sprintf($lang->attack, $_FILES["filename"]["name"]));
         }
 
-        if ($isauthor && ($r = AuthorRights::i()->canupload())) {
-            return $r;
+        if ($isauthor && !AuthorRights::canUpload()) {
+            return AuthorRights::getMessage();
         }
 
         $filename = $_FILES['filename']['name'];

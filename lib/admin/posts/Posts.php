@@ -52,8 +52,8 @@ class Posts extends \litepubl\admin\Menu
         }
 
         $post = Post::i($id);
-        if ($this->isauthor && ($r = AuthorRights::i()->changeposts($action))) {
-            return $r;
+        if ($this->isauthor && !AuthorRights::canStatus($action)) {
+            return AuthorRights::getMessage();
         }
 
         if ($this->isauthor && ($this->getApp()->options->user != $post->author)) {
@@ -161,8 +161,8 @@ class Posts extends \litepubl\admin\Menu
         $posts = PostItems::i();
         $posts->lock();
         $status = isset($_POST['publish']) ? 'published' : (isset($_POST['setdraft']) ? 'draft' : 'delete');
-        if ($this->isauthor && ($r = AuthorRights::i()->changeposts($status))) {
-            return $r;
+        if ($this->isauthor && !AuthorRights::canStatus($status)) {
+            return AuthorRights::getMessage();
         }
         $iduser = $this->getApp()->options->user;
         foreach ($_POST as $key => $id) {

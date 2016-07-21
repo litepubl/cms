@@ -147,14 +147,9 @@ class JsonFiles extends \litepubl\core\Events
     {
         $options = $this->getApp()->options;
 
-        if ($options->hasGroup('author')
-            && !in_array($options->groupnames['author'], $options->idgroups)
-            || !AuthorRights::i()->canUpload()
-        ) {
-            return true;
-        }
-
-        return false;
+return $options->inGroup('editor')
+|| ($options->hasGroup('author')
+            && AuthorRights::canUpload());
     }
 
     public function files_upload(array $args)

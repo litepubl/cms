@@ -68,8 +68,8 @@ class Files extends \litepubl\admin\Menu
             switch ($_GET['action']) {
             case 'delete':
                 if ($this->confirmed) {
-                    if (('author' == $this->getApp()->options->group) && ($r = AuthorRights::i()->candeletefile($id))) {
-                        return $r;
+                    if (('author' == $this->getApp()->options->group) && !AuthorRights::canDeleteFile($id)) {
+                        return AuthorRights::getMessage();
                     }
 
                     $files->delete($id);
@@ -157,8 +157,8 @@ class Files extends \litepubl\admin\Menu
                 if (!is_uploaded_file($_FILES['filename']['tmp_name'])) {
                     return $admintheme->geterr(sprintf($lang->attack, $_FILES['filename']['name']));
                 }
-                if ($isauthor && ($r = AuthorRights::i()->canupload())) {
-                    return $r;
+                if ($isauthor && !AuthorRights::canUpload()) {
+                    return AuthorRights::getMessage();
                 }
 
                 $overwrite = isset($_POST['overwrite']);
@@ -174,8 +174,8 @@ class Files extends \litepubl\admin\Menu
                 if ($filename == '') {
                     $filename = 'noname.txt';
                 }
-                if ($isauthor && ($r = AuthorRights::i()->canupload())) {
-                    return $r;
+                if ($isauthor && !AuthorRights::canUpload()) {
+                    return AuthorRights::getMessage();
                 }
                 $overwrite = isset($_POST['overwrite']);
                 $parser = MediaParser::i();

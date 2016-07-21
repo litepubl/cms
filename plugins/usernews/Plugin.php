@@ -10,6 +10,7 @@
 
 namespace litepubl\plugins\usernews;
 
+use litepubl\core\Event;
 use litepubl\view\Lang;
 
 class Plugin extends \litepubl\core\Plugin
@@ -32,24 +33,27 @@ class Plugin extends \litepubl\core\Plugin
         return sprintf('<h4>%s</h4>', $lang->norights);
     }
 
-    public function changePosts($action)
+    public function onStatus(Event $event)
     {
         if (!$this->_changeposts) {
-            return $this->noRights;
+$event->result = false;
+            $event->message = $this->noRights;
         }
     }
 
-    public function canUpload()
+    public function canUpload(Event $event)
     {
         if (!$this->_canupload) {
-            return $this->noRights;
+$event->result = false;
+            $event->message = $this->noRights;
         }
     }
 
-    public function canDeleteFile()
+    public function canDeleteFile(Event $event)
     {
         if (!$this->_candeletefile) {
-            return $this->noRights;
+$event->result = false;
+            $event->message = $this->noRights;
         }
     }
 

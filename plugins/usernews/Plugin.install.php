@@ -43,9 +43,9 @@ function PluginInstall($self)
 
     $rights = AuthorRights::i();
     $rights->lock();
-    $rights->changeposts = $self->changePosts;
-    $rights->canupload = $self->canUpload;
-    $rights->candeletefile = $self->canDeleteFile;
+    $rights->Status = $self->onStatus;
+    $rights->upload = $self->canUpload;
+    $rights->deleteFile = $self->canDeleteFile;
     $rights->unlock();
 
     $menus = Menus::i();
