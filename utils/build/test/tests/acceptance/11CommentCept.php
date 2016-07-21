@@ -39,7 +39,11 @@ $i->click('Ok');
 
 $i->wantTo('Send comment as admin');
 $i->click($data->login);
+        codecept_debug(date('i:s'));
+sleep(6);
 codecept_debug($i->grabFromCurrentUrl());
+        codecept_debug(date('i:s'));
+$i->seeInCurrentUrl(urlencode($posturl));
 $comment->login();
 
 $i->wantTo('Must be returned back to post');

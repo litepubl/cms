@@ -230,7 +230,7 @@ class Router extends Items
         return $item['id'];
     }
 
-    public function delete(string $url)
+    public function delete($url)
     {
         $url = Str::quote($url);
         if ($id = $this->db->findid('url = ' . $url)) {

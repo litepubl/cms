@@ -101,6 +101,7 @@ $this->afterContent(['post' => $post]);
 return;
         }
 
+$s = $r['content'];
         $moretag = ' <!--more-->';
         if (preg_match('/<!--more(.*?)?-->/', $s, $matches) || preg_match('/\[more(.*?)?\]/', $s, $matches) || preg_match('/\[cut(.*?)?\]/', $s, $matches)) {
             $parts = explode($matches[0], $s, 2);
