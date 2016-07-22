@@ -1,3 +1,16 @@
+#reorder to include
+!Classes.php
+!Router.php
+!ItemsPosts.php
+!Cron.php
+!Users.php
+
+lib/core/Classes.php
+lib/core/Router.php
+lib/core/Cron.php
+lib/core/ItemsPosts.php
+lib/core/Users.php
+
 !DBManager.php
 !DBOptimizer.php
 !Plugins.php
@@ -14,6 +27,9 @@ vendor/monolog/monolog/src/Monolog/Handler/AbstractHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/AbstractProcessingHandler.php
 vendor/monolog/monolog/src/Monolog/Logger.php
 vendor/psr/log/Psr/Log/LoggerInterface.php
+vendor/psr/log/Psr/Log/LogLevel.php
+vendor/psr/log/Psr/Log/InvalidArgumentException.php
+vendor/monolog/monolog/src/Monolog/ErrorHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/MailHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/NativeMailerHandler.php

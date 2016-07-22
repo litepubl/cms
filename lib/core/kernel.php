@@ -672,478 +672,6 @@ trait Callbacks
     }
 }
 
-//Classes.php
-namespace litepubl\core;
-
-use litepubl\Config;
-
-/**
- * Class to manage autoload and keep singletons
- *
- * @property-write callable $onNewItem
- * @property-write callable $onRename
- * @method         array onNewItem(array $params) trigger when new item create
- * @method         array onRename(array $params) trigger when class renamed
- */
-
-class Classes extends Items
-{
-    use PoolStorageTrait;
-
-    public $namespaces;
-    public $kernel;
-    public $remap;
-    public $classmap;
-    public $aliases;
-    public $instances;
-    public $loaded;
-    private $composerLoaded;
-
-    public static function i()
-    {
-        $app = static ::getAppInstance();
-        if (!isset($app->classes)) {
-            $classname = get_called_class();
-            $app->classes = new $classname();
-            $app->classes->instances[$classname] = $app->classes;
-        }
-
-        return $app->classes;
-    }
-
-    protected function create()
-    {
-        parent::create();
-        $this->basename = 'classes';
-        $this->dbversion = false;
-        $this->addevents('onnewitem', 'onrename');
-        $this->addmap('namespaces', ['litepubl' => 'lib']);
-        $this->addmap('kernel', array());
-        $this->addmap('remap', array());
-        $this->instances = array();
-        $this->classmap = [];
-        $this->aliases = [];
-        $this->loaded = [];
-        $this->composerLoaded = false;
-
-        spl_autoload_register(
-            array(
-            $this,
-            'autoload'
-            ), true, true
-        );
-    }
-
-    public function getInstance(string $class)
-    {
-        if (isset($this->instances[$class])) {
-            return $this->instances[$class];
-        }
-
-        if (isset($this->aliases[$class]) && ($alias = $this->aliases[$class]) && ($alias != $class)) {
-            return $this->getinstance($alias);
-        }
-
-        if (!class_exists($class)) {
-            $this->error(sprintf('Class "%s" not found', $class));
-        }
-
-        return $this->instances[$class] = $this->newinstance($class);
-    }
-
-    public function newinstance(string $class)
-    {
-        if (!empty($this->remap[$class])) {
-            $class = $this->remap[$class];
-        }
-
-        return new $class();
-    }
-
-    public function newItem(string $name, string $class, $id)
-    {
-        if (!empty($this->remap[$class])) {
-            $class = $this->remap[$class];
-        }
-
-        $info = $this->onnewitem(
-            [
-            'name' => $name,
-            'class' => $class,
-            'id' => $id,
-            ]
-        );
-
-        return new $info['class']();
-    }
-
-    public function add($class, $filename, $deprecatedPath = false)
-    {
-        if ($incfilename = $this->findPSR4($class)) {
-            $this->include($incfilename);
-        } else {
-            if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
-                return false;
-            }
-
-            $this->lock();
-            if (!class_exists($class, false) && !strpos($class, '\\')) {
-                $class = 'litepubl\\' . $class;
-                $filename = sprintf('plugins/%s%s', $deprecatedPath ? $deprecatedPath . '/' : '', $filename);
-            }
-
-            $this->items[$class] = $filename;
-        }
-
-        $this->installClass($class);
-        $this->unlock();
-        $this->added($class);
-        return true;
-    }
-
-    public function installClass(string $classname)
-    {
-        $instance = $this->getinstance($classname);
-        if (method_exists($instance, 'install')) {
-            $instance->install();
-        }
-
-        return $instance;
-    }
-
-    public function uninstallClass(string $classname)
-    {
-        if (class_exists($classname)) {
-            $instance = $this->getinstance($classname);
-            if (method_exists($instance, 'uninstall')) {
-                $instance->uninstall();
-            }
-        }
-    }
-
-    public function delete($class)
-    {
-        if (!isset($this->items[$class])) {
-            return false;
-        }
-
-        $this->lock();
-        $this->uninstallClass($class);
-        unset($this->items[$class]);
-        unset($this->kernel[$class]);
-        $this->unlock();
-        $this->deleted($class);
-    }
-
-    public function reinstall(string $class)
-    {
-        if (isset($this->items[$class])) {
-            $this->lock();
-            $filename = $this->items[$class];
-            $kernel = isset($this->kernel[$class]) ? $this->kernel[$class] : false;
-            $this->delete($class);
-            $this->add($class, $filename);
-            if ($kernel) {
-                $this->kernel[$class] = $kernel;
-            }
-            $this->unlock();
-        }
-    }
-
-    public function baseClass(string $classname)
-    {
-        if ($i = strrpos($classname, '\\')) {
-            return substr($classname, $i + 1);
-        }
-
-        return $classname;
-    }
-
-    public function addAlias(string $classname, string $alias)
-    {
-        if (!$alias) {
-            if ($i = strrpos($classname, '\\')) {
-                $alias = substr($classname, $i + 1);
-            } else {
-                $alias = 'litepubl\\' . $classname;
-            }
-        }
-
-        //may be exchange class names
-        if (class_exists($alias, false) && !class_exists($classname, false)) {
-            $tmp = $classname;
-            $classname = $alias;
-            $alias = $tmp;
-        }
-
-        if (!isset($this->aliases[$alias])) {
-            class_alias($classname, $alias, false);
-            $this->aliases[$alias] = $classname;
-        }
-    }
-
-    public function getClassmap(string $classname)
-    {
-        if (isset($this->aliases[$classname])) {
-            return $this->aliases[$classname];
-        }
-
-        if (!count($this->classmap)) {
-            $this->classmap = include $this->getApp()->paths->lib . 'update/classmap.php';
-        }
-        $classname = $this->baseclass($classname);
-        if (isset($this->classmap[$classname])) {
-            $result = $this->classmap[$classname];
-            if (!isset($this->aliases[$classname])) {
-                class_alias($result, $classname, false);
-                $this->aliases[$classname] = $result;
-            }
-
-            $classname = 'litepubl\\' . $classname;
-            if (!isset($this->aliases[$classname])) {
-                class_alias($result, $classname, false);
-                $this->aliases[$classname] = $result;
-            }
-
-            return $result;
-        }
-
-        return false;
-    }
-
-    public function autoload(string $classname)
-    {
-        if (isset($this->loaded[$classname])) {
-            return;
-        }
-
-        if (config::$useKernel && !config::$debug && ($filename = $this->findKernel($classname))) {
-            include_once $filename;
-            if (class_exists($classname, false) || interface_exists($classname, false) || trait_exists($classname, false)) {
-                $this->loaded[$classname] = $filename;
-                return;
-            }
-        }
-
-        $filename = $this->findFile($classname);
-        $this->loaded[$classname] = $filename;
-        if ($filename) {
-            include_once $filename;
-        } elseif (!$this->composerLoaded) {
-            $this->composerLoaded = true;
-            $this->loadComposer($classname);
-        }
-    }
-
-    public function findFile(string $classname)
-    {
-        /*
-        if ($newclass = $this->getClassmap($classname)) {
-        $classname = $newclass;
-        }
-        */
-
-        $result = $this->findPSR4($classname);
-        if (!$result) {
-            $result = $this->findClassmap($classname);
-        }
-
-        return $result;
-    }
-
-    public function findClassmap(string $classname)
-    {
-        if (isset($this->items[$classname])) {
-            $filename = $this->app->paths->home . $this->items[$classname];
-            if (file_exists($filename)) {
-                return $filename;
-            }
-        }
-    }
-
-    public function include(string $filename)
-    {
-        //if (is_dir($filename)) $this->error($filename);
-        include_once $filename;
-    }
-
-    public function include_file(string $filename)
-    {
-        if ($filename && file_exists($filename)) {
-            $this->include($filename);
-        }
-    }
-
-    public function findPSR4(string $classname)
-    {
-        if (false === ($i = strrpos($classname, '\\'))) {
-            return false;
-        }
-
-        $ns = substr($classname, 0, $i);
-        if ($ns[0] == '\\') {
-            $ns = substr($ns, 1);
-        }
-
-        $baseclass = substr($classname, $i + 1);
-        $paths = $this->app->paths;
-
-        if (isset($this->loaded[$ns])) {
-            $filename = $this->loaded[$ns] . $baseclass . '.php';
-            if (file_exists($filename)) {
-                return $filename;
-            }
-
-            return false;
-        }
-
-        if (isset($this->namespaces[$ns])) {
-            $dir = $paths->home . $this->namespaces[$ns] . '/';
-            $filename = $dir . $baseclass . '.php';
-            if (file_exists($filename)) {
-                $this->loaded[$ns] = $dir;
-                return $filename;
-            }
-        }
-
-        $names = explode('\\', $ns);
-        $vendor = array_shift($names);
-        while (count($names)) {
-            if (isset($this->namespaces[$vendor])) {
-                $dir = $paths->home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
-                $filename = $dir . $baseclass . '.php';
-                if (file_exists($filename)) {
-                    $this->loaded[$ns] = $dir;
-                    return $filename;
-                }
-            }
-
-            $vendor.= '\\' . array_shift($names);
-        }
-
-        //last chanse
-        $name = 'litepubl\plugins';
-        if (Str::begin($ns, $name)) {
-            $dir = $paths->plugins . $this->subSpace($ns, $name) . '/';
-            $filename = $dir . $baseclass . '.php';
-            if (file_exists($filename)) {
-                $this->loaded[$ns] = $dir;
-                return $filename;
-            }
-        }
-
-        return false;
-    }
-
-    public function findKernel(string $classname)
-    {
-        if (false === ($i = strrpos($classname, '\\'))) {
-            return false;
-        }
-
-        $ns = substr($classname, 0, $i);
-        if ($ns[0] == '\\') {
-            $ns = substr($ns, 1);
-        }
-
-        if (isset($this->loaded[$ns])) {
-            return false;
-        }
-
-        $home = $this->app->paths->home;
-        if (isset($this->kernel[$ns])) {
-            $filename = $home . $this->kernel[$ns];
-            if (file_exists($filename)) {
-                return $filename;
-            }
-        }
-
-        if (isset($this->namespaces[$ns])) {
-            $dir = $home . $this->namespaces[$ns] . '/';
-            $filename = $dir . 'kernel.php';
-            if (file_exists($filename)) {
-                $this->loaded[$ns] = $dir;
-                return $filename;
-            }
-        }
-
-        $names = explode('\\', $ns);
-        $vendor = array_shift($names);
-        while (count($names)) {
-            if (isset($this->namespaces[$vendor])) {
-                $dir = $home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
-                $filename = $dir . 'kernel.php';
-                if (file_exists($filename)) {
-                    $this->loaded[$ns] = $dir;
-                    return $filename;
-                }
-            }
-
-            $vendor.= '\\' . array_shift($names);
-        }
-
-        $dir = $home . $ns . '/';
-        $filename = $dir . 'kernel.php';
-        if (file_exists($filename)) {
-            $this->loaded[$ns] = $dir;
-            return $filename;
-        }
-
-        return false;
-    }
-
-    public function subSpace(string $namespace, string $root)
-    {
-        return str_replace('\\', DIRECTORY_SEPARATOR, strtolower(substr($namespace, strlen($root) + 1)));
-    }
-
-    public function exists(string $class): bool
-    {
-        return isset($this->instances[$class]) || isset($this->items[$class]);
-    }
-
-    public function rename(string $oldclass, string $newclass)
-    {
-        if (isset($this->items[$oldclass])) {
-            $this->items[$newclass] = $this->items[$oldclass];
-            unset($this->items[$oldclass]);
-            if (isset($this->kernel[$oldclass])) {
-                $this->kernel[$newclass] = $this->items[$oldclass];
-                unset($this->kernel[$oldclass]);
-            }
-
-            $this->getApp()->router->db->update('class =' . Str::quote($newclass), 'class = ' . Str::quote($oldclass));
-            $this->save();
-
-            $this->onrename(
-                [
-                'oldclass' => $oldclass,
-                'newclass' =>  $newclass,
-                ]
-            );
-        }
-    }
-
-    public function getResourcedir($c)
-    {
-        $reflector = new \ReflectionClass($c);
-        $filename = $reflector->getFileName();
-        return dirname($filename) . '/resource/';
-    }
-    public function loadComposer($classToAutoLoad)
-    {
-        include_once $this->getApp()->paths->home . 'vendor/autoload.php';
-        if ($classToAutoLoad && ($a = spl_autoload_functions())) {
-            $compclass = 'Composer\Autoload\ClassLoader';
-            foreach ($a as $item) {
-                if (is_array($item) && is_a($item[0], $compclass)) {
-                    return call_user_func_array($item, [$classToAutoLoad]);
-                }
-            }
-        }
-    }
-}
-
 //Context.php
 namespace litepubl\core;
 
@@ -1336,289 +864,6 @@ class Controller
             if ($this->cache && $response->cache) {
                 $cache->savePhp($this->getCacheFileName($context), $response->getString());
             }
-        }
-    }
-}
-
-//Cron.php
-namespace litepubl\core;
-
-use litepubl\Config;
-use litepubl\utils\Mailer;
-
-/**
- * Class to run regular tasks
- *
- * @property-write callable $added
- * @property-write callable $deleted
- * @method array added(array $params) trigger when new task added
- * @method array deleted(array $params) trigger when task has been deleted
- */
-
-class Cron extends Events implements ResponsiveInterface
-{
-    public static $pinged = false;
-    public $disableadd;
-    private $socket;
-
-    protected function create()
-    {
-        parent::create();
-        $this->basename = 'cron';
-        $this->addEvents('added', 'deleted');
-        $this->data['password'] = '';
-        $this->data['path'] = '';
-        $this->data['disableping'] = false;
-        $this->disableadd = false;
-        $this->table = 'cron';
-    }
-
-    protected function getUrl(): string
-    {
-        return sprintf('/croncron.htm%scronpass=%s', $this->getApp()->site->q, urlencode($this->password));
-    }
-
-    public function getLockpath(): string
-    {
-        if (($result = $this->path) && is_dir($result)) {
-                return $result;
-            }
-
-        return $this->getApp()->paths->data;
-    }
-
-    public function request(Context $context)
-    {
-            $context->response->cache = false;
-        if (!isset($_GET['cronpass']) || ($this->password != $_GET['cronpass'])) {
-            $context->response->status = 403;
-            return;
-        }
-
-        if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
-            try {
-                set_time_limit(300);
-                if (Config::$debug) {
-                    ignore_user_abort(true);
-                } else {
-                    $this->getApp()->router->close_connection();
-                }
-
-                if (ob_get_level()) {
-                    ob_end_flush();
-                }
-                flush();
-
-                $this->sendexceptions();
-                $this->log("started loop");
-                $this->execute();
-            } catch (\Exception $e) {
-                $this->getApp()->logException($e);
-            }
-            flock($fh, LOCK_UN);
-            fclose($fh);
-            @chmod($this->lockpath . 'cron.lok', 0666);
-            $this->log("finished loop");
-            return 'Ok';
-        }
-        return 'locked';
-    }
-
-    public function run()
-    {
-        if (ob_get_level()) {
-            ob_end_flush();
-        }
-        flush();
-
-        if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
-            set_time_limit(300);
-
-            try {
-                $this->execute();
-            } catch (\Exception $e) {
-                $this->getApp()->logException($e);
-            }
-
-            flock($fh, LOCK_UN);
-            fclose($fh);
-            @chmod($this->lockpath . 'cron.lok', 0666);
-            return true;
-        }
-
-        return false;
-    }
-
-    public function execute()
-    {
-        while ($item = $this->db->getassoc(sprintf("date <= '%s' order by date asc limit 1", Str::sqlDate()))) {
-            extract($item);
-            $this->log("task started:\n{$class}->{$func}($arg)");
-            $arg = unserialize($arg);
-            if ($class == '') {
-                if (function_exists($func)) {
-                    try {
-                        $func($arg);
-                    } catch (\Exception $e) {
-                        $this->getApp()->logException($e);
-                    }
-                } else {
-                    $this->db->iddelete($id); {
-                        continue;
-                    }
-                }
-            } elseif (class_exists($class)) {
-                try {
-                    $obj = static ::iGet($class);
-                    $obj->$func($arg);
-                } catch (\Exception $e) {
-                    $this->getApp()->logException($e);
-                }
-            } else {
-                $this->db->iddelete($id); {
-                    continue;
-                }
-            }
-            if ($type == 'single') {
-                $this->db->iddelete($id);
-            } else {
-                $this->db->setvalue($id, 'date', Str::sqlDate(strtotime("+1 $type")));
-            }
-        }
-    }
-
-    public function add(string $type, string $class, string $func, $arg = null): int
-    {
-        if (!preg_match('/^single|hour|day|week$/', $type)) {
-            $this->error("Unknown cron type $type");
-        }
-
-        if ($this->disableadd) {
-            return 0;
-        }
-
-        $id = $this->doAdd($type, $class, $func, $arg);
-
-        if (($type == 'single') && !$this->disableping && !static ::$pinged) {
-            if (Config::$debug) {
-                $this->getApp()->getLogger()->info("cron added $id");
-            }
-
-            $memvars = Memvars::i();
-            if (!$memvars->singlecron) {
-                $memvars->singlecron = time() + 300;
-            }
-        }
-
-        return $id;
-    }
-
-    protected function doAdd(string $type, string $class, string $func, $arg): int
-    {
-        $id = $this->db->add(array(
-            'date' => Str::sqlDate() ,
-            'type' => $type,
-            'class' => $class,
-            'func' => $func,
-            'arg' => serialize($arg)
-        ));
-
-        $this->added(['id' => $id]);
-        return $id;
-    }
-
-    public function addNightly(string $class, string $func, $arg): int
-    {
-        $id = $this->db->add(array(
-            'date' => date('Y-m-d 03:15:00', time()) ,
-            'type' => 'day',
-            'class' => $class,
-            'func' => $func,
-            'arg' => serialize($arg)
-        ));
-        $this->added(['id' => $id]);
-        return $id;
-    }
-
-    public function addWeekly(string $class,string $func, $arg): int
-    {
-        $id = $this->db->add(array(
-            'date' => date('Y-m-d 03:15:00', time()) ,
-            'type' => 'week',
-            'class' => $class,
-            'func' => $func,
-            'arg' => serialize($arg)
-        ));
-
-        $this->added(['id' => $id]);
-        return $id;
-    }
-
-    public function delete($id)
-    {
-        $this->db->iddelete($id);
-        $this->deleted(['id' => $id]);
-    }
-
-    public function deleteClass($c)
-    {
-        $class = static ::getClassName($c);
-        $this->db->delete("class = '$class'");
-    }
-
-    public static function pingOnShutdown()
-    {
-        if (static ::$pinged) {
-            return;
-        }
-
-        static ::$pinged = true;
-
-        register_shutdown_function(array(
-        static ::i() ,
-            'ping'
-        ));
-    }
-
-    public function ping()
-    {
-        $p = parse_url($this->getApp()->site->url . $this->url);
-        $this->pinghost($p['host'], $p['path'] . (empty($p['query']) ? '' : '?' . $p['query']));
-    }
-
-    private function pingHost(string $host, string $path)
-    {
-        if ($this->socket = @fsockopen($host, 80, $errno, $errstr, 0.10)) {
-            fputs($this->socket, "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n");
-            //0.01 sec
-            usleep(10000);
-        }
-    }
-
-    public function sendExceptions()
-    {
-        $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'exceptionsmail.log';
-        if (!file_exists($filename)) {
-            return;
-        }
-
-        $time = @filectime($filename);
-        if (($time === false) || ($time + 3600 > time())) {
-            return;
-        }
-
-        $s = file_get_contents($filename);
-        $this->getApp()->storage->delete($filename);
-        Mailer::SendAttachmentToAdmin('[error] ' . $this->getApp()->site->name, 'See attachment', 'errors.txt', $s);
-        sleep(2);
-    }
-
-    public function log($s)
-    {
-        echo date('r') . "\n$s\n\n";
-        flush();
-        if (Config::$debug) {
-                $this->getApp()->getLogger()->info($s);
         }
     }
 }
@@ -3191,127 +2436,6 @@ class Items extends Events
     }
 }
 
-//ItemsPosts.php
-namespace litepubl\core;
-
-class ItemsPosts extends Items
-{
-    public $tablepost;
-    public $postprop;
-    public $itemprop;
-
-    protected function create()
-    {
-        parent::create();
-        $this->basename = 'itemsposts';
-        $this->table = 'itemsposts';
-        $this->tablepost = 'posts';
-        $this->postprop = 'post';
-        $this->itemprop = 'item';
-    }
-
-    public function add(int $idpost, int $iditem)
-    {
-        $item = [
-            $this->postprop => $idpost,
-            $this->itemprop => $iditem
-        ];
-
-        $this->db->insert($item);
-        $this->added($item);
-    }
-
-    public function exists(int $idpost, int $iditem): bool
-    {
-        return $this->db->exists("$this->postprop = $idpost and $this->itemprop = $iditem");
-    }
-
-    public function remove(int $idpost, int $iditem)
-    {
-        return $this->db->delete("$this->postprop = $idpost and $this->itemprop = $iditem");
-    }
-
-    public function delete($idpost)
-    {
-        return $this->deletePost($idpost);
-    }
-
-    public function deletePost(int $idpost)
-    {
-        $db = $this->db;
-        $result = $db->res2id($db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
-        $db->delete("$this->postprop = $idpost");
-        return $result;
-    }
-
-    public function deleteItem(int $iditem)
-    {
-        $this->db->delete("$this->itemprop = $iditem");
-        $this->deleted([$this->itemprop => $id]);
-    }
-
-    public function setItems(int $idpost, array $items)
-    {
-        Arr::clean($items);
-        $db = $this->db;
-        $old = $this->getitems($idpost);
-        $add = array_diff($items, $old);
-        $delete = array_diff($old, $items);
-
-        if (count($delete)) {
-            $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(', ', $delete) . ')');
-        }
-        if (count($add)) {
-            $vals = array();
-            foreach ($add as $iditem) {
-                $vals[] = "($idpost, $iditem)";
-            }
-            $db->exec("INSERT INTO $this->thistable ($this->postprop, $this->itemprop) values " . implode(',', $vals));
-        }
-
-        return array_merge($old, $add);
-    }
-
-    public function getItems($idpost): array
-    {
-        $db = $this->getApp()->db;
-        return $db->res2id($db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
-    }
-
-    public function getPosts(int $iditem): array
-    {
-        $db = $this->getApp()->db;
-        return $db->res2id($db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
-    }
-
-    public function getPostscount(int $ititem): int
-    {
-        $db = $this->getdb($this->tablepost);
-        return $db->getcount("$db->prefix$this->tablepost.status = 'published' and id in (select $this->postprop from $this->thistable where $this->itemprop = $ititem)");
-    }
-
-    public function updatePosts(array $list, $propname)
-    {
-        $db = $this->db;
-        foreach ($list as $idpost) {
-            $items = $this->getitems($idpost);
-            $db->table = $this->tablepost;
-            $db->setvalue($idpost, $propname, implode(', ', $items));
-        }
-    }
-
-    public function postDeleted(Event $event)
-    {
-        $this->deletePost($event->id);
-    }
-
-    public function itemDeleted(Event $event)
-    {
-        $this->deleteItem($event->id);
-    }
-
-}
-
 //MemvarMemcache.php
 namespace litepubl\core;
 
@@ -4545,325 +3669,6 @@ interface ResponsiveInterface
     public function request(Context $context);
 }
 
-//Router.php
-namespace litepubl\core;
-
-use litepubl\pages\Redirector;
-
-/**
- * One of main class which find url in database
- *
- * @property-write callable $beforeRequest
- * @property-write callable $afterRequest
- * @method         array beforeRequest(array $params) triggered before make request
- * @method         array afterRequest(array $params) triggered when request has been made
- */
-
-class Router extends Items
-{
-    public $prefilter;
-
-    protected function create()
-    {
-        $this->dbversion = true;
-        parent::create();
-        $this->table = 'urlmap';
-        $this->basename = 'urlmap';
-        $this->addEvents('beforerequest', 'afterrequest');
-        $this->data['disabledcron'] = false;
-        $this->data['redirdom'] = false;
-        $this->addmap('prefilter', array());
-    }
-
-    public function request(Context $context)
-    {
-        $app = $this->getApp();
-        if ($this->redirdom && $app->site->fixedurl) {
-            $parsedUrl = parse_url($app->site->url . '/');
-            if ($context->request->host != strtolower($parsedUrl['host'])) {
-                $context->response->redir($app->site->url . $context->request->url);
-                return;
-            }
-        }
-
-        $this->beforeRequest(['context' => $context]);
-        $context->itemRoute = $this->queryItem($context);
-    }
-
-    public function queryItem(Context $context)
-    {
-        $url = $context->request->url;
-        if ($result = $this->query($url)) {
-            return $result;
-        }
-
-        $srcurl = $url;
-        $response = $context->response;
-
-        if ($i = strpos($url, '?')) {
-            $url = substr($url, 0, $i);
-        }
-
-        if ('//' == substr($url, -2)) {
-            $response->redir(rtrim($url, '/') . '/');
-            return false;
-        }
-
-        //extract page number
-        if (preg_match('/(.*?)\/page\/(\d*?)\/?$/', $url, $m)) {
-            if ('/' != substr($url, -1)) {
-                $response->redir($url . '/');
-                return false;
-            }
-
-            $url = $m[1];
-            if (!$url) {
-                $url = '/';
-            }
-
-            $context->request->page = max(1, abs((int)$m[2]));
-        }
-
-        if (($srcurl != $url) && ($result = $this->query($url))) {
-            if (($context->request->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) {
-                $response->redir($result['url']);
-            }
-
-            return $result;
-        }
-
-        $url = $url != rtrim($url, '/') ? rtrim($url, '/') : $url . '/';
-        if (($srcurl != $url) && ($result = $this->query($url))) {
-            if (($context->request->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) {
-                $response->redir($result['url']);
-            }
-
-            return $result;
-        }
-
-        $context->request->uripath = explode('/', trim($url, '/'));
-        return false;
-    }
-
-    public function getIdurl($id)
-    {
-        if (!isset($this->items[$id])) {
-            $this->items[$id] = $this->db->getitem($id);
-        }
-        return $this->items[$id]['url'];
-    }
-
-    public function findUrl($url)
-    {
-        return $this->db->findItem('url = ' . Str::quote($url));
-    }
-
-    public function urlExists($url)
-    {
-        return $this->db->findid('url = ' . Str::quote($url));
-    }
-
-    private function query($url)
-    {
-        if ($item = $this->findfilter($url)) {
-            $this->items[$item['id']] = $item;
-            return $item;
-        } elseif ($item = $this->db->getassoc('url = ' . Str::quote($url) . ' limit 1')) {
-            $this->items[$item['id']] = $item;
-            return $item;
-        }
-
-        return false;
-    }
-
-    public function findFilter($url)
-    {
-        foreach ($this->prefilter as $item) {
-            switch ($item['type']) {
-            case 'begin':
-                if (Str::begin($url, $item['url'])) {
-                    return $item;
-                }
-                break;
-
-
-            case 'end':
-                if (Str::end($url, $item['url'])) {
-                    return $item;
-                }
-                break;
-
-
-            case 'regexp':
-                if (preg_match($item['url'], $url)) {
-                    return $item;
-                }
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    public function updateFilter()
-    {
-        $this->prefilter = $this->db->getitems('type in (\'begin\', \'end\', \'regexp\')');
-        $this->save();
-    }
-
-    public function addGet($url, $class)
-    {
-        return $this->add($url, $class, null, 'get');
-    }
-
-    public function add($url, $class, $arg, $type = 'normal')
-    {
-        if (empty($url)) {
-            $this->error('Empty url to add');
-        }
-
-        if (empty($class)) {
-            $this->error('Empty class name of adding url');
-        }
-
-        if (!in_array(
-            $type, array(
-            'normal',
-            'get',
-            'usernormal',
-            'userget',
-            'begin',
-            'end',
-            'regexp'
-            )
-        )) {
-            $this->error(sprintf('Invalid url type %s', $type));
-        }
-
-        if ($item = $this->db->findItem('url = ' . Str::quote($url))) {
-            $this->error(sprintf('Url "%s" already exists', $url));
-        }
-
-        $item = array(
-            'url' => $url,
-            'class' => $class,
-            'arg' => (string)$arg,
-            'type' => $type
-        );
-
-        $item['id'] = $this->db->add($item);
-        $this->items[$item['id']] = $item;
-
-        if (in_array(
-            $type, array(
-            'begin',
-            'end',
-            'regexp'
-            )
-        )) {
-            $this->prefilter[] = $item;
-            $this->save();
-        }
-
-        return $item['id'];
-    }
-
-    public function delete($url)
-    {
-        $url = Str::quote($url);
-        if ($id = $this->db->findid('url = ' . $url)) {
-            $this->db->idDelete($id);
-        } else {
-            return false;
-        }
-
-        foreach ($this->prefilter as $i => $item) {
-            if ($id == $item['id']) {
-                unset($this->prefilter[$i]);
-                $this->save();
-                break;
-            }
-        }
-
-        $this->clearcache();
-        $this->deleted(['id' => $id]);
-        return true;
-    }
-
-    public function deleteClass($class)
-    {
-        if ($items = $this->db->getItems('class = ' . Str::quote($class))) {
-            foreach ($items as $item) {
-                $this->db->idDelete($item['id']);
-                $this->deleted(['id' => $item['id']]);
-            }
-        }
-
-        $this->clearcache();
-    }
-
-    public function deleteItem($id)
-    {
-        if ($this->db->getitem($id)) {
-            $this->db->idDelete($id);
-            $this->deleted(['id' => $id]);
-        }
-
-        $this->clearcache();
-    }
-
-    //for Archives
-    public function getUrlsOfClass($class)
-    {
-        $res = $this->db->query("select url from $this->thistable where class = " . Str::quote($class));
-        return $this->db->res2id($res);
-    }
-    public function addRedir($from, $to)
-    {
-        if ($from == $to) {
-            return;
-        }
-
-        $Redir = Redirector::i();
-        $Redir->add($from, $to);
-    }
-
-    public static function unsub($obj)
-    {
-        static ::i()->unbind($obj);
-    }
-
-    public function unbind($obj)
-    {
-        $this->lock();
-        parent::unbind($obj);
-        $this->deleteClass(get_class($obj));
-        $this->updateFilter();
-        $this->unlock();
-    }
-
-    public function setUrlValue($url, $name, $value)
-    {
-        if ($id = $this->urlExists($url)) {
-            $this->setValue($id, $name, $value);
-        }
-    }
-
-    public function setIdUrl($id, $url)
-    {
-        $this->db->setValue($id, 'url', $url);
-        if (isset($this->items[$id])) {
-            $this->items[$id]['url'] = $url;
-        }
-    }
-
-    //backward compabilty
-    public function clearCache()
-    {
-        $this->getApp()->cache->clear();
-    }
-}
-
 //Singleton.php
 namespace litepubl\core;
 
@@ -5387,7 +4192,1197 @@ class Str
     }
 }
 
-//Users.php
+//lib/core/Classes.php
+namespace litepubl\core;
+
+use litepubl\Config;
+
+/**
+ * Class to manage autoload and keep singletons
+ *
+ * @property-write callable $onNewItem
+ * @property-write callable $onRename
+ * @method         array onNewItem(array $params) trigger when new item create
+ * @method         array onRename(array $params) trigger when class renamed
+ */
+
+class Classes extends Items
+{
+    use PoolStorageTrait;
+
+    public $namespaces;
+    public $kernel;
+    public $remap;
+    public $classmap;
+    public $aliases;
+    public $instances;
+    public $loaded;
+    private $composerLoaded;
+
+    public static function i()
+    {
+        $app = static ::getAppInstance();
+        if (!isset($app->classes)) {
+            $classname = get_called_class();
+            $app->classes = new $classname();
+            $app->classes->instances[$classname] = $app->classes;
+        }
+
+        return $app->classes;
+    }
+
+    protected function create()
+    {
+        parent::create();
+        $this->basename = 'classes';
+        $this->dbversion = false;
+        $this->addevents('onnewitem', 'onrename');
+        $this->addmap('namespaces', ['litepubl' => 'lib']);
+        $this->addmap('kernel', array());
+        $this->addmap('remap', array());
+        $this->instances = array();
+        $this->classmap = [];
+        $this->aliases = [];
+        $this->loaded = [];
+        $this->composerLoaded = false;
+
+        spl_autoload_register([$this, 'autoload'], true, true);
+    }
+
+    public function getInstance(string $class)
+    {
+        if (isset($this->instances[$class])) {
+            return $this->instances[$class];
+        }
+
+        if (isset($this->aliases[$class]) && ($alias = $this->aliases[$class]) && ($alias != $class)) {
+            return $this->getinstance($alias);
+        }
+
+        if (!class_exists($class)) {
+            $this->error(sprintf('Class "%s" not found', $class));
+        }
+
+        return $this->instances[$class] = $this->newinstance($class);
+    }
+
+    public function newinstance(string $class)
+    {
+        if (!empty($this->remap[$class])) {
+            $class = $this->remap[$class];
+        }
+
+        return new $class();
+    }
+
+    public function newItem(string $name, string $class, $id)
+    {
+        if (!empty($this->remap[$class])) {
+            $class = $this->remap[$class];
+        }
+
+        $info = $this->onnewitem(
+            [
+            'name' => $name,
+            'class' => $class,
+            'id' => $id,
+            ]
+        );
+
+        return new $info['class']();
+    }
+
+    public function add($class, $filename, $deprecatedPath = false)
+    {
+        if ($incfilename = $this->findPSR4($class)) {
+            $this->include($incfilename);
+        } else {
+            if (isset($this->items[$class]) && ($this->items[$class] == $filename)) {
+                return false;
+            }
+
+            $this->lock();
+            if (!class_exists($class, false) && !strpos($class, '\\')) {
+                $class = 'litepubl\\' . $class;
+                $filename = sprintf('plugins/%s%s', $deprecatedPath ? $deprecatedPath . '/' : '', $filename);
+            }
+
+            $this->items[$class] = $filename;
+        }
+
+        $this->installClass($class);
+        $this->unlock();
+        $this->added($class);
+        return true;
+    }
+
+    public function installClass(string $classname)
+    {
+        $instance = $this->getinstance($classname);
+        if (method_exists($instance, 'install')) {
+            $instance->install();
+        }
+
+        return $instance;
+    }
+
+    public function uninstallClass(string $classname)
+    {
+        if (class_exists($classname)) {
+            $instance = $this->getinstance($classname);
+            if (method_exists($instance, 'uninstall')) {
+                $instance->uninstall();
+            }
+        }
+    }
+
+    public function delete($class)
+    {
+        if (!isset($this->items[$class])) {
+            return false;
+        }
+
+        $this->lock();
+        $this->uninstallClass($class);
+        unset($this->items[$class]);
+        unset($this->kernel[$class]);
+        $this->unlock();
+        $this->deleted($class);
+    }
+
+    public function reinstall(string $class)
+    {
+        if (isset($this->items[$class])) {
+            $this->lock();
+            $filename = $this->items[$class];
+            $kernel = isset($this->kernel[$class]) ? $this->kernel[$class] : false;
+            $this->delete($class);
+            $this->add($class, $filename);
+            if ($kernel) {
+                $this->kernel[$class] = $kernel;
+            }
+            $this->unlock();
+        }
+    }
+
+    public function baseClass(string $classname)
+    {
+        if ($i = strrpos($classname, '\\')) {
+            return substr($classname, $i + 1);
+        }
+
+        return $classname;
+    }
+
+    public function addAlias(string $classname, string $alias)
+    {
+        if (!$alias) {
+            if ($i = strrpos($classname, '\\')) {
+                $alias = substr($classname, $i + 1);
+            } else {
+                $alias = 'litepubl\\' . $classname;
+            }
+        }
+
+        //may be exchange class names
+        if (class_exists($alias, false) && !class_exists($classname, false)) {
+            $tmp = $classname;
+            $classname = $alias;
+            $alias = $tmp;
+        }
+
+        if (!isset($this->aliases[$alias])) {
+            class_alias($classname, $alias, false);
+            $this->aliases[$alias] = $classname;
+        }
+    }
+
+    public function getClassmap(string $classname)
+    {
+        if (isset($this->aliases[$classname])) {
+            return $this->aliases[$classname];
+        }
+
+        if (!count($this->classmap)) {
+            $this->classmap = include $this->getApp()->paths->lib . 'update/classmap.php';
+        }
+        $classname = $this->baseclass($classname);
+        if (isset($this->classmap[$classname])) {
+            $result = $this->classmap[$classname];
+            if (!isset($this->aliases[$classname])) {
+                class_alias($result, $classname, false);
+                $this->aliases[$classname] = $result;
+            }
+
+            $classname = 'litepubl\\' . $classname;
+            if (!isset($this->aliases[$classname])) {
+                class_alias($result, $classname, false);
+                $this->aliases[$classname] = $result;
+            }
+
+            return $result;
+        }
+
+        return false;
+    }
+
+    public function autoload(string $classname)
+    {
+        if (isset($this->loaded[$classname])) {
+            return;
+        }
+
+        if (config::$useKernel && !config::$debug && ($filename = $this->findKernel($classname))) {
+            include_once $filename;
+            if (class_exists($classname, false) || interface_exists($classname, false) || trait_exists($classname, false)) {
+                $this->loaded[$classname] = $filename;
+                return;
+            }
+        }
+
+        $filename = $this->findFile($classname);
+        $this->loaded[$classname] = $filename;
+        if ($filename) {
+            include_once $filename;
+        } elseif (!$this->composerLoaded) {
+            $this->composerLoaded = true;
+            $this->loadComposer($classname);
+        }
+    }
+
+    public function findFile(string $classname)
+    {
+        /*
+        if ($newclass = $this->getClassmap($classname)) {
+        $classname = $newclass;
+        }
+        */
+
+        $result = $this->findPSR4($classname);
+        if (!$result) {
+            $result = $this->findClassmap($classname);
+        }
+
+        return $result;
+    }
+
+    public function findClassmap(string $classname)
+    {
+        if (isset($this->items[$classname])) {
+            $filename = $this->app->paths->home . $this->items[$classname];
+            if (file_exists($filename)) {
+                return $filename;
+            }
+        }
+    }
+
+    public function include(string $filename)
+    {
+        //if (is_dir($filename)) $this->error($filename);
+        include_once $filename;
+    }
+
+    public function include_file(string $filename)
+    {
+        if ($filename && file_exists($filename)) {
+            $this->include($filename);
+        }
+    }
+
+    public function findPSR4(string $classname)
+    {
+        if (false === ($i = strrpos($classname, '\\'))) {
+            return false;
+        }
+
+        $ns = substr($classname, 0, $i);
+        if ($ns[0] == '\\') {
+            $ns = substr($ns, 1);
+        }
+
+        $baseclass = substr($classname, $i + 1);
+        $paths = $this->app->paths;
+
+        if (isset($this->loaded[$ns])) {
+            $filename = $this->loaded[$ns] . $baseclass . '.php';
+            if (file_exists($filename)) {
+                return $filename;
+            }
+
+            return false;
+        }
+
+        if (isset($this->namespaces[$ns])) {
+            $dir = $paths->home . $this->namespaces[$ns] . '/';
+            $filename = $dir . $baseclass . '.php';
+            if (file_exists($filename)) {
+                $this->loaded[$ns] = $dir;
+                return $filename;
+            }
+        }
+
+        $names = explode('\\', $ns);
+        $vendor = array_shift($names);
+        while (count($names)) {
+            if (isset($this->namespaces[$vendor])) {
+                $dir = $paths->home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
+                $filename = $dir . $baseclass . '.php';
+                if (file_exists($filename)) {
+                    $this->loaded[$ns] = $dir;
+                    return $filename;
+                }
+            }
+
+            $vendor.= '\\' . array_shift($names);
+        }
+
+        //last chanse
+        $name = 'litepubl\plugins';
+        if (Str::begin($ns, $name)) {
+            $dir = $paths->plugins . $this->subSpace($ns, $name) . '/';
+            $filename = $dir . $baseclass . '.php';
+            if (file_exists($filename)) {
+                $this->loaded[$ns] = $dir;
+                return $filename;
+            }
+        }
+
+        return false;
+    }
+
+    public function findKernel(string $classname)
+    {
+        if (false === ($i = strrpos($classname, '\\'))) {
+            return false;
+        }
+
+        $ns = substr($classname, 0, $i);
+        if ($ns[0] == '\\') {
+            $ns = substr($ns, 1);
+        }
+
+        if (isset($this->loaded[$ns])) {
+            return false;
+        }
+
+        $home = $this->app->paths->home;
+        if (isset($this->kernel[$ns])) {
+            $filename = $home . $this->kernel[$ns];
+            if (file_exists($filename)) {
+                return $filename;
+            }
+        }
+
+        if (isset($this->namespaces[$ns])) {
+            $dir = $home . $this->namespaces[$ns] . '/';
+            $filename = $dir . 'kernel.php';
+            if (file_exists($filename)) {
+                $this->loaded[$ns] = $dir;
+                return $filename;
+            }
+        }
+
+        $names = explode('\\', $ns);
+        $vendor = array_shift($names);
+        while (count($names)) {
+            if (isset($this->namespaces[$vendor])) {
+                $dir = $home . $this->namespaces[$vendor] . '/' . implode('/', $names) . '/';
+                $filename = $dir . 'kernel.php';
+                if (file_exists($filename)) {
+                    $this->loaded[$ns] = $dir;
+                    return $filename;
+                }
+            }
+
+            $vendor.= '\\' . array_shift($names);
+        }
+
+        $dir = $home . $ns . '/';
+        $filename = $dir . 'kernel.php';
+        if (file_exists($filename)) {
+            $this->loaded[$ns] = $dir;
+            return $filename;
+        }
+
+        return false;
+    }
+
+    public function subSpace(string $namespace, string $root)
+    {
+        return str_replace('\\', DIRECTORY_SEPARATOR, strtolower(substr($namespace, strlen($root) + 1)));
+    }
+
+    public function exists(string $class): bool
+    {
+        return isset($this->instances[$class]) || isset($this->items[$class]);
+    }
+
+    public function rename(string $oldclass, string $newclass)
+    {
+        if (isset($this->items[$oldclass])) {
+            $this->items[$newclass] = $this->items[$oldclass];
+            unset($this->items[$oldclass]);
+            if (isset($this->kernel[$oldclass])) {
+                $this->kernel[$newclass] = $this->items[$oldclass];
+                unset($this->kernel[$oldclass]);
+            }
+
+            $this->getApp()->router->db->update('class =' . Str::quote($newclass), 'class = ' . Str::quote($oldclass));
+            $this->save();
+
+            $this->onrename(
+                [
+                'oldclass' => $oldclass,
+                'newclass' =>  $newclass,
+                ]
+            );
+        }
+    }
+
+    public function getResourcedir($c)
+    {
+        $reflector = new \ReflectionClass($c);
+        $filename = $reflector->getFileName();
+        return dirname($filename) . '/resource/';
+    }
+    public function loadComposer($classToAutoLoad)
+    {
+        include_once $this->getApp()->paths->home . 'vendor/autoload.php';
+        if ($classToAutoLoad && ($a = spl_autoload_functions())) {
+            $compclass = 'Composer\Autoload\ClassLoader';
+            foreach ($a as $item) {
+                if (is_array($item) && is_a($item[0], $compclass)) {
+                    return call_user_func_array($item, [$classToAutoLoad]);
+                }
+            }
+        }
+    }
+}
+
+//lib/core/Router.php
+namespace litepubl\core;
+
+use litepubl\pages\Redirector;
+
+/**
+ * One of main class which find url in database
+ *
+ * @property-write callable $beforeRequest
+ * @property-write callable $afterRequest
+ * @method         array beforeRequest(array $params) triggered before make request
+ * @method         array afterRequest(array $params) triggered when request has been made
+ */
+
+class Router extends Items
+{
+    public $prefilter;
+
+    protected function create()
+    {
+        $this->dbversion = true;
+        parent::create();
+        $this->table = 'urlmap';
+        $this->basename = 'urlmap';
+        $this->addEvents('beforerequest', 'afterrequest');
+        $this->data['disabledcron'] = false;
+        $this->data['redirdom'] = false;
+        $this->addmap('prefilter', array());
+    }
+
+    public function request(Context $context)
+    {
+        $app = $this->getApp();
+        if ($this->redirdom && $app->site->fixedurl) {
+            $parsedUrl = parse_url($app->site->url . '/');
+            if ($context->request->host != strtolower($parsedUrl['host'])) {
+                $context->response->redir($app->site->url . $context->request->url);
+                return;
+            }
+        }
+
+        $this->beforeRequest(['context' => $context]);
+        $context->itemRoute = $this->queryItem($context);
+    }
+
+    public function queryItem(Context $context)
+    {
+        $url = $context->request->url;
+        if ($result = $this->query($url)) {
+            return $result;
+        }
+
+        $srcurl = $url;
+        $response = $context->response;
+
+        if ($i = strpos($url, '?')) {
+            $url = substr($url, 0, $i);
+        }
+
+        if ('//' == substr($url, -2)) {
+            $response->redir(rtrim($url, '/') . '/');
+            return false;
+        }
+
+        //extract page number
+        if (preg_match('/(.*?)\/page\/(\d*?)\/?$/', $url, $m)) {
+            if ('/' != substr($url, -1)) {
+                $response->redir($url . '/');
+                return false;
+            }
+
+            $url = $m[1];
+            if (!$url) {
+                $url = '/';
+            }
+
+            $context->request->page = max(1, abs((int)$m[2]));
+        }
+
+        if (($srcurl != $url) && ($result = $this->query($url))) {
+            if (($context->request->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) {
+                $response->redir($result['url']);
+            }
+
+            return $result;
+        }
+
+        $url = $url != rtrim($url, '/') ? rtrim($url, '/') : $url . '/';
+        if (($srcurl != $url) && ($result = $this->query($url))) {
+            if (($context->request->page == 1) && ($result['type'] == 'normal') && ($srcurl != $result['url'])) {
+                $response->redir($result['url']);
+            }
+
+            return $result;
+        }
+
+        $context->request->uripath = explode('/', trim($url, '/'));
+        return false;
+    }
+
+    public function getIdurl($id)
+    {
+        if (!isset($this->items[$id])) {
+            $this->items[$id] = $this->db->getitem($id);
+        }
+        return $this->items[$id]['url'];
+    }
+
+    public function findUrl($url)
+    {
+        return $this->db->findItem('url = ' . Str::quote($url));
+    }
+
+    public function urlExists($url)
+    {
+        return $this->db->findid('url = ' . Str::quote($url));
+    }
+
+    private function query($url)
+    {
+        if ($item = $this->findfilter($url)) {
+            $this->items[$item['id']] = $item;
+            return $item;
+        } elseif ($item = $this->db->getassoc('url = ' . Str::quote($url) . ' limit 1')) {
+            $this->items[$item['id']] = $item;
+            return $item;
+        }
+
+        return false;
+    }
+
+    public function findFilter($url)
+    {
+        foreach ($this->prefilter as $item) {
+            switch ($item['type']) {
+            case 'begin':
+                if (Str::begin($url, $item['url'])) {
+                    return $item;
+                }
+                break;
+
+
+            case 'end':
+                if (Str::end($url, $item['url'])) {
+                    return $item;
+                }
+                break;
+
+
+            case 'regexp':
+                if (preg_match($item['url'], $url)) {
+                    return $item;
+                }
+                break;
+            }
+        }
+
+        return false;
+    }
+
+    public function updateFilter()
+    {
+        $this->prefilter = $this->db->getitems('type in (\'begin\', \'end\', \'regexp\')');
+        $this->save();
+    }
+
+    public function addGet($url, $class)
+    {
+        return $this->add($url, $class, null, 'get');
+    }
+
+    public function add($url, $class, $arg, $type = 'normal')
+    {
+        if (empty($url)) {
+            $this->error('Empty url to add');
+        }
+
+        if (empty($class)) {
+            $this->error('Empty class name of adding url');
+        }
+
+        if (!in_array(
+            $type, array(
+            'normal',
+            'get',
+            'usernormal',
+            'userget',
+            'begin',
+            'end',
+            'regexp'
+            )
+        )) {
+            $this->error(sprintf('Invalid url type %s', $type));
+        }
+
+        if ($item = $this->db->findItem('url = ' . Str::quote($url))) {
+            $this->error(sprintf('Url "%s" already exists', $url));
+        }
+
+        $item = array(
+            'url' => $url,
+            'class' => $class,
+            'arg' => (string)$arg,
+            'type' => $type
+        );
+
+        $item['id'] = $this->db->add($item);
+        $this->items[$item['id']] = $item;
+
+        if (in_array(
+            $type, array(
+            'begin',
+            'end',
+            'regexp'
+            )
+        )) {
+            $this->prefilter[] = $item;
+            $this->save();
+        }
+
+        return $item['id'];
+    }
+
+    public function delete($url)
+    {
+        $url = Str::quote($url);
+        if ($id = $this->db->findid('url = ' . $url)) {
+            $this->db->idDelete($id);
+        } else {
+            return false;
+        }
+
+        foreach ($this->prefilter as $i => $item) {
+            if ($id == $item['id']) {
+                unset($this->prefilter[$i]);
+                $this->save();
+                break;
+            }
+        }
+
+        $this->clearcache();
+        $this->deleted(['id' => $id]);
+        return true;
+    }
+
+    public function deleteClass($class)
+    {
+        if ($items = $this->db->getItems('class = ' . Str::quote($class))) {
+            foreach ($items as $item) {
+                $this->db->idDelete($item['id']);
+                $this->deleted(['id' => $item['id']]);
+            }
+        }
+
+        $this->clearcache();
+    }
+
+    public function deleteItem($id)
+    {
+        if ($this->db->getitem($id)) {
+            $this->db->idDelete($id);
+            $this->deleted(['id' => $id]);
+        }
+
+        $this->clearcache();
+    }
+
+    //for Archives
+    public function getUrlsOfClass($class)
+    {
+        $res = $this->db->query("select url from $this->thistable where class = " . Str::quote($class));
+        return $this->db->res2id($res);
+    }
+    public function addRedir($from, $to)
+    {
+        if ($from == $to) {
+            return;
+        }
+
+        $Redir = Redirector::i();
+        $Redir->add($from, $to);
+    }
+
+    public static function unsub($obj)
+    {
+        static ::i()->unbind($obj);
+    }
+
+    public function unbind($obj)
+    {
+        $this->lock();
+        parent::unbind($obj);
+        $this->deleteClass(get_class($obj));
+        $this->updateFilter();
+        $this->unlock();
+    }
+
+    public function setUrlValue($url, $name, $value)
+    {
+        if ($id = $this->urlExists($url)) {
+            $this->setValue($id, $name, $value);
+        }
+    }
+
+    public function setIdUrl($id, $url)
+    {
+        $this->db->setValue($id, 'url', $url);
+        if (isset($this->items[$id])) {
+            $this->items[$id]['url'] = $url;
+        }
+    }
+
+    //backward compabilty
+    public function clearCache()
+    {
+        $this->getApp()->cache->clear();
+    }
+}
+
+//lib/core/Cron.php
+namespace litepubl\core;
+
+use litepubl\Config;
+use litepubl\utils\Mailer;
+
+/**
+ * Class to run regular tasks
+ *
+ * @property-write callable $added
+ * @property-write callable $deleted
+ * @method array added(array $params) trigger when new task added
+ * @method array deleted(array $params) trigger when task has been deleted
+ */
+
+class Cron extends Events implements ResponsiveInterface
+{
+    public static $pinged = false;
+    public $disableadd;
+    private $socket;
+
+    protected function create()
+    {
+        parent::create();
+        $this->basename = 'cron';
+        $this->addEvents('added', 'deleted');
+        $this->data['password'] = '';
+        $this->data['path'] = '';
+        $this->data['disableping'] = false;
+        $this->disableadd = false;
+        $this->table = 'cron';
+    }
+
+    protected function getUrl(): string
+    {
+        return sprintf('/croncron.htm%scronpass=%s', $this->getApp()->site->q, urlencode($this->password));
+    }
+
+    public function getLockpath(): string
+    {
+        if (($result = $this->path) && is_dir($result)) {
+                return $result;
+            }
+
+        return $this->getApp()->paths->data;
+    }
+
+    public function request(Context $context)
+    {
+            $context->response->cache = false;
+        if (!isset($_GET['cronpass']) || ($this->password != $_GET['cronpass'])) {
+            $context->response->status = 403;
+            return;
+        }
+
+        if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
+            try {
+                set_time_limit(300);
+                if (Config::$debug) {
+                    ignore_user_abort(true);
+                } else {
+                    $this->getApp()->router->close_connection();
+                }
+
+                if (ob_get_level()) {
+                    ob_end_flush();
+                }
+                flush();
+
+                $this->sendexceptions();
+                $this->log("started loop");
+                $this->execute();
+            } catch (\Exception $e) {
+                $this->getApp()->logException($e);
+            }
+            flock($fh, LOCK_UN);
+            fclose($fh);
+            @chmod($this->lockpath . 'cron.lok', 0666);
+            $this->log("finished loop");
+            return 'Ok';
+        }
+        return 'locked';
+    }
+
+    public function run()
+    {
+        if (ob_get_level()) {
+            ob_end_flush();
+        }
+        flush();
+
+        if (($fh = @fopen($this->lockpath . 'cron.lok', 'w')) && flock($fh, LOCK_EX | LOCK_NB)) {
+            set_time_limit(300);
+
+            try {
+                $this->execute();
+            } catch (\Exception $e) {
+                $this->getApp()->logException($e);
+            }
+
+            flock($fh, LOCK_UN);
+            fclose($fh);
+            @chmod($this->lockpath . 'cron.lok', 0666);
+            return true;
+        }
+
+        return false;
+    }
+
+    public function execute()
+    {
+        while ($item = $this->db->getassoc(sprintf("date <= '%s' order by date asc limit 1", Str::sqlDate()))) {
+            extract($item);
+            $this->log("task started:\n{$class}->{$func}($arg)");
+            $arg = unserialize($arg);
+            if ($class == '') {
+                if (function_exists($func)) {
+                    try {
+                        $func($arg);
+                    } catch (\Exception $e) {
+                        $this->getApp()->logException($e);
+                    }
+                } else {
+                    $this->db->iddelete($id); {
+                        continue;
+                    }
+                }
+            } elseif (class_exists($class)) {
+                try {
+                    $obj = static ::iGet($class);
+                    $obj->$func($arg);
+                } catch (\Exception $e) {
+                    $this->getApp()->logException($e);
+                }
+            } else {
+                $this->db->iddelete($id); {
+                    continue;
+                }
+            }
+            if ($type == 'single') {
+                $this->db->iddelete($id);
+            } else {
+                $this->db->setvalue($id, 'date', Str::sqlDate(strtotime("+1 $type")));
+            }
+        }
+    }
+
+    public function add(string $type, string $class, string $func, $arg = null): int
+    {
+        if (!preg_match('/^single|hour|day|week$/', $type)) {
+            $this->error("Unknown cron type $type");
+        }
+
+        if ($this->disableadd) {
+            return 0;
+        }
+
+        $id = $this->doAdd($type, $class, $func, $arg);
+
+        if (($type == 'single') && !$this->disableping && !static ::$pinged) {
+            if (Config::$debug) {
+                $this->getApp()->getLogger()->info("cron added $id");
+            }
+
+            $memvars = Memvars::i();
+            if (!$memvars->singlecron) {
+                $memvars->singlecron = time() + 300;
+            }
+        }
+
+        return $id;
+    }
+
+    protected function doAdd(string $type, string $class, string $func, $arg): int
+    {
+        $id = $this->db->add(array(
+            'date' => Str::sqlDate() ,
+            'type' => $type,
+            'class' => $class,
+            'func' => $func,
+            'arg' => serialize($arg)
+        ));
+
+        $this->added(['id' => $id]);
+        return $id;
+    }
+
+    public function addNightly(string $class, string $func, $arg): int
+    {
+        $id = $this->db->add(array(
+            'date' => date('Y-m-d 03:15:00', time()) ,
+            'type' => 'day',
+            'class' => $class,
+            'func' => $func,
+            'arg' => serialize($arg)
+        ));
+        $this->added(['id' => $id]);
+        return $id;
+    }
+
+    public function addWeekly(string $class,string $func, $arg): int
+    {
+        $id = $this->db->add(array(
+            'date' => date('Y-m-d 03:15:00', time()) ,
+            'type' => 'week',
+            'class' => $class,
+            'func' => $func,
+            'arg' => serialize($arg)
+        ));
+
+        $this->added(['id' => $id]);
+        return $id;
+    }
+
+    public function delete($id)
+    {
+        $this->db->iddelete($id);
+        $this->deleted(['id' => $id]);
+    }
+
+    public function deleteClass($c)
+    {
+        $class = static ::getClassName($c);
+        $this->db->delete("class = '$class'");
+    }
+
+    public static function pingOnShutdown()
+    {
+        if (static ::$pinged) {
+            return;
+        }
+
+        static ::$pinged = true;
+
+        register_shutdown_function(array(
+        static ::i() ,
+            'ping'
+        ));
+    }
+
+    public function ping()
+    {
+        $p = parse_url($this->getApp()->site->url . $this->url);
+        $this->pinghost($p['host'], $p['path'] . (empty($p['query']) ? '' : '?' . $p['query']));
+    }
+
+    private function pingHost(string $host, string $path)
+    {
+        if ($this->socket = @fsockopen($host, 80, $errno, $errstr, 0.10)) {
+            fputs($this->socket, "GET $path HTTP/1.0\r\nHost: $host\r\n\r\n");
+            //0.01 sec
+            usleep(10000);
+        }
+    }
+
+    public function sendExceptions()
+    {
+        $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'exceptionsmail.log';
+        if (!file_exists($filename)) {
+            return;
+        }
+
+        $time = @filectime($filename);
+        if (($time === false) || ($time + 3600 > time())) {
+            return;
+        }
+
+        $s = file_get_contents($filename);
+        $this->getApp()->storage->delete($filename);
+        Mailer::SendAttachmentToAdmin('[error] ' . $this->getApp()->site->name, 'See attachment', 'errors.txt', $s);
+        sleep(2);
+    }
+
+    public function log($s)
+    {
+        echo date('r') . "\n$s\n\n";
+        flush();
+        if (Config::$debug) {
+                $this->getApp()->getLogger()->info($s);
+        }
+    }
+}
+
+//lib/core/ItemsPosts.php
+namespace litepubl\core;
+
+class ItemsPosts extends Items
+{
+    public $tablepost;
+    public $postprop;
+    public $itemprop;
+
+    protected function create()
+    {
+        parent::create();
+        $this->basename = 'itemsposts';
+        $this->table = 'itemsposts';
+        $this->tablepost = 'posts';
+        $this->postprop = 'post';
+        $this->itemprop = 'item';
+    }
+
+    public function add(int $idpost, int $iditem)
+    {
+        $item = [
+            $this->postprop => $idpost,
+            $this->itemprop => $iditem
+        ];
+
+        $this->db->insert($item);
+        $this->added($item);
+    }
+
+    public function exists(int $idpost, int $iditem): bool
+    {
+        return $this->db->exists("$this->postprop = $idpost and $this->itemprop = $iditem");
+    }
+
+    public function remove(int $idpost, int $iditem)
+    {
+        return $this->db->delete("$this->postprop = $idpost and $this->itemprop = $iditem");
+    }
+
+    public function delete($idpost)
+    {
+        return $this->deletePost($idpost);
+    }
+
+    public function deletePost(int $idpost)
+    {
+        $db = $this->db;
+        $result = $db->res2id($db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
+        $db->delete("$this->postprop = $idpost");
+        return $result;
+    }
+
+    public function deleteItem(int $iditem)
+    {
+        $this->db->delete("$this->itemprop = $iditem");
+        $this->deleted([$this->itemprop => $id]);
+    }
+
+    public function setItems(int $idpost, array $items)
+    {
+        Arr::clean($items);
+        $db = $this->db;
+        $old = $this->getitems($idpost);
+        $add = array_diff($items, $old);
+        $delete = array_diff($old, $items);
+
+        if (count($delete)) {
+            $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(', ', $delete) . ')');
+        }
+        if (count($add)) {
+            $vals = array();
+            foreach ($add as $iditem) {
+                $vals[] = "($idpost, $iditem)";
+            }
+            $db->exec("INSERT INTO $this->thistable ($this->postprop, $this->itemprop) values " . implode(',', $vals));
+        }
+
+        return array_merge($old, $add);
+    }
+
+    public function getItems($idpost): array
+    {
+        $db = $this->getApp()->db;
+        return $db->res2id($db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
+    }
+
+    public function getPosts(int $iditem): array
+    {
+        $db = $this->getApp()->db;
+        return $db->res2id($db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
+    }
+
+    public function getPostscount(int $ititem): int
+    {
+        $db = $this->getdb($this->tablepost);
+        return $db->getcount("$db->prefix$this->tablepost.status = 'published' and id in (select $this->postprop from $this->thistable where $this->itemprop = $ititem)");
+    }
+
+    public function updatePosts(array $list, $propname)
+    {
+        $db = $this->db;
+        foreach ($list as $idpost) {
+            $items = $this->getitems($idpost);
+            $db->table = $this->tablepost;
+            $db->setvalue($idpost, $propname, implode(', ', $items));
+        }
+    }
+
+    public function postDeleted(Event $event)
+    {
+        $this->deletePost($event->id);
+    }
+
+    public function itemDeleted(Event $event)
+    {
+        $this->deleteItem($event->id);
+    }
+
+}
+
+//lib/core/Users.php
 namespace litepubl\core;
 
 /**
@@ -6669,6 +6664,255 @@ interface LoggerInterface
      * @return null
      */
     public function log($level, $message, array $context = array());
+}
+
+//vendor/psr/log/Psr/Log/LogLevel.php
+namespace Psr\Log;
+
+/**
+ * Describes log levels
+ */
+class LogLevel
+{
+    const EMERGENCY = 'emergency';
+    const ALERT = 'alert';
+    const CRITICAL = 'critical';
+    const ERROR = 'error';
+    const WARNING = 'warning';
+    const NOTICE = 'notice';
+    const INFO = 'info';
+    const DEBUG = 'debug';
+}
+
+//vendor/psr/log/Psr/Log/InvalidArgumentException.php
+namespace Psr\Log;
+
+class InvalidArgumentException extends \InvalidArgumentException
+{
+}
+
+//vendor/monolog/monolog/src/Monolog/ErrorHandler.php
+/*
+ * This file is part of the Monolog package.
+ *
+ * (c) Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Monolog;
+
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Monolog\Handler\AbstractHandler;
+
+/**
+ * Monolog error handler
+ *
+ * A facility to enable logging of runtime errors, exceptions and fatal errors.
+ *
+ * Quick setup: <code>ErrorHandler::register($logger);</code>
+ *
+ * @author Jordi Boggiano <j.boggiano@seld.be>
+ */
+class ErrorHandler
+{
+    private $logger;
+
+    private $previousExceptionHandler;
+    private $uncaughtExceptionLevel;
+
+    private $previousErrorHandler;
+    private $errorLevelMap;
+
+    private $hasFatalErrorHandler;
+    private $fatalLevel;
+    private $reservedMemory;
+    private static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * Registers a new ErrorHandler for a given Logger
+     *
+     * By default it will handle errors, exceptions and fatal errors
+     *
+     * @param  LoggerInterface $logger
+     * @param  array|false     $errorLevelMap  an array of E_* constant to LogLevel::* constant mapping, or false to disable error handling
+     * @param  int|false       $exceptionLevel a LogLevel::* constant, or false to disable exception handling
+     * @param  int|false       $fatalLevel     a LogLevel::* constant, or false to disable fatal error handling
+     * @return ErrorHandler
+     */
+    public static function register(LoggerInterface $logger, $errorLevelMap = array(), $exceptionLevel = null, $fatalLevel = null)
+    {
+        $handler = new static($logger);
+        if ($errorLevelMap !== false) {
+            $handler->registerErrorHandler($errorLevelMap);
+        }
+        if ($exceptionLevel !== false) {
+            $handler->registerExceptionHandler($exceptionLevel);
+        }
+        if ($fatalLevel !== false) {
+            $handler->registerFatalHandler($fatalLevel);
+        }
+
+        return $handler;
+    }
+
+    public function registerExceptionHandler($level = null, $callPrevious = true)
+    {
+        $prev = set_exception_handler(array($this, 'handleException'));
+        $this->uncaughtExceptionLevel = $level;
+        if ($callPrevious && $prev) {
+            $this->previousExceptionHandler = $prev;
+        }
+    }
+
+    public function registerErrorHandler(array $levelMap = array(), $callPrevious = true, $errorTypes = -1)
+    {
+        $prev = set_error_handler(array($this, 'handleError'), $errorTypes);
+        $this->errorLevelMap = array_replace($this->defaultErrorLevelMap(), $levelMap);
+        if ($callPrevious) {
+            $this->previousErrorHandler = $prev ?: true;
+        }
+    }
+
+    public function registerFatalHandler($level = null, $reservedMemorySize = 20)
+    {
+        register_shutdown_function(array($this, 'handleFatalError'));
+
+        $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
+        $this->fatalLevel = $level;
+        $this->hasFatalErrorHandler = true;
+    }
+
+    protected function defaultErrorLevelMap()
+    {
+        return array(
+            E_ERROR             => LogLevel::CRITICAL,
+            E_WARNING           => LogLevel::WARNING,
+            E_PARSE             => LogLevel::ALERT,
+            E_NOTICE            => LogLevel::NOTICE,
+            E_CORE_ERROR        => LogLevel::CRITICAL,
+            E_CORE_WARNING      => LogLevel::WARNING,
+            E_COMPILE_ERROR     => LogLevel::ALERT,
+            E_COMPILE_WARNING   => LogLevel::WARNING,
+            E_USER_ERROR        => LogLevel::ERROR,
+            E_USER_WARNING      => LogLevel::WARNING,
+            E_USER_NOTICE       => LogLevel::NOTICE,
+            E_STRICT            => LogLevel::NOTICE,
+            E_RECOVERABLE_ERROR => LogLevel::ERROR,
+            E_DEPRECATED        => LogLevel::NOTICE,
+            E_USER_DEPRECATED   => LogLevel::NOTICE,
+        );
+    }
+
+    /**
+     * @private
+     */
+    public function handleException($e)
+    {
+        $this->logger->log(
+            $this->uncaughtExceptionLevel === null ? LogLevel::ERROR : $this->uncaughtExceptionLevel,
+            sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()),
+            array('exception' => $e)
+        );
+
+        if ($this->previousExceptionHandler) {
+            call_user_func($this->previousExceptionHandler, $e);
+        }
+
+        exit(255);
+    }
+
+    /**
+     * @private
+     */
+    public function handleError($code, $message, $file = '', $line = 0, $context = array())
+    {
+        if (!(error_reporting() & $code)) {
+            return;
+        }
+
+        // fatal error codes are ignored if a fatal error handler is present as well to avoid duplicate log entries
+        if (!$this->hasFatalErrorHandler || !in_array($code, self::$fatalErrors, true)) {
+            $level = isset($this->errorLevelMap[$code]) ? $this->errorLevelMap[$code] : LogLevel::CRITICAL;
+            $this->logger->log($level, self::codeToString($code).': '.$message, array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'context' => $context));
+        }
+
+        if ($this->previousErrorHandler === true) {
+            return false;
+        } elseif ($this->previousErrorHandler) {
+            return call_user_func($this->previousErrorHandler, $code, $message, $file, $line, $context);
+        }
+    }
+
+    /**
+     * @private
+     */
+    public function handleFatalError()
+    {
+        $this->reservedMemory = null;
+
+        $lastError = error_get_last();
+        if ($lastError && in_array($lastError['type'], self::$fatalErrors, true)) {
+            $this->logger->log(
+                $this->fatalLevel === null ? LogLevel::ALERT : $this->fatalLevel,
+                'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
+                array('code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'])
+            );
+
+            if ($this->logger instanceof Logger) {
+                foreach ($this->logger->getHandlers() as $handler) {
+                    if ($handler instanceof AbstractHandler) {
+                        $handler->close();
+                    }
+                }
+            }
+        }
+    }
+
+    private static function codeToString($code)
+    {
+        switch ($code) {
+            case E_ERROR:
+                return 'E_ERROR';
+            case E_WARNING:
+                return 'E_WARNING';
+            case E_PARSE:
+                return 'E_PARSE';
+            case E_NOTICE:
+                return 'E_NOTICE';
+            case E_CORE_ERROR:
+                return 'E_CORE_ERROR';
+            case E_CORE_WARNING:
+                return 'E_CORE_WARNING';
+            case E_COMPILE_ERROR:
+                return 'E_COMPILE_ERROR';
+            case E_COMPILE_WARNING:
+                return 'E_COMPILE_WARNING';
+            case E_USER_ERROR:
+                return 'E_USER_ERROR';
+            case E_USER_WARNING:
+                return 'E_USER_WARNING';
+            case E_USER_NOTICE:
+                return 'E_USER_NOTICE';
+            case E_STRICT:
+                return 'E_STRICT';
+            case E_RECOVERABLE_ERROR:
+                return 'E_RECOVERABLE_ERROR';
+            case E_DEPRECATED:
+                return 'E_DEPRECATED';
+            case E_USER_DEPRECATED:
+                return 'E_USER_DEPRECATED';
+        }
+
+        return 'Unknown PHP error';
+    }
 }
 
 //vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php

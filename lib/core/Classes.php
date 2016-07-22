@@ -61,12 +61,7 @@ class Classes extends Items
         $this->loaded = [];
         $this->composerLoaded = false;
 
-        spl_autoload_register(
-            array(
-            $this,
-            'autoload'
-            ), true, true
-        );
+        spl_autoload_register([$this, 'autoload'], true, true);
     }
 
     public function getInstance(string $class)
