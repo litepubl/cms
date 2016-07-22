@@ -45,12 +45,13 @@ $i->waitForText($text, 6);
 $ulogin->screenshot('comment');
 $i->wantTo('test ulogin without dialog box');
 $ulogin->logout();
-$i->openPage('/admin/login/');
+//$i->openPage('/admin/login/');
 $ulogin->screenshot('login');
 $ulogin->click();
-//dont need to wait auth because mailru remember prev auth
-//$ulogin->auth();
-$i->waitForJS('return !litepubl || !litepubl.authdialog || litepubl.authdialog.ulogin.status == \'wait\';', 6);
+sleep(10);
+codecept_debug($i->grabFromCurrentUrl());
+//$i->waitForJS('return !litepubl || !litepubl.authdialog || litepubl.authdialog.ulogin.status == \'wait\';', 6);
+
 $ulogin->logout();
 
 $plugin->uninstall('ulogin');

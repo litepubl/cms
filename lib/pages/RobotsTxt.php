@@ -34,7 +34,7 @@ class RobotsTxt extends \litepubl\core\Items implements \litepubl\core\Responsiv
             $this->items[] = $value;
             $this->save();
             $this->getApp()->cache->clearUrl('/robots.txt');
-            $this->added($value);
+            $this->added(['line' => $value]);
         }
     }
 

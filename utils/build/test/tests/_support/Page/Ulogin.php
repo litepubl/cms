@@ -55,7 +55,7 @@ class Ulogin extends Base
         $i->executeJs("\$('[data-uloginbutton=$name]').click();");
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
         $i->wantTo('Wait to open window');
-        $i->waitForJS('return litepubl.authdialog.ulogin.status == \'open\';', 5);
+        $i->waitForJS('return (litepubl.authdialog.ulogin.status == \'open\' || litepubl.authdialog.ulogin.status == \'receive\');', 5);
     }
 
     public function waitForcloseDialog()

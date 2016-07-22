@@ -37,7 +37,7 @@ class Redirector extends \litepubl\core\Items
     {
         $this->items[$from] = $to;
         $this->save();
-        $this->added($from);
+        $this->added(['from' => $from, 'to' => $to]);
     }
 
     public function get($url)

@@ -194,7 +194,7 @@ class Common extends \litepubl\core\Items
         $idurl = $this->getApp()->router->add($url, get_class($this), $id, $this->urltype);
         $this->setValue($id, 'idurl', $idurl);
         $this->items[$id]['url'] = $url;
-        $this->added($id);
+        $this->added(['id' => $id]);
         $this->changed([]);
         $this->getApp()->cache->clear();
         return $id;
