@@ -14,9 +14,7 @@ use litepubl\core\Str;
 use litepubl\view\MainView;
 
 /**
-* 
  * Holds rederects
- *
  *
  * @property-write callable $onGet
  * @method         array onGet(array $params)

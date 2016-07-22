@@ -15,9 +15,7 @@ use litepubl\core\Str;
 use litepubl\core\Plugins;
 
 /**
-* 
  * Common class for join files
- *
  *
  * @property-write callable $onSave
  * @method         array onsave(array $params)

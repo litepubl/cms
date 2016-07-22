@@ -225,7 +225,6 @@ class App
     }
 
     /**
-* 
      * To compability with Callbacks trait
      */
 
@@ -679,9 +678,7 @@ namespace litepubl\core;
 use litepubl\Config;
 
 /**
-* 
  * Class to manage autoload and keep singletons
- *
  *
  * @property-write callable $onNewItem
  * @property-write callable $onRename
@@ -2996,9 +2993,7 @@ trait ItemOwnerTrait
 namespace litepubl\core;
 
 /**
-* 
  * Container class to keep items
- *
  *
  * @property-write callable $added
  * @property-write callable $deleted
@@ -4556,9 +4551,7 @@ namespace litepubl\core;
 use litepubl\pages\Redirector;
 
 /**
-* 
  * One of main class which find url in database
- *
  *
  * @property-write callable $beforeRequest
  * @property-write callable $afterRequest
@@ -5398,9 +5391,7 @@ class Str
 namespace litepubl\core;
 
 /**
-* 
  * Class to manage users
- *
  *
  * @property-write callable $beforeDelete
  * @method         array beforeDelete(array $params) triggered when user need to delete

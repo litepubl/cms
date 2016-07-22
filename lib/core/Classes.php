@@ -13,9 +13,7 @@ namespace litepubl\core;
 use litepubl\Config;
 
 /**
-* 
  * Class to manage autoload and keep singletons
- *
  *
  * @property-write callable $onNewItem
  * @property-write callable $onRename

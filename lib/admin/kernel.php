@@ -12,9 +12,7 @@ interface AdminInterface
 namespace litepubl\admin;
 
 /**
-* 
  *  Events for author rights on post, files
- *
  *
  * @property-write callable $onCan
  * @property-write callable $add
@@ -751,9 +749,7 @@ use litepubl\pages\Menu as StdMenu;
 use litepubl\view\Lang;
 
 /**
-* 
  * Admin menu items
- *
  *
  * @property       string $heads
  * @property-write callable $onExclude

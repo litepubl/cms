@@ -19,9 +19,7 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
-* 
  * View of categories and tags
- *
  *
  * @property-write callable $onContent
  * @property-write callable $onBeforeContent

@@ -14,9 +14,7 @@ use litepubl\core\Context;
 use litepubl\view\Lang;
 
 /**
-* 
  * Generate sitemap.xml and html
- *
  *
  * @property       int $date
  * @property       int $countfiles

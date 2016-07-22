@@ -15,9 +15,7 @@ use litepubl\pages\Menu as StdMenu;
 use litepubl\view\Lang;
 
 /**
-* 
  * Admin menu items
- *
  *
  * @property       string $heads
  * @property-write callable $onExclude

@@ -16,9 +16,7 @@ use litepubl\core\Str;
 use litepubl\core\Plugins;
 
 /**
-* 
  * Common class for theme parsing
- *
  *
  * @property-write callable $onGetPaths
  * @property-write callable $beforeParse

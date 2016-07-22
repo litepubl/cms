@@ -14,9 +14,7 @@ use litepubl\core\Context;
 use litepubl\core\Event;
 
 /**
-* 
  * RSS files
- *
  *
  * @property       string $feedburner
  * @property-write callable $onRoot

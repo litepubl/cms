@@ -15,9 +15,7 @@ use litepubl\view\Lang;
 use litepubl\view\Schema;
 
 /**
-* 
  * Post announces
- *
  *
  * @property-write callable $before
  * @property-write callable $after

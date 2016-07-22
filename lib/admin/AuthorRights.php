@@ -11,9 +11,7 @@
 namespace litepubl\admin;
 
 /**
-* 
  *  Events for author rights on post, files
- *
  *
  * @property-write callable $onCan
  * @property-write callable $add

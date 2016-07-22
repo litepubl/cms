@@ -21,9 +21,7 @@ use litepubl\view\Args;
 use litepubl\view\Lang;
 
 /**
-* 
  * Login page
- *
  *
  * @property-write callable $onContent
  * @method         array onContent(array $params)

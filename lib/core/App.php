@@ -233,7 +233,6 @@ class App
     }
 
     /**
-* 
      * To compability with Callbacks trait
      */
 

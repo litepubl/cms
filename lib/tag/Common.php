@@ -18,9 +18,7 @@ use litepubl\view\Filter;
 use litepubl\view\Schemes;
 
 /**
-* 
  * Parent class of categories and tags
- *
  *
  * @property       bool $includechilds
  * @property       bool $includeparents

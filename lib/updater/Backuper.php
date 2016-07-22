@@ -16,9 +16,7 @@ use litepubl\utils\Filer;
 use litepubl\view\Lang;
 
 /**
-* 
  * Integrated class for archives and filers
- *
  *
  * @property       string $ftproot
  * @property       string $filertype

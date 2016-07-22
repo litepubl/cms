@@ -20,9 +20,7 @@ use litepubl\view\Lang;
 use litepubl\view\Vars;
 
 /**
-* 
  * Comment items
- *
  *
  * @property-write callable $edited
  * @property-write callable $onStatus

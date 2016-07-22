@@ -196,9 +196,7 @@ use litepubl\view\Lang;
 use litepubl\view\Vars;
 
 /**
-* 
  * Comment items
- *
  *
  * @property-write callable $edited
  * @property-write callable $onStatus
@@ -514,9 +512,7 @@ use litepubl\view\Lang;
 use litepubl\view\Vars;
 
 /**
-* 
  * Manage comment form data
- *
  *
  * @property-write callable $onComuser
  * @method         array onComuser(array $params)
@@ -1081,9 +1077,7 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
-* 
  * Comment manager included several options and rules
- *
  *
  * @property       bool $
  * @property       bool $filterstatus

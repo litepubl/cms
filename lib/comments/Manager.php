@@ -23,9 +23,7 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
-* 
  * Comment manager included several options and rules
- *
  *
  * @property       bool $
  * @property       bool $filterstatus

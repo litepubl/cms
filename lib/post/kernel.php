@@ -7,9 +7,7 @@ use litepubl\view\Lang;
 use litepubl\view\Schema;
 
 /**
-* 
  * Post announces
- *
  *
  * @property-write callable $before
  * @property-write callable $after
@@ -214,9 +212,7 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
-* 
  * Manage uploaded files
- *
  *
  * @property-write callable $changed
  * @property-write callable $edited
@@ -1517,9 +1513,7 @@ use litepubl\utils\LinkGenerator;
 use litepubl\view\Schemes;
 
 /**
-* 
  * Main class to manage posts
- *
  *
  * @property       int $archivescount
  * @property       int $revision
@@ -1906,9 +1900,7 @@ use litepubl\view\Lang;
 use litepubl\view\Schema;
 
 /**
-* 
  * Post view
- *
  *
  * @property-write callable $beforeContent
  * @property-write callable $afterContent

@@ -16,9 +16,7 @@ use litepubl\view\Args;
 use litepubl\view\Lang;
 
 /**
-* 
  * Links widget
- *
  *
  * @property-write callable $added
  * @property-write callable $deleted

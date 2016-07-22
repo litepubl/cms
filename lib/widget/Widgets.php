@@ -17,9 +17,7 @@ use litepubl\view\Schema;
 use litepubl\view\ViewInterface;
 
 /**
-* 
  * Central class to manage widgets
- *
  *
  * @property-write callable $onWidget
  * @property-write callable $onAdminLogged

@@ -14,9 +14,7 @@ use litepubl\core\Str;
 use litepubl\utils\LinkGenerator;
 
 /**
-* 
  * Manage uploaded images
- *
  *
  * @property       string $previewmode
  * @property       int $previewwidth

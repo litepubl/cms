@@ -13,18 +13,14 @@ namespace litepubl\xmlrpc;
 use litepubl\core\Context;
 
 /**
-* 
  * XML-RPC server
- *
  *
  * @property-write callable $onGet
  * @method         array onGet(array $params)
  */
 
 /**
-* 
  * JSON-RPC server
- *
  *
  * @property-write callable $getMethods
  * @property-write callable $beforeCall

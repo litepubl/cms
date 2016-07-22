@@ -18,9 +18,7 @@ use litepubl\core\Response;
 use litepubl\core\Str;
 
 /**
-* 
  * JSON-RPC server
- *
  *
  * @property-write callable $beforeRequest
  * @property-write callable $beforeCall

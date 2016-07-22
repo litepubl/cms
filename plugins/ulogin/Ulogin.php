@@ -20,9 +20,7 @@ use litepubl\utils\Http;
 use litepubl\view\Filter;
 
 /**
-* 
  * ULogin plugin
- *
  *
  * @property       string $url
  * @property       array $nets

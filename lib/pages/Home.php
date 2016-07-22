@@ -22,9 +22,7 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
-* 
  * Home page
- *
  *
  * @property       string $image
  * @property       string $smallimage

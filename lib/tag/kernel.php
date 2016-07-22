@@ -51,9 +51,7 @@ use litepubl\view\Filter;
 use litepubl\view\Schemes;
 
 /**
-* 
  * Parent class of categories and tags
- *
  *
  * @property       bool $includechilds
  * @property       bool $includeparents
@@ -227,7 +225,7 @@ class Common extends \litepubl\core\Items
         $idurl = $this->getApp()->router->add($url, get_class($this), $id, $this->urltype);
         $this->setValue($id, 'idurl', $idurl);
         $this->items[$id]['url'] = $url;
-        $this->added($id);
+        $this->added(['id' => $id]);
         $this->changed([]);
         $this->getApp()->cache->clear();
         return $id;
@@ -644,9 +642,7 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
-* 
  * View of categories and tags
- *
  *
  * @property-write callable $onContent
  * @property-write callable $onBeforeContent

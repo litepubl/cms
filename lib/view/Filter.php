@@ -14,9 +14,7 @@ use litepubl\core\Str;
 use litepubl\post\Post;
 
 /**
-* 
  * Main class to filter, format text, html content
- *
  *
  * @property       bool $automore
  * @property       int $automorelength

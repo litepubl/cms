@@ -17,9 +17,7 @@ use litepubl\perms\Perm;
 use litepubl\widget\Widgets;
 
 /**
-* 
  * Base class for page render
- *
  *
  * @property       string $heads
  * @property       string $footer

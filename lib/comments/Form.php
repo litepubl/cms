@@ -24,9 +24,7 @@ use litepubl\view\Lang;
 use litepubl\view\Vars;
 
 /**
-* 
  * Manage comment form data
- *
  *
  * @property-write callable $onComuser
  * @method         array onComuser(array $params)

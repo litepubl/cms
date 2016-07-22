@@ -11,9 +11,7 @@
 namespace litepubl\core;
 
 /**
-* 
  * Container class to keep items
- *
  *
  * @property-write callable $added
  * @property-write callable $deleted

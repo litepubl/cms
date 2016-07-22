@@ -17,9 +17,7 @@ use litepubl\view\Parser;
 use litepubl\view\Theme;
 
 /**
-* 
  * JSON-RPC methods to upload files
- *
  *
  * @property-write callable $uploaded
  * @property-write callable $onProps

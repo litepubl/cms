@@ -13,9 +13,7 @@ namespace litepubl\core;
 use litepubl\pages\Redirector;
 
 /**
-* 
  * One of main class which find url in database
- *
  *
  * @property-write callable $beforeRequest
  * @property-write callable $afterRequest

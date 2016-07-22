@@ -378,9 +378,7 @@ namespace litepubl\widget;
 use litepubl\core\Event;
 
 /**
-* 
  * Widgets with editable content
- *
  *
  * @property-write callable $added
  * @property-write callable $deleted
@@ -541,9 +539,7 @@ use litepubl\view\Args;
 use litepubl\view\Lang;
 
 /**
-* 
  * Links widget
- *
  *
  * @property-write callable $added
  * @property-write callable $deleted
@@ -1147,9 +1143,7 @@ use litepubl\view\Schema;
 use litepubl\view\ViewInterface;
 
 /**
-* 
  * Central class to manage widgets
- *
  *
  * @property-write callable $onWidget
  * @property-write callable $onAdminLogged

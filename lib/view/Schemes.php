@@ -14,9 +14,7 @@ use litepubl\core\Arr;
 use litepubl\core\Event;
 
 /**
-* 
  * Common class for join files
- *
  *
  * @property-write callable $themeChanged
  * @method         array themeChanged(array $params)

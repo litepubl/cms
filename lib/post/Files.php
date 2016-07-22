@@ -18,9 +18,7 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
-* 
  * Manage uploaded files
- *
  *
  * @property-write callable $changed
  * @property-write callable $edited

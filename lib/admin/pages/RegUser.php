@@ -23,9 +23,7 @@ use litepubl\view\Lang;
 use litepubl\view\Theme;
 
 /**
-* 
  * User regestration page
- *
  *
  * @property-write callable $onContent
  * @method         array onContent(array $params)

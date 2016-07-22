@@ -11,9 +11,7 @@
 namespace litepubl\core;
 
 /**
-* 
  * Class to manage users
- *
  *
  * @property-write callable $beforeDelete
  * @method         array beforeDelete(array $params) triggered when user need to delete

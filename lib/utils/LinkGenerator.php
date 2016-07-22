@@ -14,9 +14,7 @@ use litepubl\core\Str;
 use litepubl\view\Lang;
 
 /**
-* 
  * Generate human readabilty url's
- *
  *
  * @property       string $post
  * @property       string $menu

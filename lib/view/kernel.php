@@ -746,9 +746,7 @@ use litepubl\perms\Perm;
 use litepubl\widget\Widgets;
 
 /**
-* 
  * Base class for page render
- *
  *
  * @property       string $heads
  * @property       string $footer
@@ -1258,9 +1256,7 @@ use litepubl\core\Arr;
 use litepubl\core\Event;
 
 /**
-* 
  * Common class for join files
- *
  *
  * @property-write callable $themeChanged
  * @method         array themeChanged(array $params)

@@ -20,9 +20,7 @@ use litepubl\view\Lang;
 use litepubl\view\Schema;
 
 /**
-* 
  * Post view
- *
  *
  * @property-write callable $beforeContent
  * @property-write callable $afterContent

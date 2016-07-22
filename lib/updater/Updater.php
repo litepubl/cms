@@ -17,9 +17,7 @@ use litepubl\view\Lang;
 use litepubl\widget\Sidebars;
 
 /**
-* 
  * Download and update latest version
- *
  *
  * @property       bool $useshell
  * @property-write callable $onUpdated

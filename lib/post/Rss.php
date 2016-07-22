@@ -23,9 +23,7 @@ use litepubl\view\Theme;
 use litepubl\widget\Comments as CommentWidget;
 
 /**
-* 
  * RSS posts
- *
  *
  * @property       string $feedburner
  * @property       string $feedburnercomments

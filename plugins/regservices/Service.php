@@ -21,9 +21,7 @@ use litepubl\view\Filter;
 use litepubl\view\Lang;
 
 /**
-* 
  * Social network login plugin
- *
  *
  * @property-write callable $onAdd
  * @method         array onAdd(array $params)

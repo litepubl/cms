@@ -17,9 +17,7 @@ use litepubl\view\Theme;
 use litepubl\core\Event;
 
 /**
-* 
  * Holds menu items
- *
  *
  * @property       int $idhome
  * @property       bool $home

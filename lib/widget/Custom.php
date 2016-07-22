@@ -13,9 +13,7 @@ namespace litepubl\widget;
 use litepubl\core\Event;
 
 /**
-* 
  * Widgets with editable content
- *
  *
  * @property-write callable $added
  * @property-write callable $deleted

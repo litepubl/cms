@@ -16,9 +16,7 @@ use litepubl\utils\LinkGenerator;
 use litepubl\view\Schemes;
 
 /**
-* 
  * Main class to manage posts
- *
  *
  * @property       int $archivescount
  * @property       int $revision
