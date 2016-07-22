@@ -1,4 +1,351 @@
 <?php
+//Event.php
+namespace litepubl\core;
+
+class Event
+{
+    protected $name;
+    protected $target;
+    protected $stopped;
+    protected $params;
+    public $once;
+
+    public function __construct($target, string $name)
+    {
+        $this->target = $target;
+        $this->name = $name;
+        $this->stopped = false;
+        $this->params = [];
+        $this->once = false;
+    }
+
+    public function __get($name)
+    {
+        if (method_exists($this, $get = 'get' . $name)) {
+            return $this->$get();
+        } elseif (array_key_exists($name, $this->params)) {
+            return $this->params[$name];
+        } else {
+            throw new PropException(get_class($this), $name);
+        }
+    }
+
+    public function __set($name, $value)
+    {
+        if (method_exists($this, $set = 'set' . $name)) {
+            $this->$set($value);
+        } elseif (key_exists($name, $this->params)) {
+            $this->params[$name] = $value;
+        } else {
+            throw new PropException(get_class($this), $name);
+        }
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Get target/context from which event was triggered
+     */
+    public function getTarget()
+    {
+        return $this->target;
+    }
+
+    /**
+     * Get parameters passed to the event
+     */
+    public function getParams(): array
+    {
+        return $this->params;
+    }
+
+    /**
+     * Get a single parameter by name
+     *
+     * @return mixed
+     */
+    public function getParam(string $name)
+    {
+        return $this->params[$name];
+    }
+
+    /**
+     * Set the event name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Set the event target
+     *
+     * @param  null|string|object $target
+     * @return void
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
+    }
+
+    /**
+     * Set event parameters
+     */
+    public function setParams(array $params)
+    {
+        $this->params = $params;
+    }
+
+    /**
+     * Indicate whether or not to stop propagating this event
+     */
+    public function stopPropagation(bool $flag)
+    {
+        $this->stopped = $flag;
+    }
+
+    /**
+     * Has this event indicated event propagation should stop?
+     */
+    public function isPropagationStopped(): bool
+    {
+        return $this->stopped;
+    }
+
+}
+
+//EventsTrait.php
+namespace litepubl\core;
+
+trait EventsTrait
+{
+    use Callbacks;
+
+    protected $eventnames = [];
+    protected $events;
+
+    protected function createData()
+    {
+        parent::createData();
+
+        if (method_exists($this, 'addMap')) {
+                $this->addMap('events', []);
+        } else {
+                $this->data['events'] = [];
+        }
+    }
+
+    protected function getProp(string $name)
+    {
+        if (method_exists($this, $name)) {
+            return [get_class($this) ,                 $name];
+        }
+
+        return parent::getProp($name);
+    }
+
+    protected function setProp(string $name, $value)
+    {
+        $eventName = strtolower($name);
+        if (in_array($eventName, $this->eventnames)) {
+            $this->addEvent($eventName, $value);
+        } else {
+            parent::setProp($name, $value);
+        }
+    }
+
+    public function __call($name, $params)
+    {
+        $eventName = strtolower($name);
+        if (in_array($eventName, $this->eventnames)) {
+            return $this->callEvent($eventName, $params[0]);
+        }
+
+        return parent::__call($name, $params);
+    }
+
+    public function __isset($name)
+    {
+        return parent::__isset($name) || in_array($name, $this->eventnames);
+    }
+
+    public function eventExists(string $name): bool
+    {
+        return in_array(strtolower($name), $this->eventnames);
+    }
+
+    public function method_exists($name)
+    {
+        return in_array(strtolower($name), $this->eventnames);
+    }
+
+    protected function addEvents()
+    {
+        $a = func_get_args();
+        foreach ($a as $name) {
+                $this->eventnames[] = strtolower($name);
+        }
+    }
+
+    protected function reIndexEvents()
+    {
+        foreach ($this->data['events'] as $name => $events) {
+            if (!count($events)) {
+                unset($this->data['events'][$name]);
+            } else {
+                ksort($events);
+                $sorted = [];
+                $newIndex = 0;
+                foreach ($events as $i => $item) {
+                    if (floor($i / 10) == floor($newIndex / 10)) {
+                        $newIndex++;
+                    } else {
+                        $newIndex  = floor($i / 10) * 10;
+                    }
+
+                    $sorted[$newIndex] = $item;
+                }
+
+                $this->data['events'][$name] = $sorted;
+            }
+        }
+    }
+
+    public function getEventCount(string $name): int
+    {
+        return isset($this->data['events'][$name]) ? count($this->data['events'][$name]) : 0;
+    }
+
+    public function newEvent(string $name): Event
+    {
+        return new Event($this, $name);
+    }
+
+    public function callEvent(string $name, array $params): array
+    {
+        $name = strtolower($name);
+        if (!$this->getEventCount($name) && !$this->getCallbacksCount($name)) {
+            return $params;
+        }
+
+        $event = $this->newEvent($name);
+        $event->setParams($params);
+        $this->triggerCallback($event);
+        $this->trigger($event);
+        return $event->getParams();
+    }
+
+    protected function trigger(Event $event)
+    {
+        $app = $this->getApp();
+        $eventName = $event->getName();
+
+        foreach ($this->data['events'][$eventName] as $i => $item) {
+            if ($event->isPropagationStopped()) {
+                        break;
+            }
+
+            if (class_exists($item[0])) {
+                try {
+                    $callback = [$app->classes->getInstance($item[0]), $item[1]];
+                    call_user_func_array($callback, [$event]);
+                    if ($event->once) {
+                                        $event->once = false;
+                                        unset($this->data['events'][$eventName][$i]);
+                                        $this->save();
+                    }
+                } catch (\Throwable $e) {
+                    $app->logException($e);
+                }
+            } else {
+                        unset($this->data['events'][$eventName][$i]);
+                if (!count($this->data['events'][$eventName])) {
+                    unset($this->data['events'][$eventName]);
+                }
+
+                        $this->save();
+                        $app->getLogger()->warning(sprintf('Event subscriber has been removed from %s:%s', get_class($this), $eventName), is_array($item) ? $item : []);
+            }
+        }
+
+    }
+
+    public function addEvent(string $name, $callable, $method = null)
+    {
+        $name = strtolower($name);
+        if (!in_array($name, $this->eventnames)) {
+            $this->error(sprintf('No such %s event', $name));
+        }
+
+        if (!is_callable($callable)) {
+            if (!$method) {
+                    $this->error(sprintf('Error bind to event %s', $name));
+            }
+
+                $callable = [$callable, $method];
+            if (!is_callable($callable)) {
+                    $this->error(sprintf('Error bind to event %s', $name));
+            }
+        }
+
+        if (!is_array($callable) || !is_string($callable[0])) {
+                return $this->addCallback($name, $callable);
+        }
+
+        if (!isset($this->data['events'][$name])) {
+            $this->data['events'][$name] = [500 => $callable];
+            $this->save();
+        } else {
+            //check if event already added
+            foreach ($this->data['events'][$name] as $item) {
+                if ($callable == $item) {
+                    return false;
+                }
+            }
+
+            Arr::append($this->data['events'][$name], 500, $callable);
+            $this->save();
+        }
+    }
+
+    public function detach(string $name, callable $callback): bool
+    {
+        $name = strtolower($name);
+        $this->deleteCallback($name, $callback);
+        if (isset($this->data['events'][$name])) {
+            foreach ($this->data['events'][$name] as $i => $item) {
+                if ($item == $callback) {
+                    unset($this->data['events'][$name][$i]);
+                    $this->reIndexEvents();
+                    $this->save();
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function unbind($c)
+    {
+        $class = static ::getClassName($c);
+        foreach ($this->data['events'] as $name => $events) {
+            foreach ($events as $i => $item) {
+                if ($class == $item[0]) {
+                    unset($this->data['events'][$name][$i]);
+                }
+            }
+        }
+        
+        $this->reIndexEvents();
+        $this->save();
+    }
+
+}
+
 //App.php
 namespace litepubl\core;
 
@@ -1714,124 +2061,6 @@ class ErrorPages
     }
 }
 
-//Event.php
-namespace litepubl\core;
-
-class Event
-{
-    protected $name;
-    protected $target;
-    protected $stopped;
-    protected $params;
-    public $once;
-
-    public function __construct($target, string $name)
-    {
-        $this->target = $target;
-        $this->name = $name;
-        $this->stopped = false;
-        $this->params = [];
-        $this->once = false;
-    }
-
-    public function __get($name)
-    {
-        if (method_exists($this, $get = 'get' . $name)) {
-            return $this->$get();
-        } elseif (array_key_exists($name, $this->params)) {
-            return $this->params[$name];
-        } else {
-            throw new PropException(get_class($this), $name);
-        }
-    }
-
-    public function __set($name, $value)
-    {
-        if (method_exists($this, $set = 'set' . $name)) {
-            $this->$set($value);
-        } elseif (key_exists($name, $this->params)) {
-            $this->params[$name] = $value;
-        } else {
-            throw new PropException(get_class($this), $name);
-        }
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    /**
-     * Get target/context from which event was triggered
-     */
-    public function getTarget()
-    {
-        return $this->target;
-    }
-
-    /**
-     * Get parameters passed to the event
-     */
-    public function getParams(): array
-    {
-        return $this->params;
-    }
-
-    /**
-     * Get a single parameter by name
-     *
-     * @return mixed
-     */
-    public function getParam(string $name)
-    {
-        return $this->params[$name];
-    }
-
-    /**
-     * Set the event name
-     */
-    public function setName(string $name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Set the event target
-     *
-     * @param  null|string|object $target
-     * @return void
-     */
-    public function setTarget($target)
-    {
-        $this->target = $target;
-    }
-
-    /**
-     * Set event parameters
-     */
-    public function setParams(array $params)
-    {
-        $this->params = $params;
-    }
-
-    /**
-     * Indicate whether or not to stop propagating this event
-     */
-    public function stopPropagation(bool $flag)
-    {
-        $this->stopped = $flag;
-    }
-
-    /**
-     * Has this event indicated event propagation should stop?
-     */
-    public function isPropagationStopped(): bool
-    {
-        return $this->stopped;
-    }
-
-}
-
 //Events.php
 namespace litepubl\core;
 
@@ -1877,235 +2106,6 @@ class Events extends Data
     {
         parent::free();
         unset($this->getApp()->classes->instances[get_class($this) ]);
-    }
-
-}
-
-//EventsTrait.php
-namespace litepubl\core;
-
-trait EventsTrait
-{
-    use Callbacks;
-
-    protected $eventnames = [];
-    protected $events;
-
-    protected function createData()
-    {
-        parent::createData();
-
-        if (method_exists($this, 'addMap')) {
-                $this->addMap('events', []);
-        } else {
-                $this->data['events'] = [];
-        }
-    }
-
-    protected function getProp(string $name)
-    {
-        if (method_exists($this, $name)) {
-            return [get_class($this) ,                 $name];
-        }
-
-        return parent::getProp($name);
-    }
-
-    protected function setProp(string $name, $value)
-    {
-        $eventName = strtolower($name);
-        if (in_array($eventName, $this->eventnames)) {
-            $this->addEvent($eventName, $value);
-        } else {
-            parent::setProp($name, $value);
-        }
-    }
-
-    public function __call($name, $params)
-    {
-        $eventName = strtolower($name);
-        if (in_array($eventName, $this->eventnames)) {
-            return $this->callEvent($eventName, $params[0]);
-        }
-
-        return parent::__call($name, $params);
-    }
-
-    public function __isset($name)
-    {
-        return parent::__isset($name) || in_array($name, $this->eventnames);
-    }
-
-    public function eventExists(string $name): bool
-    {
-        return in_array(strtolower($name), $this->eventnames);
-    }
-
-    public function method_exists($name)
-    {
-        return in_array(strtolower($name), $this->eventnames);
-    }
-
-    protected function addEvents()
-    {
-        $a = func_get_args();
-        foreach ($a as $name) {
-                $this->eventnames[] = strtolower($name);
-        }
-    }
-
-    protected function reIndexEvents()
-    {
-        foreach ($this->data['events'] as $name => $events) {
-            if (!count($events)) {
-                unset($this->data['events'][$name]);
-            } else {
-                ksort($events);
-                $sorted = [];
-                $newIndex = 0;
-                foreach ($events as $i => $item) {
-                    if (floor($i / 10) == floor($newIndex / 10)) {
-                        $newIndex++;
-                    } else {
-                        $newIndex  = floor($i / 10) * 10;
-                    }
-
-                    $sorted[$newIndex] = $item;
-                }
-
-                $this->data['events'][$name] = $sorted;
-            }
-        }
-    }
-
-    public function getEventCount(string $name): int
-    {
-        return isset($this->data['events'][$name]) ? count($this->data['events'][$name]) : 0;
-    }
-
-    public function newEvent(string $name): Event
-    {
-        return new Event($this, $name);
-    }
-
-    public function callEvent(string $name, array $params): array
-    {
-        $name = strtolower($name);
-        if (!$this->getEventCount($name) && !$this->getCallbacksCount($name)) {
-            return $params;
-        }
-
-        $event = $this->newEvent($name);
-        $event->setParams($params);
-        $this->triggerCallback($event);
-        $this->trigger($event);
-        return $event->getParams();
-    }
-
-    protected function trigger(Event $event)
-    {
-        $app = $this->getApp();
-        $eventName = $event->getName();
-
-        foreach ($this->data['events'][$eventName] as $i => $item) {
-            if ($event->isPropagationStopped()) {
-                        break;
-            }
-
-            if (class_exists($item[0])) {
-                try {
-                    $callback = [$app->classes->getInstance($item[0]), $item[1]];
-                    call_user_func_array($callback, [$event]);
-                    if ($event->once) {
-                                        $event->once = false;
-                                        unset($this->data['events'][$eventName][$i]);
-                                        $this->save();
-                    }
-                } catch (\Throwable $e) {
-                    $app->logException($e);
-                }
-            } else {
-                        unset($this->data['events'][$eventName][$i]);
-                if (!count($this->data['events'][$eventName])) {
-                    unset($this->data['events'][$eventName]);
-                }
-
-                        $this->save();
-                        $app->getLogger()->warning(sprintf('Event subscriber has been removed from %s:%s', get_class($this), $eventName), is_array($item) ? $item : []);
-            }
-        }
-
-    }
-
-    public function addEvent(string $name, $callable, $method = null)
-    {
-        $name = strtolower($name);
-        if (!in_array($name, $this->eventnames)) {
-            $this->error(sprintf('No such %s event', $name));
-        }
-
-        if (!is_callable($callable)) {
-            if (!$method) {
-                    $this->error(sprintf('Error bind to event %s', $name));
-            }
-
-                $callable = [$callable, $method];
-            if (!is_callable($callable)) {
-                    $this->error(sprintf('Error bind to event %s', $name));
-            }
-        }
-
-        if (!is_array($callable) || !is_string($callable[0])) {
-                return $this->addCallback($name, $callable);
-        }
-
-        if (!isset($this->data['events'][$name])) {
-            $this->data['events'][$name] = [500 => $callable];
-            $this->save();
-        } else {
-            //check if event already added
-            foreach ($this->data['events'][$name] as $item) {
-                if ($callable == $item) {
-                    return false;
-                }
-            }
-
-            Arr::append($this->data['events'][$name], 500, $callable);
-            $this->save();
-        }
-    }
-
-    public function detach(string $name, callable $callback): bool
-    {
-        $name = strtolower($name);
-        $this->deleteCallback($name, $callback);
-        if (isset($this->data['events'][$name])) {
-            foreach ($this->data['events'][$name] as $i => $item) {
-                if ($item == $callback) {
-                    unset($this->data['events'][$name][$i]);
-                    $this->reIndexEvents();
-                    $this->save();
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public function unbind($c)
-    {
-        $class = static ::getClassName($c);
-        foreach ($this->data['events'] as $name => $events) {
-            foreach ($events as $i => $item) {
-                if ($class == $item[0]) {
-                    unset($this->data['events'][$name][$i]);
-                }
-            }
-        }
-        
-        $this->reIndexEvents();
-        $this->save();
     }
 
 }
@@ -4192,7 +4192,7 @@ class Str
     }
 }
 
-//lib/core/Classes.php
+//Classes.php
 namespace litepubl\core;
 
 use litepubl\Config;
@@ -4659,7 +4659,7 @@ class Classes extends Items
     }
 }
 
-//lib/core/Router.php
+//Router.php
 namespace litepubl\core;
 
 use litepubl\pages\Redirector;
@@ -4978,7 +4978,7 @@ class Router extends Items
     }
 }
 
-//lib/core/Cron.php
+//Cron.php
 namespace litepubl\core;
 
 use litepubl\Config;
@@ -5261,7 +5261,7 @@ class Cron extends Events implements ResponsiveInterface
     }
 }
 
-//lib/core/ItemsPosts.php
+//ItemsPosts.php
 namespace litepubl\core;
 
 class ItemsPosts extends Items
@@ -5382,7 +5382,7 @@ class ItemsPosts extends Items
 
 }
 
-//lib/core/Users.php
+//Users.php
 namespace litepubl\core;
 
 /**

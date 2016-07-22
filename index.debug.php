@@ -22,11 +22,6 @@ $d = __dir__ . '/storage/data';
 //flush();
 
 try {
-spl_autoload_register(function($class) {
-//include (__DIR__ .'/' . str_replace('litepubl\\', 'lib/', $class) . '.php');
-//echo implode("\n", get_declared_classes());
-//echo \litepubl\debug\LogException::trace();
-});
 if (Config::$debug) {
 require (__DIR__ . '/lib/debug/kernel.php');
 } else {

@@ -1,15 +1,19 @@
 #reorder to include
+^Event.php
+^EventsTrait.php
+
+#exclude and include moves files to end
 !Classes.php
 !Router.php
 !ItemsPosts.php
 !Cron.php
 !Users.php
 
-lib/core/Classes.php
-lib/core/Router.php
-lib/core/Cron.php
-lib/core/ItemsPosts.php
-lib/core/Users.php
+Classes.php
+Router.php
+Cron.php
+ItemsPosts.php
+Users.php
 
 !DBManager.php
 !DBOptimizer.php

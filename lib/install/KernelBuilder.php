@@ -39,22 +39,33 @@ class KernelBuilder
             return false;
         }
 
+        $homedir = dirname(dirname(__DIR__)) . '/';
+        foreach ($rules['before'] as $filename) {
+            $result.= "//$filename\n";
+            if (strpos($filename, '/')) {
+                $result.= static ::getfile($homedir . $filename);
+            } else {
+                $result.= static ::getFile($dir . $filename);
+            }
+        }
+
         $dirlist = dir($dir);
         while ($filename = $dirlist->read()) {
             if ((substr($filename, -4) != '.php') || ($filename == 'kernel.php')) {
                 continue;
             }
 
-            if (!in_array($filename, $rules['ignore']) && !in_array($filename, $rules['include'])) {
+            if (!in_array($filename, $rules['ignore'])
+&& !in_array($filename, $rules['before'])
+ && !in_array($filename, $rules['after'])
+) {
                 $result.= "//$filename\n";
-                //$s = trim(substr($s, strpos($s, '*/') + 2));
                 $result.= static ::getFile($dir . $filename);
             }
         }
         $dirlist->close();
 
-        $homedir = dirname(dirname(__DIR__)) . '/';
-        foreach ($rules['include'] as $filename) {
+        foreach ($rules['after'] as $filename) {
             $result.= "//$filename\n";
             if (strpos($filename, '/')) {
                 $result.= static ::getfile($homedir . $filename);
@@ -80,14 +91,20 @@ class KernelBuilder
 
         $a = explode("\n", $s);
 
-        $result = ['ignore' => [], 'include' => [], ];
+        $result = [
+'before' => [],
+ 'after' => [],
+'ignore' => [],
+];
 
         foreach ($a as $filename) {
             if (($filename = trim($filename)) && ($filename[0] != '#') && ($filename[0] != ';')) {
-                if ($filename[0] == '!') {
+                if ($filename[0] == '^') {
+                    $result['before'][] = substr($filename, 1);
+                } elseif ($filename[0] == '!') {
                     $result['ignore'][] = substr($filename, 1);
                 } else {
-                    $result['include'][] = $filename;
+                    $result['after'][] = $filename;
                 }
             }
         }
