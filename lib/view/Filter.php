@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\view;
@@ -14,14 +14,16 @@ use litepubl\core\Str;
 use litepubl\post\Post;
 
 /**
+* 
  * Main class to filter, format text, html content
  *
- * @property bool $automore
- * @property int $automorelength
- * @property bool $phpcode
- * @property bool $usefilter
- * @property bool $autolinks
- * @property bool $commentautolinks
+ *
+ * @property       bool $automore
+ * @property       int $automorelength
+ * @property       bool $phpcode
+ * @property       bool $usefilter
+ * @property       bool $autolinks
+ * @property       bool $commentautolinks
  * @property-write callable $onComment
  * @property-write callable $onAfterComment
  * @property-write callable $beforeContent
@@ -30,14 +32,14 @@ use litepubl\post\Post;
  * @property-write callable $afterFilter
  * @property-write callable $onSimpleFilter
  * @property-write callable $onAfterSimple
- * @method array onComment(array $params)
- * @method array onAfterComment(array $params)
- * @method array beforeContent(array $params)
- * @method array afterContent(array $params)
- * @method array beforeFilter(array $params)
- * @method array afterFilter(array $params)
- * @method array onSimpleFilter(array $params)
- * @method array onAfterSimple(array $params)
+ * @method         array onComment(array $params)
+ * @method         array onAfterComment(array $params)
+ * @method         array beforeContent(array $params)
+ * @method         array afterContent(array $params)
+ * @method         array beforeFilter(array $params)
+ * @method         array afterFilter(array $params)
+ * @method         array onSimpleFilter(array $params)
+ * @method         array onAfterSimple(array $params)
  */
 
 class Filter extends \litepubl\core\Events
@@ -62,8 +64,8 @@ class Filter extends \litepubl\core\Events
         $result = str_replace(["\r\n", "\r"], "\n", $result);
         $result = static ::quote(htmlspecialchars($result));
 
-$r = $this->onComment(['content' => $result, 'cancel' => false]);
-if ($r['cancel']) {
+        $r = $this->onComment(['content' => $result, 'cancel' => false]);
+        if ($r['cancel']) {
             $r = $this->onAfterComment($r);
             return $r['content'];
         }
@@ -90,18 +92,20 @@ if ($r['cancel']) {
 
     public function filterPost(Post $post, string $s)
     {
-        $r = $this->beforeContent([
-'post' => $post,
-'content' => $s,
-'cancel' => false
-]);
+        $r = $this->beforeContent(
+            [
+            'post' => $post,
+            'content' => $s,
+            'cancel' => false
+            ]
+        );
 
         if ($r['cancel']) {
-$this->afterContent(['post' => $post]);
-return;
+            $this->afterContent(['post' => $post]);
+            return;
         }
 
-$s = $r['content'];
+        $s = $r['content'];
         $moretag = ' <!--more-->';
         if (preg_match('/<!--more(.*?)?-->/', $s, $matches) || preg_match('/\[more(.*?)?\]/', $s, $matches) || preg_match('/\[cut(.*?)?\]/', $s, $matches)) {
             $parts = explode($matches[0], $s, 2);
@@ -140,14 +144,16 @@ $s = $r['content'];
             $description = $theme->parse($description);
         }
         $description = static ::gettitle($description);
-        $description = strtr($description, [
+        $description = strtr(
+            $description, [
             "\r" => ' ',
             "\n" => ' ',
             '  ' => ' ',
             '"' => '&quot;',
             "'" => '&#39;',
             '$' => '&#36;'
-]);
+            ]
+        );
 
         return str_replace('  ', ' ', $description);
     }
@@ -190,8 +196,8 @@ $s = $r['content'];
 
     public function filter(string $content): string
     {
-$r = $this->beforeFilter(['content' => $content, 'cancel' => false]);
-if ($r['cancel']) {
+        $r = $this->beforeFilter(['content' => $content, 'cancel' => false]);
+        if ($r['cancel']) {
             $r = $this->afterFilter($r);
             return $r['content'];
         }
@@ -217,7 +223,7 @@ if ($r['cancel']) {
         }
 
         $r = $this->onSimpleFilter(['content' => $s]);
-$s = $r['content'];
+        $s = $r['content'];
         if ($this->autolinks) {
             $s = static ::createlinks($s);
         }
@@ -258,11 +264,13 @@ $s = $r['content'];
         );
         if ($this->phpcode) {
             $s = preg_replace_callback(
-                '/\<\?(.*?)\?\>/ims', [$this, 'callback_replace_php'], $s);
+                '/\<\?(.*?)\?\>/ims', [$this, 'callback_replace_php'], $s
+            );
         } else {
             $s = preg_replace_callback(
                 '/\<\?(.*?)\?\>/ims',
- [$this, 'callback_fix_php'], $s);
+                [$this, 'callback_fix_php'], $s
+            );
         }
         return $s;
     }

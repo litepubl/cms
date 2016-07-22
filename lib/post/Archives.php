@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\post;
@@ -112,7 +112,7 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
     public function getHead(): string
     {
         $announce = Announce::i($this->schema->theme);
-return $announce->getHead($this->getIdPosts());
+        return $announce->getHead($this->getIdPosts());
     }
 
     public function getTitle(): string

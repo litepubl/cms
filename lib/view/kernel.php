@@ -269,13 +269,13 @@ class Base extends \litepubl\core\Events
         }
     }
 
-    public function __set($name, $value)
+    protected function setProp(string $name, $value)
     {
         if (array_key_exists($name, $this->templates)) {
             $this->templates[$name] = $value;
-            return;
+        } else {
+            parent::setProp($name, $value);
         }
-        return parent::__set($name, $value);
     }
 
     public function reg($exp)
@@ -399,7 +399,7 @@ class Base extends \litepubl\core\Events
         return $s;
     }
 
-    public static function parsevar($name, $var, $s)
+    public static function parseVar($name, $var, $s)
     {
         static ::$vars[$name] = $var;
         return static ::i()->parse($s);
@@ -525,6 +525,40 @@ trait EmptyViewTrait
     }
 }
 
+//Factory.php
+namespace litepubl\view;
+
+trait Factory
+{
+
+
+    public function newArgs(): Args
+    {
+        return new Args();
+    }
+
+    public function newVars(): Vars
+    {
+        return new Vars();
+    }
+
+    public function getLang(string $section = ''): Lang
+    {
+        return Lang::i($section);
+    }
+
+    public function getSchema(): Schema
+    {
+        return Schema::getSchema($this);
+    }
+
+    public function getTheme(): Theme
+    {
+        return $this->getSchema()->theme;
+    }
+
+}
+
 //Lang.php
 namespace litepubl\view;
 
@@ -539,7 +573,7 @@ class Lang
     public $section;
     public $searchsect;
 
-    public static function i($section = '')
+    public static function i(string $section = '')
     {
         if (!isset(static ::$self)) {
             static ::$self = static ::getInstance();
@@ -711,6 +745,32 @@ use litepubl\core\Str;
 use litepubl\perms\Perm;
 use litepubl\widget\Widgets;
 
+/**
+* 
+ * Base class for page render
+ *
+ *
+ * @property       string $heads
+ * @property       string $footer
+ * @property       string $js
+ * @property       string $jsready
+ * @property       string $jsload
+ * @property-write callable $beforeContent
+ * @property-write callable $afterContent
+ * @property-write callable $onHead
+ * @property-write callable $onBody
+ * @property-write callable $onRequest
+ * @property-write callable $onTitle
+ * @property-write callable $onGetMenu
+ * @method         array beforeContent(array $params)
+ * @method         array afterContent(array $params)
+ * @method         array onHead(array $params)
+ * @method         array onBody(array $params)
+ * @method         array onRequest(array $params)
+ * @method         array onTitle(array $params)
+ * @method         array onGetMenu(array $params)
+ */
+
 class MainView extends \litepubl\core\Events
 {
     use \litepubl\core\PoolStorageTrait;
@@ -733,7 +793,7 @@ class MainView extends \litepubl\core\Events
         $app->classes->instances[get_class($this) ] = $this;
         parent::create();
         $this->basename = 'template';
-        $this->addevents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
+        $this->addEvents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
         $this->path = $app->paths->themes . 'default' . DIRECTORY_SEPARATOR;
         $this->url = $app->site->files . '/themes/default';
         $this->ltoptions = array(
@@ -808,12 +868,12 @@ class MainView extends \litepubl\core\Events
         }
 
         $context->response->body.= $theme->render($context->view);
-        $this->onbody($this);
+        $this->onbody([]);
         if ($this->extrabody) {
             $context->response->body = str_replace('</body>', $this->extrabody . '</body>', $context->response->body);
         }
 
-        $this->onrequest($this);
+        $this->onrequest([]);
 
         $this->context = null;
         $this->view = null;
@@ -839,20 +899,21 @@ class MainView extends \litepubl\core\Events
         return Widgets::i()->getSidebar($this->view);
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
-        $title = new str($this->view->gettitle());
-        if ($this->ontitle($title)) {
-            return $title->value;
+        $title = $this->view->gettitle();
+        $a =        $this->ontitle(['title' => $title, 'return' => false]);
+        if ($a['return']) {
+            return $a['title'];
         } else {
-            return $this->parsetitle($title, $this->schema->theme->templates['title']);
+            return $this->parsetitle($a['title'], $this->schema->theme->templates['title']);
         }
     }
 
-    public function parsetitle(Str $title, $tml)
+    public function parseTitle(string $title, string $tml): string
     {
         $args = new Args();
-        $args->title = $title->value;
+        $args->title = $title;
         $result = $this->schema->theme->parseArg($tml, $args);
         $result = trim($result, " |.:\n\r\t");
         if (!$result) {
@@ -882,10 +943,11 @@ class MainView extends \litepubl\core\Events
         return $result;
     }
 
-    public function getMenu()
+    public function getMenu(): string
     {
-        if ($r = $this->ongetmenu()) {
-            return $r;
+        $r = $this->onGetMenu(['content' => '', 'cancel' => false]);
+        if ($r['cancel']) {
+            return $r['content'];
         }
 
         $app = $this->getApp();
@@ -951,18 +1013,16 @@ class MainView extends \litepubl\core\Events
         $result.= $this->extrahead;
         $result = $this->schema->theme->parse($result);
 
-        $s = new Str($result);
-        $this->onhead($s);
-        return $s->value;
+        $a = $this->onhead(['head' => $result]);
+        return $a['head'];
     }
 
-    public function getContent()
+    public function getContent(): string
     {
-        $result = new Str('');
-        $this->beforecontent($result);
-        $result->value.= $this->view->getCont();
-        $this->aftercontent($result);
-        return $result->value;
+        $result = $this->beforecontent(['content' => '']);
+        $result['content'] .= $this->view->getCont();
+        $result = $this->aftercontent($result);
+        return $result['content'];
     }
 
     protected function setFooter($s)
@@ -1052,7 +1112,7 @@ class Schema extends \litepubl\core\Item
             'customsidebar' => false,
             'disableajax' => false,
             //possible values: default, lite, card
-            'postanounce' => 'excerpt',
+            'postannounce' => 'excerpt',
             'invertorder' => false,
             'perpage' => 0,
 
@@ -1112,7 +1172,7 @@ class Schema extends \litepubl\core\Item
         $this->data['custom'] = $this->originalCustom;
         $this->save();
 
-        static ::getowner()->themechanged($this);
+        static ::getOwner()->themechanged(['schema' => $this]);
     }
 
     public function setAdminname($name)
@@ -1191,22 +1251,20 @@ class Schema extends \litepubl\core\Item
     }
 }
 
-//SchemaTrait.php
-namespace litepubl\view;
-
-trait SchemaTrait
-{
-
-    public function getSchema()
-    {
-        return Schema::getSchema($this);
-    }
-}
-
 //Schemes.php
 namespace litepubl\view;
 
 use litepubl\core\Arr;
+use litepubl\core\Event;
+
+/**
+* 
+ * Common class for join files
+ *
+ *
+ * @property-write callable $themeChanged
+ * @method         array themeChanged(array $params)
+ */
 
 class Schemes extends \litepubl\core\Items
 {
@@ -1219,7 +1277,7 @@ class Schemes extends \litepubl\core\Items
         $this->dbversion = false;
         parent::create();
         $this->basename = 'views';
-        $this->addevents('themechanged');
+        $this->addEvents('themechanged');
         $this->addmap('defaults', array());
     }
 
@@ -1286,8 +1344,9 @@ class Schemes extends \litepubl\core\Items
         }
     }
 
-    public function widgetdeleted($idwidget)
+    public function widgetDeleted(Event $event)
     {
+        $idwidget = $event->id;
         $deleted = false;
         foreach ($this->items as & $schemaitem) {
             unset($sidebar);

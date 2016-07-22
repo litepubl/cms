@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\plugins\regservices;
@@ -45,8 +45,8 @@ class RegUser extends \litepubl\core\Items
         return $this->db->findId('service = ' . Str::quote($service) . ' and uid = ' . Str::quote($uid));
     }
 
-public function userDeleted(Event $event)
-{
-$this->delete($event->id);
-}
+    public function userDeleted(Event $event)
+    {
+        $this->delete($event->id);
+    }
 }

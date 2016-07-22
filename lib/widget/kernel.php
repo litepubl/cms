@@ -134,7 +134,7 @@ class Cache extends \litepubl\core\Items
         $this->dbversion = false;
         parent::create();
         $this->modified = false;
-        $this->getApp()->cache->onClear->on($this, 'onClearCache');
+        $this->getApp()->cache->onClear([$this, 'onClearCache']);
     }
 
     public function getBasename(): string
@@ -166,7 +166,7 @@ class Cache extends \litepubl\core\Items
     {
         if (!$this->modified) {
             $this->modified = true;
-            $this->getApp()->onClose->on($this, 'commit');
+            $this->getApp()->onClose([$this, 'commit']);
         }
     }
 
@@ -290,6 +290,7 @@ class Cats extends CommonTags
 namespace litepubl\widget;
 
 use litepubl\view\Args;
+use litepubl\core\Event;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 
@@ -333,7 +334,7 @@ class Comments extends Widget
         return $view->getContent($result, 'comments', $sidebar);
     }
 
-    public function changed()
+    public function changed(Event $event)
     {
         Cache::i()->removeWidget($this);
     }
@@ -374,6 +375,19 @@ class Comments extends Widget
 //Custom.php
 namespace litepubl\widget;
 
+use litepubl\core\Event;
+
+/**
+* 
+ * Widgets with editable content
+ *
+ *
+ * @property-write callable $added
+ * @property-write callable $deleted
+ * @method         array added(array $params)
+ * @method         array deleted(array $params) triggered when item has been deleted
+ */
+
 class Custom extends Widget
 {
     public $items;
@@ -383,8 +397,8 @@ class Custom extends Widget
         parent::create();
         $this->basename = 'widgets.custom';
         $this->adminclass = '\litepubl\admin\widget\Custom';
-        $this->addmap('items', array());
-        $this->addevents('added', 'deleted');
+        $this->addMap('items', array());
+        $this->addEvents('added', 'deleted');
     }
 
     public function getWidget(int $id, int $sidebar): string
@@ -426,7 +440,7 @@ class Custom extends Widget
         $sidebars->add($id);
         $widgets->unlock();
         $this->save();
-        $this->added($id);
+        $this->added(['id' => $id]);
         return $id;
     }
 
@@ -454,12 +468,13 @@ class Custom extends Widget
 
             $widgets = Widgets::i();
             $widgets->delete($id);
-            $this->deleted($id);
+            $this->deleted(['id' => $id]);
         }
     }
 
-    public function widgetDeleted(int $id)
+    public function widgetDeleted(Event $event)
     {
+        $id = $event->id;
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
@@ -525,6 +540,17 @@ use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 
+/**
+* 
+ * Links widget
+ *
+ *
+ * @property-write callable $added
+ * @property-write callable $deleted
+ * @method         array added(array $params)
+ * @method         array deleted(array $params) triggered when item has been deleted
+ */
+
 class Links extends Widget implements \litepubl\core\ResponsiveInterface
 {
     public $items;
@@ -588,7 +614,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         );
 
         $this->save();
-        $this->added($this->autoid);
+        $this->added(['id' => $this->autoid]);
         return $this->autoid;
     }
 
@@ -612,6 +638,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();
+            $this->deleted(['id' => $id]);
             $this->getApp()->cache->clear();
         }
     }
@@ -1119,6 +1146,21 @@ use litepubl\core\Str;
 use litepubl\view\Schema;
 use litepubl\view\ViewInterface;
 
+/**
+* 
+ * Central class to manage widgets
+ *
+ *
+ * @property-write callable $onWidget
+ * @property-write callable $onAdminLogged
+ * @property-write callable $onAdminPanel
+ * @property-write callable $onSidebar
+ * @method         array onWidget(array $params)
+ * @method         array onAdminLogged(array $params)
+ * @method         array onAdminPanel(array $params)
+ * @method         array onSidebar(array $params)
+ */
+
 class Widgets extends \litepubl\core\Items
 {
     use \litepubl\core\PoolStorageTrait;
@@ -1132,7 +1174,7 @@ class Widgets extends \litepubl\core\Items
     {
         $this->dbversion = false;
         parent::create();
-        $this->addevents('onwidget', 'onadminlogged', 'onadminpanel', 'ongetwidgets', 'onsidebar');
+        $this->addEvents('onwidget', 'onadminlogged', 'onadminpanel', 'onsidebar');
         $this->basename = 'widgets';
         $this->currentSidebar = 0;
         $this->addMap('classes', array());
@@ -1209,7 +1251,7 @@ class Widgets extends \litepubl\core\Items
         }
 
         unset($this->items[$id]);
-        $this->deleted($id);
+        $this->deleted(['id' => $id]);
         $this->save();
         return true;
     }
@@ -1246,7 +1288,7 @@ class Widgets extends \litepubl\core\Items
         $this->save();
 
         foreach ($deleted as $id) {
-            $this->deleted($id);
+            $this->deleted(['id' => $id]);
         }
 
         return true;
@@ -1292,25 +1334,25 @@ class Widgets extends \litepubl\core\Items
             $view->getWidgets($items, $sidebar);
         }
 
+        $a = ['items' => $items, 'sidebar' => $sidebar];
         $app = $this->getApp();
         if ($app->options->adminFlag && $app->options->group == 'admin') {
-            $this->onadminlogged($items, $sidebar);
+            $a = $this->onadminlogged($a);
         }
 
         if (isset($app->context) && $app->context->request->isAdminPanel) {
-            $this->onadminpanel($items, $sidebar);
+            $a = $this->onadminpanel($a);
         }
 
         $schema = Schema::getSchema($view);
-        $result = $this->getSidebarContent($items, $sidebar, !$schema->customsidebar && $schema->disableajax);
-
-        $str = new Str($result);
+        $content = $this->getSidebarContent($a['items'], $sidebar, !$schema->customsidebar && $schema->disableajax);
+        $r = ['content' => $content, 'sidebar' => $sidebar];
         if ($view instanceof WidgetsInterface) {
-            $view->getSidebar($str, $sidebar);
+            $r = $view->getSidebar($r);
         }
 
-        $this->onsidebar($str, $sidebar);
-        return $str->value;
+        $r = $this->onsidebar($r);
+        return $r['content'];
     }
 
     private function getWidgets(ViewInterface $view, int $sidebar): array
@@ -1473,9 +1515,8 @@ class Widgets extends \litepubl\core\Items
                 throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
             }
 
-            $str->value = $content;
-            $this->onwidget($id, $str);
-            $result.= $str->value;
+            $r = $this->onwidget(['id' => $id, 'content' => $content]);
+            $result.= $r['content'];
         }
 
         return $result;
@@ -1560,12 +1601,11 @@ class Widgets extends \litepubl\core\Items
 namespace litepubl\widget;
 
 use ArrayObject;
-use litepubl\core\Str;
 
 interface WidgetsInterface
 {
     public function getWidgets(ArrayObject $items, int $sidebar);
-    public function getSidebar(Str $str, int $sidebar);
+    public function getSidebar(array $params): array;
 }
 
 //Widget.php

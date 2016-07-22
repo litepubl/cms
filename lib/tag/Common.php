@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\tag;
@@ -18,12 +18,14 @@ use litepubl\view\Filter;
 use litepubl\view\Schemes;
 
 /**
+* 
  * Parent class of categories and tags
  *
- * @property bool $includechilds
- * @property bool $includeparents
+ *
+ * @property       bool $includechilds
+ * @property       bool $includeparents
  * @property-write callable $changed
- * @method array changed(array $params) triggered when new item has been added
+ * @method         array changed(array $params)
  */
 
 class Common extends \litepubl\core\Items

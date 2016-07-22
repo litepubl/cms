@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
@@ -28,7 +28,7 @@ class ItemsPosts extends Items
 
     public function add(int $idpost, int $iditem)
     {
-$item = [
+        $item = [
             $this->postprop => $idpost,
             $this->itemprop => $iditem
         ];
@@ -90,13 +90,13 @@ $item = [
 
     public function getItems($idpost): array
     {
-$db = $this->getApp()->db;
+        $db = $this->getApp()->db;
         return $db->res2id($db->query("select $this->itemprop from $this->thistable where $this->postprop = $idpost"));
     }
 
     public function getPosts(int $iditem): array
     {
-$db = $this->getApp()->db;
+        $db = $this->getApp()->db;
         return $db->res2id($db->query("select $this->postprop from $this->thistable where $this->itemprop = $iditem"));
     }
 
@@ -116,14 +116,14 @@ $db = $this->getApp()->db;
         }
     }
 
-public function postDeleted(Event $event)
-{
-$this->deletePost($event->id);
-}
+    public function postDeleted(Event $event)
+    {
+        $this->deletePost($event->id);
+    }
 
-public function itemDeleted(Event $event)
-{
-$this->deleteItem($event->id);
-}
+    public function itemDeleted(Event $event)
+    {
+        $this->deleteItem($event->id);
+    }
 
 }

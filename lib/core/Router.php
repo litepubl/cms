@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
@@ -13,12 +13,14 @@ namespace litepubl\core;
 use litepubl\pages\Redirector;
 
 /**
+* 
  * One of main class which find url in database
+ *
  *
  * @property-write callable $beforeRequest
  * @property-write callable $afterRequest
- * @method array beforeRequest(array $params) triggered before make request
- * @method array afterRequest(array $params) triggered when request has been made
+ * @method         array beforeRequest(array $params) triggered before make request
+ * @method         array afterRequest(array $params) triggered when request has been made
  */
 
 class Router extends Items

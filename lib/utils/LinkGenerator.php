@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\utils;
@@ -14,17 +14,19 @@ use litepubl\core\Str;
 use litepubl\view\Lang;
 
 /**
+* 
  * Generate human readabilty url's
  *
- * @property string $post
- * @property string $menu
- * @property string $tag
- * @property string $category
- * @property string $archive
- * @property string $file
- * @property bool $urlencode
+ *
+ * @property       string $post
+ * @property       string $menu
+ * @property       string $tag
+ * @property       string $category
+ * @property       string $archive
+ * @property       string $file
+ * @property       bool $urlencode
  * @property-write callable $onEncode
- * @method array onEncode(array $params) triggered when new item has been added
+ * @method         array onEncode(array $params)
  */
 
 class LinkGenerator extends \litepubl\core\Events
@@ -105,7 +107,7 @@ class LinkGenerator extends \litepubl\core\Events
     {
         $r = $this->onEncode(['text' => trim($s, "\n\r\t \x0B\0,.;?!/\\<>():;-\"'")]);
 
-$s = $r['text'];
+        $s = $r['text'];
         if ($this->urlencode) {
             return rawurlencode($s);
         }

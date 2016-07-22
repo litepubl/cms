@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\pages;
@@ -14,12 +14,14 @@ use litepubl\core\Context;
 use litepubl\view\Lang;
 
 /**
+* 
  * Generate sitemap.xml and html
  *
- * @property int $date
- * @property int $countfiles
+ *
+ * @property       int $date
+ * @property       int $countfiles
  * @property-write callable $onIndex
- * @method array onIndex(array $params) triggered when new item has been added
+ * @method         array onIndex(array $params)
  */
 
 class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterface

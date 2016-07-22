@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\post;
@@ -18,16 +18,18 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
+* 
  * Manage uploaded files
+ *
  *
  * @property-write callable $changed
  * @property-write callable $edited
  * @property-write callable $onGetFilelist
  * @property-write callable $onlist
- * @method array changed(array $params) triggered when new item has been added
- * @method array edited(array $params) triggered when new item has been added
- * @method array onGetFilelist(array $params) triggered when new item has been added
- * @method array onlist(array $params) triggered when new item has been added
+ * @method         array changed(array $params)
+ * @method         array edited(array $params)
+ * @method         array onGetFilelist(array $params)
+ * @method         array onlist(array $params)
  */
 
 class Files extends \litepubl\core\Items
@@ -175,7 +177,7 @@ class Files extends \litepubl\core\Items
 
         $this->getdb('imghashes')->delete("id = $id");
         $this->changed([]);
-$this->deleted(['id' => $id]);
+        $this->deleted(['id' => $id]);
         return true;
     }
 
@@ -207,7 +209,7 @@ $this->deleted(['id' => $id]);
 
     public function getFilelist(array $list, $excerpt)
     {
-$r = $this->onGetFilelist(['list' => $list, 'excerpt' => $excerpt, 'result' => false]);
+        $r = $this->onGetFilelist(['list' => $list, 'excerpt' => $excerpt, 'result' => false]);
         if ($r['result']) {
             return $r['result'];
         }

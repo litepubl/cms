@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\post;
@@ -73,7 +73,7 @@ use litepubl\view\Filter;
 
 class Post extends \litepubl\core\Item
 {
-use \litepubl\core\Callbacks;
+    use \litepubl\core\Callbacks;
 
     protected $childTable;
     protected $rawTable;
@@ -363,7 +363,7 @@ use \litepubl\core\Callbacks;
         
         $this->idurl = $this->createUrl();
         $this->db->setValue($id, 'idurl', $this->idurl);
-$this->triggerOnId();
+        $this->triggerOnId();
         return $id;
     }
 
@@ -391,13 +391,13 @@ $this->triggerOnId();
 
     public function onId(callable $callback)
     {
-$this->addCallback('onid', $callback);
-}
+        $this->addCallback('onid', $callback);
+    }
 
-protected function triggerOnId()
-{
+    protected function triggerOnId()
+    {
         $this->triggerCallback('onid');
-$this->clearCallbacks('onid');
+        $this->clearCallbacks('onid');
 
         if (isset($this->metaInstance)) {
             $this->metaInstance->id = $this->id;

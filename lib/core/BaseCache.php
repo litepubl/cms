@@ -5,22 +5,22 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
 
 abstract class BaseCache
 {
-use Callbacks;
+    use Callbacks;
 
     protected $items = [];
     protected $lifetime = 3600;
 
     public function onClear(callable $callback)
-{
-$this->addCallback('onclear', $callback);
-}
+    {
+        $this->addCallback('onclear', $callback);
+    }
 
     abstract public function getString(string $filename): string;
     abstract public function setString(string $filename, string $str);

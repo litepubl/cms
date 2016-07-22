@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
@@ -15,14 +15,14 @@ use litepubl\Config;
 /**
  * This is the class to storage base tags in templates
  *
- * @property string $files
- * @property string $language
- * @property string $liveUser
- * @property string $q
- * @property string $subdir
- * @property string $url
- * @property string $userlink
- * @property string $version
+ * @property      string $files
+ * @property      string $language
+ * @property      string $liveUser
+ * @property      string $q
+ * @property      string $subdir
+ * @property      string $url
+ * @property      string $userlink
+ * @property      string $version
  * @property-read string $domain
  */
 
@@ -37,10 +37,12 @@ class Site extends Events
     {
         parent::create();
         $this->basename = 'site';
-        $this->addmap('mapoptions', array(
+        $this->addmap(
+            'mapoptions', array(
             'version' => 'version',
             'language' => 'language',
-        ));
+            )
+        );
     }
 
     protected function getProp(string $name)
@@ -51,8 +53,8 @@ class Site extends Events
                 list($classname, $method) = $prop;
                 return call_user_func_array([static ::iGet($classname),                      $method], [$name]);
             } else {
-            return $this->getApp()->options->data[$prop];
-}
+                return $this->getApp()->options->data[$prop];
+            }
         }
 
         return parent::getProp($name);
@@ -60,19 +62,19 @@ class Site extends Events
 
     protected function setProp(string $name, $value)
     {
-if (isset($this->mapoptions[$name])) {
+        if (isset($this->mapoptions[$name])) {
             $prop = $this->mapoptions[$name];
             if (is_string($prop)) {
                 $this->getApp()->options->{$prop} = $value;
-return;
+                return;
             }
-}
+        }
 
-try {
-parent::setProp($name, $value);
-} catch(PropException $e) {
+        try {
+                parent::setProp($name, $value);
+        } catch(PropException $e) {
             $this->data[$name] = $value;
-}
+        }
 
             $this->save();
     }

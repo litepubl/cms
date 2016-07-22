@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\pages;
@@ -22,27 +22,29 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
+* 
  * Home page
  *
- * @property string $image
- * @property string $smallimage
- * @property bool $showmidle
- * @property int $midlecat
- * @property bool $showposts
- * @property array $includecats
- * @property array $excludecats
- * @property bool $showpagenator
- * @property int $archcount
- * @property bool $parsetags
+ *
+ * @property       string $image
+ * @property       string $smallimage
+ * @property       bool $showmidle
+ * @property       int $midlecat
+ * @property       bool $showposts
+ * @property       array $includecats
+ * @property       array $excludecats
+ * @property       bool $showpagenator
+ * @property       int $archcount
+ * @property       bool $parsetags
  * @property-write callable $onBeforeGetItems
  * @property-write callable $onGetItems
- * @method array onBeforeGetItems(array $params)
- * @method array onGetItems(array $params)
+ * @method         array onBeforeGetItems(array $params)
+ * @method         array onGetItems(array $params)
  */
 
 class Home extends SingleMenu
 {
-use \litepubl\core\EventsTrait;
+    use \litepubl\core\EventsTrait;
 
     public $cacheposts;
     public $midleposts;
@@ -52,7 +54,7 @@ use \litepubl\core\EventsTrait;
     {
         parent::create();
         $this->basename = 'homepage';
-$this->addEvents('onbeforegetitems', 'ongetitems');
+        $this->addEvents('onbeforegetitems', 'ongetitems');
         $this->data['image'] = '';
         $this->data['smallimage'] = '';
         $this->data['showmidle'] = false;
@@ -93,8 +95,8 @@ $this->addEvents('onbeforegetitems', 'ongetitems');
     {
         $result = parent::gethead();
 
-$schema = Schema::getSchema($this);
-$theme = $schema->theme;
+        $schema = Schema::getSchema($this);
+        $theme = $schema->theme;
         $result.= $theme->templates['head.home'];
 
         if ($this->showposts) {
@@ -165,8 +167,8 @@ $theme = $schema->theme;
             return $this->cacheposts;
         }
 
-$r = $this->onBeforeGetItems(['items' => []]);
-if (count($r['items'])) {
+        $r = $this->onBeforeGetItems(['items' => []]);
+        if (count($r['items'])) {
             return $r['items'];
         }
 

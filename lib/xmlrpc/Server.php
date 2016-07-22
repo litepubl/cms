@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\xmlrpc;
@@ -13,21 +13,25 @@ namespace litepubl\xmlrpc;
 use litepubl\core\Context;
 
 /**
+* 
  * XML-RPC server
  *
+ *
  * @property-write callable $onGet
- * @method array onGet(array $params)
+ * @method         array onGet(array $params)
  */
 
 /**
+* 
  * JSON-RPC server
+ *
  *
  * @property-write callable $getMethods
  * @property-write callable $beforeCall
  * @property-write callable $afterCall
- * @method array getMethods(array $params)
- * @method array beforeCall(array $params)
- * @method array afterCall(array $params)
+ * @method         array getMethods(array $params)
+ * @method         array beforeCall(array $params)
+ * @method         array afterCall(array $params)
  */
 
 class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveInterface
@@ -61,7 +65,7 @@ class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
     public function call($method, $args)
     {
         $r = $this->beforeCall(['method' => $method, 'args' => $args]);
-$method = $r['method'];
+        $method = $r['method'];
         if (!isset($this->items[$method])) {
             return new IXR_Error(-32601, "server error. requested method $method does not exist.");
         }

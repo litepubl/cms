@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\pages;
@@ -14,10 +14,12 @@ use litepubl\core\Str;
 use litepubl\view\MainView;
 
 /**
+* 
  * Holds rederects
  *
+ *
  * @property-write callable $onGet
- * @method array onGet(array $params)
+ * @method         array onGet(array $params)
  */
 
 class Redirector extends \litepubl\core\Items
@@ -96,10 +98,10 @@ class Redirector extends \litepubl\core\Items
             }
         }
 
-$a = $this->onget(['url' => $url]);
-if ($url != $a['url']) {
-return $a['url'];
-}
+        $a = $this->onget(['url' => $url]);
+        if ($url != $a['url']) {
+                return $a['url'];
+        }
 
         return false;
     }

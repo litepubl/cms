@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\plugins\regservices;
@@ -119,11 +119,11 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
 
     public function onComuser(Event $event)
     {
-$values = $event->values;
+        $values = $event->values;
         //ignore $comfirmed, always return redirect
         $form = Form::i();
         if ($err = $form->processComUser($values)) {
-$values->result = $err;
+            $values->result = $err;
             return;
         }
 

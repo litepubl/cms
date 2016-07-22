@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\view;
@@ -113,8 +113,8 @@ class Base extends \litepubl\core\Events
         if (array_key_exists($name, $this->templates)) {
             $this->templates[$name] = $value;
         } else {
-        parent::setProp($name, $value);
-}
+            parent::setProp($name, $value);
+        }
     }
 
     public function reg($exp)

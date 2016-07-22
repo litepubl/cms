@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\view;
@@ -15,10 +15,12 @@ use litepubl\core\Str;
 use litepubl\core\Plugins;
 
 /**
+* 
  * Common class for join files
  *
+ *
  * @property-write callable $onSave
- * @method array onsave(array $params)
+ * @method         array onsave(array $params)
  */
 
 class Merger extends \litepubl\core\Items
@@ -242,8 +244,8 @@ class Merger extends \litepubl\core\Items
     {
         $home = rtrim($this->getApp()->paths->home, DIRECTORY_SEPARATOR);
         $theme = Theme::i();
-$vars = new Vars();
-$vars->plugins = Plugins::i();
+        $vars = new Vars();
+        $vars->plugins = Plugins::i();
         $template = MainView::i();
         $template->data[$this->basename] = $this->revision;
 

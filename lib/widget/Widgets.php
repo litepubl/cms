@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\widget;
@@ -17,16 +17,18 @@ use litepubl\view\Schema;
 use litepubl\view\ViewInterface;
 
 /**
+* 
  * Central class to manage widgets
+ *
  *
  * @property-write callable $onWidget
  * @property-write callable $onAdminLogged
  * @property-write callable $onAdminPanel
  * @property-write callable $onSidebar
- * @method array onWidget(array $params)
- * @method array onAdminLogged(array $params)
- * @method array onAdminPanel(array $params)
- * @method array onSidebar(array $params)
+ * @method         array onWidget(array $params)
+ * @method         array onAdminLogged(array $params)
+ * @method         array onAdminPanel(array $params)
+ * @method         array onSidebar(array $params)
  */
 
 class Widgets extends \litepubl\core\Items
@@ -202,7 +204,7 @@ class Widgets extends \litepubl\core\Items
             $view->getWidgets($items, $sidebar);
         }
 
-$a = ['items' => $items, 'sidebar' => $sidebar];
+        $a = ['items' => $items, 'sidebar' => $sidebar];
         $app = $this->getApp();
         if ($app->options->adminFlag && $app->options->group == 'admin') {
             $a = $this->onadminlogged($a);
@@ -214,7 +216,7 @@ $a = ['items' => $items, 'sidebar' => $sidebar];
 
         $schema = Schema::getSchema($view);
         $content = $this->getSidebarContent($a['items'], $sidebar, !$schema->customsidebar && $schema->disableajax);
-$r = ['content' => $content, 'sidebar' => $sidebar];
+        $r = ['content' => $content, 'sidebar' => $sidebar];
         if ($view instanceof WidgetsInterface) {
             $r = $view->getSidebar($r);
         }

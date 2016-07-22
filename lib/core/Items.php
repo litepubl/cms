@@ -5,18 +5,20 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
 
 /**
+* 
  * Container class to keep items
+ *
  *
  * @property-write callable $added
  * @property-write callable $deleted
- * @method array added(array $params) triggered when new item has been added
- * @method array deleted(array $params) triggered when item has been deleted
+ * @method         array added(array $params)
+ * @method         array deleted(array $params) triggered when item has been deleted
  */
 
 class Items extends Events

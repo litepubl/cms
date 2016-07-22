@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\view;
@@ -17,13 +17,15 @@ use litepubl\perms\Perm;
 use litepubl\widget\Widgets;
 
 /**
+* 
  * Base class for page render
  *
- * @property string $heads
- * @property string $footer
- * @property string $js
- * @property string $jsready
- * @property string $jsload
+ *
+ * @property       string $heads
+ * @property       string $footer
+ * @property       string $js
+ * @property       string $jsready
+ * @property       string $jsload
  * @property-write callable $beforeContent
  * @property-write callable $afterContent
  * @property-write callable $onHead
@@ -31,13 +33,13 @@ use litepubl\widget\Widgets;
  * @property-write callable $onRequest
  * @property-write callable $onTitle
  * @property-write callable $onGetMenu
- * @method array beforeContent(array $params)
- * @method array afterContent(array $params)
- * @method array onHead(array $params)
- * @method array onBody(array $params)
- * @method array onRequest(array $params)
- * @method array onTitle(array $params)
- * @method array onGetMenu(array $params)
+ * @method         array beforeContent(array $params)
+ * @method         array afterContent(array $params)
+ * @method         array onHead(array $params)
+ * @method         array onBody(array $params)
+ * @method         array onRequest(array $params)
+ * @method         array onTitle(array $params)
+ * @method         array onGetMenu(array $params)
  */
 
 class MainView extends \litepubl\core\Events
@@ -171,8 +173,8 @@ class MainView extends \litepubl\core\Events
     public function getTitle(): string
     {
         $title = $this->view->gettitle();
-$a =        $this->ontitle(['title' => $title, 'return' => false]);
-if ($a['return']) {
+        $a =        $this->ontitle(['title' => $title, 'return' => false]);
+        if ($a['return']) {
             return $a['title'];
         } else {
             return $this->parsetitle($a['title'], $this->schema->theme->templates['title']);
@@ -214,8 +216,8 @@ if ($a['return']) {
 
     public function getMenu(): string
     {
-$r = $this->onGetMenu(['content' => '', 'cancel' => false]);
-if ($r['cancel']) {
+        $r = $this->onGetMenu(['content' => '', 'cancel' => false]);
+        if ($r['cancel']) {
             return $r['content'];
         }
 

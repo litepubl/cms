@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\update;
@@ -21,11 +21,11 @@ class classReplacer
 
     public function file(string $filename)
     {
-if (substr($filename, -4) == '.php') {
-        $s = file_get_contents($filename);
-        $s = $this->replace($s);
-        file_put_contents($filename, $s);
-}
+        if (substr($filename, -4) == '.php') {
+                $s = file_get_contents($filename);
+                $s = $this->replace($s);
+                file_put_contents($filename, $s);
+        }
     }
 
     public function dir($dir)
@@ -40,7 +40,7 @@ if (substr($filename, -4) == '.php') {
             if (is_dir($filename)) {
                 $this->dir($filename);
             } else {
-$this->file($filename);
+                $this->file($filename);
             }
         }
         

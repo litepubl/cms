@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\pages;
@@ -196,7 +196,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
         $order = $schema->invertorder ? 'asc' : 'desc';
         $items = $posts->select("$poststable.status = 'published' and $poststable.author = $this->id", "order by $poststable.posted $order limit $from, $perpage");
 
-$announce = Announce::i();
+        $announce = Announce::i();
         $result.= $announce->getNavi($items, $schema, $item['url'], $count);
         return $result;
     }

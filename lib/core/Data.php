@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
@@ -68,12 +68,12 @@ class Data
 
     public function __destruct()
     {
-$this->free();
+        $this->free();
     }
 
     public function free()
-{
-}
+    {
+    }
 
     public function __get($name)
     {
@@ -82,14 +82,14 @@ $this->free();
         } elseif (array_key_exists($name, $this->data)) {
             return $this->data[$name];
         } else {
-return $this->getProp($name);
+            return $this->getProp($name);
         }
     }
 
-protected function getProp(string $name)
-{
+    protected function getProp(string $name)
+    {
             throw new PropException(get_class($this), $name);
-}
+    }
 
     public function __set($name, $value)
     {
@@ -98,24 +98,24 @@ protected function getProp(string $name)
         } elseif (array_key_exists($name, $this->data)) {
             $this->data[$name] = $value;
         } else {
-$this->setProp($name, $value);
+            $this->setProp($name, $value);
         }
     }
 
-protected function setProp(string $name, $value)
-{
+    protected function setProp(string $name, $value)
+    {
             throw new PropException(get_class($this), $name);
-}
+    }
 
     public function __isset($name)
     {
-return array_key_exists($name, $this->data) || method_exists($this, "get$name") || method_exists($this, "Get$name");
+        return array_key_exists($name, $this->data) || method_exists($this, "get$name") || method_exists($this, "Get$name");
     }
 
-public function __call($name, $params)
-{
+    public function __call($name, $params)
+    {
             throw new \UnexpectedValueException(sprintf('Call unknown method %s in %s', $name, get_class($this)));
-}
+    }
 
     public function method_exists($name)
     {

@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\view;
@@ -16,16 +16,18 @@ use litepubl\core\Str;
 use litepubl\core\Plugins;
 
 /**
+* 
  * Common class for theme parsing
+ *
  *
  * @property-write callable $onGetPaths
  * @property-write callable $beforeParse
  * @property-write callable $parsed
  * @property-write callable $onFix
- * @method array onGetPaths(array $params) triggered when tags required before parse
- * @method array beforeParse(array $params) triggered before parse text
- * @method array parsed(array $params) triggered after parse
- * @method array onFix(array $params) triggered after parse
+ * @method         array onGetPaths(array $params) triggered when tags required before parse
+ * @method         array beforeParse(array $params) triggered before parse text
+ * @method         array parsed(array $params) triggered after parse
+ * @method         array onFix(array $params) triggered after parse
  */
 
 class BaseParser extends \litepubl\core\Events
@@ -72,16 +74,16 @@ class BaseParser extends \litepubl\core\Events
         $about = $this->getAbout($name);
         $result[] = $paths->themes . $name . '/' . $about['file'];
 
-$base = new Base();
-$vars = new Vars();
-$vars->plugins = Plugins::i();
+        $base = new Base();
+        $vars = new Vars();
+        $vars->plugins = Plugins::i();
         foreach ($this->themefiles as $filename) {
             $filename = ltrim($filename, '/');
             if (!$filename) {
                 continue;
             }
 
-$filename = $base->parse($filename);
+            $filename = $base->parse($filename);
                 $result[] = $paths->home . $filename;
         }
 
@@ -300,12 +302,14 @@ $filename = $base->parse($filename);
         }
 
         $s = trim($s);
-        $info = $this->beforeparse([
+        $info = $this->beforeparse(
+            [
             'theme' => $theme,
-'text' => $s,
-            ]);
+            'text' => $s,
+            ]
+        );
 
-$s = $info['text'];
+        $s = $info['text'];
         if ($this->removephp) {
             $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
         } else {

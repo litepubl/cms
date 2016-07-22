@@ -5,16 +5,18 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
 
 /**
+* 
  * Class to nightly optimize database
  *
+ *
  * @property-write callable $postsDeleted
- * @method array postsDeleted(array $params) trigger when real posts removed from database
+ * @method         array postsDeleted(array $params) trigger when real posts removed from database
  */
 
 class DbOptimizer extends Events

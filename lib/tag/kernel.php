@@ -44,10 +44,22 @@ class Cats extends Common
 namespace litepubl\tag;
 
 use litepubl\core\Arr;
+use litepubl\core\Event;
 use litepubl\core\ItemsPosts;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Filter;
 use litepubl\view\Schemes;
+
+/**
+* 
+ * Parent class of categories and tags
+ *
+ *
+ * @property       bool $includechilds
+ * @property       bool $includeparents
+ * @property-write callable $changed
+ * @method         array changed(array $params)
+ */
 
 class Common extends \litepubl\core\Items
 {
@@ -63,7 +75,7 @@ class Common extends \litepubl\core\Items
     {
         $this->dbversion = true;
         parent::create();
-        $this->addevents('changed', 'onbeforecontent', 'oncontent');
+        $this->addEvents('changed');
         $this->data['includechilds'] = false;
         $this->data['includeparents'] = false;
         $this->PermalinkIndex = 'category';
@@ -126,22 +138,22 @@ class Common extends \litepubl\core\Items
         return $item['title'];
     }
 
-    public function postEdited(int $idpost)
+    public function postEdited(Event $event)
     {
-        $post = $this->factory->getPost((int)$idpost);
+        $post = $this->factory->getPost((int)$event->id);
         $items = $post->{$this->postpropname};
         Arr::clean($items);
         if (count($items)) {
             $items = $this->db->idSelect(sprintf('id in (%s)', implode(',', $items)));
         }
 
-        $changed = $this->itemsposts->setItems($idpost, $items);
+        $changed = $this->itemsposts->setItems($event->id, $items);
         $this->updateCount($changed);
     }
 
-    public function postDeleted(int $idpost)
+    public function postDeleted(Event $event)
     {
-        $changed = $this->itemsposts->deletePost($idpost);
+        $changed = $this->itemsposts->deletePost($event->id);
         $this->updateCount($changed);
     }
 
@@ -216,7 +228,7 @@ class Common extends \litepubl\core\Items
         $this->setValue($id, 'idurl', $idurl);
         $this->items[$id]['url'] = $url;
         $this->added($id);
-        $this->changed();
+        $this->changed([]);
         $this->getApp()->cache->clear();
         return $id;
     }
@@ -255,7 +267,7 @@ class Common extends \litepubl\core\Items
 
         $this->items[$id] = $item;
         $this->save();
-        $this->changed();
+        $this->changed([]);
         $app->cache->clear();
     }
 
@@ -271,7 +283,7 @@ class Common extends \litepubl\core\Items
             $this->itemsposts->updatePosts($list, $this->postpropname);
         }
 
-        $this->changed();
+        $this->changed([]);
         $this->getApp()->cache->clear();
     }
 
@@ -624,13 +636,23 @@ class Tags extends Common
 namespace litepubl\tag;
 
 use litepubl\core\Context;
-use litepubl\core\Str;
 use litepubl\post\Announce;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
+
+/**
+* 
+ * View of categories and tags
+ *
+ *
+ * @property-write callable $onContent
+ * @property-write callable $onBeforeContent
+ * @method         array onContent(array $params)
+ * @method         array onBeforeContent(array $params) triggered when item has been deleted
+ */
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
@@ -734,8 +756,8 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             $result.= $theme->templates['head.tags'];
 
             $list = $this->getIdPosts($this->id);
-            $announce = new Announce($theme);
-            $result.= $announce->getAnHead($list);
+            $announce = Announce::i($theme);
+            $result.= $announce->getHead($list);
 
             return $theme->parse($result);
         }
@@ -822,11 +844,10 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
     public function getCont(): string
     {
-        $result = new Str('');
-        $this->onbeforecontent($result);
+        $result = $this->onbeforecontent(['content' => '']);
 
         if (!$this->id) {
-            $result->value.= $this->getcont_all();
+            $result['content'] .= $this->getcont_all();
         } else {
             $schema = Schema::getSchema($this);
             $theme = $schema->theme;
@@ -834,17 +855,17 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             if ($this->getContent()) {
                 $vars = new Vars();
                 $vars->menu = $this;
-                $result->value.= $theme->parse($theme->templates['content.menu']);
+                $result['content'] .= $theme->parse($theme->templates['content.menu']);
             }
 
             $list = $this->getIdPosts($this->id);
             $item = $this->tags->getItem($this->id);
-            $announce = new Announce($theme);
-            $result->value.= $announce->getPostsNavi($list, $item['url'], $item['itemscount'], $schema->postanounce, $schema->perpage);
+            $announce = Announce::i($theme);
+            $result['content'] .= $announce->getNavi($list, $schema, $item['url'], $item['itemscount']);
         }
 
-        $this->oncontent($result);
-        return $result->value;
+        $result = $this->oncontent($result);
+        return $result['content'];
     }
 
     public function getCont_all()

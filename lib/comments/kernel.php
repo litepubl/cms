@@ -186,6 +186,7 @@ class Comment extends \litepubl\core\Data
 //Comments.php
 namespace litepubl\comments;
 
+use litepubl\core\Event;
 use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\post\View as PostView;
@@ -193,6 +194,21 @@ use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
+
+/**
+* 
+ * Comment items
+ *
+ *
+ * @property-write callable $edited
+ * @property-write callable $onStatus
+ * @property-write callable $changed
+ * @property-write callable $onApproved
+ * @method         array edited(array $params)
+ * @method         array onStatus(array $params)
+ * @method         array changed(array $params)
+ * @method         array onApproved(array $params)
+ */
 
 class Comments extends \litepubl\core\Items
 {
@@ -215,7 +231,7 @@ class Comments extends \litepubl\core\Items
         $this->table = 'comments';
         $this->rawtable = 'rawcomments';
         $this->basename = 'comments';
-        $this->addevents('edited', 'onstatus', 'changed', 'onapproved');
+        $this->addEvents('edited', 'onstatus', 'changed', 'onapproved');
         $this->pid = 0;
     }
 
@@ -252,8 +268,8 @@ class Comments extends \litepubl\core\Items
             )
         );
 
-        $this->added($id);
-        $this->changed($id);
+        $this->added(['id' => $id]);
+        $this->changed(['id' => $id]);
         return $id;
     }
 
@@ -279,8 +295,8 @@ class Comments extends \litepubl\core\Items
             $this->items[$id]['rawcontent'] = $content;
         }
 
-        $this->edited($id);
-        $this->changed($id);
+        $this->edited(['id' => $id]);
+        $this->changed(['id' => $id]);
         return true;
     }
 
@@ -291,8 +307,8 @@ class Comments extends \litepubl\core\Items
         }
 
         $this->db->setvalue($id, 'status', 'deleted');
-        $this->deleted($id);
-        $this->changed($id);
+        $this->deleted(['id' => $id]);
+        $this->changed(['id' => $id]);
         return true;
     }
 
@@ -311,22 +327,29 @@ class Comments extends \litepubl\core\Items
             return false;
         }
 
-        $old = $this->getvalue($id, 'status');
+        $old = $this->getValue($id, 'status');
         if ($old != $status) {
-            $this->setvalue($id, 'status', $status);
-            $this->onstatus($id, $old, $status);
-            $this->changed($id);
+            $this->setValue($id, 'status', $status);
+            $this->onstatus(
+                [
+                'id' => $id,
+                'old' => $old,
+                'status' =>  $status
+                ]
+            );
+
+            $this->changed(['id' => $id]);
             if (($old == 'hold') && ($status == 'approved')) {
-                $this->onapproved($id);
+                $this->onapproved(['id' => $id]);
             }
             return true;
         }
         return false;
     }
 
-    public function postDeleted($idpost)
+    public function postDeleted(Event $event)
     {
-        $this->db->update("status = 'deleted'", "post = $idpost");
+        $this->db->update("status = 'deleted'", "post = $event->id");
     }
 
     public function getComment($id)
@@ -480,7 +503,6 @@ namespace litepubl\comments;
 use litepubl\core\Context;
 use litepubl\core\Session;
 use litepubl\core\Str;
-use litepubl\core\TempProps;
 use litepubl\core\UserOptions;
 use litepubl\core\Users;
 use litepubl\pages\Simple;
@@ -491,15 +513,26 @@ use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Vars;
 
+/**
+* 
+ * Manage comment form data
+ *
+ *
+ * @property-write callable $onComuser
+ * @method         array onComuser(array $params)
+ */
+
 class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
+    use \litepubl\utils\TempProps;
+
     public $helper;
 
     protected function create()
     {
         parent::create();
         $this->basename = 'commentform';
-        $this->addevents('oncomuser');
+        $this->addEvents('oncomuser');
     }
 
     public function request(Context $context)
@@ -519,7 +552,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             return;
         }
 
-        $temp = new TempProps($this);
+        $temp = $this->newProps();
         $temp->context = $context;
         $response->body = $this->doRequest($context->request->getPost());
     }
@@ -619,8 +652,15 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
             case 'comuser':
                 //hook in regservices social plugin
-                if ($r = $this->oncomuser($values, $confirmed)) {
-                    return $r;
+                $r = $this->oncomuser(
+                    [
+                    'values' => $values,
+                    'confirmid' => $confirmed,
+                    'result' => false
+                    ]
+                );
+                if ($r['result']) {
+                    return $r['result'];
                 }
 
                 if (!$confirmed && $cm->confirmcomuser) {
@@ -657,7 +697,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             return $this->getErrorContent($lang->holduser);
         }
 
-        if (!$cm->canadd($iduser)) {
+        if (!$cm->canAdd($iduser)) {
             return $this->getErrorContent($lang->toomany);
         }
 
@@ -1030,6 +1070,7 @@ namespace litepubl\comments;
 
 use litepubl\Config;
 use litepubl\core\Context;
+use litepubl\core\Event;
 use litepubl\core\Str;
 use litepubl\core\Users;
 use litepubl\utils\Mailer;
@@ -1039,6 +1080,40 @@ use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
 
+/**
+* 
+ * Comment manager included several options and rules
+ *
+ *
+ * @property       bool $
+ * @property       bool $filterstatus
+ * @property       bool $checkduplicate
+ * @property       string $defstatus
+ * @property       bool $sendnotification
+ * @property       int $trustlevel
+ * @property       bool $hidelink
+ * @property       bool $redir
+ * @property       bool $nofollow
+ * @property       bool $canedit
+ * @property       bool $candelete
+ * @property       bool $confirmlogged
+ * @property       bool $confirmguest
+ * @property       bool $confirmcomuser
+ * @property       bool $confirmemail
+ * @property       bool $comuser_subscribe
+ * @property       int $idguest
+ * @property       array $idgroups
+ * @property-write callable $onChanged
+ * @property-write callable $comuserAdded
+ * @property-write callable $isSpamer
+ * @property-write callable $onCreateStatus
+ * @method         array onChanged(array $params)
+ * @method         array comuserAdded(array $params)
+ * @method         array isSpamer(array $params)
+ * @method         array onComuser(array $params)
+ * @method         array onCreateStatus(array $params)
+ */
+
 class Manager extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
     use \litepubl\core\PoolStorageTrait;
@@ -1047,7 +1122,7 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
     {
         parent::create();
         $this->basename = 'commentmanager';
-        $this->addevents('onchanged', 'approved', 'comuseradded', 'is_spamer', 'oncreatestatus');
+        $this->addEvents('onchanged', 'comuseradded', 'isspamer', 'oncreatestatus');
     }
 
     public function getCount()
@@ -1070,14 +1145,14 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
         );
 
         if ($id) {
-            $this->comuseradded($id);
+            $this->comuseradded(['id' => $id]);
         }
         return $id;
     }
 
     public function add($idpost, $idauthor, $content, $ip)
     {
-        $status = $this->createstatus($idpost, $idauthor, $content, $ip);
+        $status = $this->createStatus($idpost, $idauthor, $content, $ip);
         if (!$status) {
             return false;
         }
@@ -1096,10 +1171,10 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
         return $id;
     }
 
-    public function changed($id)
+    public function changed(Event $event)
     {
         $comments = Comments::i();
-        $idpost = $comments->getValue($id, 'post');
+        $idpost = $comments->getValue($event->id, 'post');
         $count = $comments->db->getcount("post = $idpost and status = 'approved'");
         $comments->getDB('posts')->setValue($idpost, 'commentscount', $count);
         if ($this->getApp()->options->commentspool) {
@@ -1108,7 +1183,7 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
 
         //update trust
         try {
-            $idauthor = $comments->getvalue($id, 'author');
+            $idauthor = $comments->getvalue($event->id, 'author');
             $users = Users::i();
             if ($this->trustlevel > (int)$users->getvalue($idauthor, 'trust')) {
                 $trust = $comments->db->getcount("author = $idauthor and status = 'approved' limit " . ($this->trustlevel + 1));
@@ -1117,13 +1192,23 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
         } catch (\Exception $e) {
         }
 
-        $this->onchanged($id);
+        $this->onChanged(['id' => $event->id]);
     }
 
-    public function sendMail($id)
+    public function commentAdded(Event $event)
+    {
+        $this->sendMail($event->id);
+    }
+
+    public function sendMail(int $id)
     {
         if ($this->sendnotification) {
-            $this->getApp()->onClose->on($this, 'send_mail', $id);
+            $this->getApp()->onClose(
+                function ($event) use ($id) {
+                    $this->send_mail($id);
+                    $event->once = true;
+                }
+            );
         }
     }
 
@@ -1152,15 +1237,21 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
         return Mailer::sendtoadmin($subject, $body, false);
     }
 
-    public function createstatus($idpost, $idauthor, $content, $ip)
+    public function createStatus(int $idpost, int $idauthor, string $content, string $ip): string
     {
-        $status = $this->oncreatestatus($idpost, $idauthor, $content, $ip);
-        if (false === $status) {
-            return false;
-        }
+        $r = $this->onCreateStatus(
+            [
+            'idpost' => $idpost,
+            'status' => '',
+            'idauthor' =>  $idauthor,
+            'content' =>  $content,
+            'ip' =>  $ip
+            ]
+        );
 
-        if ($status == 'spam') {
-            return false;
+        $status = $r['status'];
+        if ($status === false || $status == 'spam') {
+            return '';
         }
 
         if (($status == 'hold') || ($status == 'approved')) {
@@ -1178,9 +1269,10 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
         return 'hold';
     }
 
-    public function canadd($idauthor)
+    public function canAdd(int $idauthor): bool
     {
-        return !$this->is_spamer($idauthor);
+        $r = $this->isSpamer(['author' => $idauthor, 'spamer' => false]);
+        return !$r['spamer'];
     }
 
     public function is_duplicate($idpost, $content)
@@ -1270,6 +1362,7 @@ use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
+use litepubl\core\Event;
 
 class Subscribers extends \litepubl\core\ItemsPosts
 {
@@ -1313,31 +1406,32 @@ class Subscribers extends \litepubl\core\ItemsPosts
         if ($this->enabled != $value) {
             $this->data['enabled'] = $value;
             $this->save();
+
             $comments = Comments::i();
             if ($value) {
-                Posts::i()->added = $this->postadded;
+                Posts::i()->added = $this->postAdded;
 
                 $comments->lock();
-                $comments->added = $this->sendmail;
-                $comments->onapproved = $this->sendmail;
+                $comments->added = $this->commentAdded;
+                $comments->onapproved = $this->commentAdded;
                 $comments->unlock();
             } else {
                 $comments->unbind($this);
-                Posts::i()->delete_event_class('added', get_class($this));
+                Posts::i()->detach('added', $this->postAdded);
             }
         }
     }
 
-    public function postadded($idpost)
+    public function postAdded(Event $event)
     {
-        $post = Post::i($idpost);
+        $post = Post::i($event->id);
         if ($post->author <= 1) {
             return;
         }
 
         $useroptions = UserOptions::i();
-        if ('enabled' == $useroptions->getvalue($post->author, 'authorpost_subscribe')) {
-            $this->add($idpost, $post->author);
+        if ('enabled' == $useroptions->getValue($post->author, 'authorpost_subscribe')) {
+            $this->add($post->id, $post->author);
         }
     }
 
@@ -1372,7 +1466,12 @@ class Subscribers extends \litepubl\core\ItemsPosts
         }
     }
 
-    public function sendmail($id)
+    public function commentAdded(Event $event)
+    {
+        $this->sendMail($event->id);
+    }
+
+    public function sendMail(int $id)
     {
         if (!$this->enabled) {
             return;
@@ -1474,7 +1573,6 @@ class Subscribers extends \litepubl\core\ItemsPosts
 //Templates.php
 namespace litepubl\comments;
 
-use litepubl\core\TempProps;
 use litepubl\post\Post;
 use litepubl\post\View as PostView;
 use litepubl\view\Args;
@@ -1483,6 +1581,7 @@ use litepubl\view\Theme;
 
 class Templates extends \litepubl\core\Events
 {
+    use \litepubl\utils\TempProps;
 
     protected function create()
     {
@@ -1494,7 +1593,7 @@ class Templates extends \litepubl\core\Events
     {
         $result = '';
         $idpost = (int)$view->id;
-        $props = new TempProps($this);
+        $props = $this->newProps();
         $props->view = $view;
         $lang = Lang::i('comment');
         $comments = Comments::i();

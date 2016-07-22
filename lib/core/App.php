@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
@@ -15,7 +15,7 @@ use litepubl\debug\LogManager;
 
 class App
 {
-use Callbacks;
+    use Callbacks;
 
     public $cache;
     public $classes;
@@ -233,16 +233,17 @@ use Callbacks;
     }
 
     /**
+* 
      * To compability with Callbacks trait
      */
 
-public function getApp(): App
-{
-return $this;
-}
+    public function getApp(): App
+    {
+        return $this;
+    }
 
-public function onClose(callable $callback)
-{
-$this->addCallback('onclose', $callback);
-}
+    public function onClose(callable $callback)
+    {
+        $this->addCallback('onclose', $callback);
+    }
 }

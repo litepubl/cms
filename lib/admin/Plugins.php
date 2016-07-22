@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\admin;
@@ -36,7 +36,7 @@ class Plugins extends Menu
         $result = parent::gethead();
         if (!empty($_GET['plugin'])) {
             $name = $_GET['plugin'];
-$plugins = PluginItems::i();
+            $plugins = PluginItems::i();
             if ($plugins->exists($name)) {
                 if ($admin = $this->getAdminPlugin($name)) {
                     if (method_exists($admin, 'gethead')) {

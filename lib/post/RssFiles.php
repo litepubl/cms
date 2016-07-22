@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\post;
@@ -14,13 +14,15 @@ use litepubl\core\Context;
 use litepubl\core\Event;
 
 /**
+* 
  * RSS files
  *
- * @property string $feedburner
+ *
+ * @property       string $feedburner
  * @property-write callable $onRoot
  * @property-write callable $onItem
- * @method array onRoot(array $params)
- * @method array onItem(array $params)
+ * @method         array onRoot(array $params)
+ * @method         array onItem(array $params)
  */
 
 class RssFiles extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface

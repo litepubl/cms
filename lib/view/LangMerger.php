@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\view;
@@ -52,10 +52,10 @@ class LangMerger extends Merger
     {
         $filename = ltrim($filename, '/');
 
-$theme = Theme::i();
-$vars = new Vars();
-$vars->plugins = Plugins::i();
-$filename = $theme->parse($filename);
+        $theme = Theme::i();
+        $vars = new Vars();
+        $vars->plugins = Plugins::i();
+        $filename = $theme->parse($filename);
         return $this->getApp()->paths->home . $filename;
     }
 

@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
@@ -17,8 +17,8 @@ class Plugins extends Items
 {
     public static $abouts = [];
     public $deprecated;
-public $paths;
-private $dirNames;
+    public $paths;
+    private $dirNames;
 
     protected function create()
     {
@@ -26,49 +26,49 @@ private $dirNames;
         parent::create();
         $this->basename = 'plugins/index';
         $this->deprecated = [];
-$this->addMap('paths', []);
+        $this->addMap('paths', []);
     }
 
-public function __get($name)
-{
-if (isset($this->items[$name])) {
-$section = $this->items[$name]['path'] ?? '';
-if (isset($this->paths[$section])) {
-return trim($this->paths[$section], '\/') . '/' . $name;
-} else {
-return $name;
-}
-} elseif (isset($this->paths[$name])) {
-return $this->paths[$name];
-} else {
-return parent::__get($name);
-}
-}
+    public function __get($name)
+    {
+        if (isset($this->items[$name])) {
+            $section = $this->items[$name]['path'] ?? '';
+            if (isset($this->paths[$section])) {
+                return trim($this->paths[$section], '\/') . '/' . $name;
+            } else {
+                return $name;
+            }
+        } elseif (isset($this->paths[$name])) {
+            return $this->paths[$name];
+        } else {
+            return parent::__get($name);
+        }
+    }
 
-public function __set($name, $value)
-{
-if (isset($this->items[$name])) {
-$this->items[$name]['path'] = $value;
-} elseif (isset($this->paths[$name])) {
-$this->paths[$name] = $value;
-} else {
-return parent::__set($name, $value);
-}
+    public function __set($name, $value)
+    {
+        if (isset($this->items[$name])) {
+            $this->items[$name]['path'] = $value;
+        } elseif (isset($this->paths[$name])) {
+            $this->paths[$name] = $value;
+        } else {
+            return parent::__set($name, $value);
+        }
 
-$this->save();
-return true;
-}
+        $this->save();
+        return true;
+    }
 
     public static function getAbout(string $name): array
     {
         if (!isset(static ::$abouts[$name])) {
-$pluginsDir = static ::getAppInstance()->paths->plugins;
-if (is_dir($pluginsDir . $name)) {
-$dir = $pluginsDir . $name;
-} else {
-$self = static::i();
-$dir = $self->getPluginDir($name);
-}
+            $pluginsDir = static ::getAppInstance()->paths->plugins;
+            if (is_dir($pluginsDir . $name)) {
+                        $dir = $pluginsDir . $name;
+            } else {
+                        $self = static::i();
+                        $dir = $self->getPluginDir($name);
+            }
 
             static ::$abouts[$name] = static ::localAbout($dir);
         }
@@ -94,14 +94,14 @@ $dir = $self->getPluginDir($name);
 
     public static function getLangAbout($filename): Lang
     {
-$dir = dirname($filename);
-$name = basename($dir);
-if (!isset(static::$abouts[$name])) {
-        $about = static ::localAbout($dir);
-static::$abouts[$name] = $about;
-}
+        $dir = dirname($filename);
+        $name = basename($dir);
+        if (!isset(static::$abouts[$name])) {
+                $about = static ::localAbout($dir);
+                static::$abouts[$name] = $about;
+        }
 
-$about = static::$abouts[$name];
+        $about = static::$abouts[$name];
         $lang = Lang::admin();
         $lang->ini[$name] = $about;
         $lang->section = $name;
@@ -110,12 +110,12 @@ $about = static::$abouts[$name];
 
     public function add(string $name)
     {
-$dirNames = $this->getDirNames();
-if (!isset($dirNames[$name])) {
-return false;
-}
+        $dirNames = $this->getDirNames();
+        if (!isset($dirNames[$name])) {
+                return false;
+        }
 
-$dir = $this->getPluginDir($name) . DIRECTORY_SEPARATOR;
+        $dir = $this->getPluginDir($name) . DIRECTORY_SEPARATOR;
         $about = static ::getAbout($name);
 
         if (file_exists($dir . $about['filename'])) {
@@ -134,20 +134,20 @@ $dir = $this->getPluginDir($name) . DIRECTORY_SEPARATOR;
 
         $classname = trim($about['classname']);
         if (!strrpos($classname, '\\')) {
-$this->error('Plugin class must have namespace');
-}
+            $this->error('Plugin class must have namespace');
+        }
 
         $classes = $this->getApp()->classes;
         $classes->lock();
         $this->lock();
             $this->items[$name] = array(
-'path' => $dirNames[$name],
+        'path' => $dirNames[$name],
             );
 
             $classes->installClass($classname);
-            if ($about['adminclassname']) {
-                $classes->installClass($about['adminclassname']);
-            }
+        if ($about['adminclassname']) {
+            $classes->installClass($about['adminclassname']);
+        }
 
         $this->unlock();
         $classes->unlock();
@@ -171,7 +171,7 @@ $this->error('Plugin class must have namespace');
 
         $about = static ::getabout($name);
         $datafile = false;
-$app = $this->getApp();
+        $app = $this->getApp();
         if (class_exists($about['classname'])) {
             $plugin = $app->classes->getInstance($about['classname']);
             if ($plugin instanceof Plugin) {
@@ -180,7 +180,7 @@ $app = $this->getApp();
         }
 
         $app->classes->lock();
-if (strrpos($about['classname'], '\\')) {
+        if (strrpos($about['classname'], '\\')) {
             if ($about['adminclassname']) {
                 $app->classes->uninstallClass($about['adminclassname']);
             }
@@ -267,90 +267,90 @@ if (strrpos($about['classname'], '\\')) {
         }
     }
 
-public function readPaths(): array
-{
-$paths = [];
-$dir = $this->getapp()->paths->plugins;
-$list = dir($dir);
-while($filename = $list->read()) {
-if ($filename == '.' || $filename == '..') {
-continue;
-}
+    public function readPaths(): array
+    {
+        $paths = [];
+        $dir = $this->getapp()->paths->plugins;
+        $list = dir($dir);
+        while($filename = $list->read()) {
+            if ($filename == '.' || $filename == '..') {
+                continue;
+            }
 
-if (is_dir($dir . $filename)) {
-$this->dirNames[$filename] = '';
-} elseif (substr($filename, -4) == '.ini') {
-$ini = parse_ini_file($dir . $filename, false);
-$paths = $ini + $paths;
-}
-}
+            if (is_dir($dir . $filename)) {
+                $this->dirNames[$filename] = '';
+            } elseif (substr($filename, -4) == '.ini') {
+                $ini = parse_ini_file($dir . $filename, false);
+                $paths = $ini + $paths;
+            }
+        }
 
-$list->close();
+        $list->close();
 
-if ($paths != $this->paths) {
-$this->paths = $paths;
-$this->save();
-}
+        if ($paths != $this->paths) {
+            $this->paths = $paths;
+            $this->save();
+        }
 
-return $paths;
-}
+        return $paths;
+    }
 
-public function getDirNames(): array
-{
-if (!$this->dirNames) {
-        $this->dirNames = [];
-$paths = $this->readPaths();
-        ksort($this->dirNames);
+    public function getDirNames(): array
+    {
+        if (!$this->dirNames) {
+                $this->dirNames = [];
+            $paths = $this->readPaths();
+                ksort($this->dirNames);
 
-$pluginsDir = $this->getApp()->paths->plugins;
-foreach ($paths as $namePath => $path) {
-$path = trim($path, '\/');
-if (is_dir($pluginsDir . $path)) {
-$dirNames = [];
-$dir = $pluginsDir . $path;
-$list = dir($dir);
-while ($filename = $list->read()) {
-if ($filename == '.' || $filename == '..') {
-continue;
-}
+            $pluginsDir = $this->getApp()->paths->plugins;
+            foreach ($paths as $namePath => $path) {
+                $path = trim($path, '\/');
+                if (is_dir($pluginsDir . $path)) {
+                    $dirNames = [];
+                    $dir = $pluginsDir . $path;
+                    $list = dir($dir);
+                    while ($filename = $list->read()) {
+                        if ($filename == '.' || $filename == '..') {
+                            continue;
+                        }
 
-if (is_dir($dir . '/' . $filename)) {
-$dirNames[$filename] = $namePath;
-}
-}
+                        if (is_dir($dir . '/' . $filename)) {
+                            $dirNames[$filename] = $namePath;
+                        }
+                    }
 
-$list->close();
+                    $list->close();
 
-ksort($dirNames);
-$this->dirNames = $this->dirNames + $dirNames;
-}
-}
-}
+                    ksort($dirNames);
+                    $this->dirNames = $this->dirNames + $dirNames;
+                }
+            }
+        }
 
-return $this->dirNames;
-}
+        return $this->dirNames;
+    }
 
-public function exists(string $name): bool
-{
-$list = $this->getDirNames();
-return isset($list[$name]);
-}
+    public function exists(string $name): bool
+    {
+        $list = $this->getDirNames();
+        return isset($list[$name]);
+    }
 
-public function getPluginDir(string $name): string
-{
-$pluginsDir = $this->getApp()->paths->plugins;
-if (isset($this->items[$name])) {
-return $pluginsDir . $this->__get($name);
-} elseif (is_dir($pluginsDir . $name)) {
-return $pluginsDir . $name;
-} else {
-$dirNames = $this->getDirNames();
-if (isset($this->paths[$dirNames[$name]])) {
-return $pluginsDir . trim($this->paths[$dirNames[$name]], '\/') . '/' . $name;
-}
-}
+    public function getPluginDir(string $name): string
+    {
+        $pluginsDir = $this->getApp()->paths->plugins;
+        if (isset($this->items[$name])) {
+            return $pluginsDir . $this->__get($name);
+        } elseif (is_dir($pluginsDir . $name)) {
+            return $pluginsDir . $name;
+        } else {
+            $dirNames = $this->getDirNames();
+            if (isset($this->paths[$dirNames[$name]])) {
+                return $pluginsDir . trim($this->paths[$dirNames[$name]], '\/') . '/' . $name;
+            }
+        }
 
-$this->error(sprintf('Plugin dir not found for %s', $name));
-}
+        $this->error(sprintf('Plugin dir not found for %s', $name));
+    }
 
 }

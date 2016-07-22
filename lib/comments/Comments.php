@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\comments;
@@ -20,16 +20,18 @@ use litepubl\view\Lang;
 use litepubl\view\Vars;
 
 /**
+* 
  * Comment items
+ *
  *
  * @property-write callable $edited
  * @property-write callable $onStatus
  * @property-write callable $changed
  * @property-write callable $onApproved
- * @method array edited(array $params)
- * @method array onStatus(array $params)
- * @method array changed(array $params)
- * @method array onApproved(array $params)
+ * @method         array edited(array $params)
+ * @method         array onStatus(array $params)
+ * @method         array changed(array $params)
+ * @method         array onApproved(array $params)
  */
 
 class Comments extends \litepubl\core\Items
@@ -152,11 +154,13 @@ class Comments extends \litepubl\core\Items
         $old = $this->getValue($id, 'status');
         if ($old != $status) {
             $this->setValue($id, 'status', $status);
- $this->onstatus([
-'id' => $id,
-'old' => $old,
-'status' =>  $status
-]);
+            $this->onstatus(
+                [
+                'id' => $id,
+                'old' => $old,
+                'status' =>  $status
+                ]
+            );
 
             $this->changed(['id' => $id]);
             if (($old == 'hold') && ($status == 'approved')) {

@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\admin;
@@ -15,11 +15,13 @@ use litepubl\pages\Menu as StdMenu;
 use litepubl\view\Lang;
 
 /**
+* 
  * Admin menu items
  *
- * @property string $heads
+ *
+ * @property       string $heads
  * @property-write callable $onExclude
- * @method array onExclude(array $params)
+ * @method         array onExclude(array $params)
  */
 
 class Menus extends \litepubl\pages\Menus
@@ -152,6 +154,6 @@ class Menus extends \litepubl\pages\Menus
         }
 
         $r = $this->onExclude(['id' => $id, 'exclude' => false]);
-return $r['exclude'];
+        return $r['exclude'];
     }
 }

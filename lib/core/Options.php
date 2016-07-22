@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
@@ -15,45 +15,45 @@ use litepubl\Config;
 /**
  * This is the class to storage common options
  *
- * @property int $user
- * @property string $email
- * @property string $password
- * @property string $solt
- * @property bool $authenabled
- * @property bool $usersenabled 
- * @property bool $reguser
- * @property bool $xxxcheck
- * @property string $cookiehash
- * @property int $cookieexpired
- * @property bool $securecookie
- * @property string $version
- * @property string $language
- * @property string $dateformat
- * @property string $timezone
- * @property string $mailer
- * @property string $fromemail
- * @property array $dbconfig
- * @property bool $cache
- * @property int $expiredcache
- * @property bool $admincache
- * @property bool $ob_cache
- * @property int $filetime_offset
- * @property int $perpage
- * @property int $commentsperpage
- * @property bool $commentpages
- * @property bool $comments_invert_order
- * @property bool $commentsdisabled
- * @property string $comstatus
- * @property bool $commentspool
- * @property bool $pingenabled
- * @property bool $echoexception
- * @property bool $parsepost
- * @property bool $hidefilesonpage
- * @property bool $show_draft_post
- * @property bool $show_file_perm
- * @property int $crontime
+ * @property       int $user
+ * @property       string $email
+ * @property       string $password
+ * @property       string $solt
+ * @property       bool $authenabled
+ * @property       bool $usersenabled 
+ * @property       bool $reguser
+ * @property       bool $xxxcheck
+ * @property       string $cookiehash
+ * @property       int $cookieexpired
+ * @property       bool $securecookie
+ * @property       string $version
+ * @property       string $language
+ * @property       string $dateformat
+ * @property       string $timezone
+ * @property       string $mailer
+ * @property       string $fromemail
+ * @property       array $dbconfig
+ * @property       bool $cache
+ * @property       int $expiredcache
+ * @property       bool $admincache
+ * @property       bool $ob_cache
+ * @property       int $filetime_offset
+ * @property       int $perpage
+ * @property       int $commentsperpage
+ * @property       bool $commentpages
+ * @property       bool $comments_invert_order
+ * @property       bool $commentsdisabled
+ * @property       string $comstatus
+ * @property       bool $commentspool
+ * @property       bool $pingenabled
+ * @property       bool $echoexception
+ * @property       bool $parsepost
+ * @property       bool $hidefilesonpage
+ * @property       bool $show_draft_post
+ * @property       bool $show_file_perm
+ * @property       int $crontime
  * @property-write callable $changed
- * @method array changed(array $params) triggered when option changed
+ * @method         array changed(array $params) triggered when option changed
  */
 
 class Options extends Events
@@ -93,17 +93,17 @@ class Options extends Events
 
     public function __set($name, $value)
     {
-try {
-parent::__set($name, $value);
-} catch(PropException $e) {
-$this->data[$name] = $value;
-}
+        try {
+                parent::__set($name, $value);
+        } catch(PropException $e) {
+                $this->data[$name] = $value;
+        }
 
-if (array_key_exists($name, $this->data)) {
+        if (array_key_exists($name, $this->data)) {
             $this->save();
             $this->changed(['name' => $name, 'value' => $value]);
             $this->getApp()->cache->clear();
-}
+        }
     }
 
     public function delete(string $name)
@@ -324,7 +324,7 @@ if (array_key_exists($name, $this->data)) {
             $this->data['timezone'] = $value;
             date_default_timezone_set($this->timezone);
             $this->gmt = date('Z');
-$this->save();
+            $this->save();
         }
     }
 
@@ -340,11 +340,11 @@ $this->save();
         return Str::baseMD5($s . $this->solt . Config::$secret);
     }
 
-public function setSolt(string $value)
-{
-$this->data['solt'] = $value;
+    public function setSolt(string $value)
+    {
+        $this->data['solt'] = $value;
                 $this->data['emptyhash'] = $this->hash('');
-}
+    }
 
     public function inGroup(string $groupname): bool
     {

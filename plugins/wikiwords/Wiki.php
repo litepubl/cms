@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\plugins\wikiwords;
@@ -222,19 +222,21 @@ class Wiki extends \litepubl\core\Items
     public function createWords(string $content, Post $post): string
     {
         if (preg_match_all('/\[wiki\:(.*?)\]/im', $content, $m, PREG_SET_ORDER)) {
-$theme = $post->view->theme;
+            $theme = $post->view->theme;
             foreach ($m as $item) {
                 $word = $item[1];
                 if ($id = $this->add($word, $post->id)) {
                     if ($post->id == 0) {
                         $this->fix[$id] = $post;
-                        $post->onId(function($event) {
-$this->fixPost($event->getTarget());
-});
+                        $post->onId(
+                            function ($event) {
+                                $this->fixPost($event->getTarget());
+                            }
+                        );
                     }
 
 
-            $wikiWord = str_replace('$word', $word, $theme->templates['wiki.word']);
+                    $wikiWord = str_replace('$word', $word, $theme->templates['wiki.word']);
                     $content = str_replace($item[0], $wikiWord, $content);
                 }
             }

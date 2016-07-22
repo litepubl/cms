@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\post;
@@ -23,18 +23,20 @@ use litepubl\view\Theme;
 use litepubl\widget\Comments as CommentWidget;
 
 /**
+* 
  * RSS posts
  *
- * @property string $feedburner
- * @property string $feedburnercomments
- * @property string $template
- * @property int $idpostcomments
+ *
+ * @property       string $feedburner
+ * @property       string $feedburnercomments
+ * @property       string $template
+ * @property       int $idpostcomments
  * @property-write callable $beforePost
  * @property-write callable $afterPost
  * @property-write callable $onPostItem
- * @method array beforePost(array $params)
- * @method array afterPost(array $params)
- * @method array onPostItem(array $params)
+ * @method         array beforePost(array $params)
+ * @method         array afterPost(array $params)
+ * @method         array onPostItem(array $params)
  */
 
 class Rss extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface

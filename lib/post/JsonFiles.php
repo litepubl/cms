@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\post;
@@ -17,12 +17,14 @@ use litepubl\view\Parser;
 use litepubl\view\Theme;
 
 /**
+* 
  * JSON-RPC methods to upload files
+ *
  *
  * @property-write callable $uploaded
  * @property-write callable $onProps
- * @method array uploaded(array $params)
- * @method array onProps(array $params)
+ * @method         array uploaded(array $params)
+ * @method         array onProps(array $params)
  */
 
 class JsonFiles extends \litepubl\core\Events
@@ -147,8 +149,8 @@ class JsonFiles extends \litepubl\core\Events
     {
         $options = $this->getApp()->options;
 
-return $options->inGroup('editor')
-|| ($options->hasGroup('author')
+        return $options->inGroup('editor')
+        || ($options->hasGroup('author')
             && AuthorRights::canUpload());
     }
 

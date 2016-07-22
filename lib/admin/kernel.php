@@ -11,14 +11,88 @@ interface AdminInterface
 //AuthorRights.php
 namespace litepubl\admin;
 
+/**
+* 
+ *  Events for author rights on post, files
+ *
+ *
+ * @property-write callable $onCan
+ * @property-write callable $add
+ * @property-write callable $status
+ * @property-write callable $upload
+ * @property-write callable $deleteFile
+ * @method         array onCan(array $params)
+ * @method         array add(array $params)
+ * @method         array status(array $params)
+ * @method         array upload(array $params)
+ * @method         array deleteFile(array $params)
+ */
+
 class AuthorRights extends \litepubl\core\Events
 {
+    public $message = '';
+    public $result = true;
+
+    public static function __callStatic( string $name , array $args)
+    {
+        return static::i()->can($name, count($args) ? $args[0] : null);
+    }
+
+    public static function getMessage(): string
+    {
+        return static::i()->message;
+    }
 
     protected function create()
     {
         parent::create();
-        $this->addevents('changeposts', 'canupload', 'candeletefile');
         $this->basename = 'authorrights';
+        $this->addEvents('onCan', 'add', 'status', 'upload', 'deleteFile');
+    }
+
+    public function can(string $action, $arg = null): bool
+    {
+        $action = strtolower($action);
+        if (Str::begin($action, 'can')) {
+            $action = substr($action, 3);
+        }
+
+        if (!in_array($name, $this->eventnames)) {
+            $this->error(sprintf('Unknown % action', $action));
+        }
+
+        if ($name != 'oncan') {
+            $r = $this->callEvent(
+                'oncan', [
+                'result' => true,
+                'message' => '',
+                'action' => $name,
+                'arg' => $arg,
+                ]
+            );
+
+            if ($r['result']) {
+                $r = $this->callEvent(
+                    $name, [
+                    'result' => true,
+                    'message' => '',
+                    'arg' => $arg,
+                    ]
+                );
+            }
+        } else {
+            $r = $this->callEvent(
+                $name, [
+                'result' => true,
+                'message' => '',
+                'arg' => $arg,
+                ]
+            );
+        }
+
+        $this->result = $r['result'];
+        $this->message = $r['message'];
+        return $r['result'];
     }
 }
 
@@ -351,7 +425,6 @@ namespace litepubl\admin;
 use litepubl\core\UserGroups;
 use litepubl\perms\Perms;
 use litepubl\view\Admin;
-use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 
@@ -677,6 +750,16 @@ use litepubl\core\UserGroups;
 use litepubl\pages\Menu as StdMenu;
 use litepubl\view\Lang;
 
+/**
+* 
+ * Admin menu items
+ *
+ *
+ * @property       string $heads
+ * @property-write callable $onExclude
+ * @method         array onExclude(array $params)
+ */
+
 class Menus extends \litepubl\pages\Menus
 {
 
@@ -684,7 +767,7 @@ class Menus extends \litepubl\pages\Menus
     {
         parent::create();
         $this->basename = 'adminmenu';
-        $this->addevents('onexclude');
+        $this->addEvents('onexclude');
         $this->data['heads'] = '';
     }
 
@@ -806,7 +889,8 @@ class Menus extends \litepubl\pages\Menus
             return true;
         }
 
-        return $this->onexclude($id);
+        $r = $this->onExclude(['id' => $id, 'exclude' => false]);
+        return $r['exclude'];
     }
 }
 

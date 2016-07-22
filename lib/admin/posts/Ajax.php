@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\admin\posts;
@@ -44,7 +44,7 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
     public function addEvent(string $name, $callable, $method = null)
     {
-$name = strtolower($name);
+        $name = strtolower($name);
         if (!in_array($name, $this->eventnames)) {
             $this->eventnames[] = $name;
         }
@@ -54,7 +54,7 @@ $name = strtolower($name);
 
     public function deleteEvent(string $name)
     {
-$name = strtolower($name);
+        $name = strtolower($name);
         if (isset($this->data['events'][$name])) {
             unset($this->data['events'][$name]);
             Arr::deleteValue($this->eventnames, $name);

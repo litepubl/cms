@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\tag;
@@ -19,12 +19,14 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
+* 
  * View of categories and tags
+ *
  *
  * @property-write callable $onContent
  * @property-write callable $onBeforeContent
- * @method array onContent(array $params) triggered when new item has been added
- * @method array onBeforeContent(array $params) triggered when item has been deleted
+ * @method         array onContent(array $params)
+ * @method         array onBeforeContent(array $params) triggered when item has been deleted
  */
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface

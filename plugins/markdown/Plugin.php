@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\plugins\markdown;
@@ -32,11 +32,13 @@ class Plugin extends \litepubl\core\Plugin
         }
         $event->content = $this->parser->transform($event->content);
         if ($this->deletep) {
-            $event->content = strtr($event->content, array(
+            $event->content = strtr(
+                $event->content, array(
                 '<p>' => '',
                 '</p>' => '',
                 '&#95;' => '_'
-                )            );
+                )            
+            );
         }
     }
 }

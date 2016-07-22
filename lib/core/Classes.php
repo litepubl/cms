@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
@@ -13,12 +13,14 @@ namespace litepubl\core;
 use litepubl\Config;
 
 /**
+* 
  * Class to manage autoload and keep singletons
+ *
  *
  * @property-write callable $onNewItem
  * @property-write callable $onRename
- * @method array onNewItem(array $params) trigger when new item create
- * @method array onRename(array $params) trigger when class renamed
+ * @method         array onNewItem(array $params) trigger when new item create
+ * @method         array onRename(array $params) trigger when class renamed
  */
 
 class Classes extends Items
@@ -101,11 +103,13 @@ class Classes extends Items
             $class = $this->remap[$class];
         }
 
-        $info = $this->onnewitem([
+        $info = $this->onnewitem(
+            [
             'name' => $name,
-'class' => $class,
+            'class' => $class,
             'id' => $id,
-            ]);
+            ]
+        );
 
         return new $info['class']();
     }
@@ -448,10 +452,12 @@ class Classes extends Items
             $this->getApp()->router->db->update('class =' . Str::quote($newclass), 'class = ' . Str::quote($oldclass));
             $this->save();
 
-            $this->onrename([
-'oldclass' => $oldclass,
-'newclass' =>  $newclass,
-]);
+            $this->onrename(
+                [
+                'oldclass' => $oldclass,
+                'newclass' =>  $newclass,
+                ]
+            );
         }
     }
 

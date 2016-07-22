@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\view;
@@ -13,15 +13,16 @@ namespace litepubl\view;
 trait Factory
 {
 
+
     public function newArgs(): Args
-{
+    {
         return new Args();
     }
 
-public function newVars(): Vars
-{
-return new Vars();
-}
+    public function newVars(): Vars
+    {
+        return new Vars();
+    }
 
     public function getLang(string $section = ''): Lang
     {
@@ -33,9 +34,9 @@ return new Vars();
         return Schema::getSchema($this);
     }
 
-public function getTheme(): Theme
-{
-return $this->getSchema()->theme;
-}
+    public function getTheme(): Theme
+    {
+        return $this->getSchema()->theme;
+    }
 
 }

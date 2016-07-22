@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\pages;
@@ -18,14 +18,16 @@ use litepubl\core\Response;
 use litepubl\core\Str;
 
 /**
+* 
  * JSON-RPC server
+ *
  *
  * @property-write callable $beforeRequest
  * @property-write callable $beforeCall
  * @property-write callable $afterCall
- * @method array beforeRequest(array $params)
- * @method array beforeCall(array $params)
- * @method array afterCall(array $params)
+ * @method         array beforeRequest(array $params)
+ * @method         array beforeCall(array $params)
+ * @method         array afterCall(array $params)
  */
 
 class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
@@ -102,7 +104,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
 
         $a = $this->beforeCall(['params' => $params]);
-$params = $a['params'];
+        $params = $a['params'];
         try {
             $result = $this->callMethod($args['method'], $params);
         } catch (\Exception $e) {
@@ -114,7 +116,7 @@ $params = $a['params'];
         }
 
         $r = $this->afterCall(['result' => $result, 'args' => $args]);
-$result = $r['result'];
+        $result = $r['result'];
 
         $resp = array(
             'jsonrpc' => '2.0'
@@ -127,9 +129,9 @@ $result = $r['result'];
             if (isset($params['slave']) && is_array($params['slave'])) {
                 try {
                     $slave_result = $this->callMethod(
-$params['slave']['method'], 
+                        $params['slave']['method'], 
                         $params['slave']['params']
-);
+                    );
                 } catch (\Exception $e) {
                     $slave_result = array(
                         'error' => array(
@@ -169,7 +171,7 @@ $params['slave']['method'],
 
     public function addEvent(string $name, $callable, $method = null)
     {
-$name = strtolower($name);
+        $name = strtolower($name);
         if (!in_array($name, $this->eventnames)) {
             $this->eventnames[] = $name;
         }
@@ -186,20 +188,20 @@ $name = strtolower($name);
         }
     }
 
-public function callMethod(string $method, array $params)
-{
-foreach ($this->data['events'][$method] as $item) {
-if (class_exists($item[0])) {
+    public function callMethod(string $method, array $params)
+    {
+        foreach ($this->data['events'][$method] as $item) {
+            if (class_exists($item[0])) {
                 $callback = [$this->getApp()->classes->getInstance($item[0]), $item[1]];
-return call_user_func_array($callback, [$params]);
-} else {
-$mesg = sprintf('Class "%s" not found for method "%s"', $item[0], $method);
-$this->getApp()->getLogger()->warning($mesg);
-return ['error' => [
-'message' => $mesg,
-'code' => 500
-]];
-}
-}
-}
+                return call_user_func_array($callback, [$params]);
+            } else {
+                $mesg = sprintf('Class "%s" not found for method "%s"', $item[0], $method);
+                $this->getApp()->getLogger()->warning($mesg);
+                return ['error' => [
+                'message' => $mesg,
+                'code' => 500
+                ]];
+            }
+        }
+    }
 }

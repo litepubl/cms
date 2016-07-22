@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\view;
@@ -14,10 +14,12 @@ use litepubl\core\Arr;
 use litepubl\core\Event;
 
 /**
+* 
  * Common class for join files
  *
+ *
  * @property-write callable $themeChanged
- * @method array themeChanged(array $params)
+ * @method         array themeChanged(array $params)
  */
 
 class Schemes extends \litepubl\core\Items
@@ -100,7 +102,7 @@ class Schemes extends \litepubl\core\Items
 
     public function widgetDeleted(Event $event)
     {
-$idwidget = $event->id;
+        $idwidget = $event->id;
         $deleted = false;
         foreach ($this->items as & $schemaitem) {
             unset($sidebar);

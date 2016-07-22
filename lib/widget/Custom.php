@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\widget;
@@ -13,12 +13,14 @@ namespace litepubl\widget;
 use litepubl\core\Event;
 
 /**
+* 
  * Widgets with editable content
+ *
  *
  * @property-write callable $added
  * @property-write callable $deleted
- * @method array added(array $params) triggered when new item has been added
- * @method array deleted(array $params) triggered when item has been deleted
+ * @method         array added(array $params)
+ * @method         array deleted(array $params) triggered when item has been deleted
  */
 
 class Custom extends Widget
@@ -107,7 +109,7 @@ class Custom extends Widget
 
     public function widgetDeleted(Event $event)
     {
-$id = $event->id;
+        $id = $event->id;
         if (isset($this->items[$id])) {
             unset($this->items[$id]);
             $this->save();

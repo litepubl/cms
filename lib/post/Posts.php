@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\post;
@@ -16,19 +16,21 @@ use litepubl\utils\LinkGenerator;
 use litepubl\view\Schemes;
 
 /**
+* 
  * Main class to manage posts
  *
- * @property int $archivescount
- * @property int $revision
- * @property bool $syncmeta
+ *
+ * @property       int $archivescount
+ * @property       int $revision
+ * @property       bool $syncmeta
  * @property-write callable $edited
  * @property-write callable $changed
  * @property-write callable $singleCron
  * @property-write callable $onSelect
- * @method array edited(array $params)
- * @method array changed(array $params)
- * @method array singleCron(array $params)
- * @method array onselect(array $params)
+ * @method         array edited(array $params)
+ * @method         array changed(array $params)
+ * @method         array singleCron(array $params)
+ * @method         array onselect(array $params)
  */
 
 class Posts extends \litepubl\core\Items
@@ -376,7 +378,7 @@ class Posts extends \litepubl\core\Items
         $this->data['revision']++;
         $this->save();
         $this->getApp()->cache->clear();
-return $this->data['revision'];
+        return $this->data['revision'];
     }
 
     public function getSitemap($from, $count)

@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\comments;
@@ -36,9 +36,9 @@ class RssHold extends \litepubl\core\Events implements \litepubl\core\Responsive
     {
         if ($this->key != $key) {
             if ($key == '') {
-Manager::i()->unbind($self);
+                Manager::i()->unbind($self);
             } else {
-Manager::i()->changed = $this->commentschanged;
+                Manager::i()->changed = $this->commentschanged;
             }
             $this->data['key'] = $key;
             $this->save();
@@ -47,7 +47,7 @@ Manager::i()->changed = $this->commentschanged;
 
     public function commentschanged(Event $event)
     {
-$this->getApp()->cache->clearUrl($this->url);
+        $this->getApp()->cache->clearUrl($this->url);
     }
 
     public function request(Context $context)

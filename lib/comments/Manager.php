@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\comments;
@@ -23,35 +23,37 @@ use litepubl\view\Theme;
 use litepubl\view\Vars;
 
 /**
+* 
  * Comment manager included several options and rules
  *
- * @property bool $
- * @property bool $filterstatus
- * @property bool $checkduplicate
- * @property string $defstatus
- * @property bool $sendnotification
- * @property int $trustlevel
- * @property bool $hidelink
- * @property bool $redir
- * @property bool $nofollow
- * @property bool $canedit
- * @property bool $candelete
- * @property bool $confirmlogged
- * @property bool $confirmguest
- * @property bool $confirmcomuser
- * @property bool $confirmemail
- * @property bool $comuser_subscribe
- * @property int $idguest
- * @property array $idgroups
+ *
+ * @property       bool $
+ * @property       bool $filterstatus
+ * @property       bool $checkduplicate
+ * @property       string $defstatus
+ * @property       bool $sendnotification
+ * @property       int $trustlevel
+ * @property       bool $hidelink
+ * @property       bool $redir
+ * @property       bool $nofollow
+ * @property       bool $canedit
+ * @property       bool $candelete
+ * @property       bool $confirmlogged
+ * @property       bool $confirmguest
+ * @property       bool $confirmcomuser
+ * @property       bool $confirmemail
+ * @property       bool $comuser_subscribe
+ * @property       int $idguest
+ * @property       array $idgroups
  * @property-write callable $onChanged
  * @property-write callable $comuserAdded
  * @property-write callable $isSpamer
  * @property-write callable $onCreateStatus
- * @method array onChanged(array $params)
- * @method array comuserAdded(array $params)
- * @method array isSpamer(array $params)
- * @method array onComuser(array $params)
- * @method array onCreateStatus(array $params)
+ * @method         array onChanged(array $params)
+ * @method         array comuserAdded(array $params)
+ * @method         array isSpamer(array $params)
+ * @method         array onComuser(array $params)
+ * @method         array onCreateStatus(array $params)
  */
 
 class Manager extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
@@ -136,17 +138,19 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
     }
 
     public function commentAdded(Event $event)
-{
-$this->sendMail($event->id);
-}
+    {
+        $this->sendMail($event->id);
+    }
 
     public function sendMail(int $id)
     {
         if ($this->sendnotification) {
-            $this->getApp()->onClose(function($event) use ($id) {
-$this->send_mail($id);
-$event->once = true;
-});
+            $this->getApp()->onClose(
+                function ($event) use ($id) {
+                    $this->send_mail($id);
+                    $event->once = true;
+                }
+            );
         }
     }
 
@@ -177,15 +181,17 @@ $event->once = true;
 
     public function createStatus(int $idpost, int $idauthor, string $content, string $ip): string
     {
-$r = $this->onCreateStatus([
-'idpost' => $idpost,
-'status' => '',
-'idauthor' =>  $idauthor,
-'content' =>  $content,
-'ip' =>  $ip
-]);
+        $r = $this->onCreateStatus(
+            [
+            'idpost' => $idpost,
+            'status' => '',
+            'idauthor' =>  $idauthor,
+            'content' =>  $content,
+            'ip' =>  $ip
+            ]
+        );
 
-$status = $r['status'];
+        $status = $r['status'];
         if ($status === false || $status == 'spam') {
             return '';
         }
@@ -207,7 +213,7 @@ $status = $r['status'];
 
     public function canAdd(int $idauthor): bool
     {
-$r = $this->isSpamer(['author' => $idauthor, 'spamer' => false]);
+        $r = $this->isSpamer(['author' => $idauthor, 'spamer' => false]);
         return !$r['spamer'];
     }
 

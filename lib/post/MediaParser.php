@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\post;
@@ -14,31 +14,33 @@ use litepubl\core\Str;
 use litepubl\utils\LinkGenerator;
 
 /**
+* 
  * Manage uploaded images
  *
- * @property string $previewmode
- * @property int $previewwidth
- * @property int $previewheight
- * @property int $maxwidth
- * @property int $maxheight
- * @property bool $enablemidle
- * @property int $midlewidth
- * @property int $midleheight
- * @property int $quality_snapshot
- * @property int $quality_original
- * @property bool $alwaysresize
- * @property string $audioext
- * @property string $videoext
+ *
+ * @property       string $previewmode
+ * @property       int $previewwidth
+ * @property       int $previewheight
+ * @property       int $maxwidth
+ * @property       int $maxheight
+ * @property       bool $enablemidle
+ * @property       int $midlewidth
+ * @property       int $midleheight
+ * @property       int $quality_snapshot
+ * @property       int $quality_original
+ * @property       bool $alwaysresize
+ * @property       string $audioext
+ * @property       string $videoext
  * @property-write callable $added
  * @property-write callable $onBefore
  * @property-write callable $onResize
  * @property-write callable $noResize
  * @property-write callable $onImage
- * @method array added(array $params)
- * @method array onBefore(array $params)
- * @method array onResize(array $params)
- * @method array noResize(array $params)
- * @method array onImage(array $params)
+ * @method         array added(array $params)
+ * @method         array onBefore(array $params)
+ * @method         array onResize(array $params)
+ * @method         array noResize(array $params)
+ * @method         array onImage(array $params)
  */
 
 class MediaParser extends \litepubl\core\Events
@@ -319,7 +321,7 @@ class MediaParser extends \litepubl\core\Events
         if ($item['media'] == 'image') {
             $srcfilename = $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
             $r = $this->onBefore(['item' => $item, 'filename' => $srcfilename]);
-$item = $r['item'];
+            $item = $r['item'];
 
             $maxwidth = isset($file['maxwidth']) ? $file['maxwidth'] : $this->maxwidth;
             $maxheight = isset($file['maxheight']) ? $file['maxheight'] : $this->maxheight;

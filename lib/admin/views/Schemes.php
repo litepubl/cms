@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\admin\views;
@@ -173,7 +173,8 @@ class Schemes extends \litepubl\admin\Menu
             }
 
             $args->adminname = $this->theme->comboItems($list, $itemview['adminname']);
-            $args->postannounce = $this->theme->comboItems([
+            $args->postannounce = $this->theme->comboItems(
+                [
                 'excerpt' => $lang->postexcerpt,
                 'card' => $lang->postcard,
                 'lite' => $lang->postlite

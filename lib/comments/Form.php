@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\comments;
@@ -24,15 +24,17 @@ use litepubl\view\Lang;
 use litepubl\view\Vars;
 
 /**
+* 
  * Manage comment form data
  *
+ *
  * @property-write callable $onComuser
- * @method array onComuser(array $params) triggered when new item has been added
+ * @method         array onComuser(array $params)
  */
 
 class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
 {
-use \litepubl\utils\TempProps;
+    use \litepubl\utils\TempProps;
 
     public $helper;
 
@@ -160,12 +162,14 @@ use \litepubl\utils\TempProps;
 
             case 'comuser':
                 //hook in regservices social plugin
-$r = $this->oncomuser([
-'values' => $values,
-'confirmid' => $confirmed,
-'result' => false
-]);
-if ($r['result']) {
+                $r = $this->oncomuser(
+                    [
+                    'values' => $values,
+                    'confirmid' => $confirmed,
+                    'result' => false
+                    ]
+                );
+                if ($r['result']) {
                     return $r['result'];
                 }
 

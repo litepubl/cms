@@ -5,16 +5,18 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
 
 /**
+* 
  * Class to manage users
  *
+ *
  * @property-write callable $beforeDelete
- * @method array beforeDelete(array $params) triggered when user need to delete
+ * @method         array beforeDelete(array $params) triggered when user need to delete
  */
 
 class Users extends Items

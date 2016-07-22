@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\plugins\extrasidebars;
@@ -27,7 +27,7 @@ class ExtraSidebars extends \litepubl\core\Plugin
 
     public function fix(Event $event)
     {
-$theme = $event->theme;
+        $theme = $event->theme;
         if (in_array($theme->name, $this->themes) && !isset($theme->templates['extrasidebars'])) {
             $s = & $theme->templates['index'];
             if ($this->beforepost) {
@@ -47,7 +47,7 @@ $theme = $event->theme;
 
     public function themeParsed(Event $event)
     {
-$theme = $event->theme;
+        $theme = $event->theme;
         if (in_array($theme->name, $this->themes) && !isset($theme->templates['extrasidebars'])) {
             $s = & $theme->templates['index'];
             $s = str_replace('<!--$template.sidebar-->', '', $s);

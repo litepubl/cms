@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\post;
@@ -20,7 +20,9 @@ use litepubl\view\Lang;
 use litepubl\view\Schema;
 
 /**
+* 
  * Post view
+ *
  *
  * @property-write callable $beforeContent
  * @property-write callable $afterContent
@@ -28,17 +30,17 @@ use litepubl\view\Schema;
  * @property-write callable $afterExcerpt
  * @property-write callable $onHead
  * @property-write callable $onTags
- * @method array beforeContent(array $params)
- * @method array afterContent(array $params)
- * @method array beforeExcerpt(array $params)
- * @method array afterExcerpt(array $params)
- * @method array onHead(array $params)
- * @method array onTags(array $params)
+ * @method         array beforeContent(array $params)
+ * @method         array afterContent(array $params)
+ * @method         array beforeExcerpt(array $params)
+ * @method         array afterExcerpt(array $params)
+ * @method         array onHead(array $params)
+ * @method         array onTags(array $params)
  */
 
 class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 {
-use \litepubl\core\PoolStorageTrait;
+    use \litepubl\core\PoolStorageTrait;
 
     public $post;
     public $context;
@@ -49,7 +51,7 @@ use \litepubl\core\PoolStorageTrait;
     protected function create()
     {
         parent::create();
-$this->basename = 'postview';
+        $this->basename = 'postview';
         $this->addEvents('beforecontent', 'aftercontent', 'beforeexcerpt', 'afterexcerpt', 'onhead', 'ontags');
         $this->table = 'posts';
     }
@@ -57,7 +59,7 @@ $this->basename = 'postview';
     public function setPost(Post $post)
     {
         $this->post = $post;
-$this->themeInstance = null;
+        $this->themeInstance = null;
     }
 
     public function getView()
@@ -155,17 +157,17 @@ $this->themeInstance = null;
     public function getTheme(): Theme
     {
         if (!$this->themeInstance) {
-        $this->themeInstance = $this->post ? Schema::getSchema($this)->theme : Theme::context();
-}
+            $this->themeInstance = $this->post ? Schema::getSchema($this)->theme : Theme::context();
+        }
 
         $this->themeInstance->setvar('post', $this);
         return $this->themeInstance;
     }
 
-public function setTheme(Theme $theme)
-{
-$this->themeInstance = $theme;
-}
+    public function setTheme(Theme $theme)
+    {
+        $this->themeInstance = $theme;
+    }
 
     public function parseTml(string $path): string
     {
@@ -373,7 +375,7 @@ $this->themeInstance = $theme;
         }
 
         $result = $theme->parse($result);
-$r = $this->onHead(['post' => $this->post, 'content' => $result]);
+        $r = $this->onHead(['post' => $this->post, 'content' => $result]);
         return $r['content'];
     }
 
@@ -406,7 +408,7 @@ $r = $this->onHead(['post' => $this->post, 'content' => $result]);
         }
     }
 
-//to override schema in post, id schema not changed
+    //to override schema in post, id schema not changed
     public function getFileList()
     {
         if (!count($this->files) || (($this->page > 1) && $this->getApp()->options->hidefilesonpage)) {
@@ -538,8 +540,8 @@ $r = $this->onHead(['post' => $this->post, 'content' => $result]);
 
     public function getExcerptContent(): string
     {
-$this->post->checkRevision();
-$r = $this->beforeExcerpt(['post' => $this->post, 'content' => $this->excerpt]);
+        $this->post->checkRevision();
+        $r = $this->beforeExcerpt(['post' => $this->post, 'content' => $this->excerpt]);
         $result = $this->replaceMore($r['content'], true);
         if ($this->getApp()->options->parsepost) {
             $result = $this->theme->parse($result);
@@ -592,9 +594,9 @@ $r = $this->beforeExcerpt(['post' => $this->post, 'content' => $this->excerpt]);
 
     public function getContent(): string
     {
-$this->post->checkRevision();
+        $this->post->checkRevision();
         $r = $this->beforeContent(['post' => $this->post, 'content' => '']);
-$result = $r['content'];
+        $result = $r['content'];
         $result.= $this->getContentPage($this->page);
 
         if ($this->getApp()->options->parsepost) {

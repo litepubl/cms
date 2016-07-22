@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\core;
@@ -56,10 +56,12 @@ class Pool extends Data
     public function savepool($idpool)
     {
         if (!isset($this->modified[$idpool])) {
-            $this->getApp()->onClose(function(Event $event) use($idpool) {
-$this->saveModified($idpool);
-$event->once = true;
-});
+            $this->getApp()->onClose(
+                function (Event $event) use ($idpool) {
+                    $this->saveModified($idpool);
+                    $event->once = true;
+                }
+            );
             $this->modified[$idpool] = true;
         }
     }

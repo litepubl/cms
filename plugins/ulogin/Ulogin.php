@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\plugins\ulogin;
@@ -20,16 +20,18 @@ use litepubl\utils\Http;
 use litepubl\view\Filter;
 
 /**
+* 
  * ULogin plugin
  *
- * @property string $url
- * @property array $nets
+ *
+ * @property       string $url
+ * @property       array $nets
  * @property-write callable $added
  * @property-write callable $onAdd
  * @property-write callable $onPhone
- * @method array added(array $params)
- * @method array onAdd(array $params)
- * @method array onPhone(array $params)
+ * @method         array added(array $params)
+ * @method         array onAdd(array $params)
+ * @method         array onPhone(array $params)
  */
 
 class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveInterface
@@ -119,7 +121,7 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         }
 
         if (!(int)Users::i()->db->getValue((int) $cookies['id'], 'phone')) {
-$r = $this->onPhone(['backurl' => $backurl, 'redir' => false]);
+            $r = $this->onPhone(['backurl' => $backurl, 'redir' => false]);
             if ($r['redir']) {
                 return $response->redir($r['redir']);
             }
@@ -227,11 +229,13 @@ $r = $this->onPhone(['backurl' => $backurl, 'redir' => false]);
         }
 
         setcookie('litepubl_regservice', $info['network'], $expired, $this->getApp()->site->subdir . '/', false);
-        $this->onAdd([
-'id' => $id,
-'info' =>  $info,
-'newreg' =>  $newreg
-]);
+        $this->onAdd(
+            [
+            'id' => $id,
+            'info' =>  $info,
+            'newreg' =>  $newreg
+            ]
+        );
 
         return array(
             'id' => $id,

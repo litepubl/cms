@@ -1,4 +1,12 @@
 <?php
+/**
+ * Lite Publisher CMS
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.01
+  */
 
 namespace litepubl\utils;
 
@@ -8,50 +16,50 @@ trait CoInstances
     public $coinstances = [];
 
     protected function createData()
-{
-parent::createData();
+    {
+        parent::createData();
 
-if (method_exists($this, 'addMap')) {
-        $this->addMap('coclasses', []);
-}
-}
+        if (method_exists($this, 'addMap')) {
+                $this->addMap('coclasses', []);
+        }
+    }
 
     public function afterLoad()
     {
         parent::afterload();
 
         foreach ($this->coclasses as $coclass) {
-$instance = static ::iGet($coclass);
-if (method_exists($instance, 'afterLoad')) {
-$instance->afterLoad();
-}
+            $instance = static ::iGet($coclass);
+            if (method_exists($instance, 'afterLoad')) {
+                        $instance->afterLoad();
+            }
 
             $this->coinstances[] = $instance;
         }
-}
+    }
 
-protected function getProp(string $name)
-{
-            foreach ($this->coinstances as $coinstance) {
-                if (isset($coinstance->$name)) {
-                    return $coinstance->$name;
-                }
+    protected function getProp(string $name)
+    {
+        foreach ($this->coinstances as $coinstance) {
+            if (isset($coinstance->$name)) {
+                return $coinstance->$name;
             }
+        }
 
-return parent::getProp($name);
-}
+        return parent::getProp($name);
+    }
 
-protected function setProp(string $name, $value)
-{
-            foreach ($this->coinstances as $coinstance) {
-                if (isset($coinstance->$name)) {
-                    $coinstance->$name = $value;
-                    return true;
-                }
+    protected function setProp(string $name, $value)
+    {
+        foreach ($this->coinstances as $coinstance) {
+            if (isset($coinstance->$name)) {
+                $coinstance->$name = $value;
+                return true;
             }
+        }
 
-return parent::getProp($name);
-}
+        return parent::getProp($name);
+    }
 
     public function __call($name, $params)
     {
@@ -71,9 +79,9 @@ return parent::getProp($name);
 
     public function __isset($name)
     {
-if (parent::__isset($name)) {
-return true;
-}
+        if (parent::__isset($name)) {
+                return true;
+        }
 
         foreach ($this->coinstances as $coinstance) {
             if (isset($coinstance->$name)) {
@@ -82,7 +90,7 @@ return true;
         }
 
         return false;
-}
+    }
 
     public function coInstanceCall(string $method, array $args = [])
     {
@@ -95,8 +103,8 @@ return true;
 
     public function free()
     {
-parent::free();
-$this->coInstanceCall('free');
+        parent::free();
+        $this->coInstanceCall('free');
     }
 
     private function indexofcoclass($class)

@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\admin\menu;
@@ -21,7 +21,7 @@ use litepubl\view\Schemes;
 
 class Ajax extends \litepubl\admin\posts\Ajax
 {
-use \litepubl\utils\TempProps;
+    use \litepubl\utils\TempProps;
 
     //to prevent call parent method
     public function install()

@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.01
   */
 
 namespace litepubl\pages;
@@ -17,10 +17,12 @@ use litepubl\view\Theme;
 use litepubl\core\Event;
 
 /**
+* 
  * Holds menu items
  *
- * @property int $idhome
- * @property bool $home
+ *
+ * @property       int $idhome
+ * @property       bool $home
  * @property-write callable $edited
  * @property-write callable $onProcessForm
  * @property-write callable $onBeforeMenu
@@ -28,13 +30,13 @@ use litepubl\core\Event;
  * @property-write callable $onItems
  * @property-write callable $onSubItems
  * @property-write callable $onContent
- * @method array edited(array $params)
- * @method array onProcessForm(array $params)
- * @method array onBeforeMenu(array $params)
- * @method array onMenu(array $params)
- * @method array onItems(array $params)
- * @method array onSubItems(array $params)
- * @method array onContent(array $params)
+ * @method         array edited(array $params)
+ * @method         array onProcessForm(array $params)
+ * @method         array onBeforeMenu(array $params)
+ * @method         array onMenu(array $params)
+ * @method         array onItems(array $params)
+ * @method         array onSubItems(array $params)
+ * @method         array onContent(array $params)
  */
 
 class Menus extends \litepubl\core\Items
@@ -287,17 +289,17 @@ class Menus extends \litepubl\core\Items
 
     public function renameClass(Event $event)
     {
-$changed = false;
+        $changed = false;
         foreach ($this->items as $id => $item) {
             if ($event->oldclass == $item['class']) {
                 $this->items[$id]['class'] = $event->newclass;
-$changed = true;
+                $changed = true;
             }
         }
     
-if ($changed) {
-$this->save();
-}
+        if ($changed) {
+                $this->save();
+        }
     }
 
     public function sort()
@@ -382,10 +384,12 @@ $this->save();
 
     public function getMenu($hover, $current)
     {
-        $r = $this->onBeforeMenu([
-'hover' => $hover,
+        $r = $this->onBeforeMenu(
+            [
+            'hover' => $hover,
             'current' => $current,
-]);
+            ]
+        );
 
         if (count($this->tree) > 0) {
             $theme = Theme::i();
