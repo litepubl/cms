@@ -48,11 +48,8 @@ $ulogin->logout();
 //$i->openPage('/admin/login/');
 $ulogin->screenshot('login');
 $ulogin->click();
-sleep(10);
+$i->waitForUrlChanged(10);
 codecept_debug($i->grabFromCurrentUrl());
-//$i->waitForJS('return !litepubl || !litepubl.authdialog || litepubl.authdialog.ulogin.status == \'wait\';', 6);
-
 $ulogin->logout();
-
 $plugin->uninstall('ulogin');
 $ulogin->screenshot('uninstall');

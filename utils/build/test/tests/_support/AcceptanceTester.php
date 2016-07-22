@@ -1,7 +1,7 @@
 <?php
 
-
 use test\config;
+
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -17,6 +17,7 @@ use test\config;
  *
  * @SuppressWarnings(PHPMD)
 */
+
 class AcceptanceTester extends \Codeception\Actor
 {
     use _generated\AcceptanceTesterActions;
@@ -24,6 +25,13 @@ class AcceptanceTester extends \Codeception\Actor
    /**
     * Define custom actions here
     */
+
+
+    public function wantTo($text)
+{
+parent::wantTo($text);
+codecept_debug($text);
+}
 
 public function checkError()
 {
@@ -69,6 +77,26 @@ $js = strtr($js, [
 ]);
 
 $this->executeJs('$(\'head:first\').append(\'<script type="text/javascript">' . $js . '</script>\');');
+}
+
+    public function waitForUrl(callable $callback, int $timeout = 5)
+    {
+        $this->executeInSelenium(
+            function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) use ($callback, $timeout) {
+                $webdriver->wait($timeout)->until(function() use ($callback, $webdriver) {
+return $callback(\Codeception\Util\Uri::retrieveUri($webdriver->getCurrentURL()));
+});
+            }
+        );
+    }
+
+    public function waitForUrlChanged(int $timeout = 5)
+{
+$this->wantTo('Wait for url changed');
+$current = $this->grabFromCurrentUrl();
+$this->waitForUrl(function($url) use ($current) {
+return $url != $current;
+}, $timeout);
 }
 
 }
