@@ -42,7 +42,7 @@ class Service extends Login
         } elseif ($islatest <= 0) {
             $result.= $admin->success($lang->islatest);
         } else {
-            $form = new Form($args);
+            $form = $this->newForm($args);
             $form->title = $lang->requireupdate;
             $form->body = $this->getloginform() . '[submit=autoupdate]';
             $form->submit = 'manualupdate';

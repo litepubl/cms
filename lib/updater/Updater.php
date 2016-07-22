@@ -12,7 +12,7 @@ namespace litepubl\updater;
 
 use litepubl\core\Str;
 use litepubl\utils\Filer;
-use litepubl\utils\http;
+use litepubl\utils\Http;
 use litepubl\view\Lang;
 use litepubl\widget\Sidebars;
 
