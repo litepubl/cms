@@ -20,14 +20,14 @@ class Parser extends BaseParser
     {
         parent::create();
         $this->basename = 'themeparser';
-        $this->tagfiles[] = 'lib/install/ini/themeparser.ini';
+        $this->tagfiles[] = 'themes/default/tags.ini';
         $this->sidebar_index = 0;
     }
 
     public function loadPaths(): array
     {
         if (!count($this->tagfiles)) {
-            $this->tagfiles[] = 'lib/install/ini/themeparser.ini';
+        $this->tagfiles[] = 'themes/default/tags.ini';
         }
 
         return parent::loadPaths();

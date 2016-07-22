@@ -14,6 +14,7 @@ use litepubl\pages\Sitemap;
 use litepubl\core\litepubl;
 use litepubl\view\Css;
 use litepubl\view\Schemes;
+use litepubl\view\Parser;
 use litepubl\post\Posts;
 use litepubl\post\View;
 use litepubl\updater\StorageIterator;
@@ -32,6 +33,13 @@ function update701()
 
     litepubl::$app->router->delete('/manifest.appcache');
     litepubl::$app->router->updateFilter();
+
+$parser = Parser::i();
+$i = array_search('lib/install/ini/themeparser.ini', $parser->tagfiles);
+if ($i !== false) {
+        $parser->tagfiles[$i] = 'themes/default/tags.ini';
+$parser->save();
+}
 
     $css = Css::i();
     $css->replaceFile(
