@@ -10,9 +10,9 @@
 
 namespace litepubl\plugins\clearcache;
 
+use litepubl\core\Event;
 use litepubl\view\Schemes;
 use litepubl\view\Theme;
-use litepubl\core\Event;
 
 class ClearCache extends \litepubl\core\Plugin
 {

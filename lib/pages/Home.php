@@ -10,8 +10,8 @@
 
 namespace litepubl\pages;
 
-use litepubl\core\Event;
 use litepubl\core\Context;
+use litepubl\core\Event;
 use litepubl\post\Announce;
 use litepubl\post\Post;
 use litepubl\post\Posts;

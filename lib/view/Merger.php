@@ -11,8 +11,8 @@
 namespace litepubl\view;
 
 use litepubl\core\Arr;
-use litepubl\core\Str;
 use litepubl\core\Plugins;
+use litepubl\core\Str;
 
 /**
  * Common class for join files

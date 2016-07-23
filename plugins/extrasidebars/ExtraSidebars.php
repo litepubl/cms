@@ -10,8 +10,8 @@
 
 namespace litepubl\plugins\extrasidebars;
 
-use litepubl\view\Theme;
 use litepubl\core\Event;
+use litepubl\view\Theme;
 
 class ExtraSidebars extends \litepubl\core\Plugin
 {

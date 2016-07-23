@@ -11,8 +11,8 @@
 namespace litepubl\plugins\ulogin;
 
 use litepubl\core\Context;
-use litepubl\core\Event;
 use litepubl\core\DBManager;
+use litepubl\core\Event;
 use litepubl\core\Str;
 use litepubl\core\UserGroups;
 use litepubl\core\Users;

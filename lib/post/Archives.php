@@ -11,10 +11,10 @@
 namespace litepubl\post;
 
 use litepubl\core\Context;
+use litepubl\core\Event;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
-use litepubl\core\Event;
 
 class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {

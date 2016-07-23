@@ -604,8 +604,8 @@ class Factory
 //Tags.php
 namespace litepubl\tag;
 
-use litepubl\widget\Tags as TagsWidget;
 use litepubl\widget\Cache;
+use litepubl\widget\Tags as TagsWidget;
 
 class Tags extends Common
 {

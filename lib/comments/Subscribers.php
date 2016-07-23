@@ -12,6 +12,7 @@ namespace litepubl\comments;
 
 use litepubl\core\Arr;
 use litepubl\core\Cron;
+use litepubl\core\Event;
 use litepubl\core\Str;
 use litepubl\core\UserOptions;
 use litepubl\core\Users;
@@ -22,7 +23,6 @@ use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
-use litepubl\core\Event;
 
 class Subscribers extends \litepubl\core\ItemsPosts
 {

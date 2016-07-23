@@ -289,8 +289,8 @@ class Cats extends CommonTags
 //Comments.php
 namespace litepubl\widget;
 
-use litepubl\view\Args;
 use litepubl\core\Event;
+use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\view\Lang;
 

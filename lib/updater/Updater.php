@@ -13,9 +13,9 @@ namespace litepubl\updater;
 use litepubl\core\Str;
 use litepubl\utils\Filer;
 use litepubl\utils\Http;
-use litepubl\view\Lang;
-use litepubl\view\Js;
 use litepubl\view\Css;
+use litepubl\view\Js;
+use litepubl\view\Lang;
 use litepubl\widget\Sidebars;
 
 /**

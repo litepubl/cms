@@ -10,15 +10,15 @@
 
 namespace litepubl\update;
 
-use litepubl\pages\Sitemap;
-use litepubl\updater\Updater;
 use litepubl\core\litepubl;
-use litepubl\view\Css;
-use litepubl\view\Schemes;
-use litepubl\view\Parser;
+use litepubl\pages\Sitemap;
 use litepubl\post\Posts;
 use litepubl\post\View;
 use litepubl\updater\StorageIterator;
+use litepubl\updater\Updater;
+use litepubl\view\Css;
+use litepubl\view\Parser;
+use litepubl\view\Schemes;
 
 function update701()
 {

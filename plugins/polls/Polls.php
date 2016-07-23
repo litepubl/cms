@@ -11,11 +11,11 @@
 namespace litepubl\plugins\polls;
 
 use litepubl\Config;
+use litepubl\core\Event;
 use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
-use litepubl\core\Event;
 
 class Polls extends \litepubl\core\Items
 {

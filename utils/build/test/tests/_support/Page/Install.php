@@ -10,8 +10,8 @@
 
 namespace Page;
 
-use test\config;
 use litepubl\utils\Filer;
+use test\config;
 
 class Install extends Base
 {

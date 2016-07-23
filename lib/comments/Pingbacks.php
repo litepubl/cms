@@ -10,6 +10,7 @@
 
 namespace litepubl\comments;
 
+use litepubl\core\Event;
 use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\utils\Mailer;
@@ -18,7 +19,6 @@ use litepubl\view\Filter;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
-use litepubl\core\Event;
 
 class Pingbacks extends \litepubl\core\Items
 {

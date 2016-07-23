@@ -10,12 +10,12 @@
 
 namespace litepubl\plugins\metatags;
 
+use litepubl\core\Event;
 use litepubl\post\Post;
 use litepubl\post\Posts;
 use litepubl\tag\View as CatView;
 use litepubl\view\MainView;
 use litepubl\view\Theme;
-use litepubl\core\Event;
 
 class Plugin extends \litepubl\core\Plugin
 {

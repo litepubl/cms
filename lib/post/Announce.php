@@ -10,9 +10,9 @@
 
 namespace litepubl\post;
 
-use litepubl\view\Vars;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
+use litepubl\view\Vars;
 
 /**
  * Post announces

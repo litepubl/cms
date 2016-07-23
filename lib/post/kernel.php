@@ -2,9 +2,9 @@
 //Announce.php
 namespace litepubl\post;
 
-use litepubl\view\Vars;
 use litepubl\view\Lang;
 use litepubl\view\Schema;
+use litepubl\view\Vars;
 
 /**
  * Post announces
@@ -204,8 +204,8 @@ class Factory
 //Files.php
 namespace litepubl\post;
 
-use litepubl\core\Str;
 use litepubl\core\Event;
+use litepubl\core\Str;
 use litepubl\view\Args;
 use litepubl\view\Filter;
 use litepubl\view\Theme;
@@ -1894,10 +1894,10 @@ use litepubl\comments\Templates;
 use litepubl\core\Context;
 use litepubl\core\Str;
 use litepubl\view\Args;
-use litepubl\view\MainView;
-use litepubl\view\Theme;
 use litepubl\view\Lang;
+use litepubl\view\MainView;
 use litepubl\view\Schema;
+use litepubl\view\Theme;
 
 /**
  * Post view

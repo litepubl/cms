@@ -11,12 +11,12 @@
 namespace litepubl\plugins\catbread;
 
 use litepubl\core\Arr;
+use litepubl\core\Event;
 use litepubl\post\Post;
 use litepubl\tag\Cats;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 use litepubl\view\Theme;
-use litepubl\core\Event;
 
 class Catbread extends \litepubl\core\Plugin
 {

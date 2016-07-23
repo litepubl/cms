@@ -10,9 +10,9 @@
 
 namespace Page;
 
-use test\config;
-use test\Utils;
 use litepubl\utils\Filer;
+use test\Utils;
+use test\config;
 
 class Password extends Base
 {

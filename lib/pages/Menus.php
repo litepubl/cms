@@ -10,11 +10,11 @@
 
 namespace litepubl\pages;
 
+use litepubl\core\Event;
 use litepubl\utils\LinkGenerator;
 use litepubl\view\Args;
 use litepubl\view\Schemes;
 use litepubl\view\Theme;
-use litepubl\core\Event;
 
 /**
  * Holds menu items
