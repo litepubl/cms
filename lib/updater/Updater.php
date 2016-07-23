@@ -14,6 +14,8 @@ use litepubl\core\Str;
 use litepubl\utils\Filer;
 use litepubl\utils\Http;
 use litepubl\view\Lang;
+use litepubl\view\Js;
+use litepubl\view\Css;
 use litepubl\widget\Sidebars;
 
 /**
@@ -106,6 +108,13 @@ class Updater extends \litepubl\core\Events
     {
         $this->log("begin update", 'update');
         Lang::clearCache();
+
+$js = Js::i();
+$js->lock();
+
+$css = Css::i();
+$css->unlock();
+
         $this->versions = static ::getversions();
         $nextver = $this->nextversion;
         $app = $this->getApp();
@@ -118,6 +127,7 @@ class Updater extends \litepubl\core\Events
             if (strlen($ver) == 1) {
                 $ver.= '.00';
             }
+
             $this->log("$v selected to update", 'update');
             $this->run($v);
             $app->options->version = $ver;
@@ -125,6 +135,8 @@ class Updater extends \litepubl\core\Events
             $v = $v + 0.01;
         }
 
+$js->unlock();
+$css->unlock();
         Filer::delete($app->paths->data . 'themes', false, false);
         $app->cache->clear();
         Lang::clearCache();
@@ -135,6 +147,7 @@ class Updater extends \litepubl\core\Events
         }
 
         $this->log("update finished", 'update');
+        $this->onupdated([]);
     }
 
     public function autoUpdate($protecttimeout = true)
@@ -231,7 +244,10 @@ class Updater extends \litepubl\core\Events
             return false;
         }
 
-        if (!(($s = Http::get("https://codeload.github.com/litepubl/cms/tar.gz/v$version")) || ($s = Http::get("https://github.com/litepubl/cms/archive/v$version.tar.gz")) || ($s = Http::get("http://litepublisher.com/download/litepublisher.$version.tar.gz")))) {
+        if (!(($s = Http::get("https://codeload.github.com/litepubl/cms/tar.gz/v$version"))
+ || ($s = Http::get("https://github.com/litepubl/cms/archive/v$version.tar.gz"))
+ || ($s = Http::get("http://litepublisher.com/download/litepublisher.$version.tar.gz")))
+) {
             $this->result = $lang->errordownload;
             return false;
         }
@@ -241,7 +257,6 @@ class Updater extends \litepubl\core\Events
             return false;
         }
 
-        $this->onupdated([]);
         return true;
     }
 
@@ -260,7 +275,6 @@ class Updater extends \litepubl\core\Events
             return $s;
         }
 
-        $this->onupdated([]);
         return true;
     }
 }

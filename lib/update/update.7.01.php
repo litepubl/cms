@@ -11,6 +11,7 @@
 namespace litepubl\update;
 
 use litepubl\pages\Sitemap;
+use litepubl\updater\Updater;
 use litepubl\core\litepubl;
 use litepubl\view\Css;
 use litepubl\view\Schemes;
@@ -73,6 +74,12 @@ function update701()
 
     $posts->save();
     $view->save();
+
+$updater = Updater::i();
+$updater->lock();
+$updater->unbind('litepubl\view\Js');
+$updater->unbind('litepubl\view\Css');
+$updater->unlock();
 
     $map = include __DIR__ . '/update7/eventmap.php';
     $func= function (\StdClass $std) use ($map) {

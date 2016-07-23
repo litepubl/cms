@@ -158,7 +158,7 @@ class Backuper extends \litepubl\core\Events
         return false;
     }
 
-    public function createarchive()
+    public function createArchive(): bool
     {
         if (!$this->filer->connected) {
             $this->error('Filer not connected');
@@ -173,15 +173,22 @@ class Backuper extends \litepubl\core\Events
         case 'zip':
         case 'unzip':
             $this->zip = new \ZipArchive();
+$filename = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
+if ($this->zip->open($filename, \ZipArchive::CREATE) === false) {
+$this->eror("Error create zip archive $filename");
+}
             break;
 
 
         default:
             $this->unknown_archive();
+return false;
         }
+
+return true;
     }
 
-    public function savearchive()
+    public function saveArchive(): string
     {
         switch ($this->archtype) {
         case 'tar':
@@ -200,6 +207,8 @@ class Backuper extends \litepubl\core\Events
         default:
             $this->unknown_archive();
         }
+
+return '';
     }
 
     private function addfile($filename, $content, $perm)
@@ -356,13 +365,13 @@ class Backuper extends \litepubl\core\Events
         }
     }
 
-    public function getPartial($plugins, $theme, $lib)
+    public function getPartial(bool $plugins, bool $theme, bool $lib): string
     {
         set_time_limit(300);
-        $this->createarchive();
+
+        $this->createArchive();
         $this->addfile('dump.sql', $this->getdump(), $this->filer->chmod_file);
 
-        //$this->readdata( $this->getApp()->paths->data);
         $this->setdir('storage');
         $this->readdir('storage/data');
 
@@ -399,13 +408,13 @@ class Backuper extends \litepubl\core\Events
             }
         }
 
-        return $this->savearchive();
+        return $this->saveArchive();
     }
 
     public function getFull()
     {
         set_time_limit(300);
-        $this->createarchive();
+        $this->createArchive();
         $this->addfile('dump.sql', $this->getdump(), $this->filer->chmod_file);
 
         //$this->readdata( $this->getApp()->paths->data);
@@ -424,7 +433,7 @@ class Backuper extends \litepubl\core\Events
         $this->setdir('themes');
         $this->readdir('themes');
 
-        return $this->savearchive();
+        return $this->saveArchive();
     }
 
     public function getDump()
@@ -563,7 +572,7 @@ class Backuper extends \litepubl\core\Events
         $this->archtype = $archtype;
         $this->hasdata = false;
         $this->existingfolders = array();
-        $this->createarchive();
+        $this->createArchive();
 
         switch ($archtype) {
         case 'tar':

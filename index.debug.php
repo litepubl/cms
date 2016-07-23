@@ -8,7 +8,7 @@ namespace litepubl;
 
 define('litepubl\mode', 'config');
 require (__DIR__ . '/index.php');
-//Config::$debug = true;
+Config::$debug = true;
 Config::$classes['storage'] = 'litepubl\core\storageinc';
 Config::$beforeRequest  = function() {
 include (__DIR__ . '/temp/zdebug.php');
