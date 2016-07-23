@@ -67,7 +67,12 @@ class App
         $this->createCache();
 
         if ($this->installed) {
+try {
             $this->db = DB::i();
+} catch (DBException $e) {
+Config::$ignoreRequest = true;
+$this->getLogger()->alert($e->getMessage());
+}
         } else {
             include $this->paths->lib . 'install/install.php';
             //exit() in lib/install/install.php
