@@ -173,19 +173,19 @@ class Backuper extends \litepubl\core\Events
         case 'zip':
         case 'unzip':
             $this->zip = new \ZipArchive();
-$filename = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
-if ($this->zip->open($filename, \ZipArchive::CREATE) === false) {
-$this->eror("Error create zip archive $filename");
-}
+            $filename = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
+            if ($this->zip->open($filename, \ZipArchive::CREATE) === false) {
+                        $this->eror("Error create zip archive $filename");
+            }
             break;
 
 
         default:
             $this->unknown_archive();
-return false;
+            return false;
         }
 
-return true;
+        return true;
     }
 
     public function saveArchive(): string
@@ -208,7 +208,7 @@ return true;
             $this->unknown_archive();
         }
 
-return '';
+        return '';
     }
 
     private function addfile($filename, $content, $perm)

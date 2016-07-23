@@ -109,11 +109,11 @@ class Updater extends \litepubl\core\Events
         $this->log("begin update", 'update');
         Lang::clearCache();
 
-$js = Js::i();
-$js->lock();
+        $js = Js::i();
+        $js->lock();
 
-$css = Css::i();
-$css->unlock();
+        $css = Css::i();
+        $css->unlock();
 
         $this->versions = static ::getversions();
         $nextver = $this->nextversion;
@@ -135,8 +135,8 @@ $css->unlock();
             $v = $v + 0.01;
         }
 
-$js->unlock();
-$css->unlock();
+        $js->unlock();
+        $css->unlock();
         Filer::delete($app->paths->data . 'themes', false, false);
         $app->cache->clear();
         Lang::clearCache();
@@ -245,9 +245,9 @@ $css->unlock();
         }
 
         if (!(($s = Http::get("https://codeload.github.com/litepubl/cms/tar.gz/v$version"))
- || ($s = Http::get("https://github.com/litepubl/cms/archive/v$version.tar.gz"))
- || ($s = Http::get("http://litepublisher.com/download/litepublisher.$version.tar.gz")))
-) {
+            || ($s = Http::get("https://github.com/litepubl/cms/archive/v$version.tar.gz"))
+            || ($s = Http::get("http://litepublisher.com/download/litepublisher.$version.tar.gz")))
+        ) {
             $this->result = $lang->errordownload;
             return false;
         }
