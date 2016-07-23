@@ -29,6 +29,7 @@ function installOptions($email, $language)
             'dbname' => '',
             'login' => '',
             'password' => '',
+'crypt' => Crypt::METHOD,
             'prefix' => config::$db['prefix'],
         );
     } else {
@@ -40,6 +41,7 @@ function installOptions($email, $language)
             'dbname' => $_REQUEST['dbname'],
             'login' => $_REQUEST['dblogin'],
             'password' => '',
+'crypt' => Crypt::METHOD,
             'prefix' => $_REQUEST['dbprefix']
         );
 

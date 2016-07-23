@@ -277,19 +277,19 @@ class Options extends Events
 
     public function getDBPassword(): string
     {
-        if (function_exists('mcrypt_encrypt')) {
-            return static ::decrypt($this->data['dbconfig']['password'], $this->solt . Config::$secret);
-        } else {
-            return str_rot13(base64_decode($this->data['dbconfig']['password']));
-        }
+if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
+            return Crypt::decode($this->data['dbconfig']['password'], $this->solt . Config::$secret);
+} else {
+return $this->data['dbconfig']['password'];
+}
     }
 
     public function setDBPassword(string $password)
     {
-        if (function_exists('mcrypt_encrypt')) {
-            $this->data['dbconfig']['password'] = static ::encrypt($password, $this->solt . Config::$secret);
+if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
+            $this->data['dbconfig']['password'] = Crypt::encode($password, $this->solt . Config::$secret);
         } else {
-            $this->data['dbconfig']['password'] = base64_encode(str_rot13($password));
+            $this->data['dbconfig']['password'] = $password;
         }
 
         $this->save();
