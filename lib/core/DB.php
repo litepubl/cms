@@ -65,7 +65,7 @@ class DB
         $this->mysqli = new \mysqli($dbconfig['host'], $dbconfig['login'], $dbconfig['password'], $dbconfig['dbname'], $dbconfig['port'] > 0 ? $dbconfig['port'] : null);
 
         if (mysqli_connect_error()) {
-            throw new \Exception('Error connect to database');
+            throw new DBException('Error connect to database');
         }
 
         $this->mysqli->set_charset('utf8');
@@ -118,7 +118,7 @@ class DB
 
         $this->result = $this->mysqli->query($sql);
         if ($this->result == false) {
-            $this->logError($this->mysqli->error);
+            $this->error($this->mysqli->error);
         } elseif (Config::$debug) {
             $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
             if ($this->mysqli->warning_count
@@ -132,18 +132,17 @@ class DB
         return $this->result;
     }
 
-    protected function logError($mesg)
+    protected function error(string $mesg)
     {
-        $log = "exception:\n$mesg\n$this->sql\n";
-        $app = $this->getApp();
-        $log.= $app->getLogManager()->getTrace();
-        $log.= $this->performance();
-        die($log);
-        //$app->getLogger()->alert($log);
-        throw new \Exception($log);
+        $mesg .= "\n$this->sql\n";
+if (Config::$debug) {
+        $mesg .= $this->performance();
+}
+
+        throw new DBException($mesg);
     }
 
-    public function performance()
+    public function performance(): string
     {
         $result = '';
         $total = 0.0;
@@ -162,7 +161,7 @@ class DB
         return $result;
     }
 
-    public function quote($s)
+    public function quote($s): string
     {
         return sprintf('\'%s\'', $this->mysqli->real_escape_string($s));
     }

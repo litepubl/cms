@@ -71,7 +71,7 @@ try {
             $this->db = DB::i();
 } catch (DBException $e) {
 Config::$ignoreRequest = true;
-$this->getLogger()->alert($e->getMessage());
+$this->logException($e);
 }
         } else {
             include $this->paths->lib . 'install/install.php';
@@ -133,7 +133,6 @@ $this->getLogger()->alert($e->getMessage());
 
         try {
             $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']), new Response());
-
             $this->context = $context;
 
             $obEnabled = !Config::$debug && $this->options->ob_cache;
@@ -141,7 +140,7 @@ $this->getLogger()->alert($e->getMessage());
                 ob_start();
             }
 
-            if (Config::$beforeRequest && is_callable(Config::$beforeRequest)) {
+            if (is_callable(Config::$beforeRequest)) {
                 call_user_func_array(Config::$beforeRequest, [$this]);
             }
 
@@ -183,6 +182,10 @@ $this->getLogger()->alert($e->getMessage());
     {
         try {
             $this->init();
+if (is_callable(config::$afterInit)) {
+                call_user_func_array(Config::$afterInit, [$this]);
+}
+
             if (!config::$ignoreRequest) {
                 $this->process();
             }

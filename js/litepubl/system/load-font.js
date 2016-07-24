@@ -5,7 +5,7 @@
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
  *  version   7.01
-  */
+ */
 
 (function($) {
   'use strict';
@@ -28,7 +28,7 @@
         weight: 400
       });
 
-      observer.check().then(function() {
+      observer.load(null, 5000).then(function() {
         $("body").addClass(class_name);
       });
     }, 0);

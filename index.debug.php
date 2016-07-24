@@ -10,7 +10,7 @@ define('litepubl\mode', 'config');
 require (__DIR__ . '/index.php');
 Config::$debug = true;
 Config::$classes['storage'] = 'litepubl\core\storageinc';
-Config::$beforeRequest  = function() {
+Config::$afterInit = function($app) {
 include (__DIR__ . '/temp/zdebug.php');
 };
 
@@ -30,8 +30,7 @@ require (__DIR__ . '/lib/core/kernel.php');
 \litepubl\core\litepubl::$app->getLogger();
 } catch (\Throwable $e) {
 echo "<pre>\n";
-echo $e->getMessage();
-var_dump($e->getTrace());
+echo $e;
 }
 
 return;

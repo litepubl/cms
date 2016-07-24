@@ -12,6 +12,8 @@ namespace litepubl\update;
 
 use litepubl\core\litepubl;
 use litepubl\core\Crypt;
+use litepubl\Config;
+use litepubl\core\DBManager;
 
 function update702()
 {
@@ -22,6 +24,7 @@ $password = decrypt($options->data['dbconfig']['password'], $options->solt . Con
 $options->data['dbconfig']['password'] = Crypt::encode($password,$options->solt . Config::$secret);
 $options->save();
 }
+
 
 }
 

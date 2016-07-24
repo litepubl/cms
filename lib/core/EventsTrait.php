@@ -21,7 +21,7 @@ trait EventsTrait
     {
         parent::createData();
 
-        if (method_exists($this, 'addMap')) {
+        if ($this instanceof Events) {
                 $this->addMap('events', []);
         } else {
                 $this->data['events'] = [];

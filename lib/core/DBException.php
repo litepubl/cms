@@ -10,16 +10,6 @@
 
 namespace litepubl\core;
 
-class DBException extends \RuntimeException
+class DBException extends \Exception
 {
-    public $propName;
-    public $className;
-
-    public function __construct($className, $propName)
-    {
-        $this->className = $className;
-        $this->propName = $propName;
-
-        parent::__construct(sprintf('The requested property "%s" not found in class  %s', $propName, $className), 404);
-    }
 }

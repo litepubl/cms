@@ -68,7 +68,7 @@ class DBManager
         return $this->exec("truncate $this->prefix$name");
     }
 
-    public function alter($table, $arg)
+    public function alter(string $table, string $arg)
     {
         return $this->exec("alter table $this->prefix$table $arg");
     }
@@ -197,12 +197,12 @@ class DBManager
         $this->query("set $name = $value");
     }
 
-    public function columnExists($table, $column)
+    public function columnExists(string $table, string $column): bool
     {
         return $this->query("SHOW COLUMNS FROM $this->prefix$table LIKE '$column'")->num_rows;
     }
 
-    public function key_exists($table, $key)
+    public function keyExists(string $table, string $key): bool
     {
         return $this->query("SHOW index FROM $this->prefix$table where Key_name = '$key'")->num_rows;
     }
