@@ -263,16 +263,6 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         foreach ($items as $id) {
             $item = $tags->getitem($id);
             $args->add($item);
-            if (($item['icon'] == 0) || $this->getApp()->options->icondisabled) {
-                $args->icon = '';
-            } else {
-                $files = $this->factory->files;
-                if ($files->itemExists($item['icon'])) {
-                    $args->icon = $files->geticon($item['icon']);
-                } else {
-                    $args->icon = '';
-                }
-            }
             $list[] = $theme->parseArg($tmlitem, $args);
         }
 

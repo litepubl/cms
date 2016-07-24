@@ -62,7 +62,6 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         $args = new Args();
         $args->subcount = '';
         $args->subitems = '';
-        $args->icon = '';
         $args->rel = 'link';
         foreach ($this->items as $id => $item) {
             $args->add($item);

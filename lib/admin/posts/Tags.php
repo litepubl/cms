@@ -149,9 +149,7 @@ class Tags extends \litepubl\admin\Menu
         if (isset($idperm)) {
             $item['idperm'] = (int)$idperm;
         }
-        if (isset($icon)) {
-            $item['icon'] = (int)$icon;
-        }
+
         return $item;
     }
 

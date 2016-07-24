@@ -54,7 +54,6 @@ class Archives extends Widget
         }
 
         $args = new Args();
-        $args->icon = '';
         $args->subcount = '';
         $args->subitems = '';
         $args->rel = 'archives';

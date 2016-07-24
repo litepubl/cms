@@ -474,7 +474,6 @@ $url - адрес без адреса сайта
 $title - название (заголовок) метки или рубрики
 $itemscount - количество записей в метке или рубрике
 $parent - уникальный id родительской метки или рубрики, имеет смысл при вложенных метакх и рубриках
-$icon - html иконка, если есть
 
 Перед тем, как расматривать шаблон списка файлов рассмотрим два несложных шаблона - ссылка на RSS и ссылки на следующую и предыдущую запись.
 */
@@ -577,7 +576,6 @@ $id - уникальный id файла (число)
 $media - тип файла, строка имеет одно из следующих значений: 'bin','image','icon','audio','video','flash', 'document','executable','text','archive'
 $parent - уникальный id родительского файла, в шаблонах = 0, кроме шаблона для миниатюр - $preview
 $preview - уникальный id миниатюры, если миниатюры нет, то равен 0. Имеет смысл только для картинок
-$icon - уникальный id иконки для этого типа файлов. В настоящее время не используется и равно 0.
 $author - уникальный id автора файла. Имеет смысл при многопользовательском режиме.
 $idperm - уникальный id ограниченного доступа к файлу. В шаблонах не используется
 $size - размер в байтах файла
@@ -1260,7 +1258,7 @@ $template.sidebar = [
         <div class="collapse in" id="widget-content-$id" aria-labelledby="widget-heading-$id">
             <div class="panel-body">
                 $items = [<ul>
-                    $item = [<li><a href="$link" title="$title">$icon$text</a>
+                    $item = [<li><a href="$link" title="$title">$text</a>
                                             $subcount = [<strong>($itemscount)</strong>]
                                             $subitems = [<ul>$item</ul>]
                     </li>]
@@ -1288,7 +1286,6 @@ $subitems - шаблон вложенного списка
 $link - полный адрес ссылки
 $title - описание, текст для атрибута title
 $rel - текст для адрибута rel
-$icon - не обязательный html иконки, если есть
 $text - текст ссылки
 $subcount html количества, например записей в рубрике
 $itemscount - цифра количества , например количество записей в рубрике
@@ -1315,7 +1312,7 @@ $meta - мета
 
 sidebar.posts.item     = [<li><a href="$post.link" rel="bookmark" title="$lang.permalink $post.title">$post.title</a></li>]
 sidebar.comments.item = [<li><a href=" $link#comment-$id" title="$name $onrecent $title">$name $onrecent $title</a>: $content...</li>]
-sidebar.meta.item      = [<li><a $class href="$link" title="$title">$icon$text</a>$subitems</li>]
+sidebar.meta.item      = [<li><a $class href="$link" title="$title">$text</a>$subitems</li>]
 
 /*
 Мы объявили 3 шаблона: элемент списка для свежих записей, элемент списка для свежих комментариев и элемент списка мета. В этих шаблонах используются неизвестные ранее теги, к которым нужны пояснения. Но прежде хотелось бы разъяснить следующий момент: мы не прописывали шаблон всего виджета целиком, потому, что в этом нет необходимости - он совпадает с шаблоном виджета по умолчанию. Если была бы необходимость задать шаблон, то сделать этом можно так:
@@ -1365,7 +1362,7 @@ sidebar1.widget = [
     <a href="#widget-content-$id" id="widget-title-$id" class="btn btn-default dropdown-toggle widget-button" data-toggle="dropdown" data-model="dropdown" data-target="#widget-content-$id" aria-haspopup="true" aria-expanded="false"> $title</a>
     <div id="widget-content-$id" class="footer-widget-content" aria-labelledby="widget-title-$id">
         $items = [<ul class="dropdown-menu" role="menu">
-            $item = [<li><a href="$link" title="$title">$icon$text</a>
+            $item = [<li><a href="$link" title="$title">$text</a>
                             $subcount = [<em>($itemscount)</em>]
                                             $subitems = [<ul>$item</ul>]
             </li>]

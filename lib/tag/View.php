@@ -63,7 +63,6 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         foreach ($sorted as $id) {
             $item = $tags->getItem($id);
             $args->add($item);
-            $args->icon = '';
             $args->subcount = $showcount ? $theme->parseArg($tml['subcount'], $args) : '';
             $args->subitems = $tml['subitems'] ? $this->getSorted($tml, $id, $sortname, $count, $showcount) : '';
 
@@ -246,7 +245,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return sprintf(
             '<ul>%s</ul>', $this->getSorted(
                 array(
-                'item' => '<li><a href="$link" title="$title">$icon$title</a>$subcount</li>',
+                'item' => '<li><a href="$link" title="$title">$title</a>$subcount</li>',
                 'subcount' => '<strong>($itemscount)</strong>',
                 'subitems' => '<ul>$item</ul>'
                 ), 0, 'count', 0, 0, false

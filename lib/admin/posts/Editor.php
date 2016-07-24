@@ -223,10 +223,6 @@ class Editor extends \litepubl\admin\Menu
             $post->tagnames = $tags;
         }
 
-        if (isset($icon)) {
-            $post->icon = (int)$icon;
-        }
-
         if (isset($idschema)) {
             $post->idschema = (int)$idschema;
         }

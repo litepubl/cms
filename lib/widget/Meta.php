@@ -56,13 +56,14 @@ class Meta extends Widget
         $tml = $view->getItem('meta', $sidebar);
         $metaclasses = $view->getTml($sidebar, 'meta', 'classes');
         $args = new Args();
+
         foreach ($this->items as $name => $item) {
             if (!$item['enabled']) {
                 continue;
             }
 
             $args->add($item);
-            $args->icon = '';
+
             $args->subcount = '';
             $args->subitems = '';
             $args->rel = $name;

@@ -91,9 +91,9 @@ class Parser extends BaseParser
     {
         if ($s = parent::getfile($filename)) {
             //fix some old tags
-            $s = strtr(
-                $s, array(
+            $s = strtr($s, [
                 '$options.url$url' => '$link',
+'$post.icon' => '',
                 '$post.categorieslinks' => '$post.catlinks',
                 '$post.tagslinks' => '$post.taglinks',
                 '$post.subscriberss' => '$post.rsslink',
@@ -103,8 +103,7 @@ class Parser extends BaseParser
                 '$template.sitebar' => '$template.sidebar',
                 '<!--sitebar-->' => '<!--sidebar-->',
                 '<!--/sitebar-->' => '<!--/sidebar-->'
-                )
-            );
+            ]);
         }
 
         return $s;

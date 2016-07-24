@@ -29,7 +29,6 @@ class View extends \litepubl\admin\Menu
         $args->automorelength = $filter->automorelength;
         $args->autolinks = $filter->autolinks;
         $args->commentautolinks = $filter->commentautolinks;
-        //$args->icondisabled = $options->icondisabled;
         $args->hidefilesonpage = $options->hidefilesonpage;
 
         $themeparser = Parser::i();
@@ -55,7 +54,6 @@ class View extends \litepubl\admin\Menu
     {
         extract($_POST, EXTR_SKIP);
         $options = $this->getApp()->options;
-        //$options->icondisabled = isset($icondisabled);
         $options->hidefilesonpage = isset($hidefilesonpage);
         if (!empty($perpage)) {
             $options->perpage = (int)$perpage;

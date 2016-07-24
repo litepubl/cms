@@ -11,7 +11,6 @@
   parent int unsigned NOT NULL default '0',
   midle int unsigned NOT NULL default '0',
   preview int unsigned NOT NULL default '0',
-  icon int unsigned NOT NULL default '0',
   author int unsigned NOT NULL default '0',
 idperm int unsigned NOT NULL default '0',
   width int unsigned NOT NULL default '0',

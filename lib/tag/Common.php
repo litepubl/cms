@@ -181,7 +181,6 @@ class Common extends \litepubl\core\Items
             'title' => $title,
             'idschema' => $idschema,
             'idperm' => 0,
-            'icon' => 0,
             'itemscount' => 0,
             'includechilds' => $this->includechilds,
             'includeparents' => $this->includeparents,

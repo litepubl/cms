@@ -147,43 +147,7 @@ class MediaParser extends \litepubl\core\Events
         return $subdir == '' ? $filename : "$subdir/$filename";
     }
 
-    public function uploadicon($filename, $content, $overwrite)
-    {
-        $filename = static ::linkgen($filename);
-        $tempfilename = $this->doupload($filename, $content, $overwrite);
-        $info = $this->getinfo($tempfilename);
-        if ($info['media'] != 'image') {
-            $this->error('Invalid icon file format ' . $info['media']);
-        }
-        $info['media'] = 'icon';
-        $info['filename'] = $this->movetofolder($filename, $tempfilename, 'icon', $overwrite);
-        $item = $info + array(
-            'title' => '',
-            'description' => ''
-        );
-
-        $files = Files::i();
-        return $files->additem($item);
-    }
-
-    public function addicon($filename)
-    {
-        $info = $this->getinfo($filename);
-        if ($info['media'] != 'image') {
-            $this->error('Invalid icon file format ' . $info['media']);
-        }
-        $info['media'] = 'icon';
-        $item = $info + array(
-            'filename' => $filename,
-            'title' => '',
-            'description' => ''
-        );
-
-        $files = Files::i();
-        return $files->additem($item);
-    }
-
-    private function doupload($filename, &$content)
+    private function doUpload($filename, &$content)
     {
         $filename = static ::fixfilename($filename);
         $parts = pathinfo($filename);
@@ -472,7 +436,6 @@ class MediaParser extends \litepubl\core\Events
             'mime' => 'application/octet-stream',
             'filename' => $filename,
             'size' => 0,
-            'icon' => 0,
             'idperm' => 0,
             'height' => 0,
             'width' => 0,

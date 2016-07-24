@@ -25,10 +25,12 @@ $options->data['dbconfig']['password'] = Crypt::encode($password,$options->solt 
 $options->save();
 }
 
-
 $man = DBManager::i();
-if ($db->columnExists('posts', 'icon')) {
-$man->alter('posts', 'drop icon');
+
+foreach (['posts', 'categories', 'tags', 'files'] as $table) {
+if ($db->columnExists($table, 'icon')) {
+$man->alter($table, 'drop icon');
+}
 }
 
 if ($db->columnExists('posts', 'rss')) {

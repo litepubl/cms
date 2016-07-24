@@ -66,16 +66,7 @@ class Files extends \litepubl\core\Items
     public function getLink($id)
     {
         $item = $this->getitem($id);
-        $icon = '';
-        if (($item['icon'] != 0) && ($item['media'] != 'icon')) {
-            $icon = $this->geticon($item['icon']);
-        }
-        return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', $this->getApp()->site->files, $item['filename'], $item['title'], $icon . $item['description']);
-    }
-
-    public function getIcon($id)
-    {
-        return sprintf('<img src="%s" alt="icon" />', $this->geturl($id));
+        return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', $this->getApp()->site->files, $item['filename'], $item['title'], $item['description']);
     }
 
     public function getHash($filename)
