@@ -270,7 +270,7 @@ header('Location: $this->feedburnercomments');
         $r = $this->beforePost(['id' => $post->id, 'content' => '']);
 
         if (!$this->template) {
-            $r['content'] .= $post->view->replaceMore($post->rss, true);
+            $r['content'] .= $post->view->replaceMore($post->excerpt, true);
         } else {
             $r['content'] .= Theme::parsevar('post', $post->view, $this->template);
         }

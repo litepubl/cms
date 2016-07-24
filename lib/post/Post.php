@@ -22,7 +22,6 @@ use litepubl\view\Filter;
  * @property      int $parent
  * @property      int $author
  * @property      int $revision
- * @property      int $icon
  * @property      int $idperm
  * @property      string $class
  * @property      int $posted timestamp
@@ -30,7 +29,6 @@ use litepubl\view\Filter;
  * @property      string $title2
  * @property      string $filtered
  * @property      string $excerpt
- * @property      string $rss
  * @property      string $keywords
  * @property      string $description
  * @property      string $rawhead
@@ -187,7 +185,6 @@ class Post extends \litepubl\core\Item
             'parent' => 0,
             'author' => 0,
             'revision' => 0,
-            'icon' => 0,
             'idperm' => 0,
             'class' => str_replace('\\', '-', get_class($this)),
             'posted' => static::ZERODATE,
@@ -195,7 +192,6 @@ class Post extends \litepubl\core\Item
             'title2' => '',
             'filtered' => '',
             'excerpt' => '',
-            'rss' => '',
             'keywords' => '',
             'description' => '',
             'rawhead' => '',

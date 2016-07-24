@@ -454,6 +454,12 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     {
     }
 
+    public function getRss(): string
+{
+$this->getApp()->getLogManager()->trace('get rss deprecated post property');
+return $this->post->excerpt;
+}
+
     public function getPrevNext()
     {
         $prev = '';

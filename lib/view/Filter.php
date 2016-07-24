@@ -130,7 +130,6 @@ class Filter extends \litepubl\core\Events
     public function setExcerpt(Post $post, $excerpt, $more)
     {
         $post->excerpt = $excerpt;
-        $post->rss = $excerpt;
         $post->description = static ::getpostdescription($excerpt);
         $post->moretitle = $more;
     }

@@ -26,6 +26,15 @@ $options->save();
 }
 
 
+$man = DBManager::i();
+if ($db->columnExists('posts', 'icon')) {
+$man->alter('posts', 'drop icon');
+}
+
+if ($db->columnExists('posts', 'rss')) {
+$man->alter('posts', 'drop rss');
+}
+
 }
 
 function encrypt($s, $key)
