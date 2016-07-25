@@ -100,7 +100,6 @@ function installOptions($email, $language)
     $options->show_draft_post = false;
     $options->usersenabled = false;
     $options->reguser = false;
-    $options->icondisabled = false;
     $options->crontime = time();
     $options->show_file_perm = false;
     //$options->xxxcheck = empty($_SERVER['HTTP_REFERER']) && isset($_POST) && (count($_POST) > 0) ? false : true;

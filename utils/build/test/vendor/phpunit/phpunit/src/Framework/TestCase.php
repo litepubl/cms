@@ -134,7 +134,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     /**
      * The name of the expected Exception.
      *
-     * @var mixed
+     * @var string
      */
     private $expectedException = null;
 
@@ -574,12 +574,16 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     }
 
     /**
-     * @param mixed $exception
+     * @param string $exception
      *
      * @since Method available since Release 5.2.0
      */
     public function expectException($exception)
     {
+        if (!is_string($exception)) {
+            throw PHPUnit_Util_InvalidArgumentHelper::factory(1, 'string');
+        }
+
         $this->expectedException = $exception;
     }
 
@@ -1480,7 +1484,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
             throw new PHPUnit_Framework_Exception;
         }
 
-        $this->locale[$category] = setlocale($category, null);
+        $this->locale[$category] = setlocale($category, 0);
 
         $result = call_user_func_array('setlocale', $args);
 
@@ -1521,11 +1525,11 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     protected function createMock($originalClassName)
     {
         return $this->getMockBuilder($originalClassName)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->getMock();
+                    ->disableOriginalConstructor()
+                    ->disableOriginalClone()
+                    ->disableArgumentCloning()
+                    ->disallowMockingUnknownTypes()
+                    ->getMock();
     }
 
     /**

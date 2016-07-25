@@ -25,6 +25,11 @@ $options->data['dbconfig']['password'] = Crypt::encode($password,$options->solt 
 $options->save();
 }
 
+if (isset($options->data['icondisabled'])) {
+unset($options->data['icondisabled']);
+$options->save();
+}
+
 $man = DBManager::i();
 
 foreach (['posts', 'categories', 'tags', 'files'] as $table) {

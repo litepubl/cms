@@ -132,8 +132,8 @@ class ComposerStaticInit4cc76a774a7df8065a8e29b31c449537
         ),
         'Codeception\\Extension\\' => 
         array (
-            0 => __DIR__ . '/..' . '/codeception/codeception/ext',
-            1 => __DIR__ . '/..' . '/site5/phantoman/src',
+            0 => __DIR__ . '/..' . '/site5/phantoman/src',
+            1 => __DIR__ . '/..' . '/codeception/codeception/ext',
         ),
         'Codeception\\' => 
         array (
