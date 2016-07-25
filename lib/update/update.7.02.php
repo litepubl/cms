@@ -30,6 +30,11 @@ unset($options->data['icondisabled']);
 $options->save();
 }
 
+if (isset($options->data['crontime'])) {
+unset($options->data['crontime']);
+$options->save();
+}
+
 $man = DBManager::i();
 
 foreach (['posts', 'categories', 'tags', 'files'] as $table) {

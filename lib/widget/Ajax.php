@@ -49,6 +49,8 @@ $class =$Event->classname;
                     } else {
                         $event->result = litepubl::$app->classes->getInstance($item['class']);
                     }
+
+$event->stopPropagation(true);
                 }
             };
 
