@@ -10,7 +10,7 @@
 
 namespace litepubl\widget;
 
-class Depended extends Widget
+class Contextual extends Widget
 {
     private $item;
 

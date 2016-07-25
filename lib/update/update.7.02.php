@@ -33,12 +33,12 @@ $options->save();
 $man = DBManager::i();
 
 foreach (['posts', 'categories', 'tags', 'files'] as $table) {
-if ($db->columnExists($table, 'icon')) {
+if ($man->columnExists($table, 'icon')) {
 $man->alter($table, 'drop icon');
 }
 }
 
-if ($db->columnExists('posts', 'rss')) {
+if ($man->columnExists('posts', 'rss')) {
 $man->alter('posts', 'drop rss');
 }
 

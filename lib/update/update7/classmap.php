@@ -130,7 +130,7 @@ return array(
     'tmetawidget' => 'litepubl\widget\Meta',
     'torderwidget' => 'litepubl\widget\Order',
     'tpostswidget' => 'litepubl\widget\Posts',
-    'tclasswidget' => 'litepubl\widget\Depended',
+    'tclasswidget' => 'litepubl\widget\Contextual',
     'tsidebars' => 'litepubl\widget\Sidebars',
 
     //admin

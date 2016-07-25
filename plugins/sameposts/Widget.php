@@ -15,7 +15,7 @@ use litepubl\post\Post;
 use litepubl\post\Posts;
 use litepubl\view\Lang;
 
-class Widget extends \litepubl\widget\Depended
+class Widget extends \litepubl\widget\Contextual
 {
     const POSTCLASS = 'litepubl\post\Post';
 

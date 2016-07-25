@@ -15,7 +15,7 @@ use litepubl\view\Lang;
 use litepubl\widget\View;
 use litepubl\widget\Widgets;
 
-class Oldestposts extends \litepubl\widget\Depended
+class Oldestposts extends \litepubl\widget\Contextual
 {
 
     protected function create()

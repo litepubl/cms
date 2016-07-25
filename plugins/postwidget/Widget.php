@@ -14,7 +14,7 @@ use litepubl\core\Arr;
 use litepubl\core\Event;
 use litepubl\widget\Widgets;
 
-class Widget extends \litepubl\widget\Depended
+class Widget extends \litepubl\widget\Contextual
 {
     const POSTCLASS = 'litepubl\post\Post';
     public $items;
