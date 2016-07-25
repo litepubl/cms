@@ -14,6 +14,9 @@ use litepubl\core\litepubl;
 use litepubl\core\Crypt;
 use litepubl\Config;
 use litepubl\core\DBManager;
+use litepubl\view\Js;
+use litepubl\plugins\photoswipe\Photoswipe;
+use litepubl\plugins\photoswipeThumbnail\PhotoSwwipeThumbnail;
 
 function update702()
 {
@@ -47,6 +50,21 @@ if ($man->columnExists('posts', 'rss')) {
 $man->alter('posts', 'drop rss');
 }
 
+if ($man->columnExists('rawposts', 'hash')) {
+$man->alter('rawposts', 'drop hash');
+}
+
+$js = Js::i();
+$js->lock();
+$plugin = PhotoSwipe::i();
+$plugin->delete('default');
+$plugin->add('photoswipe');
+
+$thumb = PhotoSwwipeThumbnail::i();
+$thumb->deleteJs('default');
+$thumb->addJs('photoswipe');
+
+$js->unlock();
 }
 
 function encrypt($s, $key)

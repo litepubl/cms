@@ -21,16 +21,7 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
 
     public function install()
     {
-        $plugindir = basename(dirname(__file__));
-        $js = Js::i();
-        $js->lock();
-        $js->add('default', "plugins/$plugindir/resource/thumbnails.min.js");
-        $js->unlock();
-
-        $css = Css::i();
-        $css->lock();
-        $css->add('default', "plugins/$plugindir/resource/thumbnails.min.css");
-        $css->unlock();
+$this->addJs('photoswipe');
 
         $parser = MediaParser::i();
         $parser->previewwidth = 120;
@@ -43,16 +34,7 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
 
     public function uninstall()
     {
-        $plugindir = basename(dirname(__file__));
-        $js = Js::i();
-        $js->lock();
-        $js->deletefile('default', "plugins/$plugindir/resource/thumbnails.min.js");
-        $js->unlock();
-
-        $css = Css::i();
-        $css->lock();
-        $css->deletefile('default', "plugins/$plugindir/resource/thumbnails.min.css");
-        $css->unlock();
+$this->deleteJs('photoswipe');
 
         $parser = MediaParser::i();
         $parser->previewwidth = 120;
@@ -61,7 +43,27 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
         $parser->save();
 
         $this->rescale();
-    }
+}
+
+public function addJs(string $section = 'photoswipe')
+{
+        $plugindir = basename(dirname(__file__));
+        $js = Js::i();
+        $js->add('default', "plugins/$plugindir/resource/thumbnails.min.js");
+
+        $css = Css::i();
+        $css->add($section, "plugins/$plugindir/resource/thumbnails.min.css");
+}
+
+public function deleteJs(string $section = 'photoswipe')
+{
+        $plugindir = basename(dirname(__file__));
+        $js = Js::i();
+        $js->deleteFile($section, "plugins/$plugindir/resource/thumbnails.min.js");
+
+        $css = Css::i();
+        $css->deleteFile($section, "plugins/$plugindir/resource/thumbnails.min.css");
+}
 
     public function rescale()
     {

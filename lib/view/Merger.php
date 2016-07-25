@@ -224,7 +224,7 @@ class Merger extends \litepubl\core\Items
         return $result;
     }
 
-    public function deleteSection($section)
+    public function deleteSection(string $section)
     {
         $home = rtrim($this->getApp()->paths->home, DIRECTORY_SEPARATOR);
         @unlink($home . str_replace('/', DIRECTORY_SEPARATOR, $this->getfilename($section, $this->revision)));
@@ -235,7 +235,7 @@ class Merger extends \litepubl\core\Items
 
         unset($this->items[$section]);
         $this->save();
-        $this->deleted($section);
+        $this->deleted(['section' => $section]);
     }
 
     public function merge()

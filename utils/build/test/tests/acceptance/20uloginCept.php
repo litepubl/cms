@@ -46,6 +46,8 @@ $ulogin->screenshot('comment');
 $i->wantTo('test ulogin without dialog box');
 $ulogin->logout();
 //$i->openPage('/admin/login/');
+sleep(2);
+codecept_debug($i->grabFromCurrentUrl());
 $ulogin->screenshot('login');
 $ulogin->click();
 $i->waitForUrlChanged(10);

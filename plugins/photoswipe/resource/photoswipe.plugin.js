@@ -5,7 +5,7 @@
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
  *  version   7.01
-  */
+ */
 
 (function($, litepubl, document) {
   'use strict';
@@ -47,6 +47,7 @@
         this.script.done(callback);
       } else {
         var self = this;
+        $.load_css(ltoptions.files + "/files/js/photoswipe." + ltoptions.cssmerger + ".css");
         this.script = $.load_script(ltoptions.files + "/files/js/photoswipe." + ltoptions.jsmerger + ".js", function() {
           self.ready = true;
           if (callback) callback();

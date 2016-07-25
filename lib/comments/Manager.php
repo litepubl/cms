@@ -238,7 +238,7 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
             $url = $this->getApp()->site->url . '/';
         }
 
-        if (!Str::begin($url, 'http://')) {
+        if (!Str::begin($url, 'http')) {
             $url = 'http://' . $url;
         }
 

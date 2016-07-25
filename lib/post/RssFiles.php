@@ -137,13 +137,14 @@ class RssFiles extends \litepubl\core\Events implements \litepubl\core\Responsiv
         $this->onItem(['item' => $item, 'file' => $file]);
     }
 
-    public static function hashtomd5($hash)
+    public static function hashToMD5(string $hash): string
     {
         $r = '';
         $a = base64_decode($hash);
         for ($i = 0; $i < 16; $i++) {
             $r.= dechex(ord($a[$i]));
         }
+
         return $r;
     }
 
