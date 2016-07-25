@@ -23,10 +23,12 @@ use litepubl\view\ViewInterface;
  * @property-write callable $onAdminLogged
  * @property-write callable $onAdminPanel
  * @property-write callable $onSidebar
+ * @property-write callable $onFindContext
  * @method         array onWidget(array $params)
  * @method         array onAdminLogged(array $params)
  * @method         array onAdminPanel(array $params)
  * @method         array onSidebar(array $params)
+ * @method         array onFindContext(array $params)
  */
 
 class Widgets extends \litepubl\core\Items
@@ -36,13 +38,12 @@ class Widgets extends \litepubl\core\Items
     public $classes;
     public $currentSidebar;
     public $idwidget;
-    public $onFindContextCallback;
 
     protected function create()
     {
         $this->dbversion = false;
         parent::create();
-        $this->addEvents('onwidget', 'onadminlogged', 'onadminpanel', 'onsidebar');
+        $this->addEvents('onwidget', 'onadminlogged', 'onadminpanel', 'onsidebar', 'onFindContext');
         $this->basename = 'widgets';
         $this->currentSidebar = 0;
         $this->addMap('classes', array());
@@ -457,10 +458,7 @@ class Widgets extends \litepubl\core\Items
             return $app->context->model;
         }
 
-        if (is_callable($this->onFindContextCallback)) {
-            return call_user_func_array($this->onFindContextCallback, [$class]);
-        }
-
-        return false;
+$r = $this->onFindContext(['classname' => $class, 'result' => false]);
+return $r['result'];
     }
 }

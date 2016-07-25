@@ -11,6 +11,7 @@
 namespace litepubl\widget;
 
 use litepubl\core\Context;
+use litepubl\core\Event;
 use litepubl\core\Response;
 use litepubl\core\litepubl;
 use litepubl\view\Schema;
@@ -40,12 +41,13 @@ class Ajax implements \litepubl\core\ResponsiveInterface
 
         try {
             Theme::getTheme($themename);
-            $widgets->onFindContextCallback = function ($class) use ($idurl) {
+            $widgets->onFindContext = function (Event $event) use ($idurl) {
+$class =$Event->classname;
                 if (($item = litepubl::$app->router->getItem($idurl)) && is_a($class, $item['class'], true)) {
                     if (is_a($item['class'], 'litepubl\core\Item', true)) {
-                        return ($item['class']) ::i($item['arg']);
+                        $event->result = ($item['class'])::i($item['arg']);
                     } else {
-                        return litepubl::$app->classes->getInstance($item['class']);
+                        $event->result = litepubl::$app->classes->getInstance($item['class']);
                     }
                 }
             };
