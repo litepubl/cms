@@ -56,6 +56,8 @@ $man->alter('rawposts', 'drop hash');
 
 $js = Js::i();
 $js->lock();
+$js->add('default', 'js/plugins/logger.min.js');
+$js->add('default', '/js/litepubl/system/error.min.js');
 $plugin = PhotoSwipe::i();
 $plugin->delete('default');
 $plugin->add('photoswipe');

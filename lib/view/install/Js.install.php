@@ -32,9 +32,11 @@ function JsInstall($self)
         '/js/plugins/jquery.cookie.min.js',
         '/js/plugins/tojson.min.js',
         '/js/plugins/fontfaceobserver.js',
+'js/plugins/logger.min.js',
 
         // litepubl/system
         '/js/litepubl/system/css-loader.min.js',
+        '/js/litepubl/system/error.min.js',
         '/js/litepubl/system/escape.min.js',
         '/js/litepubl/system/get_get.min.js',
         '/js/litepubl/system/html-comments.min.js',
