@@ -1132,7 +1132,7 @@ content.excerpts.lite = [
 */
 
 content.navi = [
-<div>
+<nav aria-label="$lang.navipages">
     <ul class="pagination" itemscope itemtype="http://schema.org/SiteNavigationElement">
         $prev = [<li><a href="$link" aria-label="$lang.prev"><span aria-hidden="true">&laquo;</span></a></li>]
                 $next = [<li><a href="$link" aria-label="$lang.next"><span aria-hidden="true">&raquo;</span></a></li>]
@@ -1140,7 +1140,7 @@ content.navi = [
                                 $current = [<li class="active" itemprop="name"><span>$page<span class="sr-only"> ($lang.curpage)</span></span></li>]
                 $divider = [ ]
     </ul>
-</div>
+</nav>
 ]
 
 /*
