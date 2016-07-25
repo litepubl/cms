@@ -7,8 +7,9 @@
  *  version   7.01
  */
 
-(function(window) {
+(function(window, Logger) {
   'use strict';
+
 Logger.useDefaults();
 if (ltoptions.debug) {
 Logger.setLevel(Logger.Debug);
@@ -28,4 +29,4 @@ mesg = mesg + "\n" + error.stack;
 
 Logger.error(mesg);
 };
-}(window));
+}(window, Logger));

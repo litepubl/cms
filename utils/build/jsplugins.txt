@@ -24,5 +24,6 @@ photoswipe\resource\default-skin\default-skin.inline
 photoswipe-thumbnail\resource\thumbnails
 lowvision\resource\lowvision
 nautilus\resource\nautilus
+jslogger\resource\handler
 smallplugs_enscroll\resource\init
 smallplugs_enscroll\resource\enscroll
