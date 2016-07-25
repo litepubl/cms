@@ -310,7 +310,6 @@ a:focus {
   text-decoration: underline;
 }
 a:focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -1556,12 +1555,90 @@ table th[class*="col-"] {
 .table-hover > tbody > tr.active:hover > th {
   background-color: #393838;
 }
-/*
-.table-row-variant(success; @state-success-bg);
-.table-row-variant(info; @state-info-bg);
-.table-row-variant(warning; @state-warning-bg);
-.table-row-variant(danger; @state-danger-bg);
-*/
+.table > thead > tr > td.success,
+.table > tbody > tr > td.success,
+.table > tfoot > tr > td.success,
+.table > thead > tr > th.success,
+.table > tbody > tr > th.success,
+.table > tfoot > tr > th.success,
+.table > thead > tr.success > td,
+.table > tbody > tr.success > td,
+.table > tfoot > tr.success > td,
+.table > thead > tr.success > th,
+.table > tbody > tr.success > th,
+.table > tfoot > tr.success > th {
+  background-color: #00bc8c;
+}
+.table-hover > tbody > tr > td.success:hover,
+.table-hover > tbody > tr > th.success:hover,
+.table-hover > tbody > tr.success:hover > td,
+.table-hover > tbody > tr:hover > .success,
+.table-hover > tbody > tr.success:hover > th {
+  background-color: #00a379;
+}
+.table > thead > tr > td.info,
+.table > tbody > tr > td.info,
+.table > tfoot > tr > td.info,
+.table > thead > tr > th.info,
+.table > tbody > tr > th.info,
+.table > tfoot > tr > th.info,
+.table > thead > tr.info > td,
+.table > tbody > tr.info > td,
+.table > tfoot > tr.info > td,
+.table > thead > tr.info > th,
+.table > tbody > tr.info > th,
+.table > tfoot > tr.info > th {
+  background-color: #3498DB;
+}
+.table-hover > tbody > tr > td.info:hover,
+.table-hover > tbody > tr > th.info:hover,
+.table-hover > tbody > tr.info:hover > td,
+.table-hover > tbody > tr:hover > .info,
+.table-hover > tbody > tr.info:hover > th {
+  background-color: #258cd1;
+}
+.table > thead > tr > td.warning,
+.table > tbody > tr > td.warning,
+.table > tfoot > tr > td.warning,
+.table > thead > tr > th.warning,
+.table > tbody > tr > th.warning,
+.table > tfoot > tr > th.warning,
+.table > thead > tr.warning > td,
+.table > tbody > tr.warning > td,
+.table > tfoot > tr.warning > td,
+.table > thead > tr.warning > th,
+.table > tbody > tr.warning > th,
+.table > tfoot > tr.warning > th {
+  background-color: #F39C12;
+}
+.table-hover > tbody > tr > td.warning:hover,
+.table-hover > tbody > tr > th.warning:hover,
+.table-hover > tbody > tr.warning:hover > td,
+.table-hover > tbody > tr:hover > .warning,
+.table-hover > tbody > tr.warning:hover > th {
+  background-color: #e08e0b;
+}
+.table > thead > tr > td.danger,
+.table > tbody > tr > td.danger,
+.table > tfoot > tr > td.danger,
+.table > thead > tr > th.danger,
+.table > tbody > tr > th.danger,
+.table > tfoot > tr > th.danger,
+.table > thead > tr.danger > td,
+.table > tbody > tr.danger > td,
+.table > tfoot > tr.danger > td,
+.table > thead > tr.danger > th,
+.table > tbody > tr.danger > th,
+.table > tfoot > tr.danger > th {
+  background-color: #E74C3C;
+}
+.table-hover > tbody > tr > td.danger:hover,
+.table-hover > tbody > tr > th.danger:hover,
+.table-hover > tbody > tr.danger:hover > td,
+.table-hover > tbody > tr:hover > .danger,
+.table-hover > tbody > tr.danger:hover > th {
+  background-color: #e43725;
+}
 .table-responsive {
   overflow-x: auto;
   min-height: 0.01%;
@@ -1659,7 +1736,6 @@ select[size] {
 input[type="file"]:focus,
 input[type="radio"]:focus,
 input[type="checkbox"]:focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -2150,7 +2226,6 @@ select[multiple].input-lg {
 .btn.focus,
 .btn:active.focus,
 .btn.active.focus {
-  outline: thin dotted;
   outline: 5px auto -webkit-focus-ring-color;
   outline-offset: -2px;
 }
@@ -6365,18 +6440,20 @@ body.darkly,
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 body {
   padding-top: 81px;
 }
@@ -6432,11 +6509,12 @@ footer {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 h1,
 h2,
 h3,
@@ -6473,11 +6551,12 @@ ins {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .cursor-loading,
 .cursor-loading:hover {
   cursor: progress;
@@ -6502,11 +6581,12 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .modal-dialog {
   margin-left: auto;
   margin-right: auto;
@@ -6517,11 +6597,12 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .popover-title,
 .title-nowrap {
   overflow: hidden;
@@ -6539,11 +6620,12 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .fa {
   color: #3498DB;
 }
@@ -6567,11 +6649,12 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .post-header {
   position: relative;
   display: block;
@@ -6590,11 +6673,12 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .anpost {
   position: relative;
   display: block;
@@ -6619,11 +6703,12 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .postcard {
   position: relative;
   display: block;
@@ -6661,11 +6746,12 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .photo img,
 .anpost-image img {
   border: 1px solid transparent;
@@ -6679,11 +6765,12 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .header-comments {
   text-align: center;
   font-weight: 200;
@@ -6710,11 +6797,12 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .sidebar-top .widget-image {
   float: left;
   display: block;
@@ -6757,21 +6845,23 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .panel-body {
   overflow: hidden;
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .footer-widget-content {
   display: inline;
 }
@@ -6780,11 +6870,12 @@ A.dashed:focus {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 #text-count,
 input[id^="text-count"] {
   width: 5em;
@@ -6795,11 +6886,12 @@ input[id^="text-coupon"] {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .propname-gtin,
 .prop-mpn,
 .prop-id,
@@ -6820,11 +6912,12 @@ input[id^="text-coupon"] {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .buyform > div {
   text-align: center;
   margin-bottom: 15px;
@@ -6837,11 +6930,12 @@ input[id^="text-coupon"] {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .price {
   font-weight: bold;
   font-size: 120%;
@@ -6890,11 +6984,12 @@ input[id^="text-coupon"] {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .btn-text {
   vertical-align: middle;
   padding: 10px 15px;
@@ -6923,11 +7018,12 @@ input[id^="text-coupon"] {
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .proppage-form,
 .proppage-form-submit,
 .searchpage-form,
@@ -6947,11 +7043,12 @@ proppage-form-submit,
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
 .jcarousel-wrapper {
   display: block;
   overflow: hidden;
@@ -7030,8 +7127,9 @@ proppage-form-submit,
 }
 /**
 * Lite Publisher CMS
-* @copyright  2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+*
+* @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
 * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
-* @link https://github.com/litepubl\cms
-* @version 6.15
-**/
+* @link      https://github.com/litepubl\cms
+* @version   7.01
+*/
