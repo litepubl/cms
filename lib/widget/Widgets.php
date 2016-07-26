@@ -458,7 +458,7 @@ class Widgets extends \litepubl\core\Items
             return $app->context->model;
         }
 
-$r = $this->onFindContext(['classname' => $class, 'result' => false]);
-return $r['result'];
+        $r = $this->onFindContext(['classname' => $class, 'result' => false]);
+        return $r['result'];
     }
 }

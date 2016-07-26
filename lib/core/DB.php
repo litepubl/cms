@@ -135,9 +135,9 @@ class DB
     protected function error(string $mesg)
     {
         $mesg .= "\n$this->sql\n";
-if (Config::$debug) {
-        $mesg .= $this->performance();
-}
+        if (Config::$debug) {
+                $mesg .= $this->performance();
+        }
 
         throw new DBException($mesg);
     }

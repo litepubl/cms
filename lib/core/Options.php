@@ -276,16 +276,16 @@ class Options extends Events
 
     public function getDBPassword(): string
     {
-if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
+        if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
             return Crypt::decode($this->data['dbconfig']['password'], $this->solt . Config::$secret);
-} else {
-return $this->data['dbconfig']['password'];
-}
+        } else {
+                return $this->data['dbconfig']['password'];
+        }
     }
 
     public function setDBPassword(string $password)
     {
-if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
+        if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
             $this->data['dbconfig']['password'] = Crypt::encode($password, $this->solt . Config::$secret);
         } else {
             $this->data['dbconfig']['password'] = $password;

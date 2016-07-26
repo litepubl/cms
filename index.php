@@ -24,7 +24,7 @@ class Config
     // host name or false
     public static $host = false;
 
-//callback in App when objects initiailized and before request
+    //callback in App when objects initiailized and before request
     public static $afterInit = false;
 
     //set to true to ignore request, engine will be initilized

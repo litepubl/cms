@@ -67,12 +67,12 @@ class App
         $this->createCache();
 
         if ($this->installed) {
-try {
-            $this->db = DB::i();
-} catch (DBException $e) {
-Config::$ignoreRequest = true;
-$this->logException($e);
-}
+            try {
+                        $this->db = DB::i();
+            } catch (DBException $e) {
+                        Config::$ignoreRequest = true;
+                        $this->logException($e);
+            }
         } else {
             include $this->paths->lib . 'install/install.php';
             //exit() in lib/install/install.php
@@ -182,9 +182,9 @@ $this->logException($e);
     {
         try {
             $this->init();
-if (is_callable(config::$afterInit)) {
+            if (is_callable(config::$afterInit)) {
                 call_user_func_array(Config::$afterInit, [$this]);
-}
+            }
 
             if (!config::$ignoreRequest) {
                 $this->process();

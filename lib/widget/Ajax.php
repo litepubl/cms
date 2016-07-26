@@ -42,7 +42,7 @@ class Ajax implements \litepubl\core\ResponsiveInterface
         try {
             Theme::getTheme($themename);
             $widgets->onFindContext = function (Event $event) use ($idurl) {
-$class =$Event->classname;
+                $class =$Event->classname;
                 if (($item = litepubl::$app->router->getItem($idurl)) && is_a($class, $item['class'], true)) {
                     if (is_a($item['class'], 'litepubl\core\Item', true)) {
                         $event->result = ($item['class'])::i($item['arg']);
@@ -50,7 +50,7 @@ $class =$Event->classname;
                         $event->result = litepubl::$app->classes->getInstance($item['class']);
                     }
 
-$event->stopPropagation(true);
+                    $event->stopPropagation(true);
                 }
             };
 
