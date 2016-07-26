@@ -43,7 +43,7 @@ $levels = [
 'OFF' => 'EMERGENCY',
 ];
 
-foreach ($args['messages as $item) {
+foreach ($args['messages'] as $item) {
 $level = $levels[$item['level']] ?? $item['level'];
 $logger->log($level, $item['message']);
 }

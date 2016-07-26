@@ -10,23 +10,23 @@
 (function(window, Logger) {
   'use strict';
 
-Logger.useDefaults();
-if (ltoptions.debug) {
-Logger.setLevel(Logger.Debug);
-} else {
-Logger.setLevel(Logger.WARN);
-}
+  Logger.useDefaults();
+  if (ltoptions.debug) {
+    Logger.setLevel(Logger.Debug);
+  } else {
+    Logger.setLevel(Logger.WARN);
+  }
 
-window.onerror = function(msg, url, line, col, error) {
-mesg = mesg + "\nurl: " + url + "\non line " + line;
-if (col) {
-mesg = mesg + " symbol " + col;
-}
+  window.onerror = function(mesg, url, line, col, error) {
+    mesg = mesg + "\nurl: " + url + "\non line " + line;
+    if (col) {
+      mesg = mesg + " symbol " + col;
+    }
 
-if (error && "stack" in error) {
-mesg = mesg + "\n" + error.stack;
-}
+    if (error && "stack" in error) {
+      mesg = mesg + "\n" + error.stack;
+    }
 
-Logger.error(mesg);
-};
+    Logger.error(mesg);
+  };
 }(window, Logger));

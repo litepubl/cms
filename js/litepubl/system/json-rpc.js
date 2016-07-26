@@ -84,11 +84,11 @@
     }
 
     return $.ajax(ajax)
-.fail(function(jq, textStatus, errorThrown) {
-      if ($.isFunction(args.error)) {
-        args.error(jq.responseText, jq.status);
-      }
-    });
+      .fail(function(jq, textStatus, errorThrown) {
+        if ($.isFunction(args.error)) {
+          args.error(jq.responseText, jq.status);
+        }
+      });
   };
 
   $.hasprop = function(obj, prop) {

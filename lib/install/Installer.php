@@ -224,6 +224,7 @@ class Installer
         //default installed plugins
         $plugins = Plugins::i();
         $plugins->lock();
+        $plugins->add('jslogger');
         $plugins->add('likebuttons');
         $plugins->add('oldestposts');
         $plugins->add('photoswipe');

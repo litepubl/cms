@@ -17,6 +17,7 @@ use litepubl\core\DBManager;
 use litepubl\view\Js;
 use litepubl\plugins\photoswipe\Photoswipe;
 use litepubl\plugins\photoswipeThumbnail\PhotoSwwipeThumbnail;
+use litepubl\core\Plugins;
 
 function update702()
 {
@@ -66,6 +67,7 @@ $thumb = PhotoSwwipeThumbnail::i();
 $thumb->deleteJs('default');
 $thumb->addJs('photoswipe');
 
+Plugins::i()->add('jslogger');
 $js->unlock();
 }
 
