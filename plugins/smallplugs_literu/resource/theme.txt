@@ -1,0 +1,35 @@
+sidebar.categories.items = [
+<div class="scrollable">
+    <ul>$item</ul>
+</div>
+]
+
+$custom.literufeature = [
+<li class="feature-popover">
+    <a href="$post.link">$post.title</a>
+    <div class="hidden">
+        $post.excerptcontent
+    </div>
+</li>
+]
+
+$custom.literufeaturies = [
+<script type="text/javascript">
+    $(document).ready(function() {
+                $(".feature-popover").popover({
+                        container: 'body',
+                        delay: 120,
+                        html: true,
+                        trigger: 'hover focus',
+                        placement: 'bottom',
+                        title: function() {
+                            return $(this).children("a").text();
+                        },
+
+                        content: function() {
+                            return $(this.children(".hidden").html();
+                            }
+                        });
+                });
+</script>
+]

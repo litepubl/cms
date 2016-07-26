@@ -18,11 +18,11 @@ class PhotoSwipe extends \litepubl\core\Plugin
 
     public function install()
     {
-$this->add('photoswipe');
-}
+        $this->add('photoswipe');
+    }
 
-public function add(string $section= 'default')
-{
+    public function add(string $section= 'default')
+    {
         $plugindir = basename(dirname(__file__));
         $lang = $this->getApp()->options->language;
 
@@ -44,11 +44,11 @@ public function add(string $section= 'default')
 
     public function uninstall()
     {
-$this->delete('photoswipe');
-}
+        $this->delete('photoswipe');
+    }
 
-public function delete(string $section = 'default')
-{
+    public function delete(string $section = 'default')
+    {
         $plugindir = basename(dirname(__file__));
         $lang = $this->getApp()->options->language;
 
@@ -60,19 +60,19 @@ public function delete(string $section = 'default')
         $js->deletefile($section, "plugins/$plugindir/resource/$lang.photoswipe.plugin.min.js");
         $js->deletefile('default', "plugins/$plugindir/resource/photoswipe.plugin.min.js");
 
-if ($section == 'photoswipe') {
-$js->deleteSection($section);
-}
+        if ($section == 'photoswipe') {
+            $js->deleteSection($section);
+        }
         $js->unlock();
 
         $css = Css::i();
         $css->lock();
-if ($section == 'photoswipe') {
-$css->deleteSection($section);
-} else {
-        $css->deletefile($section, "plugins/$plugindir/resource/photoswipe.min.css");
-        $css->deletefile($section, "plugins/$plugindir/resource/default-skin/default-skin.inline.min.css");
-}
+        if ($section == 'photoswipe') {
+            $css->deleteSection($section);
+        } else {
+                $css->deletefile($section, "plugins/$plugindir/resource/photoswipe.min.css");
+                $css->deletefile($section, "plugins/$plugindir/resource/default-skin/default-skin.inline.min.css");
+        }
         $css->unlock();
     }
 }

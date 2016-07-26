@@ -1,0 +1,23 @@
+downloaditem = [
+<h5>$lang.downlad</h5>
+<ul>
+    <li>
+        <a href="$site.url/downloaditem.htm{$site.q}id=$post.id" "><span class="fa fa-download "></span> $lang.downloadfile</a></li>
+<li><a href="$site.url/downloaditem.htm{$site.q}id=$post.id " class="downloaditem " data-type="$post.type "><span class="fa fa-upload "></span> $lang.uploadtosite</a></li>
+</ul>
+
+<h5>$lang.aboutfile</h5>
+<ul>
+<li>$lang.downloads $post.downloadcount</li>
+<li>$lang.author: <a href="$post.authorurl ">$post.authorname</a></li>
+<li>$lang.version: $post.version</li>
+</ul>
+
+<script type="text/javascript ">
+lang.downloaditem = {
+title: "$lang.changeurl ",
+editsite: "$lang.editsite "
+};
+</script>
+<script type="text/javascript" src="$site.files/plugins/downloaditem/resource/downloaditem.min.js"></script>
+]

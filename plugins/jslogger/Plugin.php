@@ -22,8 +22,8 @@ class Plugin extends \litepubl\core\Plugin
         $js = Js::i();
         $js->add('default', "plugins/$plugindir/resource/handler.min.js");
 
-Json::i()->addEvent('logger_send', $this->logger_send);
-}
+        Json::i()->addEvent('logger_send', $this->logger_send);
+    }
 
     public function uninstall()
     {
@@ -31,23 +31,23 @@ Json::i()->addEvent('logger_send', $this->logger_send);
         $js = Js::i();
         $js->deleteFile('default', "plugins/$plugindir/resource/handler.min.js");
 
-Json::i()->unbind($this);
-}
+        Json::i()->unbind($this);
+    }
 
-public function logger_send(array $args)
-{
-$logger = $this->getApp()->getLogger();
-$levels = [
-'TIME' =>'NOTICE',
-'WARN' => 'WARNING',
-'OFF' => 'EMERGENCY',
-];
+    public function logger_send(array $args)
+    {
+        $logger = $this->getApp()->getLogger();
+        $levels = [
+        'TIME' =>'NOTICE',
+        'WARN' => 'WARNING',
+        'OFF' => 'EMERGENCY',
+        ];
 
-foreach ($args['messages'] as $item) {
-$level = $levels[$item['level']] ?? $item['level'];
-$logger->log($logger->toMonologLevel($level), $item['message']);
-}
+        foreach ($args['messages'] as $item) {
+            $level = $levels[$item['level']] ?? $item['level'];
+            $logger->log($logger->toMonologLevel($level), $item['message']);
+        }
 
-return ['result' => true];
-}
+        return ['result' => true];
+    }
 }
