@@ -10,11 +10,13 @@
 
 namespace litepubl\plugins\jslogger;
 
+use litepubl\core\Event;
 use litepubl\pages\Json;
 use litepubl\view\Js;
 
 class Plugin extends \litepubl\core\Plugin
 {
+const MESSAGE = "External error in javascript\n";
 
     public function install()
     {
@@ -45,8 +47,12 @@ class Plugin extends \litepubl\core\Plugin
 
         foreach ($args['messages'] as $item) {
             $level = $levels[$item['level']] ?? $item['level'];
-            $logger->log($logger->toMonologLevel($level), $item['message']);
+            $logger->log($logger->toMonologLevel($level), static::MESSAGE . $item['message']);
         }
+
+$this->getApp()->addCallback('onShowErrors', function(Event $event) {
+$event->show = false;
+});
 
         return ['result' => true];
     }

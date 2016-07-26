@@ -54,7 +54,7 @@ trait Callbacks
         return isset($this->callbacks[$event]) ? count($this->callbacks[$event]) : 0;
     }
 
-    public function triggerCallback($event, $params = array())
+    public function triggerCallback($event, $params = []): array
     {
         if (is_object($event)) {
                 $eventName = $event->getName();
@@ -62,12 +62,15 @@ trait Callbacks
                 $eventName = $event;
         }
 
-        if (isset($this->callbacks[$eventName])) {
+if (!$this->getCallbacksCount($eventName)) {
+return $params;
+}
+
             if (is_string($event)) {
                 $event = new Event($this, $eventName);
-                $event->setParams($params);
             }
 
+                $event->setParams($params);
             foreach ($this->callbacks[$eventName] as $i => $callback) {
                 if ($event->isPropagationStopped()) {
                     break;
@@ -83,6 +86,7 @@ trait Callbacks
                     $this->getApp()->logException($e);
                 }
             }
-        }
+
+        return $event->getParams();
     }
 }

@@ -122,8 +122,8 @@ trait EventsTrait
         }
 
         $event = $this->newEvent($name);
-        $event->setParams($params);
-        $this->triggerCallback($event);
+$params = $this->triggerCallback($event, $params);
+$event->setParams($params);
         $this->trigger($event);
         return $event->getParams();
     }
