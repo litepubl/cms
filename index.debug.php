@@ -8,8 +8,8 @@ namespace litepubl;
 
 define('litepubl\mode', 'config');
 require (__DIR__ . '/index.php');
-Config::$debug = true;
-Config::$classes['storage'] = 'litepubl\core\storageinc';
+//Config::$debug = true;
+//Config::$classes['storage'] = 'litepubl\core\storageinc';
 Config::$afterInit = function($app) {
 include (__DIR__ . '/temp/zdebug.php');
 };

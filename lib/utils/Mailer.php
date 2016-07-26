@@ -66,10 +66,10 @@ class Mailer
                 'subject' => $subject,
                 'body' => $body
             );
+        } else {
+                $app = static::getAppInstance();
+            static ::sendMail($app->site->name, $app->options->fromemail, 'admin', $app->options->email, $subject, $body);
         }
-} else {
-        static ::sendmail(static ::getAppInstance()->site->name, static ::getAppInstance()->options->fromemail, 'admin', static ::getAppInstance()->options->email, $subject, $body);
-}
     }
 
     public static function onshutdown()
@@ -120,10 +120,10 @@ class Mailer
 
     public static function SendAttachmentToAdmin($subj, $body, $filename, $attachment)
     {
-        return static ::sendattachment(static ::getAppInstance()->site->name, static ::getAppInstance()->options->fromemail, 'admin', static ::getAppInstance()->options->email, $subj, $body, $filename, $attachment);
+        return static ::sendAttachment(static ::getAppInstance()->site->name, static ::getAppInstance()->options->fromemail, 'admin', static ::getAppInstance()->options->email, $subj, $body, $filename, $attachment);
     }
 
-    public static function sendattachment($fromname, $fromemail, $toname, $toemail, $subj, $body, $filename, $attachment)
+    public static function sendAttachment($fromname, $fromemail, $toname, $toemail, $subj, $body, $filename, $attachment)
     {
         $subj = $subj == '' ? '' : '=?utf-8?B?' . @base64_encode($subj) . '?=';
         $date = date('r');
@@ -146,3 +146,4 @@ class Mailer
         return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . static ::getAppInstance()->options->version);
     }
 }
+echo "end file<br>";
