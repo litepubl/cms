@@ -10,20 +10,44 @@
 (function($, Logger) {
   'use strict';
 
-var messages = [];
-var lastCommit = 0;
+  var commit = [];
+  var pushStatus = 'wait';
 
-function commitReport() {
-if (messages.length) {
-$.jsonrpc ({
-      method: "logger_send",
-      params: {messages: messages}
-});
-}
-}
+  function pushCommit() {
+    if (commit.length) {
+      var params = {
+        messages: commit
+      };
+      commit = [];
+      pushStatus = 'send';
 
-Logger.setHandler(function (messages, context) {
-{ message: messages[0], level: context.level });
-commitReport();
-});
+      $.jsonrpc({
+          method: "logger_send",
+          params: params
+        })
+        .always(function() {
+          pushStatus = 'wait';
+          if (commit.length) {
+            pushDelay();
+          }
+        });
+    }
+  }
+
+  function pushDelay() {
+    if (pushStatus == 'wait') {
+      pushStatus = 'delay';
+      setTimeout(function() {
+        pushCommit();
+      }, 50);
+    }
+  }
+
+  Logger.setHandler(function(messages, context) {
+    commit.push({
+      message: messages[0],
+      level: context.level
+    });
+    pushDelay();
+  });
 }(jQuery, Logger));

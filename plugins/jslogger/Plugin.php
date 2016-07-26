@@ -36,7 +36,18 @@ Json::i()->unbind($this);
 
 public function logger_send(array $args)
 {
-$this->getApp()->getLogger()->
+$logger = $this->getApp()->getLogger();
+$levels = [
+'TIME' =>'NOTICE',
+'WARN' => 'WARNING',
+'OFF' => 'EMERGENCY',
+];
+
+foreach ($args['messages as $item) {
+$level = $levels[$item['level']] ?? $item['level'];
+$logger->log($level, $item['message']);
+}
+
 return ['result' => true];
 }
 }
