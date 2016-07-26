@@ -119,15 +119,17 @@ class Plugins extends Menu
 
     public function processForm()
     {
+            $plugins = PluginItems::i();
         if (!isset($_GET['plugin'])) {
             $list = array_keys($_POST);
             array_pop($list);
-            $plugins = PluginItems::i();
+
             try {
                 $plugins->update($list);
             } catch (\Exception $e) {
                 $this->getApp()->logException($e);
             }
+
             $result = $this->theme->h(Lang::i()->updated);
         } else {
             $name = $_GET['plugin'];

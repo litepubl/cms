@@ -46,7 +46,7 @@
   Logger.setHandler(function(messages, context) {
     commit.push({
       message: messages[0],
-      level: context.level
+      level: context.level.name
     });
     pushDelay();
   });

@@ -7,13 +7,13 @@
  *  version   7.01
   */
 
-(function($, litepubl, document) {
+(function($, litepubl) {
   'use strict';
 
-  $(document).ready(function() {
+  $(function() {
     //delete options if already created
     litepubl.photoswipe.options = false;
     litepubl.photoswipe.animatethumbs = true;
   });
 
-})(jQuery, litepubl, document);
+})(jQuery, litepubl);

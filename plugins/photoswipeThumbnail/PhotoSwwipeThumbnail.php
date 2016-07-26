@@ -59,7 +59,7 @@ public function deleteJs(string $section = 'photoswipe')
 {
         $plugindir = basename(dirname(__file__));
         $js = Js::i();
-        $js->deleteFile($section, "plugins/$plugindir/resource/thumbnails.min.js");
+        $js->deleteFile('default', "plugins/$plugindir/resource/thumbnails.min.js");
 
         $css = Css::i();
         $css->deleteFile($section, "plugins/$plugindir/resource/thumbnails.min.css");

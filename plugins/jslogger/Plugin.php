@@ -22,14 +22,14 @@ class Plugin extends \litepubl\core\Plugin
         $js = Js::i();
         $js->add('default', "plugins/$plugindir/resource/handler.min.js");
 
-Json::i()->addEvent('logger_send', $this, 'logger_send');
+Json::i()->addEvent('logger_send', $this->logger_send);
 }
 
     public function uninstall()
     {
         $plugindir = basename(dirname(__file__));
         $js = Js::i();
-        $js->deleteFile($section, "plugins/$plugindir/resource/handler.min.js");
+        $js->deleteFile('default', "plugins/$plugindir/resource/handler.min.js");
 
 Json::i()->unbind($this);
 }
@@ -45,7 +45,7 @@ $levels = [
 
 foreach ($args['messages'] as $item) {
 $level = $levels[$item['level']] ?? $item['level'];
-$logger->log($level, $item['message']);
+$logger->log($logger->toMonologLevel($level), $item['message']);
 }
 
 return ['result' => true];
