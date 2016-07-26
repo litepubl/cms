@@ -36,7 +36,6 @@ vendor/psr/log/Psr/Log/InvalidArgumentException.php
 vendor/monolog/monolog/src/Monolog/ErrorHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/StreamHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/MailHandler.php
-vendor/monolog/monolog/src/Monolog/Handler/NativeMailerHandler.php
 vendor/monolog/monolog/src/Monolog/Handler/HandlerInterface.php
 vendor/monolog/monolog/src/Monolog/Formatter/NormalizerFormatter.php
 vendor/monolog/monolog/src/Monolog/Formatter/LineFormatter.php
@@ -46,6 +45,7 @@ vendor/monolog/monolog/src/Monolog/Formatter/HtmlFormatter.php
 #debug logger
 lib/debug/LogManager.php
 lib/debug/RuntimeHandler.php
+lib/debug/MailerHandler.php
 lib/debug/EmptyFormatter.php
 lib/debug/LogException.php
 

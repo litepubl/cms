@@ -54,26 +54,22 @@ class Mailer
         return '=?utf-8?B?' . @base64_encode($name) . '?=' . " <$email>";
     }
 
-    public static function sendtoadmin($subject, $body, $onshutdown = false)
+    public static function sendToAdmin(string $subject, string $body, bool $onshutdown = false)
     {
         if ($onshutdown) {
             if (!isset(static ::$hold)) {
                 static ::$hold = array();
-                register_shutdown_function(
-                    array(
-                    get_called_class() ,
-                    'onshutdown'
-                    )
-                );
+                register_shutdown_function([get_called_class() , 'onshutdown']);
             }
+
             static ::$hold[] = array(
                 'subject' => $subject,
                 'body' => $body
             );
-            return;
         }
-
-        return static ::sendmail(static ::getAppInstance()->site->name, static ::getAppInstance()->options->fromemail, 'admin', static ::getAppInstance()->options->email, $subject, $body);
+} else {
+        static ::sendmail(static ::getAppInstance()->site->name, static ::getAppInstance()->options->fromemail, 'admin', static ::getAppInstance()->options->email, $subject, $body);
+}
     }
 
     public static function onshutdown()

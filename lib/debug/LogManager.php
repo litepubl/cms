@@ -13,7 +13,6 @@ namespace litepubl\debug;
 use Monolog\ErrorHandler;
 use Monolog\Formatter\HtmlFormatter;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\NativeMailerHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use litepubl\Config;
@@ -48,7 +47,7 @@ class LogManager
         $logger->pushHandler($this->runtime);
 
         if (!Config::$debug && $app->installed) {
-            $handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING);
+            $handler = new MailerHandler('[error] ' . $app->site->name, Logger::WARNING);
             $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
             $logger->pushHandler($handler);
         }
