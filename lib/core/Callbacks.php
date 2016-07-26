@@ -62,30 +62,30 @@ trait Callbacks
                 $eventName = $event;
         }
 
-if (!$this->getCallbacksCount($eventName)) {
-return $params;
-}
+        if (!$this->getCallbacksCount($eventName)) {
+                return $params;
+        }
 
-            if (is_string($event)) {
-                $event = new Event($this, $eventName);
-            }
+        if (is_string($event)) {
+            $event = new Event($this, $eventName);
+        }
 
                 $event->setParams($params);
-            foreach ($this->callbacks[$eventName] as $i => $callback) {
-                if ($event->isPropagationStopped()) {
-                    break;
-                }
-
-                try {
-                            call_user_func_array($callback, [$event]);
-                    if ($event->once) {
-                        $event->once = false;
-                        unset($this->callbacks[$eventName][$i]);
-                    }
-                } catch (\Exception $e) {
-                    $this->getApp()->logException($e);
-                }
+        foreach ($this->callbacks[$eventName] as $i => $callback) {
+            if ($event->isPropagationStopped()) {
+                break;
             }
+
+            try {
+                        call_user_func_array($callback, [$event]);
+                if ($event->once) {
+                    $event->once = false;
+                    unset($this->callbacks[$eventName][$i]);
+                }
+            } catch (\Exception $e) {
+                $this->getApp()->logException($e);
+            }
+        }
 
         return $event->getParams();
     }

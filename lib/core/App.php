@@ -223,11 +223,13 @@ class App
 
     public function showErrors()
     {
-            $r = $this->triggerCallback('onShowErrors', [
-'show' => $this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag)
-]);
-if ($r['show'] && ($log = $this->logManager->getHtml())) {
-            echo $log;
+            $r = $this->triggerCallback(
+                'onShowErrors', [
+                'show' => $this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag)
+                ]
+            );
+        if ($r['show'] && ($log = $this->logManager->getHtml())) {
+                    echo $log;
         }
     }
 

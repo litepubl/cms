@@ -232,8 +232,8 @@ trait EventsTrait
         }
 
         $event = $this->newEvent($name);
+        $params = $this->triggerCallback($event, $params);
         $event->setParams($params);
-        $this->triggerCallback($event);
         $this->trigger($event);
         return $event->getParams();
     }
@@ -406,12 +406,12 @@ class App
         $this->createCache();
 
         if ($this->installed) {
-try {
-            $this->db = DB::i();
-} catch (DBException $e) {
-Config::$ignoreRequest = true;
-$this->logException($e);
-}
+            try {
+                        $this->db = DB::i();
+            } catch (DBException $e) {
+                        Config::$ignoreRequest = true;
+                        $this->logException($e);
+            }
         } else {
             include $this->paths->lib . 'install/install.php';
             //exit() in lib/install/install.php
@@ -521,9 +521,9 @@ $this->logException($e);
     {
         try {
             $this->init();
-if (is_callable(config::$afterInit)) {
+            if (is_callable(config::$afterInit)) {
                 call_user_func_array(Config::$afterInit, [$this]);
-}
+            }
 
             if (!config::$ignoreRequest) {
                 $this->process();
@@ -562,8 +562,13 @@ if (is_callable(config::$afterInit)) {
 
     public function showErrors()
     {
-        if ($this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag) && ($log = $this->logManager->getHtml())) {
-            echo $log;
+            $r = $this->triggerCallback(
+                'onShowErrors', [
+                'show' => $this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag)
+                ]
+            );
+        if ($r['show'] && ($log = $this->logManager->getHtml())) {
+                    echo $log;
         }
     }
 
@@ -994,7 +999,7 @@ trait Callbacks
         return isset($this->callbacks[$event]) ? count($this->callbacks[$event]) : 0;
     }
 
-    public function triggerCallback($event, $params = array())
+    public function triggerCallback($event, $params = []): array
     {
         if (is_object($event)) {
                 $eventName = $event->getName();
@@ -1002,28 +1007,32 @@ trait Callbacks
                 $eventName = $event;
         }
 
-        if (isset($this->callbacks[$eventName])) {
-            if (is_string($event)) {
-                $event = new Event($this, $eventName);
+        if (!$this->getCallbacksCount($eventName)) {
+                return $params;
+        }
+
+        if (is_string($event)) {
+            $event = new Event($this, $eventName);
+        }
+
                 $event->setParams($params);
+        foreach ($this->callbacks[$eventName] as $i => $callback) {
+            if ($event->isPropagationStopped()) {
+                break;
             }
 
-            foreach ($this->callbacks[$eventName] as $i => $callback) {
-                if ($event->isPropagationStopped()) {
-                    break;
+            try {
+                        call_user_func_array($callback, [$event]);
+                if ($event->once) {
+                    $event->once = false;
+                    unset($this->callbacks[$eventName][$i]);
                 }
-
-                try {
-                            call_user_func_array($callback, [$event]);
-                    if ($event->once) {
-                        $event->once = false;
-                        unset($this->callbacks[$eventName][$i]);
-                    }
-                } catch (\Exception $e) {
-                    $this->getApp()->logException($e);
-                }
+            } catch (\Exception $e) {
+                $this->getApp()->logException($e);
             }
         }
+
+        return $event->getParams();
     }
 }
 
@@ -1228,33 +1237,33 @@ namespace litepubl\core;
 
 class Crypt
 {
-const METHOD = 'AES-256-CTR';
-const LENGTH = 32;
-const NONCELENGTH = 16;
+    const METHOD = 'AES-256-CTR';
+    const LENGTH = 32;
+    const NONCELENGTH = 16;
 
     public static function encode(string $s, string $password): string
     {
-$nonce = static::getNonce();
-$result = openssl_encrypt($s, static::METHOD, static::getPassword($password, $nonce), OPENSSL_RAW_DATA, $nonce);
-return base64_encode($nonce . $result);
+        $nonce = static::getNonce();
+        $result = openssl_encrypt($s, static::METHOD, static::getPassword($password, $nonce), OPENSSL_RAW_DATA, $nonce);
+        return base64_encode($nonce . $result);
     }
 
     public static function decode(string $s, string $password): string
     {
-$s = base64_decode($s);
-$nonce = substr($s, 0, static::NONCELENGTH);
-return openssl_decrypt(substr($s, static::NONCELENGTH), static::METHOD, static::getPassword($password, $nonce), OPENSSL_RAW_DATA, $nonce);
+        $s = base64_decode($s);
+        $nonce = substr($s, 0, static::NONCELENGTH);
+        return openssl_decrypt(substr($s, static::NONCELENGTH), static::METHOD, static::getPassword($password, $nonce), OPENSSL_RAW_DATA, $nonce);
     }
 
-public static function getNonce()
-{
-return openssl_random_pseudo_bytes (static::NONCELENGTH);
-}
+    public static function getNonce()
+    {
+        return openssl_random_pseudo_bytes(static::NONCELENGTH);
+    }
 
-public static function getPassword(string $password, string $solt): string
-{
-return openssl_pbkdf2($password , $solt, static::LENGTH, 2, 'MD5');
-}
+    public static function getPassword(string $password, string $solt): string
+    {
+        return openssl_pbkdf2($password, $solt, static::LENGTH, 2, 'MD5');
+    }
 
 }
 
@@ -1662,9 +1671,9 @@ class DB
     protected function error(string $mesg)
     {
         $mesg .= "\n$this->sql\n";
-if (Config::$debug) {
-        $mesg .= $this->performance();
-}
+        if (Config::$debug) {
+                $mesg .= $this->performance();
+        }
 
         throw new DBException($mesg);
     }
@@ -2973,16 +2982,16 @@ class Options extends Events
 
     public function getDBPassword(): string
     {
-if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
+        if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
             return Crypt::decode($this->data['dbconfig']['password'], $this->solt . Config::$secret);
-} else {
-return $this->data['dbconfig']['password'];
-}
+        } else {
+                return $this->data['dbconfig']['password'];
+        }
     }
 
     public function setDBPassword(string $password)
     {
-if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
+        if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
             $this->data['dbconfig']['password'] = Crypt::encode($password, $this->solt . Config::$secret);
         } else {
             $this->data['dbconfig']['password'] = $password;
@@ -7170,191 +7179,6 @@ abstract class MailHandler extends AbstractProcessingHandler
     }
 }
 
-//vendor/monolog/monolog/src/Monolog/Handler/NativeMailerHandler.php
-/*
- * This file is part of the Monolog package.
- *
- * (c) Jordi Boggiano <j.boggiano@seld.be>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-namespace Monolog\Handler;
-
-use Monolog\Logger;
-use Monolog\Formatter\LineFormatter;
-
-/**
- * NativeMailerHandler uses the mail() function to send the emails
- *
- * @author Christophe Coevoet <stof@notk.org>
- * @author Mark Garrett <mark@moderndeveloperllc.com>
- */
-class NativeMailerHandler extends MailHandler
-{
-    /**
-     * The email addresses to which the message will be sent
-     * @var array
-     */
-    protected $to;
-
-    /**
-     * The subject of the email
-     * @var string
-     */
-    protected $subject;
-
-    /**
-     * Optional headers for the message
-     * @var array
-     */
-    protected $headers = array();
-
-    /**
-     * Optional parameters for the message
-     * @var array
-     */
-    protected $parameters = array();
-
-    /**
-     * The wordwrap length for the message
-     * @var int
-     */
-    protected $maxColumnWidth;
-
-    /**
-     * The Content-type for the message
-     * @var string
-     */
-    protected $contentType = 'text/plain';
-
-    /**
-     * The encoding for the message
-     * @var string
-     */
-    protected $encoding = 'utf-8';
-
-    /**
-     * @param string|array $to             The receiver of the mail
-     * @param string       $subject        The subject of the mail
-     * @param string       $from           The sender of the mail
-     * @param int          $level          The minimum logging level at which this handler will be triggered
-     * @param bool         $bubble         Whether the messages that are handled can bubble up the stack or not
-     * @param int          $maxColumnWidth The maximum column width that the message lines will have
-     */
-    public function __construct($to, $subject, $from, $level = Logger::ERROR, $bubble = true, $maxColumnWidth = 70)
-    {
-        parent::__construct($level, $bubble);
-        $this->to = is_array($to) ? $to : array($to);
-        $this->subject = $subject;
-        $this->addHeader(sprintf('From: %s', $from));
-        $this->maxColumnWidth = $maxColumnWidth;
-    }
-
-    /**
-     * Add headers to the message
-     *
-     * @param  string|array $headers Custom added headers
-     * @return self
-     */
-    public function addHeader($headers)
-    {
-        foreach ((array) $headers as $header) {
-            if (strpos($header, "\n") !== false || strpos($header, "\r") !== false) {
-                throw new \InvalidArgumentException('Headers can not contain newline characters for security reasons');
-            }
-            $this->headers[] = $header;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Add parameters to the message
-     *
-     * @param  string|array $parameters Custom added parameters
-     * @return self
-     */
-    public function addParameter($parameters)
-    {
-        $this->parameters = array_merge($this->parameters, (array) $parameters);
-
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function send($content, array $records)
-    {
-        $content = wordwrap($content, $this->maxColumnWidth);
-        $headers = ltrim(implode("\r\n", $this->headers) . "\r\n", "\r\n");
-        $headers .= 'Content-type: ' . $this->getContentType() . '; charset=' . $this->getEncoding() . "\r\n";
-        if ($this->getContentType() == 'text/html' && false === strpos($headers, 'MIME-Version:')) {
-            $headers .= 'MIME-Version: 1.0' . "\r\n";
-        }
-
-        $subject = $this->subject;
-        if ($records) {
-            $subjectFormatter = new LineFormatter($this->subject);
-            $subject = $subjectFormatter->format($this->getHighestRecord($records));
-        }
-
-        $parameters = implode(' ', $this->parameters);
-        foreach ($this->to as $to) {
-            mail($to, $subject, $content, $headers, $parameters);
-        }
-    }
-
-    /**
-     * @return string $contentType
-     */
-    public function getContentType()
-    {
-        return $this->contentType;
-    }
-
-    /**
-     * @return string $encoding
-     */
-    public function getEncoding()
-    {
-        return $this->encoding;
-    }
-
-    /**
-     * @param  string $contentType The content type of the email - Defaults to text/plain. Use text/html for HTML
-     *                             messages.
-     * @return self
-     */
-    public function setContentType($contentType)
-    {
-        if (strpos($contentType, "\n") !== false || strpos($contentType, "\r") !== false) {
-            throw new \InvalidArgumentException('The content type can not contain newline characters to prevent email header injection');
-        }
-
-        $this->contentType = $contentType;
-
-        return $this;
-    }
-
-    /**
-     * @param  string $encoding
-     * @return self
-     */
-    public function setEncoding($encoding)
-    {
-        if (strpos($encoding, "\n") !== false || strpos($encoding, "\r") !== false) {
-            throw new \InvalidArgumentException('The encoding can not contain newline characters to prevent email header injection');
-        }
-
-        $this->encoding = $encoding;
-
-        return $this;
-    }
-}
-
 //vendor/monolog/monolog/src/Monolog/Handler/HandlerInterface.php
 /*
  * This file is part of the Monolog package.
@@ -8081,7 +7905,6 @@ namespace litepubl\debug;
 use Monolog\ErrorHandler;
 use Monolog\Formatter\HtmlFormatter;
 use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\NativeMailerHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use litepubl\Config;
@@ -8116,7 +7939,7 @@ class LogManager
         $logger->pushHandler($this->runtime);
 
         if (!Config::$debug && $app->installed) {
-            $handler = new NativeMailerHandler($app->options->email, '[error] ' . $app->site->name, $app->options->fromemail, Logger::WARNING);
+            $handler = new MailerHandler('[error] ' . $app->site->name, Logger::WARNING);
             $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
             $logger->pushHandler($handler);
         }
@@ -8204,6 +8027,33 @@ class RuntimeHandler extends AbstractProcessingHandler
     protected function write(array $record)
     {
         $this->log[] = $record;
+    }
+}
+
+//lib/debug/MailerHandler.php
+namespace litepubl\debug;
+
+use Monolog\Handler\MailHandler;
+use Monolog\Logger;
+use litepubl\utils\Mailer;
+
+class MailerHandler extends MailHandler
+{
+    protected $subject;
+
+    public function __construct(string $subject, $level = Logger::ERROR, $bubble = true)
+    {
+        parent::__construct($level, $bubble);
+        $this->subject = $subject;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function send($content, array $records)
+    {
+        $content = wordwrap($content, 70);
+            Mailer::sentToAdmin($this->subject, $content);
     }
 }
 
