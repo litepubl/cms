@@ -260,16 +260,7 @@ class Files extends \litepubl\core\Items
     public function getLink($id)
     {
         $item = $this->getitem($id);
-        $icon = '';
-        if (($item['icon'] != 0) && ($item['media'] != 'icon')) {
-            $icon = $this->geticon($item['icon']);
-        }
-        return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', $this->getApp()->site->files, $item['filename'], $item['title'], $icon . $item['description']);
-    }
-
-    public function getIcon($id)
-    {
-        return sprintf('<img src="%s" alt="icon" />', $this->geturl($id));
+        return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', $this->getApp()->site->files, $item['filename'], $item['title'], $item['description']);
     }
 
     public function getHash($filename)
@@ -738,7 +729,6 @@ use litepubl\view\Filter;
  * @property      int $parent
  * @property      int $author
  * @property      int $revision
- * @property      int $icon
  * @property      int $idperm
  * @property      string $class
  * @property      int $posted timestamp
@@ -746,7 +736,6 @@ use litepubl\view\Filter;
  * @property      string $title2
  * @property      string $filtered
  * @property      string $excerpt
- * @property      string $rss
  * @property      string $keywords
  * @property      string $description
  * @property      string $rawhead
@@ -903,7 +892,6 @@ class Post extends \litepubl\core\Item
             'parent' => 0,
             'author' => 0,
             'revision' => 0,
-            'icon' => 0,
             'idperm' => 0,
             'class' => str_replace('\\', '-', get_class($this)),
             'posted' => static::ZERODATE,
@@ -911,7 +899,6 @@ class Post extends \litepubl\core\Item
             'title2' => '',
             'filtered' => '',
             'excerpt' => '',
-            'rss' => '',
             'keywords' => '',
             'description' => '',
             'rawhead' => '',
@@ -2143,16 +2130,6 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         foreach ($items as $id) {
             $item = $tags->getitem($id);
             $args->add($item);
-            if (($item['icon'] == 0) || $this->getApp()->options->icondisabled) {
-                $args->icon = '';
-            } else {
-                $files = $this->factory->files;
-                if ($files->itemExists($item['icon'])) {
-                    $args->icon = $files->geticon($item['icon']);
-                } else {
-                    $args->icon = '';
-                }
-            }
             $list[] = $theme->parseArg($tmlitem, $args);
         }
 
@@ -2333,6 +2310,12 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     public function onRssItem($item)
     {
     }
+
+    public function getRss(): string
+{
+$this->getApp()->getLogManager()->trace('get rss deprecated post property');
+return $this->post->excerpt;
+}
 
     public function getPrevNext()
     {

@@ -5,19 +5,19 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.01
+ * @version   7.02
   */
 
 namespace litepubl\update;
 
-use litepubl\core\litepubl;
-use litepubl\core\Crypt;
 use litepubl\Config;
+use litepubl\core\Crypt;
 use litepubl\core\DBManager;
-use litepubl\view\Js;
-use litepubl\plugins\photoswipe\Photoswipe;
-use litepubl\plugins\photoswipeThumbnail\PhotoSwwipeThumbnail;
 use litepubl\core\Plugins;
+use litepubl\core\litepubl;
+use litepubl\plugins\photoswipeThumbnail\PhotoSwwipeThumbnail;
+use litepubl\plugins\photoswipe\Photoswipe;
+use litepubl\view\Js;
 
 function update702()
 {

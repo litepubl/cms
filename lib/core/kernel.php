@@ -131,7 +131,7 @@ trait EventsTrait
     {
         parent::createData();
 
-        if (method_exists($this, 'addMap')) {
+        if ($this instanceof Events) {
                 $this->addMap('events', []);
         } else {
                 $this->data['events'] = [];
@@ -406,7 +406,12 @@ class App
         $this->createCache();
 
         if ($this->installed) {
+try {
             $this->db = DB::i();
+} catch (DBException $e) {
+Config::$ignoreRequest = true;
+$this->logException($e);
+}
         } else {
             include $this->paths->lib . 'install/install.php';
             //exit() in lib/install/install.php
@@ -467,7 +472,6 @@ class App
 
         try {
             $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']), new Response());
-
             $this->context = $context;
 
             $obEnabled = !Config::$debug && $this->options->ob_cache;
@@ -475,7 +479,7 @@ class App
                 ob_start();
             }
 
-            if (Config::$beforeRequest && is_callable(Config::$beforeRequest)) {
+            if (is_callable(Config::$beforeRequest)) {
                 call_user_func_array(Config::$beforeRequest, [$this]);
             }
 
@@ -517,6 +521,10 @@ class App
     {
         try {
             $this->init();
+if (is_callable(config::$afterInit)) {
+                call_user_func_array(Config::$afterInit, [$this]);
+}
+
             if (!config::$ignoreRequest) {
                 $this->process();
             }
@@ -1215,6 +1223,41 @@ class Controller
     }
 }
 
+//Crypt.php
+namespace litepubl\core;
+
+class Crypt
+{
+const METHOD = 'AES-256-CTR';
+const LENGTH = 32;
+const NONCELENGTH = 16;
+
+    public static function encode(string $s, string $password): string
+    {
+$nonce = static::getNonce();
+$result = openssl_encrypt($s, static::METHOD, static::getPassword($password, $nonce), OPENSSL_RAW_DATA, $nonce);
+return base64_encode($nonce . $result);
+    }
+
+    public static function decode(string $s, string $password): string
+    {
+$s = base64_decode($s);
+$nonce = substr($s, 0, static::NONCELENGTH);
+return openssl_decrypt(substr($s, static::NONCELENGTH), static::METHOD, static::getPassword($password, $nonce), OPENSSL_RAW_DATA, $nonce);
+    }
+
+public static function getNonce()
+{
+return openssl_random_pseudo_bytes (static::NONCELENGTH);
+}
+
+public static function getPassword(string $password, string $solt): string
+{
+return openssl_pbkdf2($password , $solt, static::LENGTH, 2, 'MD5');
+}
+
+}
+
 //Data.php
 namespace litepubl\core;
 
@@ -1489,32 +1532,6 @@ class Data
     {
         return is_object($c) ? get_class($c) : trim($c);
     }
-
-    public static function encrypt($s, $key)
-    {
-        $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
-        if (strlen($key) > $maxkey) {
-            $key = substr($key, $maxkey);
-        }
-
-        $block = mcrypt_get_block_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
-        $pad = $block - (strlen($s) % $block);
-        $s.= str_repeat(chr($pad), $pad);
-        return mcrypt_encrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
-    }
-
-    public static function decrypt($s, $key)
-    {
-        $maxkey = mcrypt_get_key_size(MCRYPT_Blowfish, MCRYPT_MODE_ECB);
-        if (strlen($key) > $maxkey) {
-            $key = substr($key, $maxkey);
-        }
-
-        $s = mcrypt_decrypt(MCRYPT_Blowfish, $key, $s, MCRYPT_MODE_ECB);
-        $len = strlen($s);
-        $pad = ord($s[$len - 1]);
-        return substr($s, 0, $len - $pad);
-    }
 }
 
 //DB.php
@@ -1575,7 +1592,7 @@ class DB
         $this->mysqli = new \mysqli($dbconfig['host'], $dbconfig['login'], $dbconfig['password'], $dbconfig['dbname'], $dbconfig['port'] > 0 ? $dbconfig['port'] : null);
 
         if (mysqli_connect_error()) {
-            throw new \Exception('Error connect to database');
+            throw new DBException('Error connect to database');
         }
 
         $this->mysqli->set_charset('utf8');
@@ -1628,7 +1645,7 @@ class DB
 
         $this->result = $this->mysqli->query($sql);
         if ($this->result == false) {
-            $this->logError($this->mysqli->error);
+            $this->error($this->mysqli->error);
         } elseif (Config::$debug) {
             $this->history[count($this->history) - 1]['time'] = microtime(true) - $microtime;
             if ($this->mysqli->warning_count
@@ -1642,18 +1659,17 @@ class DB
         return $this->result;
     }
 
-    protected function logError($mesg)
+    protected function error(string $mesg)
     {
-        $log = "exception:\n$mesg\n$this->sql\n";
-        $app = $this->getApp();
-        $log.= $app->getLogManager()->getTrace();
-        $log.= $this->performance();
-        die($log);
-        //$app->getLogger()->alert($log);
-        throw new \Exception($log);
+        $mesg .= "\n$this->sql\n";
+if (Config::$debug) {
+        $mesg .= $this->performance();
+}
+
+        throw new DBException($mesg);
     }
 
-    public function performance()
+    public function performance(): string
     {
         $result = '';
         $total = 0.0;
@@ -1672,7 +1688,7 @@ class DB
         return $result;
     }
 
-    public function quote($s)
+    public function quote($s): string
     {
         return sprintf('\'%s\'', $this->mysqli->real_escape_string($s));
     }
@@ -1983,6 +1999,13 @@ class DB
         $v = implode(',', $a);
         $this->mysqli->query("set sql_mode = '$v'");
     }
+}
+
+//DBException.php
+namespace litepubl\core;
+
+class DBException extends \Exception
+{
 }
 
 //ErrorPages.php
@@ -2725,7 +2748,6 @@ use litepubl\Config;
  * @property       bool $hidefilesonpage
  * @property       bool $show_draft_post
  * @property       bool $show_file_perm
- * @property       int $crontime
  * @property-write callable $changed
  * @method         array changed(array $params) triggered when option changed
  */
@@ -2951,19 +2973,19 @@ class Options extends Events
 
     public function getDBPassword(): string
     {
-        if (function_exists('mcrypt_encrypt')) {
-            return static ::decrypt($this->data['dbconfig']['password'], $this->solt . Config::$secret);
-        } else {
-            return str_rot13(base64_decode($this->data['dbconfig']['password']));
-        }
+if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
+            return Crypt::decode($this->data['dbconfig']['password'], $this->solt . Config::$secret);
+} else {
+return $this->data['dbconfig']['password'];
+}
     }
 
     public function setDBPassword(string $password)
     {
-        if (function_exists('mcrypt_encrypt')) {
-            $this->data['dbconfig']['password'] = static ::encrypt($password, $this->solt . Config::$secret);
+if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
+            $this->data['dbconfig']['password'] = Crypt::encode($password, $this->solt . Config::$secret);
         } else {
-            $this->data['dbconfig']['password'] = base64_encode(str_rot13($password));
+            $this->data['dbconfig']['password'] = $password;
         }
 
         $this->save();

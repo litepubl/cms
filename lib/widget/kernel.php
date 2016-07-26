@@ -3,6 +3,7 @@
 namespace litepubl\widget;
 
 use litepubl\core\Context;
+use litepubl\core\Event;
 use litepubl\core\Response;
 use litepubl\core\litepubl;
 use litepubl\view\Schema;
@@ -32,13 +33,16 @@ class Ajax implements \litepubl\core\ResponsiveInterface
 
         try {
             Theme::getTheme($themename);
-            $widgets->onFindContextCallback = function ($class) use ($idurl) {
+            $widgets->onFindContext = function (Event $event) use ($idurl) {
+$class =$Event->classname;
                 if (($item = litepubl::$app->router->getItem($idurl)) && is_a($class, $item['class'], true)) {
                     if (is_a($item['class'], 'litepubl\core\Item', true)) {
-                        return ($item['class']) ::i($item['arg']);
+                        $event->result = ($item['class'])::i($item['arg']);
                     } else {
-                        return litepubl::$app->classes->getInstance($item['class']);
+                        $event->result = litepubl::$app->classes->getInstance($item['class']);
                     }
+
+$event->stopPropagation(true);
                 }
             };
 
@@ -102,7 +106,6 @@ class Archives extends Widget
         }
 
         $args = new Args();
-        $args->icon = '';
         $args->subcount = '';
         $args->subitems = '';
         $args->rel = 'archives';
@@ -372,6 +375,56 @@ class Comments extends Widget
     }
 }
 
+//Contextual.php
+namespace litepubl\widget;
+
+class Contextual extends Widget
+{
+    private $item;
+
+    private function isValue(string $name): bool
+    {
+        return in_array(
+            $name, array(
+            'ajax',
+            'order',
+            'sidebar'
+            )
+        );
+    }
+
+    public function __get($name)
+    {
+        if ($this->isvalue($name)) {
+            if (!$this->item) {
+                $widgets = Widgets::i();
+                $this->item = & $widgets->finditem($widgets->find($this));
+            }
+            return $this->item[$name];
+        }
+        return parent::__get($name);
+    }
+
+    public function __set($name, $value)
+    {
+        if ($this->isvalue($name)) {
+            if (!$this->item) {
+                $widgets = Widgets::i();
+                $this->item = & $widgets->finditem($widgets->find($this));
+            }
+            $this->item[$name] = $value;
+        } else {
+            parent::__set($name, $value);
+        }
+    }
+
+    public function save()
+    {
+        parent::save();
+        Widgets::i()->save();
+    }
+}
+
 //Custom.php
 namespace litepubl\widget;
 
@@ -480,56 +533,6 @@ class Custom extends Widget
     }
 }
 
-//Depended.php
-namespace litepubl\widget;
-
-class Depended extends Widget
-{
-    private $item;
-
-    private function isValue(string $name): bool
-    {
-        return in_array(
-            $name, array(
-            'ajax',
-            'order',
-            'sidebar'
-            )
-        );
-    }
-
-    public function __get($name)
-    {
-        if ($this->isvalue($name)) {
-            if (!$this->item) {
-                $widgets = Widgets::i();
-                $this->item = & $widgets->finditem($widgets->find($this));
-            }
-            return $this->item[$name];
-        }
-        return parent::__get($name);
-    }
-
-    public function __set($name, $value)
-    {
-        if ($this->isvalue($name)) {
-            if (!$this->item) {
-                $widgets = Widgets::i();
-                $this->item = & $widgets->finditem($widgets->find($this));
-            }
-            $this->item[$name] = $value;
-        } else {
-            parent::__set($name, $value);
-        }
-    }
-
-    public function save()
-    {
-        parent::save();
-        Widgets::i()->save();
-    }
-}
-
 //Links.php
 namespace litepubl\widget;
 
@@ -585,7 +588,6 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         $args = new Args();
         $args->subcount = '';
         $args->subitems = '';
-        $args->icon = '';
         $args->rel = 'link';
         foreach ($this->items as $id => $item) {
             $args->add($item);
@@ -702,13 +704,14 @@ class Meta extends Widget
         $tml = $view->getItem('meta', $sidebar);
         $metaclasses = $view->getTml($sidebar, 'meta', 'classes');
         $args = new Args();
+
         foreach ($this->items as $name => $item) {
             if (!$item['enabled']) {
                 continue;
             }
 
             $args->add($item);
-            $args->icon = '';
+
             $args->subcount = '';
             $args->subitems = '';
             $args->rel = $name;
@@ -1149,10 +1152,12 @@ use litepubl\view\ViewInterface;
  * @property-write callable $onAdminLogged
  * @property-write callable $onAdminPanel
  * @property-write callable $onSidebar
+ * @property-write callable $onFindContext
  * @method         array onWidget(array $params)
  * @method         array onAdminLogged(array $params)
  * @method         array onAdminPanel(array $params)
  * @method         array onSidebar(array $params)
+ * @method         array onFindContext(array $params)
  */
 
 class Widgets extends \litepubl\core\Items
@@ -1162,13 +1167,12 @@ class Widgets extends \litepubl\core\Items
     public $classes;
     public $currentSidebar;
     public $idwidget;
-    public $onFindContextCallback;
 
     protected function create()
     {
         $this->dbversion = false;
         parent::create();
-        $this->addEvents('onwidget', 'onadminlogged', 'onadminpanel', 'onsidebar');
+        $this->addEvents('onwidget', 'onadminlogged', 'onadminpanel', 'onsidebar', 'onFindContext');
         $this->basename = 'widgets';
         $this->currentSidebar = 0;
         $this->addMap('classes', array());
@@ -1583,11 +1587,8 @@ class Widgets extends \litepubl\core\Items
             return $app->context->model;
         }
 
-        if (is_callable($this->onFindContextCallback)) {
-            return call_user_func_array($this->onFindContextCallback, [$class]);
-        }
-
-        return false;
+$r = $this->onFindContext(['classname' => $class, 'result' => false]);
+return $r['result'];
     }
 }
 
