@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.02
   */
 
 namespace litepubl\admin\service;
@@ -42,7 +42,7 @@ class Service extends Login
         } elseif ($islatest <= 0) {
             $result.= $admin->success($lang->islatest);
         } else {
-            $form = new Form($args);
+            $form = $this->newForm($args);
             $form->title = $lang->requireupdate;
             $form->body = $this->getloginform() . '[submit=autoupdate]';
             $form->submit = 'manualupdate';

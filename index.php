@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.02
   */
 
 namespace litepubl;
@@ -23,6 +23,9 @@ class Config
 
     // host name or false
     public static $host = false;
+
+    //callback in App when objects initiailized and before request
+    public static $afterInit = false;
 
     //set to true to ignore request, engine will be initilized
     public static $ignoreRequest = false;

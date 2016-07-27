@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.00
+ * @version   7.02
   */
 
 namespace litepubl\updater;
@@ -14,6 +14,15 @@ use litepubl\core\Plugins;
 use litepubl\core\Str;
 use litepubl\utils\Filer;
 use litepubl\view\Lang;
+
+/**
+ * Integrated class for archives and filers
+ *
+ * @property       string $ftproot
+ * @property       string $filertype
+ * @property-write callable $onUploaded
+ * @method         array onUploaded(array $params)
+ */
 
 class Backuper extends \litepubl\core\Events
 {
@@ -30,14 +39,14 @@ class Backuper extends \litepubl\core\Events
     {
         parent::create();
         $this->basename = 'backuper';
-        $this->addevents('onuploaded');
+        $this->addEvents('onuploaded');
         $this->data['ftproot'] = '';
+        $this->data['filertype'] = 'ftp';
         $this->__filer = false;
         $this->tar = false;
         $this->zip = false;
         $this->archtype = 'zip';
         $this->lastdir = '';
-        $this->data['filertype'] = 'ftp';
     }
 
     public function __destruct()
@@ -149,7 +158,7 @@ class Backuper extends \litepubl\core\Events
         return false;
     }
 
-    public function createarchive()
+    public function createArchive(): bool
     {
         if (!$this->filer->connected) {
             $this->error('Filer not connected');
@@ -164,15 +173,22 @@ class Backuper extends \litepubl\core\Events
         case 'zip':
         case 'unzip':
             $this->zip = new \ZipArchive();
+            $filename = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
+            if ($this->zip->open($filename, \ZipArchive::CREATE) === false) {
+                        $this->eror("Error create zip archive $filename");
+            }
             break;
 
 
         default:
             $this->unknown_archive();
+            return false;
         }
+
+        return true;
     }
 
-    public function savearchive()
+    public function saveArchive(): string
     {
         switch ($this->archtype) {
         case 'tar':
@@ -191,6 +207,8 @@ class Backuper extends \litepubl\core\Events
         default:
             $this->unknown_archive();
         }
+
+        return '';
     }
 
     private function addfile($filename, $content, $perm)
@@ -347,13 +365,13 @@ class Backuper extends \litepubl\core\Events
         }
     }
 
-    public function getPartial($plugins, $theme, $lib)
+    public function getPartial(bool $plugins, bool $theme, bool $lib): string
     {
         set_time_limit(300);
-        $this->createarchive();
+
+        $this->createArchive();
         $this->addfile('dump.sql', $this->getdump(), $this->filer->chmod_file);
 
-        //$this->readdata( $this->getApp()->paths->data);
         $this->setdir('storage');
         $this->readdir('storage/data');
 
@@ -390,13 +408,13 @@ class Backuper extends \litepubl\core\Events
             }
         }
 
-        return $this->savearchive();
+        return $this->saveArchive();
     }
 
     public function getFull()
     {
         set_time_limit(300);
-        $this->createarchive();
+        $this->createArchive();
         $this->addfile('dump.sql', $this->getdump(), $this->filer->chmod_file);
 
         //$this->readdata( $this->getApp()->paths->data);
@@ -415,7 +433,7 @@ class Backuper extends \litepubl\core\Events
         $this->setdir('themes');
         $this->readdir('themes');
 
-        return $this->savearchive();
+        return $this->saveArchive();
     }
 
     public function getDump()
@@ -554,7 +572,7 @@ class Backuper extends \litepubl\core\Events
         $this->archtype = $archtype;
         $this->hasdata = false;
         $this->existingfolders = array();
-        $this->createarchive();
+        $this->createArchive();
 
         switch ($archtype) {
         case 'tar':
@@ -579,7 +597,7 @@ class Backuper extends \litepubl\core\Events
                 }
             }
 
-            $this->onuploaded($this);
+            $this->onuploaded([]);
             $this->tar = false;
             break;
 
@@ -618,7 +636,7 @@ class Backuper extends \litepubl\core\Events
                 }
             }
 
-            $this->onuploaded($this);
+            $this->onuploaded([]);
             $this->zip->close();
             $this->zip = false;
             unlink($tempfile);
@@ -695,7 +713,7 @@ class Backuper extends \litepubl\core\Events
         }
 
         $zip->close();
-        $this->onuploaded($this);
+        $this->onuploaded([]);
         $this->existingfolders = false;
         if ($this->hasdata) {
             $this->renamedata();
