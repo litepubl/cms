@@ -146,4 +146,3 @@ class Mailer
         return mail($to, $subj, $body, "From: $from\nReply-To: $from\nMIME-Version: 1.0\nContent-Type: multipart/mixed; boundary=\"$boundary\"\nDate: $date\nX-Priority: 3\nX-Mailer: Lite Publisher ver " . static ::getAppInstance()->options->version);
     }
 }
-echo "end file<br>";

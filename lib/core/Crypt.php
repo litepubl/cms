@@ -30,7 +30,7 @@ class Crypt
         return openssl_decrypt(substr($s, static::NONCELENGTH), static::METHOD, static::getPassword($password, $nonce), OPENSSL_RAW_DATA, $nonce);
     }
 
-    public static function getNonce()
+    public static function getNonce(): string
     {
         return openssl_random_pseudo_bytes(static::NONCELENGTH);
     }

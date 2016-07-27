@@ -1255,7 +1255,7 @@ class Crypt
         return openssl_decrypt(substr($s, static::NONCELENGTH), static::METHOD, static::getPassword($password, $nonce), OPENSSL_RAW_DATA, $nonce);
     }
 
-    public static function getNonce()
+    public static function getNonce(): string
     {
         return openssl_random_pseudo_bytes(static::NONCELENGTH);
     }
@@ -2982,19 +2982,23 @@ class Options extends Events
 
     public function getDBPassword(): string
     {
-        if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
+        if (!$this->data['dbconfig']['crypt']) {
+                return $this->data['dbconfig']['password'];
+        } elseif ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
             return Crypt::decode($this->data['dbconfig']['password'], $this->solt . Config::$secret);
         } else {
-                return $this->data['dbconfig']['password'];
+            $this->error('Cant decrypt database password');
         }
     }
 
     public function setDBPassword(string $password)
     {
-        if ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
+        if (!$this->data['dbconfig']['crypt']) {
+            $this->data['dbconfig']['password'] = $password;
+        } elseif ($this->data['dbconfig']['crypt'] == Crypt::METHOD) {
             $this->data['dbconfig']['password'] = Crypt::encode($password, $this->solt . Config::$secret);
         } else {
-            $this->data['dbconfig']['password'] = $password;
+            $this->error('Cant encrypt database password');
         }
 
         $this->save();
@@ -8053,7 +8057,7 @@ class MailerHandler extends MailHandler
     protected function send($content, array $records)
     {
         $content = wordwrap($content, 70);
-            Mailer::sentToAdmin($this->subject, $content);
+            Mailer::sendToAdmin($this->subject, $content);
     }
 }
 

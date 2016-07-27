@@ -30,6 +30,6 @@ class MailerHandler extends MailHandler
     protected function send($content, array $records)
     {
         $content = wordwrap($content, 70);
-            Mailer::sentToAdmin($this->subject, $content);
+            Mailer::sendToAdmin($this->subject, $content);
     }
 }
