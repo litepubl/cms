@@ -16,7 +16,7 @@ use litepubl\view\Js;
 
 class Plugin extends \litepubl\core\Plugin
 {
-const MESSAGE = "External error in javascript\n";
+    const MESSAGE = "External error in javascript\n";
 
     public function install()
     {
@@ -50,9 +50,11 @@ const MESSAGE = "External error in javascript\n";
             $logger->log($logger->toMonologLevel($level), static::MESSAGE . $item['message']);
         }
 
-$this->getApp()->addCallback('onShowErrors', function(Event $event) {
-$event->show = false;
-});
+        $this->getApp()->addCallback(
+            'onShowErrors', function (Event $event) {
+                $event->show = false;
+            }
+        );
 
         return ['result' => true];
     }

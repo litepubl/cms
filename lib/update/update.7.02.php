@@ -63,8 +63,8 @@ function update702()
     $plugin->add('photoswipe');
 
     $thumb = PhotoSwwipeThumbnail::i();
-    $thumb->deleteJs('default');
-    $thumb->addJs('photoswipe');
+    $thumb->deleteJs();
+    $thumb->addJs();
 
     Plugins::i()->add('jslogger');
     $js->unlock();
