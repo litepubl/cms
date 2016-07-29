@@ -31,7 +31,7 @@ trait PanelTrait
         $this->args = new Args();
     }
 
-    public function getSchema()
+    public function getSchema(): Schema
     {
         $app = $this->getApp();
         if (isset($app->context) && isset($app->context->view)) {
@@ -41,7 +41,7 @@ trait PanelTrait
         }
     }
 
-    public function getLangAbout()
+    public function getLangAbout(): Lang
     {
         $reflector = new \ReflectionClass($this);
         $filename = $reflector->getFileName();

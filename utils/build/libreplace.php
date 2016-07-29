@@ -40,7 +40,7 @@ function libReplace($s)
 
     $s = insertUse($s, 'Config::', 'litepubl\Config');
     $s = renameFunctions($s);
-    $s = replaceIfReturn($s);
+    //$s = replaceIfReturn($s);
     $s = camelCase($s);
     return $s;
 }
@@ -210,7 +210,7 @@ function afterFix($s)
         'ttheme::' => 'Theme::',
         'tthemeparser' => 'Parser',
         'tdbmanager' => 'DBManager',
-        'ttemplate:' => 'MainView:',
+        //'ttemplate:' => 'MainView:',
         'Str::uuote' => 'Str::quote',
         ]
     );
@@ -258,7 +258,7 @@ function afterFix2($s)
         'router->page' => 'context->request->page',
         'router->redir' => 'context->response->redir',
         'getvalue(' => 'getValue(',
-        'setvalue(' => 'setValue',
+        'setvalue(' => 'setValue(',
         'getdb(' => 'getDB(',
         '$this->view->admintheme' => '$this->admintheme',
         'http::get' => 'Http::get',

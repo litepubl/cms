@@ -307,8 +307,8 @@ class Installer
 
     public function CheckSystem()
     {
-        if (version_compare(PHP_VERSION, '5.1.4', '<')) {
-            echo 'LitePublisher requires PHP 5.1.4 or later. You are using PHP ' . PHP_VERSION;
+        if (version_compare(PHP_VERSION, '7.0', '<')) {
+            echo 'LitePublisher requires PHP 7.0 or later. You are using PHP ' . PHP_VERSION;
             exit;
         }
 

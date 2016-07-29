@@ -19,6 +19,10 @@ use litepubl\view\Lang;
 
 class Table
 {
+const LEFT = 'text-left';
+const RIGHT = 'text-right';
+const CENTER = 'text-center';
+
     //current item in items
     public $item;
     //id or index of current item
