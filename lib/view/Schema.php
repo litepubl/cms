@@ -12,6 +12,27 @@ namespace litepubl\view;
 
 use litepubl\core\Str;
 
+/**
+ * Schema class
+ *
+ * @property int $id
+ * @property string $class
+ * @property string $name
+ * @property string $themename
+ * @property string $adminname
+ * @property string $menuclass
+ * @property bool $hovermenu
+ * @property bool $customsidebar
+ * @property bool $disableajax
+ * @property string $postannounce
+ * @property bool $invertorder
+ * @property int $perpage
+ * @property array $custom
+ * @property-read Theme $theme
+ * @property-read Admin $adminTheme
+
+ */
+
 class Schema extends \litepubl\core\Item
 {
     use \litepubl\core\ItemOwnerTrait;
@@ -43,7 +64,7 @@ class Schema extends \litepubl\core\Item
         return 'schema';
     }
 
-    public static function getSchema($instance)
+    public static function getSchema($instance): Schema
     {
         $id = $instance->getIdSchema();
         if (isset(static ::$instances['schema'][$id])) {
@@ -116,7 +137,7 @@ class Schema extends \litepubl\core\Item
         return Admin::getTheme($name);
     }
 
-    public function setThemename($name)
+    public function setThemeName(string $name)
     {
         if ($name == $this->themename) {
             return false;
@@ -138,7 +159,7 @@ class Schema extends \litepubl\core\Item
         static ::getOwner()->themechanged(['schema' => $this]);
     }
 
-    public function setAdminname($name)
+    public function setAdminName(string $name)
     {
         if ($name != $this->adminname) {
             if (!Str::begin($name, 'admin')) {
@@ -154,7 +175,7 @@ class Schema extends \litepubl\core\Item
         }
     }
 
-    public function getTheme()
+    public function getTheme(): Theme
     {
         if ($this->themeInstance) {
             return $this->themeInstance;
@@ -177,7 +198,7 @@ class Schema extends \litepubl\core\Item
         return $this->themeInstance;
     }
 
-    public function getAdmintheme()
+    public function getAdmintheme(): Admin
     {
         if ($this->adminInstance) {
             return $this->adminInstance;

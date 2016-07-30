@@ -36,7 +36,7 @@ class Plugins extends Items
             if (isset($this->paths[$section])) {
                 return trim($this->paths[$section], '\/') . '/' . $name;
             } else {
-                return $name;
+                return 'plugins/' . $name;
             }
         } elseif (isset($this->paths[$name])) {
             return $this->paths[$name];
@@ -302,12 +302,12 @@ class Plugins extends Items
             $paths = $this->readPaths();
                 ksort($this->dirNames);
 
-            $pluginsDir = $this->getApp()->paths->plugins;
+            $home = $this->getApp()->paths->home;
             foreach ($paths as $namePath => $path) {
                 $path = trim($path, '\/');
-                if (is_dir($pluginsDir . $path)) {
+                if (is_dir($home . $path)) {
                     $dirNames = [];
-                    $dir = $pluginsDir . $path;
+                    $dir = $home . $path;
                     $list = dir($dir);
                     while ($filename = $list->read()) {
                         if ($filename == '.' || $filename == '..') {
@@ -338,15 +338,16 @@ class Plugins extends Items
 
     public function getPluginDir(string $name): string
     {
-        $pluginsDir = $this->getApp()->paths->plugins;
+        $home = $this->getApp()->paths->home;
+        $plugins = $this->getApp()->paths->plugins;
         if (isset($this->items[$name])) {
-            return $pluginsDir . $this->__get($name);
-        } elseif (is_dir($pluginsDir . $name)) {
-            return $pluginsDir . $name;
+            return $home . $this->__get($name);
+        } elseif (is_dir($plugins . $name)) {
+            return $plugins . $name;
         } else {
             $dirNames = $this->getDirNames();
             if (isset($this->paths[$dirNames[$name]])) {
-                return $pluginsDir . trim($this->paths[$dirNames[$name]], '\/') . '/' . $name;
+                return $home . trim($this->paths[$dirNames[$name]], '\/') . '/' . $name;
             }
         }
 

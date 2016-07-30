@@ -35,7 +35,7 @@ class Schemes extends \litepubl\core\Items
         $this->addmap('defaults', array());
     }
 
-    public function add($name)
+    public function add(string $name)
     {
         $this->lock();
         $id = ++$this->autoid;
@@ -78,7 +78,7 @@ class Schemes extends \litepubl\core\Items
         return parent::delete($id);
     }
 
-    public function get($name)
+    public function get(string $name)
     {
         foreach ($this->items as $id => $item) {
             if ($name == $item['name']) {
