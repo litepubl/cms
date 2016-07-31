@@ -67,7 +67,7 @@ class Menus extends \litepubl\pages\Menus
         return $name;
     }
 
-    public function createurl($parent, $name)
+    public function createUrl(int $parent, string $name): string
     {
         return $parent == 0 ? "/admin/$name/" : $this->items[$parent]['url'] . "$name/";
     }

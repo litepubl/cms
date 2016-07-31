@@ -13,7 +13,6 @@ namespace litepubl\view;
 trait Factory
 {
 
-
     public function newArgs(): Args
     {
         return new Args();
