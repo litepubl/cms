@@ -5,12 +5,6 @@
 %PHP_DIR%php.exe -d output_buffering=0 %PHP_DIR%composer.phar update
 pause
 exit
-rem %require% --dev Psr/Container "*"
-rem %require% sstalle/php7cc
-rem %require% phpunit/phpunit
-rem %require% simple-bus/message-bus
-rem %require% --dev Psr/Http-link "*"
-rem %require% "codeception/codeception:*"
 rem %PHP_DIR%php.exe -d output_buffering=0 %PHP_DIR%composer.phar update
 %require% "monolog/monolog"
 %require% "psr/cache"

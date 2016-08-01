@@ -37,7 +37,7 @@ class Widget extends \litepubl\admin\Panel
         return Link::url('/admin/views/widgets/?idwidget=');
     }
 
-    protected function getForm()
+    protected function getForm(): string
     {
         $title = $this->widget->gettitle($this->widget->id);
         $this->args->title = $title;
