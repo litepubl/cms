@@ -105,12 +105,15 @@ class Options extends Events
         }
     }
 
-    public function delete(string $name)
+    public function delete(string $name): bool
     {
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
             $this->save();
+return true;
         }
+
+return false;
     }
 
     public function getAdminFlag(): bool

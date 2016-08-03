@@ -325,9 +325,10 @@ class DB
         return false;
     }
 
-    public function exists($where)
+    public function exists(string $where): bool
     {
-        return $this->query("select *  from $this->prefix$this->table where $where limit 1")->num_rows;
+$res = $this->query("select *  from $this->prefix$this->table where $where limit 1");
+        return (bool) $res->num_rows;
     }
 
     public function getList(array $list)

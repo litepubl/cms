@@ -123,7 +123,7 @@ class Theme extends Base
         return $this->parse($this->templates['content.notfound']);
     }
 
-    public function getPages($url, $page, $count, $params = '')
+    public function getPages(string $url, int $page, int $count, string $params = ''): string
     {
         if (!(($count > 1) && ($page >= 1) && ($page <= $count))) {
             return '';
@@ -247,7 +247,7 @@ class Theme extends Base
         );
     }
 
-    public function getInput($type, $name, $value, $title)
+    public function getInput(string $type, string $name, string $value, string $title): string
     {
         return strtr(
             $this->templates['content.admin.' . $type], array(
