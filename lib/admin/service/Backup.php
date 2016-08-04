@@ -122,9 +122,11 @@ class Backup extends Login
             }
 
             $admin->clearcache();
-            \litepubl\core\Router::nocache();
-            @header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-            exit();
+
+            Header('Cache-Control: no-cache, must-revalidate');
+            Header('Pragma: no-cache');
+
+$this->getApp()->redirExit($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         } elseif (isset($downloadpartial)) {
             $filename = str_replace('.', '-', $this->getApp()->site->domain) . date('-Y-m-d') . $backuper->getfiletype();
             $content = $backuper->getpartial(isset($plugins), isset($theme), isset($lib));

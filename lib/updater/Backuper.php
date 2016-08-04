@@ -576,12 +576,17 @@ class Backuper extends \litepubl\core\Events
 
         switch ($archtype) {
         case 'tar':
-            $this->tar->loadfromstring($content);
+            $this->tar->loadFromString(is_object($content) ? $content->file : $content);
             if (!is_array($this->tar->files)) {
                 $this->tar = false;
                 return $this->errorarch();
             }
 
+if (is_object($content)) {
+$content->file = null;
+}
+
+$content = null;
             $path_checked = false;
             $path_root = false;
 
@@ -606,7 +611,7 @@ class Backuper extends \litepubl\core\Events
         case 'zip':
             $mode = $this->filer->chmod_file;
             $tempfile = $this->getTempName();
-            file_put_contents($tempfile, $content);
+            file_put_contents($tempfile, is_object($content) ? $content->file : $content);
             @chmod($tempfile, 0666);
 
             if ($this->zip->open($tempfile) !== true) {
@@ -614,6 +619,12 @@ class Backuper extends \litepubl\core\Events
                 $this->zip = false;
                 return $this->errorarch();
             }
+
+if (is_object($content)) {
+$content->file = null;
+}
+
+$content = null;
 
             $path_checked = false;
             $path_root = false;

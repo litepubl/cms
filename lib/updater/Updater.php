@@ -28,7 +28,7 @@ use litepubl\widget\Sidebars;
 
 class Updater extends \litepubl\core\Events
 {
-    private $releases;
+    protected $releases;
     public $versions;
     public $result;
     public $log;
@@ -39,28 +39,38 @@ class Updater extends \litepubl\core\Events
         $this->basename = 'updater';
         $this->addevents('onupdated');
         $this->data['useshell'] = false;
-        $this->versions = static ::getversions();
+        $this->versions = $this->getVersions();
         $this->log = false;
     }
 
-    public static function getVersions()
+    public function getVersions(): array
     {
-        return Str::toArray(file_get_contents(static ::getAppInstance()->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'versions.txt'));
+        return Str::toArray(file_get_contents($this->getApp()->paths->lib . 'install' . DIRECTORY_SEPARATOR . 'versions.txt'));
     }
 
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->versions[0];
     }
 
-    public function getNextversion()
+    public function getNextversion(): string
     {
         return $this->getnext($this->versions);
     }
 
-    public function getNext(array $versions)
+public function getCurrentVersion(): string
+{
+return $this->getApp()->options->version;
+}
+
+public function setCurrentVersion(string $ver)
+{
+$this->getApp()->options->version = $ver;
+}
+
+    public function getNext(array $versions): string
     {
-        $cur = $this->getApp()->options->version;
+        $cur = $this->getCurrentVersion();
         for ($i = count($versions) - 1; $i >= 0; $i--) {
             if (version_compare($cur, $versions[$i]) < 0) {
                 return $versions[$i];
@@ -77,6 +87,16 @@ class Updater extends \litepubl\core\Events
         }
     }
 
+public function getScriptFileName(string $ver): sgtring
+{
+return $this->getApp()->paths->lib . "update/update.$ver.php";
+}
+
+public function getScriptFuncName(string $ver): string
+{
+return 'litepubl\update\update' . str_replace('.', '', $ver);
+}
+
     public function run($ver)
     {
         $ver = (string)$ver;
@@ -89,19 +109,22 @@ class Updater extends \litepubl\core\Events
         }
 
         $app = $this->getApp();
-        $filename = $app->paths->lib . "update/update.$ver.php";
-
+        $filename = $this->getScriptFileName($ver);
         if (file_exists($filename)) {
             include_once $filename;
             $this->log("$filename is required file", 'update');
-            $func = 'update' . str_replace('.', '', $ver);
+            $func = $this->getScriptFuncName($ver);
 
-            if (function_exists('litepubl\update\\' . $func)) {
-                call_user_func_array('litepubl\update\\' . $func, []);
-                $this->log("$func is called", 'update');
+            if (function_exists($func)) {
+                call_user_func_array($func, []);
                 $app->poolStorage->commit();
+                $this->log("$func is called", 'update');
+} else {
+                $this->log("$func not exists", 'update');
             }
-        }
+        } else {
+                $this->log("Update file $filename not exists");
+}
     }
 
     public function update()
@@ -113,12 +136,14 @@ class Updater extends \litepubl\core\Events
         $js->lock();
 
         $css = Css::i();
-        $css->unlock();
+        $css->lock();
 
-        $this->versions = static ::getversions();
-        $nextver = $this->nextversion;
+        $this->versions = $this->getVersions();
+        $nextver = (float) $this->nextversion;
         $app = $this->getApp();
-        $v = $app->options->version + 0.01;
+        $v = $this->getCurrentVersion();
+$v += 0.01;
+
         while (version_compare($v, $nextver) <= 0) {
             $ver = (string)$v;
             if (strlen($ver) == 3) {
@@ -130,7 +155,7 @@ class Updater extends \litepubl\core\Events
 
             $this->log("$v selected to update", 'update');
             $this->run($v);
-            $app->options->version = $ver;
+$this->setCurrentVersion($ver);
             $app->poolStorage->commit();
             $v = $v + 0.01;
         }
@@ -156,6 +181,7 @@ class Updater extends \litepubl\core\Events
             if (ob_get_level()) {
                 @ob_end_clean();
             }
+
             Header('Cache-Control: no-cache, must-revalidate');
             Header('Pragma: no-cache');
             echo "\n";
@@ -185,13 +211,14 @@ class Updater extends \litepubl\core\Events
     {
         $lang = Lang::i('service');
         $latest = $this->latest;
-        if ($latest == $this->getApp()->options->version) {
+        if ($latest == $this->getCurrentVersion()) {
             return 'Already updated';
         }
 
         if (($ver == 0) || ($ver > $latest)) {
             $ver = $latest;
         }
+
         if ($this->download($ver)) {
             $this->result = $lang->successdownload;
             $this->update();
@@ -204,7 +231,7 @@ class Updater extends \litepubl\core\Events
     public function isLatest()
     {
         if ($latest = $this->getlatest()) {
-            return version_compare($latest, $this->getApp()->options->version);
+            return version_compare($latest, $this->getCurrentVersion());
         }
         return false;
     }
@@ -218,41 +245,68 @@ class Updater extends \litepubl\core\Events
         return false;
     }
 
+public function getVersionUrls(): array
+{
+return [
+'http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . $this->getApp()->db->mysqli->server_info . '&litepubl=' . $this->getApp()->options->version,
+'https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'
+];
+}
+
     public function downloadReleases()
     {
         if (isset($this->releases)) {
             return $this->releases;
         }
 
-        if (($s = Http::get('http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . $this->getApp()->db->mysqli->server_info . '&litepubl=' . $this->getApp()->options->version)) 
-            || ($s = Http::get('https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'))
-        ) {
+$urls = $this->getVersionUrls();
+foreach ($urls as $url) {
+if ($s = Http::get($url)) {
             $this->releases = Str::toArray($s);
             return $this->releases;
         }
+}
 
         return false;
     }
 
-    public function download($version)
+public function getDownloadUrls(string $version): array
+{
+return [
+"https://codeload.github.com/litepubl/cms/tar.gz/v$version",
+"https://github.com/litepubl/cms/archive/v$version.tar.gz",
+"http://litepublisher.com/download/litepublisher.$version.tar.gz",
+]
+}
+
+public function downloadFile(array $urls)
+{
+$result = new \StdClass();
+foreach ($urls as $url) {
+if ($result->file = Http::get($url)) {
+return $result;
+}
+}
+
+return false;
+}
+
+    public function download(string $version)
     {
-        //if ($this->useshell) return $this->downloadshell($version);
         $lang = Lang::i('service');
         $backuper = Backuper::i();
         if (!$backuper->test()) {
             $this->result = $lang->errorwrite;
             return false;
         }
-
-        if (!(($s = Http::get("https://codeload.github.com/litepubl/cms/tar.gz/v$version"))
-            || ($s = Http::get("https://github.com/litepubl/cms/archive/v$version.tar.gz"))
-            || ($s = Http::get("http://litepublisher.com/download/litepublisher.$version.tar.gz")))
-        ) {
+$urls = $this->getDownloadUrls($version);
+$s = $this->downloadFile($urls);
+if (!$s) {
             $this->result = $lang->errordownload;
             return false;
-        }
+}
 
-        if (!$backuper->upload($s, 'tar')) {
+        if (!$backuper->upload($s, $this->isZip($s) ? 'zip' : 'tar')) {
             $this->result = $backuper->result;
             return false;
         }
@@ -260,12 +314,32 @@ class Updater extends \litepubl\core\Events
         return true;
     }
 
-    public function downloadShell($version)
+public function isZip($content): bool
+{
+$sign = "\x50\x4b\x03\x04";
+if (is_string($content)) {
+return Str::begin($content, $sign);
+} elseif (is_object($content)) {
+for ($i = strlen($sign) - 1; $i >= 0; $i--) {
+if ($sign[$i] != $content->file[$i])) {
+return false;
+}
+}
+
+return true;
+}
+
+return false;
+}
+
+
+    public function downloadShell(string $version)
     {
-        $filename = "litepublisher.$version.tar.gz";
+$urls = $this->getDownloadUrls($version);
+
         $cmd = array();
         $cmd[] = 'cd ' . $this->getApp()->paths->backup;
-        $cmd[] = 'wget http://litepublisher.googlecode.com/files/' . $filename;
+        $cmd[] = 'wget ' . $urls[0];
         $cmd[] = 'cd ' . $this->getApp()->paths->home;
         $cmd[] = sprintf('tar -xf %s%s -p --overwrite', $this->getApp()->paths->backup, $filename);
         $cmd[] = 'rm ' . $this->getApp()->paths->backup . $filename;
@@ -277,4 +351,5 @@ class Updater extends \litepubl\core\Events
 
         return true;
     }
+
 }
