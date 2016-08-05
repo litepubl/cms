@@ -107,8 +107,7 @@ class Backup extends Login
             if (strpos($_FILES['filename']['name'], '.sql')) {
                 $backuper->uploaddump(file_get_contents($_FILES["filename"]["tmp_name"]), $_FILES["filename"]["name"]);
             } else {
-                $url = $this->getApp()->site->url;
-                $dbconfig = $this->getApp()->options->dbconfig;
+                                $dbconfig = $this->getApp()->options->dbconfig;
                 $backuper->uploadarch($_FILES['filename']['tmp_name'], $backuper->getarchtype($_FILES['filename']['name']));
 
                 if (isset($saveurl)) {

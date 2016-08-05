@@ -37,12 +37,11 @@ const CENTER = 'text-center';
     public $admintheme;
     public $callbacks;
 
-    public static function fromitems(array $items, array $struct): string
+    public static function fromItems(array $items, array $struct): string
     {
-        $classname = __class__;
+        $classname = get_called_class();
         $self = new $classname();
-        $self->setStruct($struct);
-        return $self->build($items);
+        return $self->buildItems($items, $struct);
     }
 
     public function __construct()
@@ -154,8 +153,14 @@ const CENTER = 'text-center';
             $args->data[$name] = call_user_func_array($callback['callback'], $callback['params']);
         }
 
-        return $this->getadmintheme()->parseArg($this->body, $args);
+        return $this->getAdminTheme()->parseArg($this->body, $args);
     }
+
+public function buildItems(array $items, array $struct): string
+{
+        $this->setStruct($struct);
+        return $this->build($items);
+}
 
     //predefined callbacks
     public function itemsCallback(Table $self, Items $owner)

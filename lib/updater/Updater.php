@@ -276,7 +276,7 @@ return [
 "https://codeload.github.com/litepubl/cms/tar.gz/v$version",
 "https://github.com/litepubl/cms/archive/v$version.tar.gz",
 "http://litepublisher.com/download/litepublisher.$version.tar.gz",
-]
+];
 }
 
 public function downloadFile(array $urls)
@@ -321,7 +321,7 @@ if (is_string($content)) {
 return Str::begin($content, $sign);
 } elseif (is_object($content)) {
 for ($i = strlen($sign) - 1; $i >= 0; $i--) {
-if ($sign[$i] != $content->file[$i])) {
+if ($sign[$i] != $content->file[$i]) {
 return false;
 }
 }

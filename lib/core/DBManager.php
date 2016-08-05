@@ -48,11 +48,14 @@ class DBManager
         );
     }
 
-    public function deleteTable($name)
+    public function deleteTable(string $name): bool
     {
         if ($this->tableExists($name)) {
             $this->exec("DROP TABLE $this->prefix$name");
+return true;
         }
+
+return false;
     }
 
     public function deleteAllTables()
@@ -236,7 +239,7 @@ class DBManager
         return false;
     }
 
-    public function tableExists($name)
+    public function tableExists(string $name): bool
     {
         if ($list = $this->gettables()) {
             return in_array($this->prefix . $name, $list);
