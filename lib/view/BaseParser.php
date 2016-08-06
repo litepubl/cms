@@ -514,7 +514,7 @@ class BaseParser extends \litepubl\core\Events
         return $info['paths'];
     }
 
-    public function addtags($filetheme, $filetags)
+    public function addTags($filetheme, $filetags)
     {
         if ($filetheme && !in_array($filetheme, $this->themefiles)) {
             $this->themefiles[] = $filetheme;
@@ -527,16 +527,18 @@ class BaseParser extends \litepubl\core\Events
         Arr::clean($this->themefiles);
         Arr::clean($this->tagfiles);
         $this->save();
+$this->paths = [];
         Base::clearcache();
     }
 
-    public function removetags($filetheme, $filetags)
+    public function removeTags($filetheme, $filetags)
     {
         Arr::deleteValue($this->themefiles, $filetheme);
         Arr::deleteValue($this->tagfiles, $filetags);
         Arr::clean($this->themefiles);
         Arr::clean($this->tagfiles);
         $this->save();
+$this->paths = [];
         Base::clearcache();
     }
 }
