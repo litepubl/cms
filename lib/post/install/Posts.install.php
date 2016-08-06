@@ -45,7 +45,7 @@ function PostsUninstall($self)
 
 function PostsGetsitemap($self, $from, $count)
 {
-    $result = array();
+    $result = [];
     $commentpages = $self->getApp()->options->commentpages;
     $commentsperpage = $self->getApp()->options->commentsperpage;
 
@@ -59,11 +59,11 @@ function PostsGetsitemap($self, $from, $count)
     );
     while ($item = $db->fetchassoc($res)) {
         $comments = $commentpages ? ceil($item['commentscount'] / $commentsperpage) : 1;
-        $result[] = array(
+        $result[] = [
             'url' => $item['url'],
             'title' => $item['title'],
             'pages' => max($item['pagescount'], $comments)
-        );
+        ];
     }
     return $result;
 }

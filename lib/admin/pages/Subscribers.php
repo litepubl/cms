@@ -114,12 +114,12 @@ class Subscribers extends Form
 
         $tb = new Table();
         $tb->setposts(
-            array(
-            array(
+            [
+            [
                 $lang->post,
                 '<a href="$site.url$post.url" title="$post.title">$post.title</a>'
-            )
-            )
+            ]
+            ]
         );
 
         return $admin->form('[checkbox=default_subscribe]' . $tb->build($items), $args);

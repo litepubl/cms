@@ -18,8 +18,8 @@ class Args
 
     public function __construct($thisthis = null)
     {
-        $this->callbacks = array();
-        $this->callbackParams = array();
+        $this->callbacks = [];
+        $this->callbackParams = [];
         $this->data = static ::getDefaultArgs();
         if (isset($thisthis)) {
             $this->data['$this'] = $thisthis;
@@ -30,12 +30,12 @@ class Args
     {
         if (!static ::$defaultArgs) {
             $site = static ::getAppInstance()->site;
-            static ::$defaultArgs = array(
+            static ::$defaultArgs = [
                 '$site.url' => $site->url,
                 '$site.files' => $site->files,
                 '{$site.q}' => $site->q,
                 '$site.q' => $site->q,
-            );
+            ];
         }
 
         return static ::$defaultArgs;
@@ -178,8 +178,8 @@ use litepubl\utils\Filer;
 
 class Base extends \litepubl\core\Events
 {
-    public static $instances = array();
-    public static $vars = array();
+    public static $instances = [];
+    public static $vars = [];
 
     public $name;
     public $parsing;
@@ -216,11 +216,11 @@ class Base extends \litepubl\core\Events
     {
         parent::create();
         $this->name = '';
-        $this->parsing = array();
+        $this->parsing = [];
         $this->data['type'] = 'litepublisher';
         $this->data['parent'] = '';
-        $this->addmap('templates', array());
-        $this->templates = array();
+        $this->addmap('templates', []);
+        $this->templates = [];
 
         $this->extratml = '';
     }
@@ -283,7 +283,7 @@ class Base extends \litepubl\core\Events
         if (!strpos($exp, '\.')) {
             $exp = str_replace('.', '\.', $exp);
         }
-        $result = array();
+        $result = [];
         foreach ($this->templates as $name => $val) {
             if (preg_match($exp, $name)) {
                 $result[$name] = $val;
@@ -425,7 +425,7 @@ class Base extends \litepubl\core\Events
     public static function quote($s)
     {
         return strtr(
-            $s, array(
+            $s, [
             '"' => '&quot;',
             "'" => '&#039;',
             '\\' => '&#092;',
@@ -434,7 +434,7 @@ class Base extends \litepubl\core\Events
             '_' => '&#95;',
             '<' => '&lt;',
             '>' => '&gt;',
-            )
+            ]
         );
     }
 }
@@ -600,12 +600,12 @@ class Lang
 
     public function __construct()
     {
-        $this->ini = array();
-        $this->loaded = array();
-        $this->searchsect = array(
+        $this->ini = [];
+        $this->loaded = [];
+        $this->searchsect = [
             'common',
             'default'
-        );
+        ];
     }
 
     public static function get($section, $key)
@@ -732,7 +732,7 @@ class Lang
     public static function clearcache()
     {
         \litepubl\utils\Filer::delete(static ::getcachedir(), false, false);
-        static ::i()->loaded = array();
+        static ::i()->loaded = [];
     }
 }
 
@@ -794,7 +794,7 @@ class MainView extends \litepubl\core\Events
         $this->addEvents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
         $this->path = $app->paths->themes . 'default' . DIRECTORY_SEPARATOR;
         $this->url = $app->site->files . '/themes/default';
-        $this->ltoptions = array(
+        $this->ltoptions = [
             'url' => $app->site->url,
             'files' => $app->site->files,
             'idurl' => 0,
@@ -802,7 +802,7 @@ class MainView extends \litepubl\core\Events
             'debug' => Config::$debug,
             'theme' => [],
             'custom' => [],
-        );
+        ];
 
         $this->hover = true;
         $this->data['heads'] = '';
@@ -810,7 +810,7 @@ class MainView extends \litepubl\core\Events
         $this->data['jsready'] = '<script type="text/javascript">$(document).ready(function() {%s});</script>';
         $this->data['jsload'] = '<script type="text/javascript">$.load_script(%s);</script>';
         $this->data['footer'] = '<a href="http://litepublisher.com/">Powered by Lite Publisher</a>';
-        $this->addmap('custom', array());
+        $this->addmap('custom', []);
         $this->extrahead = '';
         $this->extrabody = '';
     }
@@ -1099,7 +1099,7 @@ class Schema extends \litepubl\core\Item
     {
         parent::create();
         $this->originalCustom = [];
-        $this->data = array(
+        $this->data = [
             'id' => 0,
             'class' => get_class($this) ,
             'name' => 'default',
@@ -1114,9 +1114,9 @@ class Schema extends \litepubl\core\Item
             'invertorder' => false,
             'perpage' => 0,
 
-            'custom' => array() ,
-            'sidebars' => array()
-        );
+            'custom' => [] ,
+            'sidebars' => []
+        ];
 
         $this->sidebars = & $this->data['sidebars'];
         $this->themeInstance = null;
@@ -1241,7 +1241,7 @@ class Schema extends \litepubl\core\Item
                 $default = static ::i(1);
                 $this->sidebars = $default->sidebars;
             } else {
-                $this->sidebars = array();
+                $this->sidebars = [];
             }
             $this->data['customsidebar'] = $value;
             $this->save();
@@ -1274,7 +1274,7 @@ class Schemes extends \litepubl\core\Items
         parent::create();
         $this->basename = 'views';
         $this->addEvents('themechanged');
-        $this->addmap('defaults', array());
+        $this->addmap('defaults', []);
     }
 
     public function add($name)
@@ -1388,15 +1388,15 @@ class Theme extends Base
     protected function create()
     {
         parent::create();
-        $this->templates = array(
+        $this->templates = [
             'index' => '',
             'title' => '',
             'menu' => '',
             'content' => '',
-            'sidebars' => array() ,
-            'custom' => array() ,
-            'customadmin' => array()
-        );
+            'sidebars' => [] ,
+            'custom' => [] ,
+            'customadmin' => []
+        ];
     }
 
     public function __tostring()
@@ -1429,12 +1429,12 @@ class Theme extends Base
         }
 
         $iduser = 0;
-        foreach (array(
+        foreach ([
             'author',
             'idauthor',
             'user',
             'iduser'
-        ) as $propname) {
+        ] as $propname) {
             if (isset($model->$propname)) {
                 $iduser = $model->$propname;
                 break;
@@ -1489,7 +1489,7 @@ class Theme extends Base
         $to = $count;
         $perpage = $this->getApp()->options->perpage;
         $args->perpage = $perpage;
-        $items = array();
+        $items = [];
         if ($count > $perpage * 2) {
             //$page is midle of the bar
             $from = (int)max(1, $page - ceil($perpage / 2));
@@ -1534,7 +1534,7 @@ class Theme extends Base
             $params = $this->getApp()->site->q . $params;
         }
 
-        $a = array();
+        $a = [];
         if (($page > 1) && ($tml_prev = trim($this->templates['content.navi.prev']))) {
             $i = $page - 1;
             $args->page = $i;
@@ -1582,46 +1582,46 @@ class Theme extends Base
     public function getButton($title)
     {
         return strtr(
-            $this->templates['content.admin.button'], array(
+            $this->templates['content.admin.button'], [
             '$lang.$name' => $title,
             'name="$name"' => '',
             'id="submitbutton-$name"' => ''
-            )
+            ]
         );
     }
 
     public function getSubmit($title)
     {
         return strtr(
-            $this->templates['content.admin.submit'], array(
+            $this->templates['content.admin.submit'], [
             '$lang.$name' => $title,
             'name="$name"' => '',
             'id="submitbutton-$name"' => ''
-            )
+            ]
         );
     }
 
     public function getInput($type, $name, $value, $title)
     {
         return strtr(
-            $this->templates['content.admin.' . $type], array(
+            $this->templates['content.admin.' . $type], [
             '$lang.$name' => $title,
             '$name' => $name,
             '$value' => $value
-            )
+            ]
         );
     }
 
     public function getRadio($name, $value, $title, $checked)
     {
         return strtr(
-            $this->templates['content.admin.radioitem'], array(
+            $this->templates['content.admin.radioitem'], [
             '$lang.$name' => $title,
             '$name' => $name,
             '$value' => $title,
             '$index' => $value,
             '$checked' => $checked ? 'checked="checked"' : '',
-            )
+            ]
         );
     }
 
@@ -1651,7 +1651,7 @@ namespace litepubl\view;
 
 class Vars
 {
-    public $keys = array();
+    public $keys = [];
 
     public function __destruct()
     {
@@ -1807,10 +1807,10 @@ class Admin extends Base
             foreach ($m as $item) {
                 $name = $item[1];
                 $replace = strtr(
-                    $this->templates['tabs.panel'], array(
+                    $this->templates['tabs.panel'], [
                     '$id' => $name,
                     '$content' => trim($item[2]) ,
-                    )
+                    ]
                 );
 
                 $result = str_replace($item[0], $replace, $result);
@@ -1838,10 +1838,10 @@ class Admin extends Base
                     }
 
                     $replace = strtr(
-                        $theme->templates["content.admin.$type"], array(
+                        $theme->templates["content.admin.$type"], [
                         '$name' => $name,
                         '$value' => $varname
-                        )
+                        ]
                     );
                     break;
 
@@ -1853,42 +1853,42 @@ class Admin extends Base
 
                 case 'tab':
                     $replace = strtr(
-                        $this->templates['tabs.tab'], array(
+                        $this->templates['tabs.tab'], [
                         '$id' => $name,
                         '$title' => $lang->__get($name) ,
                         '$url' => '',
-                        )
+                        ]
                     );
                     break;
 
 
                 case 'ajaxtab':
                     $replace = strtr(
-                        $this->templates['tabs.tab'], array(
+                        $this->templates['tabs.tab'], [
                         '$id' => $name,
                         '$title' => $lang->__get($name) ,
                         '$url' => "\$ajax=$name",
-                        )
+                        ]
                     );
                     break;
 
 
                 case 'tabpanel':
                     $replace = strtr(
-                        $this->templates['tabs.panel'], array(
+                        $this->templates['tabs.panel'], [
                         '$id' => $name,
                         '$content' => isset($args->data[$varname]) ? $varname : '',
-                        )
+                        ]
                     );
                     break;
 
 
                 default:
                     $replace = strtr(
-                        $theme->templates["content.admin.$type"], array(
+                        $theme->templates["content.admin.$type"], [
                         '$name' => $name,
                         '$value' => $varname
-                        )
+                        ]
                     );
                 }
 
@@ -1915,12 +1915,12 @@ class Admin extends Base
     public function getTable(string $head, string $body, string $footer = ''): string
     {
         return strtr(
-            $this->templates['table'], array(
+            $this->templates['table'], [
             '$class' => Theme::i()->templates['content.admin.tableclass'],
             '$head' => $head,
             '$body' => $body,
             '$footer' => $footer,
-            )
+            ]
         );
     }
 
@@ -1943,20 +1943,20 @@ class Admin extends Base
     public function getSection(string $title, string $content): string
     {
         return strtr(
-            $this->templates['section'], array(
+            $this->templates['section'], [
             '$title' => $title,
             '$content' => $content
-            )
+            ]
         );
     }
 
     public function getErr(string $content): string
     {
         return strtr(
-            $this->templates['error'], array(
+            $this->templates['error'], [
             '$title' => Lang::get('default', 'error') ,
             '$content' => $content
-            )
+            ]
         );
     }
 
@@ -2045,9 +2045,9 @@ class Admin extends Base
 
         if (is_callable($this->onfileperm)) {
             call_user_func_array(
-                $this->onfileperm, array(
+                $this->onfileperm, [
                 $args
-                )
+                ]
             );
         } elseif ($this->getApp()->options->show_file_perm) {
             $args->fileperm = GetPerm::combo(0, 'idperm_upload');
@@ -2075,7 +2075,7 @@ class Admin extends Base
 
     public function check2array(string $prefix): array
     {
-        $result = array();
+        $result = [];
         foreach ($_POST as $key => $value) {
             if (Str::begin($key, $prefix)) {
                 $result[] = is_numeric($value) ? (int)$value : $value;

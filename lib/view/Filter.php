@@ -180,7 +180,7 @@ class Filter extends \litepubl\core\Events
 
     public function filterpages($content)
     {
-        $result = array();
+        $result = [];
         $pages = explode('<!--nextpage-->', $content);
         foreach ($pages as $page) {
             if ($page = trim($page)) {
@@ -275,12 +275,12 @@ class Filter extends \litepubl\core\Events
     public static function replace_code($s)
     {
         $s = strtr(
-            htmlspecialchars($s), array(
+            htmlspecialchars($s), [
             '"' => '&quot;',
             "'" => '&#39;',
             '$' => '&#36;',
             '  ' => '&nbsp;&nbsp;'
-            )
+            ]
         );
         //double space for prevent auto_p
         $s = str_replace("\n", '<br  />', $s);
@@ -327,21 +327,21 @@ class Filter extends \litepubl\core\Events
     public static function quote($s)
     {
         return strtr(
-            $s, array(
+            $s, [
             '"' => '&quot;',
             "'" => '&#039;',
             '\\' => '&#092;',
             '$' => '&#36;',
             '%' => '&#37;',
             '_' => '&#95;'
-            )
+            ]
         );
     }
 
     public static function escape($s)
     {
         return strtr(
-            trim(strip_tags($s)), array(
+            trim(strip_tags($s)), [
             '"' => '&quot;',
             "'" => '&#039;',
             '\\' => '&#092;',
@@ -350,14 +350,14 @@ class Filter extends \litepubl\core\Events
             '_' => '&#95;',
             '<' => '&lt;',
             '>' => '&gt;',
-            )
+            ]
         );
     }
 
     public static function unescape($s)
     {
         return strtr(
-            $s, array(
+            $s, [
             '&quot;' => '"',
             '&#039;' => "'",
             '&#092;' => '\\',
@@ -366,20 +366,20 @@ class Filter extends \litepubl\core\Events
             '&#95;' => '_',
             '&lt;' => '<',
             '&gt;' => '>'
-            )
+            ]
         );
     }
 
     public static function remove_scripts($s)
     {
         $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
-        foreach (array(
+        foreach ([
             'script',
             'style',
             'iframe',
             'frame',
             'object'
-        ) as $tag) {
+        ] as $tag) {
             $s = preg_replace("/\\<$tag(.*?)$tag(\\s*)\\>/ims", '', $s);
             $s = preg_replace("/\\<$tag(.*?)\\>/ims", '', $s);
         }
@@ -434,28 +434,28 @@ class Filter extends \litepubl\core\Events
 
         // Standardize newlines
         $str = str_replace(
-            array(
+            [
             "\r\n",
             "\r"
-            ), "\n", $str
+            ], "\n", $str
         );
 
         //remove br
         $str = str_replace(
-            array(
+            [
             "</br>\n",
             "<br />\N",
             "<br>\n",
             "<br/>\n"
-            ), "\n", $str
+            ], "\n", $str
         );
         $str = str_replace(
-            array(
+            [
             '</br>',
             '<br />',
             '<br>',
             '<br/>'
-            ), "\n", $str
+            ], "\n", $str
         );
 
         // Trim whitespace on each line
@@ -529,24 +529,24 @@ class Filter extends \litepubl\core\Events
     {
         $s = ' ' . $s;
         $s = preg_replace_callback(
-            '#(?<=[\s>])(\()?([\w]+?://(?:[\w\\x80-\\xff\#$%&~/=?@\[\](+-]|[.,;:](?![\s<]|(\))?([\s]|$))|(?(1)\)(?![\s<.,;:]|$)|\)))+)#is', array(
+            '#(?<=[\s>])(\()?([\w]+?://(?:[\w\\x80-\\xff\#$%&~/=?@\[\](+-]|[.,;:](?![\s<]|(\))?([\s]|$))|(?(1)\)(?![\s<.,;:]|$)|\)))+)#is', [
             __class__,
             '_make_url_clickable_cb'
-            ), $s
+            ], $s
         );
 
         $s = preg_replace_callback(
-            '#([\s>])((www|ftp)\.[\w\\x80-\\xff\#$%&~/.\-;:=,?@\[\]+]+)#is', array(
+            '#([\s>])((www|ftp)\.[\w\\x80-\\xff\#$%&~/.\-;:=,?@\[\]+]+)#is', [
             __class__,
             '_make_web_ftp_clickable_cb'
-            ), $s
+            ], $s
         );
 
         $s = preg_replace_callback(
-            '#([\s>])([.0-9a-z_+-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,})#i', array(
+            '#([\s>])([.0-9a-z_+-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,})#i', [
             __class__,
             '_make_email_clickable_cb'
-            ), $s
+            ], $s
         );
 
         $s = preg_replace("#(<a( [^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i", "$1$3</a>", $s);
@@ -574,13 +574,13 @@ class Filter extends \litepubl\core\Events
         }
 
         if (in_array(
-            substr($dest, -1), array(
+            substr($dest, -1), [
             '.',
             ',',
             ';',
             ':',
             ')'
-            )
+            ]
         ) === true) {
             $ret = substr($dest, -1);
             $dest = substr($dest, 0, strlen($dest) - 1);

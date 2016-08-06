@@ -73,11 +73,11 @@ class Twitter extends Service
             if ($r = $oauth->get_data('https://api.twitter.com/1/account/verify_credentials.json')) {
                 $info = json_decode($r);
                 return $this->addUser(
-                    $context, array(
+                    $context, [
                     'uid' => $info->id,
                     'name' => $info->name,
                     'website' => 'http://twitter.com/account/redirect_by_id?id=' . $info->id_str
-                    ), $info
+                    ], $info
                 );
             }
         }
@@ -87,10 +87,10 @@ class Twitter extends Service
 
     protected function getAdminInfo(Lang $lang): array
     {
-        return array(
+        return [
             'regurl' => 'https://dev.twitter.com/apps/new',
             'client_id' => 'Consumer key',
             'client_secret' => 'Consumer secret'
-        );
+        ];
     }
 }

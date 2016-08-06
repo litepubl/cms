@@ -23,8 +23,8 @@ class Tabs
     public function __construct($admintheme = null)
     {
         $this->_admintheme = $admintheme;
-        $this->tabs = array();
-        $this->panels = array();
+        $this->tabs = [];
+        $this->panels = [];
     }
 
     public function getAdmintheme()
@@ -39,11 +39,11 @@ class Tabs
     public function get()
     {
         return strtr(
-            $this->getadmintheme()->templates['tabs'], array(
+            $this->getadmintheme()->templates['tabs'], [
             '$id' => $this->id ? $this->id : 'tabs-' . static ::$index++,
             '$tab' => implode("\n", $this->tabs) ,
             '$panel' => implode("\n", $this->panels) ,
-            )
+            ]
         );
     }
 
@@ -67,21 +67,21 @@ class Tabs
     public function getTab($id, $url, $title)
     {
         return strtr(
-            $this->getadmintheme()->templates['tabs.tab'], array(
+            $this->getadmintheme()->templates['tabs.tab'], [
             '$id' => $id,
             '$title' => $title,
             '$url' => $url,
-            )
+            ]
         );
     }
 
     public function getPanel($id, $content)
     {
         return strtr(
-            $this->getadmintheme()->templates['tabs.panel'], array(
+            $this->getadmintheme()->templates['tabs.panel'], [
             '$id' => $id,
             '$content' => $content,
-            )
+            ]
         );
     }
 }

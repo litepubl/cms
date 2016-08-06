@@ -20,7 +20,7 @@ class ExtraSidebars extends \litepubl\core\Plugin
     protected function create()
     {
         parent::create();
-        $this->addmap('themes', array());
+        $this->addmap('themes', []);
         $this->data['beforepost'] = false;
         $this->data['afterpost'] = true;
     }

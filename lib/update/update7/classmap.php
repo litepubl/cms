@@ -8,7 +8,7 @@
  * @version   7.02
   */
 
-return array(
+return [
     'tdata' => 'litepubl\core\Data',
     'tevents' => 'litepubl\core\Events',
     'tcoevents' => 'litepubl\core\CoEvents',
@@ -324,4 +324,4 @@ return array(
 
 'tyoutubeplayer' => 'litepubl\plugins\youtubeplayer\Plugin',
 'tusernews' => 'litepubl\plugins\usernews\Plugin',    
-);
+];

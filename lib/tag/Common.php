@@ -174,7 +174,7 @@ class Common extends \litepubl\core\Items
         $schemes = Schemes::i();
         $idschema = isset($schemes->defaults[$this->PermalinkIndex]) ? $schemes->defaults[$this->PermalinkIndex] : 1;
 
-        $item = array(
+        $item = [
             'idurl' => 0,
             'customorder' => 0,
             'parent' => $parent,
@@ -184,7 +184,7 @@ class Common extends \litepubl\core\Items
             'itemscount' => 0,
             'includechilds' => $this->includechilds,
             'includeparents' => $this->includeparents,
-        );
+        ];
 
         $id = $this->db->add($item);
         $this->items[$id] = $item;
@@ -206,10 +206,10 @@ class Common extends \litepubl\core\Items
 
         $item['title'] = $title;
         $this->db->updateAssoc(
-            array(
+            [
             'id' => $id,
             'title' => $title
-            )
+            ]
         );
 
         $app = $this->getApp();
@@ -257,7 +257,7 @@ class Common extends \litepubl\core\Items
             $list = explode(',', trim($list));
         }
 
-        $result = array();
+        $result = [];
         foreach ($list as $title) {
             $title = Filter::escape($title);
             if ($title == '') {
@@ -273,7 +273,7 @@ class Common extends \litepubl\core\Items
     public function getNames(array $list): array
     {
         $this->loadItems($list);
-        $result = array();
+        $result = [];
         foreach ($list as $id) {
             if (!isset($this->items[$id])) {
                 continue;
@@ -288,11 +288,11 @@ class Common extends \litepubl\core\Items
     public function getLinks(array $list): array
     {
         if (!count($list)) {
-            return array();
+            return [];
         }
 
         $this->loadItems($list);
-        $result = array();
+        $result = [];
         foreach ($list as $id) {
             if (!isset($this->items[$id])) {
                 continue;
@@ -313,12 +313,12 @@ class Common extends \litepubl\core\Items
         }
 
         if (!in_array(
-            $sortname, array(
+            $sortname, [
             'title',
             'itemscount',
             'customorder',
             'id'
-            )
+            ]
         )) {
             $sortname = 'title';
         }
@@ -348,9 +348,9 @@ class Common extends \litepubl\core\Items
 
         if ($includeparents || $includechilds) {
             $this->loadAll();
-            $all = array(
+            $all = [
                 $id
-            );
+            ];
 
             if ($includeparents) {
                 $all = array_merge($all, $this->getParents($id));
@@ -380,7 +380,7 @@ class Common extends \litepubl\core\Items
 
     public function getParents(int $id): array
     {
-        $result = array();
+        $result = [];
         while ($id = (int)$this->items[$id]['parent']) {
             //if (!isset($this->items[$id])) $this->error(sprintf('Parent category %d not exists', $id);
             $result[] = $id;
@@ -391,7 +391,7 @@ class Common extends \litepubl\core\Items
 
     public function getChilds(int $parent): array
     {
-        $result = array();
+        $result = [];
         foreach ($this->items as $id => $item) {
             if ($parent == $item['parent']) {
                 $result[] = $id;
@@ -404,10 +404,10 @@ class Common extends \litepubl\core\Items
     public function getSitemap(int $from, int $count)
     {
         return $this->externalfunc(
-            __class__, 'Getsitemap', array(
+            __class__, 'Getsitemap', [
             $from,
             $count
-            )
+            ]
         );
     }
 

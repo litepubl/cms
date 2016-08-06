@@ -117,14 +117,14 @@ class MediaParser extends \litepubl\core\Events
         }
 
         return $this->add(
-            array(
+            [
             'filename' => $filename,
             'tempfilename' => $newtemp,
             'title' => $title,
             'description' => $description,
             'keywords' => $keywords,
             'overwrite' => $overwrite
-            )
+            ]
         );
     }
 
@@ -244,14 +244,14 @@ class MediaParser extends \litepubl\core\Events
     public function addfile($filename, $tempfilename, $title, $description, $keywords, $overwrite)
     {
         return $this->add(
-            array(
+            [
             'filename' => $filename,
             'tempfilename' => $tempfilename,
             'title' => $title,
             'description' => $description,
             'keywords' => $keywords,
             'overwrite' => $overwrite
-            )
+            ]
         );
     }
 
@@ -270,12 +270,12 @@ class MediaParser extends \litepubl\core\Events
 
         $item = $this->getInfo($file['tempfilename']);
         $item = array_merge(
-            $item, array(
+            $item, [
             'filename' => $this->movetofolder($file['filename'], $file['tempfilename'], $this->getmediafolder($item['media']), isset($file['overwrite']) ? $file['overwrite'] : false) ,
             'title' => isset($file['title']) ? $file['title'] : $file['filename'],
             'description' => isset($file['description']) ? $file['description'] : '',
             'keywords' => isset($file['keywords']) ? $file['keywords'] : ''
-            )
+            ]
         );
 
         $preview = false;
@@ -341,10 +341,10 @@ class MediaParser extends \litepubl\core\Events
         $id = $files->additem($item);
         if ($hash != $files->getvalue($id, 'hash')) {
             $files->getdb('imghashes')->insert(
-                array(
+                [
                 'id' => $id,
                 'hash' => $hash
-                )
+                ]
             );
         }
 
@@ -378,11 +378,11 @@ class MediaParser extends \litepubl\core\Events
         $tempfilename = $this->doupload($filename, $content);
 
         return $this->add(
-            array(
+            [
             'filename' => $filename,
             'tempfilename' => $tempfilename,
             'enabledpreview' => false
-            )
+            ]
         );
     }
 
@@ -412,10 +412,10 @@ class MediaParser extends \litepubl\core\Events
                 $id = $files->additem($item);
                 if ($hash != $files->getvalue($id, 'hash')) {
                     $files->getdb('imghashes')->insert(
-                        array(
+                        [
                         'id' => $id,
                         'hash' => $hash
-                        )
+                        ]
                     );
                 }
 
@@ -428,7 +428,7 @@ class MediaParser extends \litepubl\core\Events
 
     public function getDefaultvalues($filename)
     {
-        return array(
+        return [
             'parent' => 0,
             'midle' => 0,
             'preview' => 0,
@@ -443,7 +443,7 @@ class MediaParser extends \litepubl\core\Events
             'title' => '',
             'description' => '',
             'keywords' => ''
-        );
+        ];
     }
 
     public function getInfo($filename)
@@ -452,7 +452,7 @@ class MediaParser extends \litepubl\core\Events
         $result = $this->getdefaultvalues($filename);
         if (preg_match("/\\.($this->videoext)\$/", $filename, $m)) {
             $ext = $m[1];
-            $mime = array(
+            $mime = [
                 'mp4' => 'video/mp4',
                 'mpe' => 'video/mpeg',
                 'mpeg' => 'video/mpeg',
@@ -464,7 +464,7 @@ class MediaParser extends \litepubl\core\Events
                 'flv' => 'video/x-flv',
                 'f4v' => 'video/mp4',
                 'f4p' => 'video/mp4',
-            );
+            ];
 
             if (isset($mime[$ext])) {
                 $result['mime'] = $mime[$ext];
@@ -482,13 +482,13 @@ class MediaParser extends \litepubl\core\Events
         }
 
         if (preg_match("/\\.($this->audioext)\$/", $filename)) {
-            $mime = array(
+            $mime = [
                 'mp3' => 'audio/mpeg',
                 'wav' => 'audio/x-wav',
                 'flac' => 'audio/ogg',
                 'f4a' => 'audio/mp4',
                 'f4b' => 'audio/mp4',
-            );
+            ];
 
             $result['mime'] = $mime[strtolower(substr($filename, -3)) ];
             $result['media'] = 'audio';
@@ -647,11 +647,11 @@ class MediaParser extends \litepubl\core\Events
         $dest = imagecreatetruecolor($x, $y);
         imagecopyresampled($dest, $source, 0, 0, 0, 0, $x, $y, $sourcex, $sourcey);
 
-        return array(
+        return [
             'width' => $x,
             'height' => $y,
             'image' => $dest,
-        );
+        ];
     }
 
     public function getSnapshot($srcfilename, $image)
@@ -719,10 +719,10 @@ class MediaParser extends \litepubl\core\Events
         imagedestroy($dest);
         @chmod($filename, 0666);
 
-        return array(
+        return [
             'width' => $x,
             'height' => $y,
-        );
+        ];
     }
 
     private function getAudioinfo($filename)

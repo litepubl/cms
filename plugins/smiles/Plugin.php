@@ -18,12 +18,12 @@ class Plugin extends \litepubl\core\Plugin
     public function filter(Event $event)
     {
         $event->content = strtr(
-            $event->content, array(
+            $event->content, [
             ':)' => $this->smile,
             ';)' => $this->smile,
             ':(' => $this->sad,
             ';(' => $this->sad,
-            )
+            ]
         );
     }
 }

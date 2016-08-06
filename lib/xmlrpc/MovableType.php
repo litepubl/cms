@@ -24,15 +24,15 @@ class MovableType extends Common
         $count = (int)$count;
         $posts = Posts::i();
         $list = $posts->getrecent($this->getApp()->options->user, $count);
-        $result = array();
+        $result = [];
         foreach ($list as $id) {
             $post = Post::i($id);
-            $result[] = array(
+            $result[] = [
                 'dateCreated' => new IXR_Date($post->posted) ,
                 'userid' => (string)$post->author,
                 'postid' => (string)$post->id,
                 'title' => $post->title
-            );
+            ];
         }
 
         return $result;
@@ -44,12 +44,12 @@ class MovableType extends Common
         $this->auth($username, $password, 'author');
         $categories = Cats::i();
         $categories->loadall();
-        $result = array();
+        $result = [];
         foreach ($categories->items as $id => $item) {
-            $result[] = array(
+            $result[] = [
                 'categoryId' => (string)$id,
                 'categoryName' => $item['title']
-            );
+            ];
         }
         return $result;
     }
@@ -67,14 +67,14 @@ class MovableType extends Common
         $categories = Cats::i();
         $categories->loaditems($post->categories);
         $isPrimary = true;
-        $result = array();
+        $result = [];
         foreach ($post->categories as $idcat) {
             $item = $categories->getitem($idcat);
-            $result[] = array(
+            $result[] = [
                 'categoryName' => $item['title'],
                 'categoryId' => (string)$idcat,
                 'isPrimary' => $isPrimary
-            );
+            ];
             $isPrimary = false;
         }
         return $result;
@@ -92,7 +92,7 @@ class MovableType extends Common
 
         $post = Post::i($id);
 
-        $list = array();
+        $list = [];
         foreach ($catlist as $Cat) {
             $list[] = $Cat['categoryId'];
         }
@@ -103,7 +103,7 @@ class MovableType extends Common
 
     public function supportedTextFilters()
     {
-        return array();
+        return [];
     }
 
     public function getTrackbackPings($id)
@@ -119,15 +119,15 @@ class MovableType extends Common
             return $this->xerror(403, 'Target post not published');
         }
 
-        $result = array();
+        $result = [];
         $pingbacks = PingbacksItems::i($id);
         $items = $pingbacks->db->getItems("post = $id and status = 'approved' order by posted");
         foreach ($items as $item) {
-            $result[] = array(
+            $result[] = [
                 'pingIP' => $item['ip'],
                 'pingURL' => $item['url'],
                 'pingTitle' => $item['title']
-            );
+            ];
         }
         return $result;
     }

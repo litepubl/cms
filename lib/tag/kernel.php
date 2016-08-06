@@ -207,7 +207,7 @@ class Common extends \litepubl\core\Items
         $schemes = Schemes::i();
         $idschema = isset($schemes->defaults[$this->PermalinkIndex]) ? $schemes->defaults[$this->PermalinkIndex] : 1;
 
-        $item = array(
+        $item = [
             'idurl' => 0,
             'customorder' => 0,
             'parent' => $parent,
@@ -217,7 +217,7 @@ class Common extends \litepubl\core\Items
             'itemscount' => 0,
             'includechilds' => $this->includechilds,
             'includeparents' => $this->includeparents,
-        );
+        ];
 
         $id = $this->db->add($item);
         $this->items[$id] = $item;
@@ -239,10 +239,10 @@ class Common extends \litepubl\core\Items
 
         $item['title'] = $title;
         $this->db->updateAssoc(
-            array(
+            [
             'id' => $id,
             'title' => $title
-            )
+            ]
         );
 
         $app = $this->getApp();
@@ -290,7 +290,7 @@ class Common extends \litepubl\core\Items
             $list = explode(',', trim($list));
         }
 
-        $result = array();
+        $result = [];
         foreach ($list as $title) {
             $title = Filter::escape($title);
             if ($title == '') {
@@ -306,7 +306,7 @@ class Common extends \litepubl\core\Items
     public function getNames(array $list): array
     {
         $this->loadItems($list);
-        $result = array();
+        $result = [];
         foreach ($list as $id) {
             if (!isset($this->items[$id])) {
                 continue;
@@ -321,11 +321,11 @@ class Common extends \litepubl\core\Items
     public function getLinks(array $list): array
     {
         if (!count($list)) {
-            return array();
+            return [];
         }
 
         $this->loadItems($list);
-        $result = array();
+        $result = [];
         foreach ($list as $id) {
             if (!isset($this->items[$id])) {
                 continue;
@@ -346,12 +346,12 @@ class Common extends \litepubl\core\Items
         }
 
         if (!in_array(
-            $sortname, array(
+            $sortname, [
             'title',
             'itemscount',
             'customorder',
             'id'
-            )
+            ]
         )) {
             $sortname = 'title';
         }
@@ -381,9 +381,9 @@ class Common extends \litepubl\core\Items
 
         if ($includeparents || $includechilds) {
             $this->loadAll();
-            $all = array(
+            $all = [
                 $id
-            );
+            ];
 
             if ($includeparents) {
                 $all = array_merge($all, $this->getParents($id));
@@ -413,7 +413,7 @@ class Common extends \litepubl\core\Items
 
     public function getParents(int $id): array
     {
-        $result = array();
+        $result = [];
         while ($id = (int)$this->items[$id]['parent']) {
             //if (!isset($this->items[$id])) $this->error(sprintf('Parent category %d not exists', $id);
             $result[] = $id;
@@ -424,7 +424,7 @@ class Common extends \litepubl\core\Items
 
     public function getChilds(int $parent): array
     {
-        $result = array();
+        $result = [];
         foreach ($this->items as $id => $item) {
             if ($parent == $item['parent']) {
                 $result[] = $id;
@@ -437,10 +437,10 @@ class Common extends \litepubl\core\Items
     public function getSitemap(int $from, int $count)
     {
         return $this->externalfunc(
-            __class__, 'Getsitemap', array(
+            __class__, 'Getsitemap', [
             $from,
             $count
-            )
+            ]
         );
     }
 
@@ -477,7 +477,7 @@ class Content extends \litepubl\core\Data
     {
         parent::__construct();
         $this->owner = $owner;
-        $this->items = array();
+        $this->items = [];
     }
 
     public function getItem($id)
@@ -486,13 +486,13 @@ class Content extends \litepubl\core\Data
             return $this->items[$id];
         }
 
-        $item = array(
+        $item = [
             'description' => '',
             'keywords' => '',
             'head' => '',
             'content' => '',
             'rawcontent' => ''
-        );
+        ];
 
         if ($r = $this->db->getitem($id)) {
             $item = $r;
@@ -517,13 +517,13 @@ class Content extends \litepubl\core\Data
     {
         $item = $this->getitem($id);
         $filter = Filter::i();
-        $item = array(
+        $item = [
             'content' => $filter->filter($content) ,
             'rawcontent' => $content,
             'description' => $description,
             'keywords' => $keywords,
             'head' => $head
-        );
+        ];
         $this->setitem($id, $item);
     }
 
@@ -660,7 +660,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     {
         parent::create();
         $this->addEvents('onbeforecontent', 'oncontent');
-        $this->cachedIdPosts = array();
+        $this->cachedIdPosts = [];
     }
 
     public function setTags(Common $tags)
@@ -866,11 +866,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     {
         return sprintf(
             '<ul>%s</ul>', $this->getSorted(
-                array(
+                [
                 'item' => '<li><a href="$link" title="$title">$title</a>$subcount</li>',
                 'subcount' => '<strong>($itemscount)</strong>',
                 'subitems' => '<ul>$item</ul>'
-                ), 0, 'count', 0, 0, false
+                ], 0, 'count', 0, 0, false
             )
         );
     }

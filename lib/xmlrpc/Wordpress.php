@@ -39,7 +39,7 @@ class Wordpress extends MetaWeblog
             $ParentTitle = "";
         }
 
-        $Result = array(
+        $Result = [
             "dateCreated" => new IXR_Date(time()) ,
             "userid" => $menu->author,
             "page_id" => "menu_" . $menu->id,
@@ -48,7 +48,7 @@ class Wordpress extends MetaWeblog
             "title" => $menu->title,
             "link" => $menu->url,
             "permaLink" => $menu->url,
-            "categories" => array() ,
+            "categories" => [] ,
             "excerpt" => '',
             "text_more" => '',
             "mt_allow_comments" => 0,
@@ -64,7 +64,7 @@ class Wordpress extends MetaWeblog
             "wp_author_id" => $menu->author,
             "wp_author_display_name" => 'ADMIN',
             "date_created_gmt" => new IXR_Date(time() - $this->getApp()->options->gmt)
-        );
+        ];
 
         return $Result;
     }
@@ -79,7 +79,7 @@ class Wordpress extends MetaWeblog
     public function wp_getPages($blogid, $username, $password)
     {
         $this->auth($username, $password, 'editor');
-        $result = array();
+        $result = [];
         $menus = Menus::i();
         foreach ($menus->items as $id => $item) {
             $result[] = $this->menutostruct($id);
@@ -90,15 +90,15 @@ class Wordpress extends MetaWeblog
     public function wp_getPageList($blogid, $username, $password)
     {
         $this->auth($username, $password, 'editor');
-        $result = array();
+        $result = [];
         $menus = Menus::i();
         foreach ($menus->items as $id => $item) {
-            $result[] = array(
+            $result[] = [
                 'page_id' => "menu_" . $id,
                 'page_title' => $item['title'],
                 'page_parent_id' => "menu_" . $item['parent'],
                 'dateCreated' => new IXR_Date(time()) ,
-            );
+            ];
         }
 
         return $result;
@@ -144,17 +144,17 @@ class Wordpress extends MetaWeblog
     {
         $this->auth($username, $password, 'editor');
         $tags = Tags::i();
-        $result = array();
+        $result = [];
         $tags->loadall();
         foreach ($tags->items as $id => $item) {
-            $result[] = array(
+            $result[] = [
                 'tag_id' => (string)$id,
                 'name' => $item['title'],
                 'count' => $item['itemscount'],
                 'slug' => '',
                 'html_url' => $this->getApp()->site->url . $item['url'],
                 'rss_url' => $this->getApp()->site->url . $item['url']
-            );
+            ];
         }
         return $result;
     }

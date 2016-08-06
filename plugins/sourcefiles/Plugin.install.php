@@ -30,7 +30,7 @@ function PluginUninstall($self)
 
 function get_ignore_source()
 {
-    return array(
+    return [
         'lib/include/class-phpmailer.php',
         'lib/include/class-pop3.php',
         'lib/include/class-smtp.php',
@@ -43,5 +43,5 @@ function get_ignore_source()
         'js/audio-player/audio-player.js',
         'js/audio-player/audio-player-noswfobject.js',
         'js/flowplayer'
-    );
+    ];
 }

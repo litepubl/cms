@@ -33,7 +33,7 @@ class Admin extends \litepubl\admin\widget\Widget
             );
         }
 
-        $tags = array();
+        $tags = [];
         foreach ($widget->items as $id => $item) {
             $tags[] = $item['idtag'];
         }
@@ -54,7 +54,7 @@ class Admin extends \litepubl\admin\widget\Widget
             return '';
         }
 
-        $tags = array();
+        $tags = [];
         foreach ($widget->items as $id => $item) {
             $tags[] = $item['idtag'];
         }

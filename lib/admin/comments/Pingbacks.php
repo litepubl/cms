@@ -85,44 +85,44 @@ class Pingbacks extends \litepubl\admin\Menu
         $form->body = $admin->getcount($from, $from + count($items), $total);
         $tb = $this->newTable();
         $tb->setStruct(
-            array(
+            [
             $tb->checkbox('id') ,
-            array(
+            [
                 $lang->date,
                 function (Table $t) {
                 
                     return $t->date($t->item['posted']);
                 }
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->status,
                 function (Table $t) {
                 
                     return Lang::get('commentstatus', $t->item['status']);
                 }
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->title,
                 '$title'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->url,
                 '<a href="$url">$url</a>'
-            ) ,
-            array(
+            ] ,
+            [
                 'IP',
                 '$ip'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->post,
                 '<a href="$posturl">$posttitle</a>'
-            ) ,
-            array(
+            ] ,
+            [
                 'center',
                 $lang->edit,
                 "<a href='$this->adminurl=\$id&action=edit'>$lang->edit</a>"
-            ) ,
-            )
+            ] ,
+            ]
         );
 
         $form->items.= $tb->build($items);

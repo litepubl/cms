@@ -19,14 +19,14 @@ function HeaderInstall($self)
 
     $admin = Menus::i();
     $admin->additem(
-        array(
+        [
         'parent' => $admin->url2id('/admin/views/') ,
         'url' => '/admin/views/bootstrapheader/',
         'title' => $about['header'],
         'name' => 'bootstrapheader',
         'class' => get_class($self) ,
         'group' => 'admin'
-        )
+        ]
     );
 }
 

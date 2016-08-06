@@ -45,12 +45,12 @@ class Facebook extends Service
         $code = $_REQUEST['code'];
         $resp = Http::get(
             'https://graph.facebook.com/oauth/access_token?' . http_build_query(
-                array(
+                [
                 'code' => $code,
                 'client_id' => $this->client_id,
                 'client_secret' => $this->client_secret,
                 'redirect_uri' => $this->getApp()->site->url . $this->url,
-                )
+                ]
             )
         );
 
@@ -61,13 +61,13 @@ class Facebook extends Service
             if ($r = Http::get('https://graph.facebook.com/me?access_token=' . $params['access_token'])) {
                 $info = json_decode($r);
                 return $this->addUser(
-                    $context, array(
+                    $context, [
                     'service' => $this->name,
                     'uid' => isset($info->id) ? $info->id : '',
                     'email' => isset($info->email) ? $info->email : '',
                     'name' => $info->name,
                     'website' => isset($info->link) ? $info->link : ''
-                    ), $info
+                    ], $info
                 );
             }
         }
@@ -77,10 +77,10 @@ class Facebook extends Service
 
     protected function getAdminInfo(Lang $lang): array
     {
-        return array(
+        return [
             'regurl' => 'https://developers.facebook.com/apps',
             'client_id' => 'App ID',
             'client_secret' => 'App Secret'
-        );
+        ];
     }
 }

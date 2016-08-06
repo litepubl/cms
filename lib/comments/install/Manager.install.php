@@ -35,13 +35,13 @@ function ManagerInstall($self)
 
     $self->data['idguest'] = 0; //create user in installer after create users table
     $groups = $self->getApp()->options->groupnames;
-    $self->data['idgroups'] = array(
+    $self->data['idgroups'] = [
         $groups['admin'],
         $groups['editor'],
         $groups['moderator'],
         $groups['author'],
         $groups['commentator']
-    );
+    ];
 
     $self->save();
 

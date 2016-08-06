@@ -19,21 +19,21 @@ class Admin extends \litepubl\admin\Panel
         $lang = $this->lang;
         $args = $this->args;
         $form = '';
-        foreach (array(
+        foreach ([
             '_changeposts',
             '_canupload',
             '_candeletefile',
             'checkspam',
             'insertsource'
-        ) as $name) {
+        ] as $name) {
             $args->$name = $plugin->data[$name];
             $form.= "[checkbox=$name]";
         }
 
-        foreach (array(
+        foreach ([
             'sourcetml',
             'editorfile'
-        ) as $name) {
+        ] as $name) {
             $args->$name = $plugin->data[$name];
             $form.= "[text=$name]";
         }
@@ -45,20 +45,20 @@ class Admin extends \litepubl\admin\Panel
     public function processForm()
     {
         $plugin = Plugin::i();
-        foreach (array(
+        foreach ([
             '_changeposts',
             '_canupload',
             '_candeletefile',
             'checkspam',
             'insertsource'
-        ) as $name) {
+        ] as $name) {
             $plugin->data[$name] = isset($_POST[$name]);
         }
 
-        foreach (array(
+        foreach ([
             'sourcetml',
             'editorfile'
-        ) as $name) {
+        ] as $name) {
             $plugin->data[$name] = $_POST[$name];
         }
 

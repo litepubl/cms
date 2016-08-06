@@ -44,14 +44,14 @@ class BaseParser extends \litepubl\core\Events
         parent::create();
         $this->basename = 'baseparser';
         $this->addEvents('ongetpaths', 'beforeparse', 'parsed', 'onfix');
-        $this->addmap('tagfiles', array());
-        $this->addmap('themefiles', array());
-        $this->addmap('extrapaths', array());
+        $this->addmap('tagfiles', []);
+        $this->addmap('themefiles', []);
+        $this->addmap('extrapaths', []);
         $this->data['replacelang'] = false;
         $this->data['removephp'] = true;
         $this->data['removespaces'] = true;
 
-        $this->pathmap = array();
+        $this->pathmap = [];
     }
 
     public function checkAbout(string $name): bool
@@ -67,7 +67,7 @@ class BaseParser extends \litepubl\core\Events
 
     public function getFileList(string $name): array
     {
-        $result = array();
+        $result = [];
         $paths = $this->getApp()->paths;
         $about = $this->getAbout($name);
         $result[] = $paths->themes . $name . '/' . $about['file'];
@@ -102,7 +102,7 @@ class BaseParser extends \litepubl\core\Events
             $theme->parent = $parent_theme->name;
         }
 
-        $this->parsedtags = array();
+        $this->parsedtags = [];
         $about = $this->getAbout($theme->name);
 
         $filelist = $this->getFileList($theme->name);
@@ -136,7 +136,7 @@ class BaseParser extends \litepubl\core\Events
     public function callback_replace_php(array $m)
     {
         return strtr(
-            $m[0], array(
+            $m[0], [
             '$' => '&#36;',
             '?' => '&#63;',
             '(' => '&#40;',
@@ -145,14 +145,14 @@ class BaseParser extends \litepubl\core\Events
             ']' => '&#93;',
             '{' => '&#123;',
             '}' => '&#125;'
-            )
+            ]
         );
     }
 
     public function callback_restore_php($m)
     {
         return strtr(
-            $m[0], array(
+            $m[0], [
             '&#36;' => '$',
             '&#63;' => '?',
             '&#40;' => '(',
@@ -161,7 +161,7 @@ class BaseParser extends \litepubl\core\Events
             '&#93;' => ']',
             '&#123;' => '{',
             '&#125;' => '}'
-            )
+            ]
         );
     }
 
@@ -178,11 +178,11 @@ class BaseParser extends \litepubl\core\Events
 
         $s = Str::trimUtf($s);
         $s = str_replace(
-            array(
+            [
             "\r\n",
             "\r",
             "\n\n"
-            ), "\n", $s
+            ], "\n", $s
         );
 
         //strip coments
@@ -198,7 +198,7 @@ class BaseParser extends \litepubl\core\Events
     public function replace_about($s, $about)
     {
         if (preg_match_all('/\$about\.(\w\w*+)/', $s, $m, PREG_SET_ORDER)) {
-            $a = array();
+            $a = [];
             foreach ($m as $item) {
                 $name = $item[1];
                 if (isset($about[$name])) {
@@ -214,7 +214,7 @@ class BaseParser extends \litepubl\core\Events
     public function getAbout(string $name): array
     {
         if (!isset($this->abouts)) {
-            $this->abouts = array();
+            $this->abouts = [];
         }
         if (!isset($this->abouts[$name])) {
             $filename = $this->getApp()->paths->themes . $name . DIRECTORY_SEPARATOR . 'about.ini';
@@ -268,11 +268,11 @@ class BaseParser extends \litepubl\core\Events
     //4 ver
     public static function find_close($s, $a)
     {
-        $brackets = array(
+        $brackets = [
             '[' => ']',
             '{' => '}',
             '(' => ')'
-        );
+        ];
 
         $b = $brackets[$a];
         $i = strpos($s, $b);
@@ -312,10 +312,10 @@ class BaseParser extends \litepubl\core\Events
             $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
         } else {
             $s = preg_replace_callback(
-                '/\<\?(.*?)\?\>/ims', array(
+                '/\<\?(.*?)\?\>/ims', [
                 $this,
                 'callback_replace_php'
-                ), $s
+                ], $s
             );
         }
 
@@ -367,10 +367,10 @@ class BaseParser extends \litepubl\core\Events
             $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
         } else {
             $s = preg_replace_callback(
-                '/\<\?(.*?)\?\>/ims', array(
+                '/\<\?(.*?)\?\>/ims', [
                 $this,
                 'callback_replace_php'
-                ), $s
+                ], $s
             );
         }
 
@@ -403,10 +403,10 @@ class BaseParser extends \litepubl\core\Events
         $s = trim($s);
         if (!$this->removephp) {
             $s = preg_replace_callback(
-                '/\<\&\#63;.*?\&\#63;\>/ims', array(
+                '/\<\&\#63;.*?\&\#63;\>/ims', [
                 $this,
                 'callback_restore_php'
-                ), $s
+                ], $s
             );
         }
 
@@ -484,11 +484,11 @@ class BaseParser extends \litepubl\core\Events
     public function remove_spaces($s)
     {
         $s = str_replace(
-            array(
+            [
             "\n",
             "\t",
             "\x00"
-            ), ' ', $s
+            ], ' ', $s
         );
         $s = preg_replace('/[ ]{2,}/ms', ' ', $s);
         return str_replace('> <', '><', $s);
@@ -496,7 +496,7 @@ class BaseParser extends \litepubl\core\Events
 
     public function loadPaths(): array
     {
-        $result = array();
+        $result = [];
         $paths = $this->getApp()->paths;
         foreach ($this->tagfiles as $filename) {
             $filename = $paths->home . trim($filename, '/');

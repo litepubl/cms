@@ -75,13 +75,13 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
     {
         $users = Users::i();
         $id = $users->add(
-            array(
+            [
             'email' => strtolower(trim($email)) ,
             'name' => $name,
             'website' => Filter::clean_website($website) ,
             'status' => 'comuser',
             'idgroups' => 'commentator'
-            )
+            ]
         );
 
         if ($id) {

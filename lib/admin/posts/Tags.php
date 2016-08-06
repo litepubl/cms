@@ -29,9 +29,9 @@ class Tags extends \litepubl\admin\Menu
         $tags = $istags ? TagItems::i() : CatItems::i();
         $tags->loadAll();
 
-        $parents = array(
+        $parents = [
             0 => '-----'
-        );
+        ];
         foreach ($tags->items as $id => $item) {
             $parents[$id] = $item['title'];
         }
@@ -57,12 +57,12 @@ class Tags extends \litepubl\admin\Menu
             $args->formtitle = $lang->edit;
         } elseif (($this->name == 'addcat') || ($this->name == 'addtag')) {
             $id = 0;
-            $item = array(
+            $item = [
                 'id' => 0,
                 'title' => '',
                 'parent' => 0,
                 'customorder' => 0,
-            );
+            ];
 
             $args->formtitle = $lang->add;
         }
@@ -99,7 +99,7 @@ class Tags extends \litepubl\admin\Menu
             $iditems = array_slice(array_keys($tags->items), $from, $perpage);
         }
 
-        $items = array();
+        $items = [];
         foreach ($iditems as $id) {
             $item = $tags->items[$id];
             $item['parentname'] = $parents[$item['parent']];
@@ -107,33 +107,33 @@ class Tags extends \litepubl\admin\Menu
         }
 
         $result.= Table::fromitems(
-            $items, array(
-            array(
+            $items, [
+            [
                 'right',
                 $lang->count2,
                 '$itemscount'
-            ) ,
-            array(
+            ] ,
+            [
                 'left',
                 $lang->title,
                 '<a href="$link" title="$title">$title</a>'
-            ) ,
-            array(
+            ] ,
+            [
                 'left',
                 $lang->parent,
                 '$parentname'
-            ) ,
-            array(
+            ] ,
+            [
                 'center',
                 $lang->edit,
                 "<a href=\"$this->adminurl=\$id\">$lang->edit</a>"
-            ) ,
-            array(
+            ] ,
+            [
                 'center',
                 $lang->delete,
                 "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$id&action=delete\">$lang->delete</a>"
-            )
-            )
+            ]
+            ]
         );
 
         $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));

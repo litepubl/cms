@@ -106,13 +106,13 @@ class Form
         $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
 
         $attr = "action=\"$this->action\"";
-        foreach (array(
+        foreach ([
             'method',
             'enctype',
             'target',
             'id',
             'class'
-        ) as $k) {
+        ] as $k) {
             if ($v = $this->$k) {
                 $attr.= sprintf(' %s="%s"', $k, $v);
             }
@@ -135,12 +135,12 @@ class Form
         }
 
         return strtr(
-            $admin->templates['form'], array(
+            $admin->templates['form'], [
             '$title' => $title,
             '$before' => $this->before,
             '$attr' => $attr,
             '$body' => $body,
-            )
+            ]
         );
     }
 
@@ -158,10 +158,10 @@ class Form
         $a = func_get_args();
         foreach ($a as $name) {
             $result.= strtr(
-                $theme->templates['content.admin.button'], array(
+                $theme->templates['content.admin.button'], [
                 '$lang.$name' => $lang->__get($name) ,
                 '$name' => $name,
-                )
+                ]
             );
         }
 

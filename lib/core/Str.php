@@ -105,7 +105,7 @@ class Str
 
     public static function toIntArray(string $s): array
     {
-        $result = array();
+        $result = [];
         foreach (explode(',', $s) as $value) {
             if ($v = (int)trim($value)) {
                 $result[] = $v;

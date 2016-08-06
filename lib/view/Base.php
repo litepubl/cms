@@ -17,8 +17,8 @@ use litepubl\utils\Filer;
 
 class Base extends \litepubl\core\Events
 {
-    public static $instances = array();
-    public static $vars = array();
+    public static $instances = [];
+    public static $vars = [];
 
     public $name;
     public $parsing;
@@ -55,11 +55,11 @@ class Base extends \litepubl\core\Events
     {
         parent::create();
         $this->name = '';
-        $this->parsing = array();
+        $this->parsing = [];
         $this->data['type'] = 'litepublisher';
         $this->data['parent'] = '';
-        $this->addmap('templates', array());
-        $this->templates = array();
+        $this->addmap('templates', []);
+        $this->templates = [];
 
         $this->extratml = '';
     }
@@ -122,7 +122,7 @@ class Base extends \litepubl\core\Events
         if (!strpos($exp, '\.')) {
             $exp = str_replace('.', '\.', $exp);
         }
-        $result = array();
+        $result = [];
         foreach ($this->templates as $name => $val) {
             if (preg_match($exp, $name)) {
                 $result[$name] = $val;
@@ -264,7 +264,7 @@ class Base extends \litepubl\core\Events
     public static function quote($s)
     {
         return strtr(
-            $s, array(
+            $s, [
             '"' => '&quot;',
             "'" => '&#039;',
             '\\' => '&#092;',
@@ -273,7 +273,7 @@ class Base extends \litepubl\core\Events
             '_' => '&#95;',
             '<' => '&lt;',
             '>' => '&gt;',
-            )
+            ]
         );
     }
 }

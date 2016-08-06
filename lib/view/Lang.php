@@ -48,12 +48,12 @@ class Lang
 
     public function __construct()
     {
-        $this->ini = array();
-        $this->loaded = array();
-        $this->searchsect = array(
+        $this->ini = [];
+        $this->loaded = [];
+        $this->searchsect = [
             'common',
             'default'
-        );
+        ];
     }
 
     public static function get($section, $key)
@@ -180,6 +180,6 @@ class Lang
     public static function clearcache()
     {
         \litepubl\utils\Filer::delete(static ::getcachedir(), false, false);
-        static ::i()->loaded = array();
+        static ::i()->loaded = [];
     }
 }

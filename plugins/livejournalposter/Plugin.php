@@ -59,7 +59,7 @@ class Plugin extends \litepubl\core\Plugin
         $response = $client->getResponse();
         $challenge = $response['challenge'];
 
-        $args = array(
+        $args = [
         'username' => $this->login,
         'auth_method' => 'challenge',
         'auth_challenge' => $challenge,
@@ -72,12 +72,12 @@ class Plugin extends \litepubl\core\Plugin
         'day' => $date['mday'],
         'hour' => $date['hours'],
         'min' => $date['minutes'],
-        'props' => array(
+        'props' => [
             'opt_nocomments' => !$post->commentsenabled,
             'opt_preformatted' => true,
             'taglist' => $post->tagnames
-        )
-        );
+        ]
+        ];
 
         switch ($this->privacy) {
         case "public":

@@ -59,9 +59,9 @@ class Editor extends \litepubl\admin\Menu
         $postitems = $post->categories;
         $categories = Cats::i();
         if (!count($postitems)) {
-            $postitems = array(
+            $postitems = [
                 $categories->defaultid
-            );
+            ];
         }
 
         return $this->admintheme->getcats($postitems);
@@ -94,11 +94,11 @@ class Editor extends \litepubl\admin\Menu
     {
         $admintheme = $this->admintheme;
         return strtr(
-            $admintheme->templates['tabs'], array(
+            $admintheme->templates['tabs'], [
             '$id' => 'tabs',
             '$tab' => $admintheme->templates['posteditor.tabs.tabs'],
             '$panel' => $admintheme->templates['posteditor.tabs.panels'],
-            )
+            ]
         );
     }
 
@@ -124,7 +124,7 @@ class Editor extends \litepubl\admin\Menu
     public function getFilelist($post = null)
     {
         $post = $this->getVarPost($post);
-        return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemsposts->getitems($post->id) : array());
+        return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemsposts->getitems($post->id) : []);
     }
 
     public function getText($post = null)

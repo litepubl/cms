@@ -65,7 +65,7 @@ class MainView extends \litepubl\core\Events
         $this->addEvents('beforecontent', 'aftercontent', 'onhead', 'onbody', 'onrequest', 'ontitle', 'ongetmenu');
         $this->path = $app->paths->themes . 'default' . DIRECTORY_SEPARATOR;
         $this->url = $app->site->files . '/themes/default';
-        $this->ltoptions = array(
+        $this->ltoptions = [
             'url' => $app->site->url,
             'files' => $app->site->files,
             'idurl' => 0,
@@ -73,7 +73,7 @@ class MainView extends \litepubl\core\Events
             'debug' => Config::$debug,
             'theme' => [],
             'custom' => [],
-        );
+        ];
 
         $this->hover = true;
         $this->data['heads'] = '';
@@ -81,7 +81,7 @@ class MainView extends \litepubl\core\Events
         $this->data['jsready'] = '<script type="text/javascript">$(document).ready(function() {%s});</script>';
         $this->data['jsload'] = '<script type="text/javascript">$.load_script(%s);</script>';
         $this->data['footer'] = '<a href="http://litepublisher.com/">Powered by Lite Publisher</a>';
-        $this->addmap('custom', array());
+        $this->addmap('custom', []);
         $this->extrahead = '';
         $this->extrabody = '';
     }

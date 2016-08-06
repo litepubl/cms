@@ -8,17 +8,17 @@
  * @version   7.02
   */
 
-return array (
+return [
   'events' => 
-  array (
-  ),
+  [
+  ],
   'coclasses' => 
-  array (
-  ),
+  [
+  ],
   'items' => 
-  array (
+  [
     1 => 
-    array (
+    [
       'parent' => 0,
       'url' => '/admin/posts/',
       'title' => 'Записи',
@@ -29,9 +29,9 @@ return array (
       'order' => 1,
       'status' => 'published',
       'idurl' => 36,
-    ),
+    ],
     2 => 
-    array (
+    [
       'parent' => 1,
       'url' => '/admin/posts/editor/',
       'title' => 'Новая запись',
@@ -42,9 +42,9 @@ return array (
       'order' => 2,
       'status' => 'published',
       'idurl' => 37,
-    ),
+    ],
     3 => 
-    array (
+    [
       'parent' => 1,
       'url' => '/admin/posts/addcat/',
       'title' => 'Добавить рубрику',
@@ -55,9 +55,9 @@ return array (
       'order' => 3,
       'status' => 'published',
       'idurl' => 38,
-    ),
+    ],
     4 => 
-    array (
+    [
       'parent' => 1,
       'url' => '/admin/posts/categories/',
       'title' => 'Рубрики',
@@ -68,9 +68,9 @@ return array (
       'order' => 4,
       'status' => 'published',
       'idurl' => 39,
-    ),
+    ],
     5 => 
-    array (
+    [
       'parent' => 1,
       'url' => '/admin/posts/addtag/',
       'title' => 'Добавить метку',
@@ -81,9 +81,9 @@ return array (
       'order' => 5,
       'status' => 'published',
       'idurl' => 40,
-    ),
+    ],
     6 => 
-    array (
+    [
       'parent' => 1,
       'url' => '/admin/posts/tags/',
       'title' => 'Метки',
@@ -94,9 +94,9 @@ return array (
       'order' => 6,
       'status' => 'published',
       'idurl' => 41,
-    ),
+    ],
     7 => 
-    array (
+    [
       'parent' => 1,
       'url' => '/admin/posts/staticpages/',
       'title' => 'Статические страницы',
@@ -107,9 +107,9 @@ return array (
       'order' => 7,
       'status' => 'published',
       'idurl' => 42,
-    ),
+    ],
     8 => 
-    array (
+    [
       'parent' => 0,
       'url' => '/admin/comments/',
       'title' => 'Комментарии',
@@ -120,9 +120,9 @@ return array (
       'order' => 8,
       'status' => 'published',
       'idurl' => 43,
-    ),
+    ],
     9 => 
-    array (
+    [
       'parent' => 8,
       'url' => '/admin/comments/hold/',
       'title' => 'Задержанные',
@@ -133,9 +133,9 @@ return array (
       'order' => 9,
       'status' => 'published',
       'idurl' => 44,
-    ),
+    ],
     10 => 
-    array (
+    [
       'parent' => 8,
       'url' => '/admin/comments/authors/',
       'title' => 'Авторы',
@@ -146,9 +146,9 @@ return array (
       'order' => 10,
       'status' => 'published',
       'idurl' => 45,
-    ),
+    ],
     11 => 
-    array (
+    [
       'parent' => 8,
       'url' => '/admin/comments/pingback/',
       'title' => 'Пингбеки',
@@ -159,9 +159,9 @@ return array (
       'order' => 11,
       'status' => 'published',
       'idurl' => 46,
-    ),
+    ],
     12 => 
-    array (
+    [
       'parent' => 0,
       'url' => '/admin/plugins/',
       'title' => 'Плагины',
@@ -172,9 +172,9 @@ return array (
       'order' => 12,
       'status' => 'published',
       'idurl' => 47,
-    ),
+    ],
     13 => 
-    array (
+    [
       'parent' => 0,
       'url' => '/admin/files/',
       'title' => 'Файлы',
@@ -185,9 +185,9 @@ return array (
       'order' => 13,
       'status' => 'published',
       'idurl' => 48,
-    ),
+    ],
     14 => 
-    array (
+    [
       'parent' => 13,
       'url' => '/admin/files/thumbnail/',
       'title' => 'Миниатюра',
@@ -198,9 +198,9 @@ return array (
       'order' => 14,
       'status' => 'published',
       'idurl' => 49,
-    ),
+    ],
     15 => 
-    array (
+    [
       'parent' => 13,
       'url' => '/admin/files/image/',
       'title' => 'Картинки',
@@ -211,9 +211,9 @@ return array (
       'order' => 15,
       'status' => 'published',
       'idurl' => 50,
-    ),
+    ],
     16 => 
-    array (
+    [
       'parent' => 13,
       'url' => '/admin/files/video/',
       'title' => 'Видео',
@@ -224,9 +224,9 @@ return array (
       'order' => 16,
       'status' => 'published',
       'idurl' => 51,
-    ),
+    ],
     17 => 
-    array (
+    [
       'parent' => 13,
       'url' => '/admin/files/audio/',
       'title' => 'Звуки',
@@ -237,9 +237,9 @@ return array (
       'order' => 17,
       'status' => 'published',
       'idurl' => 52,
-    ),
+    ],
     18 => 
-    array (
+    [
       'parent' => 13,
       'url' => '/admin/files/bin/',
       'title' => 'Остальные',
@@ -250,9 +250,9 @@ return array (
       'order' => 18,
       'status' => 'published',
       'idurl' => 53,
-    ),
+    ],
     19 => 
-    array (
+    [
       'parent' => 0,
       'url' => '/admin/views/',
       'title' => 'Вид',
@@ -263,9 +263,9 @@ return array (
       'order' => 19,
       'status' => 'published',
       'idurl' => 54,
-    ),
+    ],
     20 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/addschema/',
       'title' => 'Добавить схему',
@@ -276,9 +276,9 @@ return array (
       'order' => 20,
       'status' => 'published',
       'idurl' => 55,
-    ),
+    ],
     21 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/widgets/',
       'title' => 'Виджеты',
@@ -289,9 +289,9 @@ return array (
       'order' => 21,
       'status' => 'published',
       'idurl' => 56,
-    ),
+    ],
     22 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/addcustom/',
       'title' => 'Редактируемый виджет',
@@ -302,9 +302,9 @@ return array (
       'order' => 22,
       'status' => 'published',
       'idurl' => 57,
-    ),
+    ],
     23 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/group/',
       'title' => 'Групповое изменение',
@@ -315,9 +315,9 @@ return array (
       'order' => 23,
       'status' => 'published',
       'idurl' => 58,
-    ),
+    ],
     24 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/defaults/',
       'title' => 'Схемы новых страниц',
@@ -328,9 +328,9 @@ return array (
       'order' => 24,
       'status' => 'published',
       'idurl' => 59,
-    ),
+    ],
     25 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/spec/',
       'title' => 'Схемы спецстраниц',
@@ -341,9 +341,9 @@ return array (
       'order' => 25,
       'status' => 'published',
       'idurl' => 60,
-    ),
+    ],
     26 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/headers/',
       'title' => 'Секция head',
@@ -354,9 +354,9 @@ return array (
       'order' => 26,
       'status' => 'published',
       'idurl' => 61,
-    ),
+    ],
     27 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/jsmerger/',
       'title' => 'Сборщик js',
@@ -367,9 +367,9 @@ return array (
       'order' => 27,
       'status' => 'published',
       'idurl' => 62,
-    ),
+    ],
     28 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/cssmerger/',
       'title' => 'Сборщик css',
@@ -380,9 +380,9 @@ return array (
       'order' => 28,
       'status' => 'published',
       'idurl' => 63,
-    ),
+    ],
     29 => 
-    array (
+    [
       'parent' => 0,
       'url' => '/admin/menu/',
       'title' => 'Меню',
@@ -393,9 +393,9 @@ return array (
       'order' => 29,
       'status' => 'published',
       'idurl' => 64,
-    ),
+    ],
     30 => 
-    array (
+    [
       'parent' => 29,
       'url' => '/admin/menu/edit/',
       'title' => 'Добавить меню',
@@ -406,9 +406,9 @@ return array (
       'order' => 30,
       'status' => 'published',
       'idurl' => 65,
-    ),
+    ],
     31 => 
-    array (
+    [
       'parent' => 29,
       'url' => '/admin/menu/editfake/',
       'title' => 'Добавить подставное',
@@ -419,9 +419,9 @@ return array (
       'order' => 31,
       'status' => 'published',
       'idurl' => 66,
-    ),
+    ],
     32 => 
-    array (
+    [
       'parent' => 0,
       'url' => '/admin/options/',
       'title' => 'Настройки',
@@ -432,9 +432,9 @@ return array (
       'order' => 32,
       'status' => 'published',
       'idurl' => 67,
-    ),
+    ],
     33 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/home/',
       'title' => 'Главная',
@@ -445,9 +445,9 @@ return array (
       'order' => 33,
       'status' => 'published',
       'idurl' => 68,
-    ),
+    ],
     34 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/mail/',
       'title' => 'Почта',
@@ -458,9 +458,9 @@ return array (
       'order' => 34,
       'status' => 'published',
       'idurl' => 69,
-    ),
+    ],
     35 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/rss/',
       'title' => 'Записи в RSS',
@@ -471,9 +471,9 @@ return array (
       'order' => 35,
       'status' => 'published',
       'idurl' => 70,
-    ),
+    ],
     36 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/view/',
       'title' => 'Вид',
@@ -484,9 +484,9 @@ return array (
       'order' => 36,
       'status' => 'published',
       'idurl' => 71,
-    ),
+    ],
     37 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/files/',
       'title' => 'Файлы',
@@ -497,9 +497,9 @@ return array (
       'order' => 37,
       'status' => 'published',
       'idurl' => 72,
-    ),
+    ],
     38 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/comments/',
       'title' => 'Комментарии',
@@ -510,9 +510,9 @@ return array (
       'order' => 38,
       'status' => 'published',
       'idurl' => 73,
-    ),
+    ],
     39 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/ping/',
       'title' => 'Сервисы пингования',
@@ -523,9 +523,9 @@ return array (
       'order' => 39,
       'status' => 'published',
       'idurl' => 74,
-    ),
+    ],
     40 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/links/',
       'title' => 'Ссылки',
@@ -536,9 +536,9 @@ return array (
       'order' => 40,
       'status' => 'published',
       'idurl' => 75,
-    ),
+    ],
     41 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/cache/',
       'title' => 'Кэширование',
@@ -549,9 +549,9 @@ return array (
       'order' => 41,
       'status' => 'published',
       'idurl' => 76,
-    ),
+    ],
     42 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/catstags/',
       'title' => 'Рубрики и метки',
@@ -562,9 +562,9 @@ return array (
       'order' => 42,
       'status' => 'published',
       'idurl' => 77,
-    ),
+    ],
     43 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/secure/',
       'title' => 'Безопасность',
@@ -575,9 +575,9 @@ return array (
       'order' => 43,
       'status' => 'published',
       'idurl' => 78,
-    ),
+    ],
     44 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/robots/',
       'title' => 'robots.txt',
@@ -588,9 +588,9 @@ return array (
       'order' => 44,
       'status' => 'published',
       'idurl' => 79,
-    ),
+    ],
     45 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/local/',
       'title' => 'Локализация',
@@ -601,9 +601,9 @@ return array (
       'order' => 45,
       'status' => 'published',
       'idurl' => 80,
-    ),
+    ],
     46 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/parser/',
       'title' => 'Разборщик темы',
@@ -614,9 +614,9 @@ return array (
       'order' => 46,
       'status' => 'published',
       'idurl' => 81,
-    ),
+    ],
     47 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/notfound404/',
       'title' => 'Страница 404',
@@ -627,9 +627,9 @@ return array (
       'order' => 47,
       'status' => 'published',
       'idurl' => 82,
-    ),
+    ],
     48 => 
-    array (
+    [
       'parent' => 32,
       'url' => '/admin/options/redir/',
       'title' => 'Редиректы',
@@ -640,9 +640,9 @@ return array (
       'order' => 48,
       'status' => 'published',
       'idurl' => 83,
-    ),
+    ],
     49 => 
-    array (
+    [
       'parent' => 0,
       'url' => '/admin/service/',
       'title' => 'Обслуживание',
@@ -653,9 +653,9 @@ return array (
       'order' => 49,
       'status' => 'published',
       'idurl' => 84,
-    ),
+    ],
     50 => 
-    array (
+    [
       'parent' => 49,
       'url' => '/admin/service/backup/',
       'title' => 'Резервирование',
@@ -666,9 +666,9 @@ return array (
       'order' => 50,
       'status' => 'published',
       'idurl' => 85,
-    ),
+    ],
     51 => 
-    array (
+    [
       'parent' => 49,
       'url' => '/admin/service/upload/',
       'title' => 'Загрузить файл',
@@ -679,9 +679,9 @@ return array (
       'order' => 51,
       'status' => 'published',
       'idurl' => 86,
-    ),
+    ],
     52 => 
-    array (
+    [
       'parent' => 49,
       'url' => '/admin/service/run/',
       'title' => 'Запуск скриптов',
@@ -692,9 +692,9 @@ return array (
       'order' => 52,
       'status' => 'published',
       'idurl' => 87,
-    ),
+    ],
     53 => 
-    array (
+    [
       'id' => 53,
       'idurl' => 0,
       'class' => 'litepubl\\pages\\FakeMenu',
@@ -704,9 +704,9 @@ return array (
       'order' => 9999999,
       'status' => 'published',
       'group' => 'commentator',
-    ),
+    ],
     54 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/bootstraptheme/',
       'title' => 'Bootstrap тема',
@@ -717,9 +717,9 @@ return array (
       'order' => 54,
       'status' => 'published',
       'idurl' => 91,
-    ),
+    ],
     55 => 
-    array (
+    [
       'parent' => 19,
       'url' => '/admin/views/bootstrapheader/',
       'title' => 'Фоновое изображение в шапке сайта',
@@ -730,179 +730,179 @@ return array (
       'order' => 55,
       'status' => 'published',
       'idurl' => 92,
-    ),
-  ),
+    ],
+  ],
   'autoid' => 55,
   'tree' => 
-  array (
+  [
     1 => 
-    array (
+    [
       2 => 
-      array (
-      ),
+      [
+      ],
       3 => 
-      array (
-      ),
+      [
+      ],
       4 => 
-      array (
-      ),
+      [
+      ],
       5 => 
-      array (
-      ),
+      [
+      ],
       6 => 
-      array (
-      ),
+      [
+      ],
       7 => 
-      array (
-      ),
-    ),
+      [
+      ],
+    ],
     8 => 
-    array (
+    [
       9 => 
-      array (
-      ),
+      [
+      ],
       10 => 
-      array (
-      ),
+      [
+      ],
       11 => 
-      array (
-      ),
-    ),
+      [
+      ],
+    ],
     12 => 
-    array (
-    ),
+    [
+    ],
     13 => 
-    array (
+    [
       14 => 
-      array (
-      ),
+      [
+      ],
       15 => 
-      array (
-      ),
+      [
+      ],
       16 => 
-      array (
-      ),
+      [
+      ],
       17 => 
-      array (
-      ),
+      [
+      ],
       18 => 
-      array (
-      ),
-    ),
+      [
+      ],
+    ],
     19 => 
-    array (
+    [
       20 => 
-      array (
-      ),
+      [
+      ],
       21 => 
-      array (
-      ),
+      [
+      ],
       22 => 
-      array (
-      ),
+      [
+      ],
       23 => 
-      array (
-      ),
+      [
+      ],
       24 => 
-      array (
-      ),
+      [
+      ],
       25 => 
-      array (
-      ),
+      [
+      ],
       26 => 
-      array (
-      ),
+      [
+      ],
       27 => 
-      array (
-      ),
+      [
+      ],
       28 => 
-      array (
-      ),
+      [
+      ],
       54 => 
-      array (
-      ),
+      [
+      ],
       55 => 
-      array (
-      ),
-    ),
+      [
+      ],
+    ],
     29 => 
-    array (
+    [
       30 => 
-      array (
-      ),
+      [
+      ],
       31 => 
-      array (
-      ),
-    ),
+      [
+      ],
+    ],
     32 => 
-    array (
+    [
       33 => 
-      array (
-      ),
+      [
+      ],
       34 => 
-      array (
-      ),
+      [
+      ],
       35 => 
-      array (
-      ),
+      [
+      ],
       36 => 
-      array (
-      ),
+      [
+      ],
       37 => 
-      array (
-      ),
+      [
+      ],
       38 => 
-      array (
-      ),
+      [
+      ],
       39 => 
-      array (
-      ),
+      [
+      ],
       40 => 
-      array (
-      ),
+      [
+      ],
       41 => 
-      array (
-      ),
+      [
+      ],
       42 => 
-      array (
-      ),
+      [
+      ],
       43 => 
-      array (
-      ),
+      [
+      ],
       44 => 
-      array (
-      ),
+      [
+      ],
       45 => 
-      array (
-      ),
+      [
+      ],
       46 => 
-      array (
-      ),
+      [
+      ],
       47 => 
-      array (
-      ),
+      [
+      ],
       48 => 
-      array (
-      ),
-    ),
+      [
+      ],
+    ],
     49 => 
-    array (
+    [
       50 => 
-      array (
-      ),
+      [
+      ],
       51 => 
-      array (
-      ),
+      [
+      ],
       52 => 
-      array (
-      ),
-    ),
+      [
+      ],
+    ],
     53 => 
-    array (
-    ),
-  ),
+    [
+    ],
+  ],
   'idhome' => 0,
   'home' => false,
   'heads' => '<link type="text/css" href="$site.files$template.cssmerger_admin" rel="stylesheet" />
   <script type="text/javascript" src="$site.files$template.jsmerger_admin"></script>',
-);
+];

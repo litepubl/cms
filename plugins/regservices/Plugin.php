@@ -59,13 +59,13 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
             $service = static ::iGet($classname);
             if ($service->valid()) {
                 $buttons .= strtr(
-                    $tml, array(
+                    $tml, [
                     '$url' => $url,
                     '$name' => $name,
                     '$icon' => $service->icon,
                     '$title' => $service->title,
                     '&' => '&amp;',
-                    )
+                    ]
                 );
             }
         }
@@ -168,9 +168,9 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         }
 
         $event->result = $form->sendResult(
-            $url, array(
+            $url, [
             ini_get('session.name') => $service->session_id
-            )
+            ]
         );
     }
 }

@@ -33,11 +33,11 @@ class Plugin extends \litepubl\core\Plugin
         $event->content = $this->parser->transform($event->content);
         if ($this->deletep) {
             $event->content = strtr(
-                $event->content, array(
+                $event->content, [
                 '<p>' => '',
                 '</p>' => '',
                 '&#95;' => '_'
-                )            
+                ]            
             );
         }
     }

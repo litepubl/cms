@@ -44,12 +44,12 @@ class VKontakte extends Service
 
         $code = $_REQUEST['code'];
         $resp = Http::post(
-            'https://oauth.vk.com/access_token', array(
+            'https://oauth.vk.com/access_token', [
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'redirect_uri' => $this->getApp()->site->url . $this->url,
-            )
+            ]
         );
 
         if ($resp) {
@@ -58,12 +58,12 @@ class VKontakte extends Service
                 $js = json_decode($r);
                 $info = $js->response[0];
                 return $this->addUser(
-                    $context, array(
+                    $context, [
                     'service' => $this->name,
                     'uid' => $info->uid,
                     'name' => $info->first_name . ' ' . $info->last_name,
                     'website' => 'http://vk.com/id' . $info->uid
-                    ), $info
+                    ], $info
                 );
             }
         }
@@ -73,10 +73,10 @@ class VKontakte extends Service
 
     protected function getAdminInfo(Lang $lang): array
     {
-        return array(
+        return [
             'regurl' => 'http://vk.com/editapp?act=create',
             'client_id' => $lang->yandex_id,
             'client_secret' => $lang->vk_secret
-        );
+        ];
     }
 }

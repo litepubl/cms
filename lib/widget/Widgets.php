@@ -46,30 +46,30 @@ class Widgets extends \litepubl\core\Items
         $this->addEvents('onwidget', 'onadminlogged', 'onadminpanel', 'onsidebar', 'onFindContext');
         $this->basename = 'widgets';
         $this->currentSidebar = 0;
-        $this->addMap('classes', array());
+        $this->addMap('classes', []);
     }
 
     public function add(Widget $widget): int
     {
         return $this->addItem(
-            array(
+            [
             'class' => get_class($widget) ,
             'cache' => $widget->cache,
             'title' => $widget->getTitle(0) ,
             'template' => $widget->template
-            )
+            ]
         );
     }
 
     public function addExt(Widget $widget, string $title, string $template): int
     {
         return $this->addItem(
-            array(
+            [
             'class' => get_class($widget) ,
             'cache' => $widget->cache,
             'title' => $title,
             'template' => $template
-            )
+            ]
         );
     }
 
@@ -78,15 +78,15 @@ class Widgets extends \litepubl\core\Items
         $this->lock();
         $id = $this->add($widget);
         if (!isset($this->classes[$class])) {
-            $this->classes[$class] = array();
+            $this->classes[$class] = [];
         }
 
-        $this->classes[$class][] = array(
+        $this->classes[$class][] = [
             'id' => $id,
             'order' => 0,
             'sidebar' => 0,
             'ajax' => false
-        );
+        ];
 
         $this->unlock();
         return $id;
@@ -128,7 +128,7 @@ class Widgets extends \litepubl\core\Items
     public function deleteClass(string $class): bool
     {
         $this->unbind($class);
-        $deleted = array();
+        $deleted = [];
         foreach ($this->items as $id => $item) {
             if ($class == $item['class']) {
                 unset($this->items[$id]);
@@ -232,7 +232,7 @@ class Widgets extends \litepubl\core\Items
             $schema = Schema::i(1);
         }
 
-        $items = isset($schema->sidebars[$sidebar]) ? $schema->sidebars[$sidebar] : array();
+        $items = isset($schema->sidebars[$sidebar]) ? $schema->sidebars[$sidebar] : [];
 
         $subItems = $this->getSubItems($view, $sidebar);
         $items = $this->joinItems($items, $subItems);
@@ -261,7 +261,7 @@ class Widgets extends \litepubl\core\Items
 
     private function getSubItems(ViewInterface $view, int $sidebar): array
     {
-        $result = array();
+        $result = [];
         foreach ($this->classes as $class => $items) {
             if ($view instanceof $class) {
                 foreach ($items as $item) {

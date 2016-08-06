@@ -113,7 +113,7 @@ class Meta extends \litepubl\core\Item
                 return;
             }
         } else {
-            static ::$instances['postmeta'] = array();
+            static ::$instances['postmeta'] = [];
         }
 
         $instances = & static ::$instances['postmeta'];

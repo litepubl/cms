@@ -90,11 +90,11 @@ class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
                 imagedestroy($image);
 
                 $db->updateassoc(
-                    array(
+                    [
                     'id' => $item['idthumb'],
                     'width' => $size['width'],
                     'height' => $size['height']
-                    )
+                    ]
                 );
             }
         }

@@ -337,7 +337,7 @@ return false;
     {
 $urls = $this->getDownloadUrls($version);
 
-        $cmd = array();
+        $cmd = [];
         $cmd[] = 'cd ' . $this->getApp()->paths->backup;
         $cmd[] = 'wget ' . $urls[0];
         $cmd[] = 'cd ' . $this->getApp()->paths->home;

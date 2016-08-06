@@ -22,10 +22,10 @@ class View extends \litepubl\post\View
     {
         $lang = Lang::i('ticket');
         $args = new Args();
-        foreach (array(
+        foreach ([
             'state',
             'prio'
-        ) as $prop) {
+        ] as $prop) {
             $value = $this->$prop;
             $args->$prop = $lang->$value;
         }

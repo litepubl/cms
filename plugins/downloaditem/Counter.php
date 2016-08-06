@@ -27,7 +27,7 @@ class Counter extends \litepubl\core\Items implements \litepubl\core\ResponsiveI
         $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'downloaditemscount.txt';
         if (@file_exists($filename) && ($s = @file_get_contents($filename))) {
             @unlink($filename);
-            $stat = array();
+            $stat = [];
             $a = explode("\n", $s);
             foreach ($a as $id) {
                 $id = (int)$id;

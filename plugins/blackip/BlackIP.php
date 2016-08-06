@@ -18,8 +18,8 @@ class BlackIP extends \litepubl\core\Plugin
     protected function create()
     {
         parent::create();
-        $this->addmap('ip', array());
-        $this->addmap('words', array());
+        $this->addmap('ip', []);
+        $this->addmap('words', []);
         $this->data['ipstatus'] = 'hold';
         $this->data['wordstatus'] = 'hold';
     }

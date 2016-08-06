@@ -67,12 +67,12 @@ class Merger extends \litepubl\core\Items
         }
 
         if (!isset($this->items[$section])) {
-            $this->items[$section] = array(
-                'files' => array(
+            $this->items[$section] = [
+                'files' => [
                     $filename
-                ) ,
-                'texts' => array()
-            );
+                ] ,
+                'texts' => []
+            ];
         } else {
             if (in_array($filename, $this->items[$section]['files'])) {
                 return false;
@@ -147,9 +147,9 @@ class Merger extends \litepubl\core\Items
         } else {
             //insert after
             array_splice(
-                $this->items[$section]['files'], $i + 1, 0, array(
+                $this->items[$section]['files'], $i + 1, 0, [
                 $dst
-                )
+                ]
             );
         }
         $this->save();
@@ -159,12 +159,12 @@ class Merger extends \litepubl\core\Items
     {
         $this->lock();
         if (isset($this->items[$section])) {
-            $this->items[$section]['files'] = array();
+            $this->items[$section]['files'] = [];
         } else {
-            $this->items[$section] = array(
-                'files' => array() ,
-                'texts' => array()
-            );
+            $this->items[$section] = [
+                'files' => [] ,
+                'texts' => []
+            ];
         }
 
         $a = explode("\n", trim($s));
@@ -182,12 +182,12 @@ class Merger extends \litepubl\core\Items
         }
 
         if (!isset($this->items[$section])) {
-            $this->items[$section] = array(
-                'files' => array() ,
-                'texts' => array(
+            $this->items[$section] = [
+                'files' => [] ,
+                'texts' => [
                     $key => $s
-                )
-            );
+                ]
+            ];
         } else {
             if (in_array($s, $this->items[$section]['texts'])) {
                 return false;

@@ -65,14 +65,14 @@ class Comments extends \litepubl\core\Items
         $filter = Filter::i();
         $filtered = $filter->filtercomment($content);
 
-        $item = array(
+        $item = [
             'post' => $idpost,
             'parent' => 0,
             'author' => (int)$idauthor,
             'posted' => Str::sqlDate() ,
             'content' => $filtered,
             'status' => $status
-        );
+        ];
 
         $id = (int)$this->db->add($item);
         $item['id'] = $id;
@@ -80,14 +80,14 @@ class Comments extends \litepubl\core\Items
         $this->items[$id] = $item;
 
         $this->getdb($this->rawtable)->add(
-            array(
+            [
             'id' => $id,
             'created' => Str::sqlDate() ,
             'modified' => Str::sqlDate() ,
             'ip' => $ip,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-            )
+            ]
         );
 
         $this->added(['id' => $id]);
@@ -104,12 +104,12 @@ class Comments extends \litepubl\core\Items
         $filtered = Filter::i()->filtercomment($content);
         $this->db->setvalue($id, 'content', $filtered);
         $this->getdb($this->rawtable)->updateassoc(
-            array(
+            [
             'id' => $id,
             'modified' => Str::sqlDate() ,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-            )
+            ]
         );
 
         if (isset($this->items[$id])) {
@@ -137,11 +137,11 @@ class Comments extends \litepubl\core\Items
     public function setStatus($id, $status)
     {
         if (!in_array(
-            $status, array(
+            $status, [
             'approved',
             'hold',
             'spam'
-            )
+            ]
         )) {
             return false;
         }
@@ -215,28 +215,28 @@ class Comments extends \litepubl\core\Items
     public function insert($idauthor, $content, $ip, $posted, $status)
     {
         $filtered = Filter::i()->filtercomment($content);
-        $item = array(
+        $item = [
             'post' => $this->pid,
             'parent' => 0,
             'author' => $idauthor,
             'posted' => Str::sqlDate($posted) ,
             'content' => $filtered,
             'status' => $status
-        );
+        ];
 
         $id = $this->db->add($item);
         $item['rawcontent'] = $content;
         $this->items[$id] = $item;
 
         $this->getdb($this->rawtable)->add(
-            array(
+            [
             'id' => $id,
             'created' => Str::sqlDate($posted) ,
             'modified' => Str::sqlDate() ,
             'ip' => $ip,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-            )
+            ]
         );
 
         return $id;
@@ -286,9 +286,9 @@ class Comments extends \litepubl\core\Items
         $lang = Lang::i('comment');
 
         $tml = strtr(
-            $theme->templates['content.post.templatecomments.comments.comment'], array(
+            $theme->templates['content.post.templatecomments.comments.comment'], [
             '$quotebuttons' => $view->comstatus != 'closed' ? $theme->templates['content.post.templatecomments.comments.comment.quotebuttons'] : ''
-            )
+            ]
         );
 
         $index = $from;

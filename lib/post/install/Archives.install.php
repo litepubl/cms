@@ -28,13 +28,13 @@ function ArchivesUninstall($self)
 
 function ArchivesGetSitemap($self, $from, $count)
 {
-    $result = array();
+    $result = [];
     foreach ($self->items as $date => $item) {
-        $result[] = array(
+        $result[] = [
             'url' => $item['url'],
             'title' => $item['title'],
             'pages' => 1
-        );
+        ];
     }
     return $result;
 }

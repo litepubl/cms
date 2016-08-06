@@ -20,7 +20,7 @@ class Groups extends Perm
         parent::create();
         $this->adminclass = '\litepubl\admin\users\PermGroups';
         $this->data['author'] = false;
-        $this->data['groups'] = array();
+        $this->data['groups'] = [];
     }
 
     public function setResponse(Response $response, $obj)

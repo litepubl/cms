@@ -105,13 +105,13 @@ class Installer
 
         $this->app->poolStorage->commit();
 
-        $result = array(
+        $result = [
             'url' => $this->app->site->url,
             'email' => $this->app->options->email,
             'password' => $password,
             'name' => $this->app->site->name,
             'description' => $this->app->site->description
-        );
+        ];
 
         switch ($this->resulttype) {
         case 'json':
@@ -358,10 +358,10 @@ class Installer
 
         $dbprefix = strtolower(
             str_replace(
-                array(
+                [
                 '.',
                 '-'
-                ), '', $domain
+                ], '', $domain
             )
         ) . '_';
 
@@ -380,12 +380,12 @@ class Installer
 
     private function getLangcombo()
     {
-        $langs = array(
+        $langs = [
             'en' => 'English',
             'ru' => 'Russian'
             //'ua' => 'Ukrain'
             
-        );
+        ];
 
         $result = '';
         foreach ($langs as $lang => $value) {
@@ -411,12 +411,12 @@ class Installer
         $cm = Manager::i();
         $users = Users::i();
         $cm->idguest = $users->add(
-            array(
+            [
             'email' => '',
             'name' => Lang::get('default', 'guest') ,
             'status' => 'hold',
             'idgroups' => 'commentator'
-            )
+            ]
         );
 
         $cm->save();

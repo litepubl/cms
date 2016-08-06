@@ -78,7 +78,7 @@ class ItemsPosts extends Items
             $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(', ', $delete) . ')');
         }
         if (count($add)) {
-            $vals = array();
+            $vals = [];
             foreach ($add as $iditem) {
                 $vals[] = "($idpost, $iditem)";
             }

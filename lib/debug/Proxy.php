@@ -62,10 +62,10 @@ class Proxy
         //echo get_class($this->obj), " call $name<br>";
         $m = microtime(true);
         $r = call_user_func_array(
-            array(
+            [
             $this->obj,
             $name
-            ), $args
+            ], $args
         );
         $this->addstat(" call $name", microtime(true) - $m);
         return $r;
@@ -75,10 +75,10 @@ class Proxy
     {
         $name = get_class($this->obj) . $s;
         //echo "$name<br>";
-        static ::$trace[] = array(
+        static ::$trace[] = [
             $name,
             $time
-        );
+        ];
         if (isset(static ::$total[$name])) {
             static ::$total[$name]+= $time;
             ++static ::$counts[$name];

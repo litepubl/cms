@@ -23,17 +23,17 @@ class Header extends \litepubl\admin\Menu
     {
         $result = parent::gethead();
 
-        foreach (array(
+        foreach ([
             'header',
             'logo'
-        ) as $name) {
+        ] as $name) {
             $css = file_get_contents(__DIR__ . "/resource/css.$name.tml");
             $css = strtr(
-                $css, array(
+                $css, [
                 "\n" => '',
                 "\r" => '',
                 "'" => '"'
-                )
+                ]
             );
 
             $result.= "<script type=\"text/javascript\">litepubl.tml.$name = '$css';</script>";
@@ -98,13 +98,13 @@ class Header extends \litepubl\admin\Menu
             $merger->unlock();
 
             //file_put_contents($filename . '.tmp', $data);
-            $result = array(
+            $result = [
                 'result' => 'ok'
-            );
+            ];
         } else {
-            $result = array(
+            $result = [
                 'result' => 'error'
-            );
+            ];
         }
 
         $response->setJson(Str::toJson($result));

@@ -24,10 +24,10 @@ class Plugin extends \litepubl\core\Plugin
     {
         $theme = $event->theme;
         $theme->templates['index'] = strtr(
-            $theme->templates['index'], array(
+            $theme->templates['index'], [
             '$template.keywords' => '$metatags.keywords',
             '$template.description' => '$metatags.description',
-            )
+            ]
         );
     }
 

@@ -40,11 +40,11 @@ class GetSchema
         $lang->addsearch('views');
         $theme = Theme::i();
         return strtr(
-            $theme->templates['content.admin.combo'], array(
+            $theme->templates['content.admin.combo'], [
             '$lang.$name' => $lang->schema,
             '$name' => $name,
             '$value' => static ::items($idschema)
-            )
+            ]
         );
     }
 

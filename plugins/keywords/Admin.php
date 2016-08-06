@@ -142,7 +142,7 @@ class Admin extends \litepubl\admin\widget\Widget
             $widget->trace = $trace;
             $widget->unlock();
 
-            $plugin->blackwords = array();
+            $plugin->blackwords = [];
             $words = Str::toArray($blackwords);
             if ($this->getApp()->options->language != 'en') {
                 Lang::usefile('translit');

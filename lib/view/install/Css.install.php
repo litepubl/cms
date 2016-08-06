@@ -13,7 +13,7 @@ namespace litepubl\view;
 function CssInstall($self)
 {
     $self->lock();
-    $self->items = array();
+    $self->items = [];
     $section = 'default';
     $self->add($section, '/js/litepubl/common/css/common.min.css');
     $self->add($section, '/js/litepubl/common/css/filelist.min.css');
@@ -36,25 +36,25 @@ function CssUninstall($self)
 
 function Css_pretty_files($self)
 {
-    return array(
+    return [
         '/js/prettyphoto/css/prettyPhoto.css',
         '/js/litepubl/pretty/dialog.pretty.min.css',
-    );
+    ];
 }
 
 function Css_deprecated_files($self)
 {
-    return array(
+    return [
         '/js/litepubl/deprecated/css/align.min.css',
         '/js/litepubl/deprecated/css/button.min.css',
         '/js/litepubl/deprecated/css/table.min.css',
-    );
+    ];
 }
 
 function Css_bootstrap_files($self)
 {
-    return array(
+    return [
         '/js/litepubl/effects/css/homeimage.min.css',
         '/themes/default/css/logo.min.css'
-    );
+    ];
 }

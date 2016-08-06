@@ -32,7 +32,7 @@ class Schemes extends \litepubl\core\Items
         parent::create();
         $this->basename = 'views';
         $this->addEvents('themechanged');
-        $this->addmap('defaults', array());
+        $this->addmap('defaults', []);
     }
 
     public function add(string $name)

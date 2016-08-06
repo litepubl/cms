@@ -26,8 +26,8 @@ class Args
 
     public function __construct($thisthis = null)
     {
-        $this->callbacks = array();
-        $this->callbackParams = array();
+        $this->callbacks = [];
+        $this->callbackParams = [];
         $this->data = static ::getDefaultArgs();
         if (isset($thisthis)) {
             $this->data['$this'] = $thisthis;
@@ -38,12 +38,12 @@ class Args
     {
         if (!static ::$defaultArgs) {
             $site = static ::getAppInstance()->site;
-            static ::$defaultArgs = array(
+            static ::$defaultArgs = [
                 '$site.url' => $site->url,
                 '$site.files' => $site->files,
                 '{$site.q}' => $site->q,
                 '$site.q' => $site->q,
-            );
+            ];
         }
 
         return static ::$defaultArgs;

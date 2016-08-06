@@ -125,11 +125,11 @@ class ftp_base {
 		$this->LocalEcho=$le;
 		$this->Verbose=$verb;
 		$this->_lastaction=NULL;
-		$this->_error_array=array();
-		$this->_eol_code=array(FTP_OS_Unix=>"\n", FTP_OS_Mac=>"\r", FTP_OS_Windows=>"\r\n");
-		$this->AuthorizedTransferMode=array(FTP_AUTOASCII, FTP_ASCII, FTP_BINARY);
-		$this->OS_FullName=array(FTP_OS_Unix => 'UNIX', FTP_OS_Windows => 'WINDOWS', FTP_OS_Mac => 'MACOS');
-		$this->AutoAsciiExt=array("ASP","BAT","C","CPP","CSS","CSV","JS","H","HTM","HTML","SHTML","INI","LOG","PHP3","PHTML","PL","PERL","SH","SQL","TXT");
+		$this->_error_array=[];
+		$this->_eol_code=[FTP_OS_Unix=>"\n", FTP_OS_Mac=>"\r", FTP_OS_Windows=>"\r\n"];
+		$this->AuthorizedTransferMode=[FTP_AUTOASCII, FTP_ASCII, FTP_BINARY];
+		$this->OS_FullName=[FTP_OS_Unix => 'UNIX', FTP_OS_Windows => 'WINDOWS', FTP_OS_Mac => 'MACOS'];
+		$this->AutoAsciiExt=["ASP","BAT","C","CPP","CSS","CSV","JS","H","HTM","HTML","SHTML","INI","LOG","PHP3","PHTML","PL","PERL","SH","SQL","TXT"];
 		$this->_port_available=($port_mode==TRUE);
 		$this->SendMSG("Staring FTP client class".($this->_port_available?"":" without PORT mode support"));
 		$this->_connected=FALSE;
@@ -145,10 +145,10 @@ class ftp_base {
 		$this->Passive(!$this->_port_available);
 		$this->_login="anonymous";
 		$this->_password="anon@ftp.com";
-		$this->_features=array();
+		$this->_features=[];
 	    $this->OS_local=FTP_OS_Unix;
 		$this->OS_remote=FTP_OS_Unix;
-		$this->features=array();
+		$this->features=[];
 		if(strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') $this->OS_local=FTP_OS_Windows;
 		elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'MAC') $this->OS_local=FTP_OS_Mac;
 	}
@@ -164,7 +164,7 @@ class ftp_base {
 	function parselisting($line) {
 		$is_windows = ($this->OS_remote == FTP_OS_Windows);
 		if ($is_windows && preg_match("/([0-9]{2})-([0-9]{2})-([0-9]{2}) +([0-9]{2}):([0-9]{2})(AM|PM) +([0-9]+|<DIR>) +(.+)/",$line,$lucifer)) {
-			$b = array();
+			$b = [];
 			if ($lucifer[3]<70) { $lucifer[3]+=2000; } else { $lucifer[3]+=1900; } // 4digit year fix
 			$b['isdir'] = ($lucifer[7]=="<DIR>");
 			if ( $b['isdir'] )
@@ -184,7 +184,7 @@ class ftp_base {
 			//echo $line."\n";
 			$lcount=count($lucifer);
 			if ($lcount<8) return '';
-			$b = array();
+			$b = [];
 			$b['isdir'] = $lucifer[0]{0} === "d";
 			$b['islink'] = $lucifer[0]{0} === "l";
 			if ( $b['isdir'] )
@@ -454,7 +454,7 @@ class ftp_base {
 		if(!$this->_exec("SYST", "systype")) return FALSE;
 		if(!$this->_checkCode()) return FALSE;
 		$DATA = explode(" ", $this->_message);
-		return array($DATA[1], $DATA[3]);
+		return [$DATA[1], $DATA[3]];
 	}
 
 	function delete($pathname) {
@@ -492,7 +492,7 @@ class ftp_base {
 		if(!$this->_exec("FEAT", "features")) return FALSE;
 		if(!$this->_checkCode()) return FALSE;
 		$f=preg_split("/[".CRLF."]+/", preg_replace("/[0-9]{3}[ -].*[".CRLF."]+/", "", $this->_message), -1, PREG_SPLIT_NO_EMPTY);
-		$this->_features=array();
+		$this->_features=[];
 		foreach($f as $k=>$v) {
 			$v=explode(" ", trim($v));
 			$this->_features[array_shift($v)]=$v;
@@ -656,7 +656,7 @@ class ftp_base {
 		if(empty($remote)) $remote=".";
 		elseif(!$this->file_exists($remote) and !$this->mkdir($remote)) return FALSE;
 		if($handle = opendir($local)) {
-			$list=array();
+			$list=[];
 			while (false !== ($file = readdir($handle))) {
 				if ($file != "." && $file != "..") $list[]=$file;
 			}
@@ -796,7 +796,7 @@ class ftp_base {
 		$out=null;
 		$chunks=explode(';',$pattern);
 		foreach($chunks as $pattern) {
-			$escape=array('$','^','.','{','}','(',')','[',']','|');
+			$escape=['$','^','.','{','}','(',')','[',']','|'];
 			while(strpos($pattern,'**')!==false)
 				$pattern=str_replace('**','*',$pattern);
 			foreach($escape as $probe)
@@ -830,7 +830,7 @@ class ftp_base {
 			return false;
 		}
 
-		$dirlist = array();
+		$dirlist = [];
 		foreach($list as $k=>$v) {
 			$entry=$this->parselisting($v);
 			if ( empty($entry) )
@@ -879,7 +879,7 @@ class ftp_base {
 // <!-- --------------------------------------------------------------------------------------- -->
 // Gnre une erreur pour traitement externe  la classe
 	function PushError($fctname,$msg,$desc=false){
-		$error=array();
+		$error=[];
 		$error['time']=time();
 		$error['fctname']=$fctname;
 		$error['msg']=$msg;

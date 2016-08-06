@@ -98,10 +98,10 @@ class Json extends \litepubl\core\Events
 
         $comments = Comments::i();
         if ($comments->edit($id, $content)) {
-            return array(
+            return [
                 'id' => $id,
                 'content' => $comments->getvalue($id, 'content')
-            );
+            ];
         } else {
             return false;
         }
@@ -116,10 +116,10 @@ class Json extends \litepubl\core\Events
 
         $comments = Comments::i();
         $raw = $comments->raw->getvalue($id, 'rawcontent');
-        return array(
+        return [
             'id' => $id,
             'rawcontent' => $raw
-        );
+        ];
     }
 
     public function comments_get_hold(array $args)
@@ -137,20 +137,20 @@ class Json extends \litepubl\core\Events
             $where = "and $comments->thistable.author = " . $this->getApp()->options->user;
         }
 
-        return array(
+        return [
             'items' => $comments->getcontentwhere('hold', $where)
-        );
+        ];
     }
 
     public function comment_add(array $args)
     {
         if ($this->getApp()->options->commentsdisabled) {
-            return array(
-                'error' => array(
+            return [
+                'error' => [
                     'message' => 'Comments disabled',
                     'code' => 403
-                )
-            );
+                ]
+            ];
         }
 
         $commentform = Form::i();
@@ -166,29 +166,29 @@ class Json extends \litepubl\core\Events
     //commentform helper
     public function confirm($confirmid)
     {
-        return array(
+        return [
             'confirmid' => $confirmid,
             'code' => 'confirm',
-        );
+        ];
     }
 
     public function getErrorcontent($s)
     {
-        return array(
-            'error' => array(
+        return [
+            'error' => [
                 'message' => $s,
                 'code' => 'error'
-            )
-        );
+            ]
+        ];
     }
 
     public function sendresult($url, $cookies)
     {
-        return array(
+        return [
             'cookies' => $cookies,
             'posturl' => $url,
             'code' => 'success'
-        );
+        ];
     }
 
     public function comments_get_logged(array $args)

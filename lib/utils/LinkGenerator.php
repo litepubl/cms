@@ -36,14 +36,14 @@ class LinkGenerator extends \litepubl\core\Events
         parent::create();
         $this->basename = 'linkgenerator';
         $this->data = array_merge(
-            $this->data, array(
+            $this->data, [
             'post' => '/[title].htm',
             'menu' => '/[title].htm',
             'tag' => '/tag/[title].htm',
             'category' => '/category/[title].htm',
             'archive' => '/[year]/[month].htm',
             'file' => '/[media]/[filename]/',
-            )
+            ]
         );
         $this->data['urlencode'] = false;
         $this->addEvents('onencode');

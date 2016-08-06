@@ -640,12 +640,12 @@ class Arr
     public static function clean(array & $items)
     {
         $items = array_unique($items);
-        foreach (array(
+        foreach ([
             0,
             false,
             null,
             ''
-        ) as $v) {
+        ] as $v) {
             $i = array_search($v, $items);
             if (($i !== false) && ($items[$i] === $v)) {
                 array_splice($items, $i, 1);
@@ -656,9 +656,9 @@ class Arr
     public static function insert(array & $a, $item, $index)
     {
         array_splice(
-            $a, $index, 0, array(
+            $a, $index, 0, [
             $item
-            )
+            ]
         );
     }
 
@@ -672,9 +672,9 @@ class Arr
         $item = $a[$oldindex];
         array_splice($a, $oldindex, 1);
         array_splice(
-            $a, $newindex, 0, array(
+            $a, $newindex, 0, [
             $item
-            )
+            ]
         );
     }
 
@@ -686,7 +686,7 @@ class Arr
 
     public static function reIndex(array & $a)
     {
-        array_splice($a, count($a), 0, array());
+        array_splice($a, count($a), 0, []);
     }
 
     public static function append(array & $a, int $index, $value): int
@@ -1456,10 +1456,10 @@ class Data
             if (is_array($args)) {
                 array_unshift($args, $this);
             } else {
-                $args = array(
+                $args = [
                     $this,
                     $args
-                );
+                ];
             }
 
             return \call_user_func_array($fnc, $args);
@@ -1566,7 +1566,7 @@ class DB
     {
         $this->sql = '';
         $this->table = '';
-        $this->history = array();
+        $this->history = [];
 
         $this->setconfig($this->getconfig());
     }
@@ -1641,10 +1641,10 @@ class DB
     {
         $this->sql = $sql;
         if (Config::$debug) {
-            $this->history[] = array(
+            $this->history[] = [
                 'sql' => $sql,
                 'time' => 0
-            );
+            ];
             $microtime = microtime(true);
         }
 
@@ -1748,7 +1748,7 @@ class DB
 
     public function assoc2update(array $a)
     {
-        $list = array();
+        $list = [];
         foreach ($a as $name => $value) {
             if (is_bool($value)) {
                 $value = $value ? '1' : '0';
@@ -1813,7 +1813,7 @@ class DB
 
     public function assocToRow(array $a)
     {
-        $vals = array();
+        $vals = [];
         foreach ($a as $val) {
             if (is_bool($val)) {
                 $vals[] = $val ? '1' : '0';
@@ -1929,7 +1929,7 @@ class DB
 
     public function getValues($names, $where)
     {
-        $result = array();
+        $result = [];
         $res = $this->query("select $names from $this->prefix$this->table where $where");
         if (is_object($res)) {
             while ($r = $res->fetch_row()) {
@@ -1941,7 +1941,7 @@ class DB
 
     public function res2array($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($row = $res->fetch_row()) {
                 $result[] = $row;
@@ -1952,7 +1952,7 @@ class DB
 
     public function res2id($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($row = $res->fetch_row()) {
                 $result[] = $row[0];
@@ -1963,7 +1963,7 @@ class DB
 
     public function res2assoc($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($r = $res->fetch_assoc()) {
                 $result[] = $r;
@@ -1974,7 +1974,7 @@ class DB
 
     public function res2items($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($r = $res->fetch_assoc()) {
                 $result[(int)$r['id']] = $r;
@@ -2207,11 +2207,11 @@ class Item extends Data
         if ($id != $this->id) {
             $name = $this->instanceName;
             if (!isset(static ::$instances)) {
-                static ::$instances = array();
+                static ::$instances = [];
             }
 
             if (!isset(static ::$instances[$name])) {
-                static ::$instances[$name] = array();
+                static ::$instances[$name] = [];
             }
 
             $a = & static ::$instances[$this->instanceName];
@@ -2291,9 +2291,9 @@ class Items extends Events
         $this->addEvents('added', 'deleted');
         $this->idprop = 'id';
         if ($this->dbversion) {
-            $this->items = array();
+            $this->items = [];
         } else {
-            $this->addmap('items', array());
+            $this->addmap('items', []);
             $this->addmap('autoid', 0);
         }
     }
@@ -2346,10 +2346,10 @@ class Items extends Events
     public function res2items($res)
     {
         if (!$res) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
         $db = $this->getApp()->db;
         while ($item = $db->fetchassoc($res)) {
             $id = $item[$this->idprop];
@@ -2478,7 +2478,7 @@ class MemvarMemcache extends CacheMemcache
     public function __construct()
     {
         parent::__construct();
-        $this->data = array();
+        $this->data = [];
     }
 
     public function getRevision(): int
@@ -2533,7 +2533,7 @@ class MemvarMysql
     {
         $this->table = 'memstorage';
         $this->checked = false;
-        $this->data = array();
+        $this->data = [];
         $this->lifetime = 10800;
     }
 
@@ -2656,7 +2656,7 @@ class MemvarMysql
     public function saveAll()
     {
         $db = $this->getdb();
-        $a = array();
+        $a = [];
         foreach ($this->data as $name => $value) {
             $a[] = sprintf('(\'%s\',%s)', $name, $db->quote($this->serialize($value)));
         }
@@ -2781,9 +2781,9 @@ class Options extends Events
         unset($this->cache);
         $this->gmt = 0;
         $this->group = '';
-        $this->idgroups = array();
-        $this->addmap('groupnames', array());
-        $this->addmap('parentgroups', array());
+        $this->idgroups = [];
+        $this->addmap('groupnames', []);
+        $this->addmap('parentgroups', []);
     }
 
     public function afterLoad()
@@ -3177,17 +3177,17 @@ class Pool extends Data
         parent::create();
         $this->basename = 'poolitems';
         $this->perpool = 20;
-        $this->pool = array();
-        $this->modified = array();
+        $this->pool = [];
+        $this->modified = [];
     }
 
     public function getItem($id)
     {
         if (isset($this->ongetitem)) {
             return call_user_func_array(
-                $this->ongetitem, array(
+                $this->ongetitem, [
                 $id
-                )
+                ]
             );
         }
 
@@ -3204,7 +3204,7 @@ class Pool extends Data
         if ($data = $this->getApp()->cache->get($this->getFilename($idpool))) {
             $this->pool[$idpool] = $data;
         } else {
-            $this->pool[$idpool] = array();
+            $this->pool[$idpool] = [];
         }
     }
 
@@ -3747,10 +3747,10 @@ class Site extends Events
         parent::create();
         $this->basename = 'site';
         $this->addmap(
-            'mapoptions', array(
+            'mapoptions', [
             'version' => 'version',
             'language' => 'language',
-            )
+            ]
         );
     }
 
@@ -3832,7 +3832,7 @@ class Site extends Events
     {
         if ($id = $this->getApp()->options->user) {
             if (!isset($this->users)) {
-                $this->users = array();
+                $this->users = [];
             }
 
             if (isset($this->users[$id])) {
@@ -4194,7 +4194,7 @@ class Str
 
     public static function toIntArray(string $s): array
     {
-        $result = array();
+        $result = [];
         foreach (explode(',', $s) as $value) {
             if ($v = (int)trim($value)) {
                 $result[] = $v;
@@ -4273,9 +4273,9 @@ class Classes extends Items
         $this->dbversion = false;
         $this->addevents('onnewitem', 'onrename');
         $this->addmap('namespaces', ['litepubl' => 'lib']);
-        $this->addmap('kernel', array());
-        $this->addmap('remap', array());
-        $this->instances = array();
+        $this->addmap('kernel', []);
+        $this->addmap('remap', []);
+        $this->instances = [];
         $this->classmap = [];
         $this->aliases = [];
         $this->loaded = [];
@@ -4721,7 +4721,7 @@ class Router extends Items
         $this->addEvents('beforerequest', 'afterrequest');
         $this->data['disabledcron'] = false;
         $this->data['redirdom'] = false;
-        $this->addmap('prefilter', array());
+        $this->addmap('prefilter', []);
     }
 
     public function request(Context $context)
@@ -4876,7 +4876,7 @@ class Router extends Items
         }
 
         if (!in_array(
-            $type, array(
+            $type, [
             'normal',
             'get',
             'usernormal',
@@ -4884,7 +4884,7 @@ class Router extends Items
             'begin',
             'end',
             'regexp'
-            )
+            ]
         )) {
             $this->error(sprintf('Invalid url type %s', $type));
         }
@@ -4893,22 +4893,22 @@ class Router extends Items
             $this->error(sprintf('Url "%s" already exists', $url));
         }
 
-        $item = array(
+        $item = [
             'url' => $url,
             'class' => $class,
             'arg' => (string)$arg,
             'type' => $type
-        );
+        ];
 
         $item['id'] = $this->db->add($item);
         $this->items[$item['id']] = $item;
 
         if (in_array(
-            $type, array(
+            $type, [
             'begin',
             'end',
             'regexp'
-            )
+            ]
         )) {
             $this->prefilter[] = $item;
             $this->save();
@@ -5188,13 +5188,13 @@ class Cron extends Events implements ResponsiveInterface
 
     protected function doAdd(string $type, string $class, string $func, $arg): int
     {
-        $id = $this->db->add(array(
+        $id = $this->db->add([
             'date' => Str::sqlDate() ,
             'type' => $type,
             'class' => $class,
             'func' => $func,
             'arg' => serialize($arg)
-        ));
+        ]);
 
         $this->added(['id' => $id]);
         return $id;
@@ -5202,26 +5202,26 @@ class Cron extends Events implements ResponsiveInterface
 
     public function addNightly(string $class, string $func, $arg): int
     {
-        $id = $this->db->add(array(
+        $id = $this->db->add([
             'date' => date('Y-m-d 03:15:00', time()) ,
             'type' => 'day',
             'class' => $class,
             'func' => $func,
             'arg' => serialize($arg)
-        ));
+        ]);
         $this->added(['id' => $id]);
         return $id;
     }
 
     public function addWeekly(string $class,string $func, $arg): int
     {
-        $id = $this->db->add(array(
+        $id = $this->db->add([
             'date' => date('Y-m-d 03:15:00', time()) ,
             'type' => 'week',
             'class' => $class,
             'func' => $func,
             'arg' => serialize($arg)
-        ));
+        ]);
 
         $this->added(['id' => $id]);
         return $id;
@@ -5247,10 +5247,10 @@ class Cron extends Events implements ResponsiveInterface
 
         static ::$pinged = true;
 
-        register_shutdown_function(array(
+        register_shutdown_function([
         static ::i() ,
             'ping'
-        ));
+        ]);
     }
 
     public function ping()
@@ -5367,7 +5367,7 @@ class ItemsPosts extends Items
             $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(', ', $delete) . ')');
         }
         if (count($add)) {
-            $vals = array();
+            $vals = [];
             foreach ($add as $iditem) {
                 $vals[] = "($idpost, $iditem)";
             }
@@ -5444,10 +5444,10 @@ class Users extends Items
     public function res2items($res)
     {
         if (!$res) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
         $db = $this->getApp()->db;
         while ($item = $db->fetchassoc($res)) {
             $id = (int)$item['id'];
@@ -5481,10 +5481,10 @@ class Users extends Items
         $db->delete("iduser = $id");
         foreach ($idgroups as $idgroup) {
             $db->add(
-                array(
+                [
                 'iduser' => $id,
                 'idgroup' => $idgroup
-                )
+                ]
             );
         }
     }
@@ -5627,11 +5627,11 @@ class Users extends Items
         }
 
         $this->db->updateassoc(
-            array(
+            [
             'id' => $id,
             'cookie' => $cookie,
             'expired' => $expired
-            )
+            ]
         );
     }
 }
@@ -5666,7 +5666,7 @@ abstract class AbstractHandler implements HandlerInterface
      * @var FormatterInterface
      */
     protected $formatter;
-    protected $processors = array();
+    protected $processors = [];
 
     /**
      * @param int     $level  The minimum logging level at which this handler will be triggered
@@ -5980,7 +5980,7 @@ class Logger implements LoggerInterface
      *
      * @var array $levels Logging levels
      */
-    protected static $levels = array(
+    protected static $levels = [
         self::DEBUG     => 'DEBUG',
         self::INFO      => 'INFO',
         self::NOTICE    => 'NOTICE',
@@ -5989,7 +5989,7 @@ class Logger implements LoggerInterface
         self::CRITICAL  => 'CRITICAL',
         self::ALERT     => 'ALERT',
         self::EMERGENCY => 'EMERGENCY',
-    );
+    ];
 
     /**
      * @var \DateTimeZone
@@ -6027,7 +6027,7 @@ class Logger implements LoggerInterface
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
      */
-    public function __construct($name, array $handlers = array(), array $processors = array())
+    public function __construct($name, array $handlers = [], array $processors = [])
     {
         $this->name = $name;
         $this->handlers = $handlers;
@@ -6092,7 +6092,7 @@ class Logger implements LoggerInterface
      */
     public function setHandlers(array $handlers)
     {
-        $this->handlers = array();
+        $this->handlers = [];
         foreach (array_reverse($handlers) as $handler) {
             $this->pushHandler($handler);
         }
@@ -6172,7 +6172,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addRecord($level, $message, array $context = array())
+    public function addRecord($level, $message, array $context = [])
     {
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
@@ -6184,7 +6184,7 @@ class Logger implements LoggerInterface
         $handlerKey = null;
         reset($this->handlers);
         while ($handler = current($this->handlers)) {
-            if ($handler->isHandling(array('level' => $level))) {
+            if ($handler->isHandling(['level' => $level])) {
                 $handlerKey = key($this->handlers);
                 break;
             }
@@ -6207,15 +6207,15 @@ class Logger implements LoggerInterface
         }
         $ts->setTimezone(static::$timezone);
 
-        $record = array(
+        $record = [
             'message' => (string) $message,
             'context' => $context,
             'level' => $level,
             'level_name' => $levelName,
             'channel' => $this->name,
             'datetime' => $ts,
-            'extra' => array(),
-        );
+            'extra' => [],
+        ];
 
         foreach ($this->processors as $processor) {
             $record = call_user_func($processor, $record);
@@ -6239,7 +6239,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addDebug($message, array $context = array())
+    public function addDebug($message, array $context = [])
     {
         return $this->addRecord(static::DEBUG, $message, $context);
     }
@@ -6251,7 +6251,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addInfo($message, array $context = array())
+    public function addInfo($message, array $context = [])
     {
         return $this->addRecord(static::INFO, $message, $context);
     }
@@ -6263,7 +6263,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addNotice($message, array $context = array())
+    public function addNotice($message, array $context = [])
     {
         return $this->addRecord(static::NOTICE, $message, $context);
     }
@@ -6275,7 +6275,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addWarning($message, array $context = array())
+    public function addWarning($message, array $context = [])
     {
         return $this->addRecord(static::WARNING, $message, $context);
     }
@@ -6287,7 +6287,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addError($message, array $context = array())
+    public function addError($message, array $context = [])
     {
         return $this->addRecord(static::ERROR, $message, $context);
     }
@@ -6299,7 +6299,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addCritical($message, array $context = array())
+    public function addCritical($message, array $context = [])
     {
         return $this->addRecord(static::CRITICAL, $message, $context);
     }
@@ -6311,7 +6311,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addAlert($message, array $context = array())
+    public function addAlert($message, array $context = [])
     {
         return $this->addRecord(static::ALERT, $message, $context);
     }
@@ -6323,7 +6323,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addEmergency($message, array $context = array())
+    public function addEmergency($message, array $context = [])
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
     }
@@ -6376,9 +6376,9 @@ class Logger implements LoggerInterface
      */
     public function isHandling($level)
     {
-        $record = array(
+        $record = [
             'level' => $level,
-        );
+        ];
 
         foreach ($this->handlers as $handler) {
             if ($handler->isHandling($record)) {
@@ -6399,7 +6399,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         $level = static::toMonologLevel($level);
 
@@ -6415,7 +6415,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function debug($message, array $context = array())
+    public function debug($message, array $context = [])
     {
         return $this->addRecord(static::DEBUG, $message, $context);
     }
@@ -6429,7 +6429,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function info($message, array $context = array())
+    public function info($message, array $context = [])
     {
         return $this->addRecord(static::INFO, $message, $context);
     }
@@ -6443,7 +6443,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function notice($message, array $context = array())
+    public function notice($message, array $context = [])
     {
         return $this->addRecord(static::NOTICE, $message, $context);
     }
@@ -6457,7 +6457,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function warn($message, array $context = array())
+    public function warn($message, array $context = [])
     {
         return $this->addRecord(static::WARNING, $message, $context);
     }
@@ -6471,7 +6471,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function warning($message, array $context = array())
+    public function warning($message, array $context = [])
     {
         return $this->addRecord(static::WARNING, $message, $context);
     }
@@ -6485,7 +6485,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function err($message, array $context = array())
+    public function err($message, array $context = [])
     {
         return $this->addRecord(static::ERROR, $message, $context);
     }
@@ -6499,7 +6499,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function error($message, array $context = array())
+    public function error($message, array $context = [])
     {
         return $this->addRecord(static::ERROR, $message, $context);
     }
@@ -6513,7 +6513,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function crit($message, array $context = array())
+    public function crit($message, array $context = [])
     {
         return $this->addRecord(static::CRITICAL, $message, $context);
     }
@@ -6527,7 +6527,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function critical($message, array $context = array())
+    public function critical($message, array $context = [])
     {
         return $this->addRecord(static::CRITICAL, $message, $context);
     }
@@ -6541,7 +6541,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function alert($message, array $context = array())
+    public function alert($message, array $context = [])
     {
         return $this->addRecord(static::ALERT, $message, $context);
     }
@@ -6555,7 +6555,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function emerg($message, array $context = array())
+    public function emerg($message, array $context = [])
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
     }
@@ -6569,7 +6569,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function emergency($message, array $context = array())
+    public function emergency($message, array $context = [])
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
     }
@@ -6614,7 +6614,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function emergency($message, array $context = array());
+    public function emergency($message, array $context = []);
 
     /**
      * Action must be taken immediately.
@@ -6626,7 +6626,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function alert($message, array $context = array());
+    public function alert($message, array $context = []);
 
     /**
      * Critical conditions.
@@ -6637,7 +6637,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function critical($message, array $context = array());
+    public function critical($message, array $context = []);
 
     /**
      * Runtime errors that do not require immediate action but should typically
@@ -6647,7 +6647,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function error($message, array $context = array());
+    public function error($message, array $context = []);
 
     /**
      * Exceptional occurrences that are not errors.
@@ -6659,7 +6659,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function warning($message, array $context = array());
+    public function warning($message, array $context = []);
 
     /**
      * Normal but significant events.
@@ -6668,7 +6668,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function notice($message, array $context = array());
+    public function notice($message, array $context = []);
 
     /**
      * Interesting events.
@@ -6679,7 +6679,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function info($message, array $context = array());
+    public function info($message, array $context = []);
 
     /**
      * Detailed debug information.
@@ -6688,7 +6688,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function debug($message, array $context = array());
+    public function debug($message, array $context = []);
 
     /**
      * Logs with an arbitrary level.
@@ -6698,7 +6698,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function log($level, $message, array $context = array());
+    public function log($level, $message, array $context = []);
 }
 
 //vendor/psr/log/Psr/Log/LogLevel.php
@@ -6764,7 +6764,7 @@ class ErrorHandler
     private $hasFatalErrorHandler;
     private $fatalLevel;
     private $reservedMemory;
-    private static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
+    private static $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
 
     public function __construct(LoggerInterface $logger)
     {
@@ -6782,7 +6782,7 @@ class ErrorHandler
      * @param  int|false       $fatalLevel     a LogLevel::* constant, or false to disable fatal error handling
      * @return ErrorHandler
      */
-    public static function register(LoggerInterface $logger, $errorLevelMap = array(), $exceptionLevel = null, $fatalLevel = null)
+    public static function register(LoggerInterface $logger, $errorLevelMap = [], $exceptionLevel = null, $fatalLevel = null)
     {
         $handler = new static($logger);
         if ($errorLevelMap !== false) {
@@ -6800,16 +6800,16 @@ class ErrorHandler
 
     public function registerExceptionHandler($level = null, $callPrevious = true)
     {
-        $prev = set_exception_handler(array($this, 'handleException'));
+        $prev = set_exception_handler([$this, 'handleException']);
         $this->uncaughtExceptionLevel = $level;
         if ($callPrevious && $prev) {
             $this->previousExceptionHandler = $prev;
         }
     }
 
-    public function registerErrorHandler(array $levelMap = array(), $callPrevious = true, $errorTypes = -1)
+    public function registerErrorHandler(array $levelMap = [], $callPrevious = true, $errorTypes = -1)
     {
-        $prev = set_error_handler(array($this, 'handleError'), $errorTypes);
+        $prev = set_error_handler([$this, 'handleError'], $errorTypes);
         $this->errorLevelMap = array_replace($this->defaultErrorLevelMap(), $levelMap);
         if ($callPrevious) {
             $this->previousErrorHandler = $prev ?: true;
@@ -6818,7 +6818,7 @@ class ErrorHandler
 
     public function registerFatalHandler($level = null, $reservedMemorySize = 20)
     {
-        register_shutdown_function(array($this, 'handleFatalError'));
+        register_shutdown_function([$this, 'handleFatalError']);
 
         $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
         $this->fatalLevel = $level;
@@ -6827,7 +6827,7 @@ class ErrorHandler
 
     protected function defaultErrorLevelMap()
     {
-        return array(
+        return [
             E_ERROR             => LogLevel::CRITICAL,
             E_WARNING           => LogLevel::WARNING,
             E_PARSE             => LogLevel::ALERT,
@@ -6843,7 +6843,7 @@ class ErrorHandler
             E_RECOVERABLE_ERROR => LogLevel::ERROR,
             E_DEPRECATED        => LogLevel::NOTICE,
             E_USER_DEPRECATED   => LogLevel::NOTICE,
-        );
+        ];
     }
 
     /**
@@ -6854,7 +6854,7 @@ class ErrorHandler
         $this->logger->log(
             $this->uncaughtExceptionLevel === null ? LogLevel::ERROR : $this->uncaughtExceptionLevel,
             sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()),
-            array('exception' => $e)
+            ['exception' => $e]
         );
 
         if ($this->previousExceptionHandler) {
@@ -6867,7 +6867,7 @@ class ErrorHandler
     /**
      * @private
      */
-    public function handleError($code, $message, $file = '', $line = 0, $context = array())
+    public function handleError($code, $message, $file = '', $line = 0, $context = [])
     {
         if (!(error_reporting() & $code)) {
             return;
@@ -6876,7 +6876,7 @@ class ErrorHandler
         // fatal error codes are ignored if a fatal error handler is present as well to avoid duplicate log entries
         if (!$this->hasFatalErrorHandler || !in_array($code, self::$fatalErrors, true)) {
             $level = isset($this->errorLevelMap[$code]) ? $this->errorLevelMap[$code] : LogLevel::CRITICAL;
-            $this->logger->log($level, self::codeToString($code).': '.$message, array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'context' => $context));
+            $this->logger->log($level, self::codeToString($code).': '.$message, ['code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'context' => $context]);
         }
 
         if ($this->previousErrorHandler === true) {
@@ -6898,7 +6898,7 @@ class ErrorHandler
             $this->logger->log(
                 $this->fatalLevel === null ? LogLevel::ALERT : $this->fatalLevel,
                 'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
-                array('code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'])
+                ['code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line']]
             );
 
             if ($this->logger instanceof Logger) {
@@ -7047,7 +7047,7 @@ class StreamHandler extends AbstractProcessingHandler
             }
             $this->createDir();
             $this->errorMessage = null;
-            set_error_handler(array($this, 'customErrorHandler'));
+            set_error_handler([$this, 'customErrorHandler']);
             $this->stream = fopen($this->url, 'a');
             if ($this->filePermission !== null) {
                 @chmod($this->url, $this->filePermission);
@@ -7105,7 +7105,7 @@ class StreamHandler extends AbstractProcessingHandler
         $dir = $this->getDirFromStream($this->url);
         if (null !== $dir && !is_dir($dir)) {
             $this->errorMessage = null;
-            set_error_handler(array($this, 'customErrorHandler'));
+            set_error_handler([$this, 'customErrorHandler']);
             $status = mkdir($dir, 0777, true);
             restore_error_handler();
             if (false === $status) {
@@ -7140,7 +7140,7 @@ abstract class MailHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records)
     {
-        $messages = array();
+        $messages = [];
 
         foreach ($records as $record) {
             if ($record['level'] < $this->level) {
@@ -7167,7 +7167,7 @@ abstract class MailHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $this->send((string) $record['formatted'], array($record));
+        $this->send((string) $record['formatted'], [$record]);
     }
 
     protected function getHighestRecord(array $records)
@@ -7345,7 +7345,7 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         if (is_array($data) || $data instanceof \Traversable) {
-            $normalized = array();
+            $normalized = [];
 
             $count = 1;
             foreach ($data as $key => $value) {
@@ -7394,12 +7394,12 @@ class NormalizerFormatter implements FormatterInterface
             throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.get_class($e));
         }
 
-        $data = array(
+        $data = [
             'class' => get_class($e),
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile().':'.$e->getLine(),
-        );
+        ];
 
         $trace = $e->getTrace();
         foreach ($trace as $frame) {
@@ -7480,7 +7480,7 @@ class NormalizerFormatter implements FormatterInterface
         if (is_string($data)) {
             $this->detectAndCleanUtf8($data);
         } elseif (is_array($data)) {
-            array_walk_recursive($data, array($this, 'detectAndCleanUtf8'));
+            array_walk_recursive($data, [$this, 'detectAndCleanUtf8']);
         } else {
             $this->throwEncodeError($code, $data);
         }
@@ -7548,8 +7548,8 @@ class NormalizerFormatter implements FormatterInterface
                 $data
             );
             $data = str_replace(
-                array('¤', '¦', '¨', '´', '¸', '¼', '½', '¾'),
-                array('€', 'Š', 'š', 'Ž', 'ž', 'Œ', 'œ', 'Ÿ'),
+                ['¤', '¦', '¨', '´', '¸', '¼', '½', '¾'],
+                ['€', 'Š', 'š', 'Ž', 'ž', 'Œ', 'œ', 'Ÿ'],
                 $data
             );
         }
@@ -7721,7 +7721,7 @@ class LineFormatter extends NormalizerFormatter
             return $str;
         }
 
-        return str_replace(array("\r\n", "\r", "\n"), ' ', $str);
+        return str_replace(["\r\n", "\r", "\n"], ' ', $str);
     }
 }
 
@@ -7787,7 +7787,7 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Translates Monolog log levels to html color priorities.
      */
-    protected $logLevels = array(
+    protected $logLevels = [
         Logger::DEBUG     => '#cccccc',
         Logger::INFO      => '#468847',
         Logger::NOTICE    => '#3a87ad',
@@ -7796,7 +7796,7 @@ class HtmlFormatter extends NormalizerFormatter
         Logger::CRITICAL  => '#FF7708',
         Logger::ALERT     => '#C12A19',
         Logger::EMERGENCY => '#000000',
-    );
+    ];
 
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format
@@ -8113,7 +8113,7 @@ class LogException
 
             if (isset($item['args']) && count($item['args'])) {
                 $result.= "\n";
-                $args = array();
+                $args = [];
                 foreach ($item['args'] as $arg) {
                     $args[] = static ::dump($arg);
                 }

@@ -32,12 +32,12 @@ class Admin extends \litepubl\admin\widget\Custom
             $args->mode = 'edit';
             $args->idwidget = $id;
         } else {
-            $item = array(
+            $item = [
                 'title' => '',
                 'content' => '',
                 'template' => 'widget',
-                'cats' => array()
-            );
+                'cats' => []
+            ];
             $args->mode = 'add';
             $args->idwidget = 0;
         }

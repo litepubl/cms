@@ -69,10 +69,10 @@ class JsonFiles extends \litepubl\core\Events
         $where = $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' . $this->getApp()->options->user;
 
         $files = Files::i();
-        $result = array(
+        $result = [
             'count' => (int)$files->db->getcount(" parent = 0 $where") ,
-            'files' => array()
-        );
+            'files' => []
+        ];
 
         if ($idpost) {
             $list = $files->itemsposts->getitems($idpost);
@@ -113,9 +113,9 @@ class JsonFiles extends \litepubl\core\Events
             $result = array_merge($result, $thumbs);
         }
 
-        return array(
+        return [
             'files' => $result
-        );
+        ];
     }
 
     public function files_setprops(array $args)
@@ -138,9 +138,9 @@ class JsonFiles extends \litepubl\core\Events
         $r = $this->onProps(['item' => $item]);
         $item = $files->escape($r['item']);
         $files->db->updateassoc($item);
-        return array(
+        return [
             'item' => $item
-        );
+        ];
     }
 
     public function canUpload(): bool
@@ -184,10 +184,10 @@ class JsonFiles extends \litepubl\core\Events
         $item = $files->db->getitem($id);
         $files->items[$id] = $item;
 
-        $result = array(
+        $result = [
             'id' => $id,
             'item' => $item
-        );
+        ];
 
         if ((int)$item['preview']) {
             $result['preview'] = $files->db->getitem($item['preview']);

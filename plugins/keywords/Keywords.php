@@ -23,7 +23,7 @@ class Keywords extends \litepubl\core\Plugin
     public function create()
     {
         parent::create();
-        $this->addmap('blackwords', array());
+        $this->addmap('blackwords', []);
     }
 
     public function urlDeleted(int $id)
@@ -84,7 +84,7 @@ class Keywords extends \litepubl\core\Plugin
             return;
         }
 
-        foreach (array(
+        foreach ([
             'site:',
             'inurl:',
             'link:',
@@ -96,7 +96,7 @@ class Keywords extends \litepubl\core\Plugin
             'http:',
             'ftp:',
             '\\'
-        ) as $k) {
+        ] as $k) {
             if (false !== strpos($keywords, $k)) {
                 return;
             }
@@ -116,10 +116,10 @@ class Keywords extends \litepubl\core\Plugin
                 return;
             }
         }
-        $widget->links[] = array(
+        $widget->links[] = [
             'url' => 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'],
             'text' => $keywords
-        );
+        ];
 
         $widget->save();
     }

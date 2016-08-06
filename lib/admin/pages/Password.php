@@ -74,11 +74,11 @@ class Password extends Form
             $ulist = new UList($admin);
             return $admin->getSection(
                 $lang->uselogin, $ulist->get(
-                    array(
+                    [
                     $theme->link('/admin/login/', $lang->controlpanel) ,
                     'E-Mail' => sprintf('<span class="email">%s</span>', $email) ,
                     $lang->password => sprintf('<span class="password">%s</span>', $password) ,
-                    )
+                    ]
                 )
             );
         } else {

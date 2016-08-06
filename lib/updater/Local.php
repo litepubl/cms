@@ -195,7 +195,7 @@ class Local extends Remote
         $path = str_replace('/', DIRECTORY_SEPARATOR, $path);
         $path = rtrim($path, DIRECTORY_SEPARATOR);
         if ($dir = @dir($path)) {
-            $result = array();
+            $result = [];
             while (false !== ($name = $dir->read())) {
                 if (($name == '.') || ($name == '..') || ($name == '.svn')) {
                     continue;

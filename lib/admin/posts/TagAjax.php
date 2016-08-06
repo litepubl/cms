@@ -63,7 +63,7 @@ class TagAjax extends Ajax
         if ($id == 0) {
             $schemes = Schemes::i();
             $name = $type == 'tags' ? 'tag' : 'category';
-            $item = array(
+            $item = [
                 'title' => '',
                 'idschema' => isset($schemes->defaults[$name]) ? $schemes->defaults[$name] : 1,
                 'idperm' => 0,
@@ -74,7 +74,7 @@ class TagAjax extends Ajax
                 'keywords' => '',
                 'description' => '',
                 'head' => ''
-            );
+            ];
         } else {
             $item = $tags->getitem($id);
         }
@@ -82,10 +82,10 @@ class TagAjax extends Ajax
         switch ($_GET['get']) {
         case 'view':
             if ($id > 0) {
-                foreach (array(
+                foreach ([
                     'includechilds',
                     'includeparents'
-                ) as $prop) {
+                ] as $prop) {
                     $item[$prop] = ((int)$item[$prop]) > 0;
                 }
             }

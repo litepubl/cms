@@ -12,7 +12,7 @@ namespace litepubl\view;
 
 class Vars
 {
-    public $keys = array();
+    public $keys = [];
 
     public function __destruct()
     {

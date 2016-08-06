@@ -34,11 +34,11 @@ class Perm extends \litepubl\core\Item
     protected function create()
     {
         parent::create();
-        $this->data = array(
+        $this->data = [
             'id' => 0,
             'class' => get_class($this) ,
             'name' => 'permission'
-        );
+        ];
     }
 
     public function getOwner()

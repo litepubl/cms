@@ -29,46 +29,46 @@ class EmailAuth extends \litepubl\core\Plugin
         $password = trim($args['password']);
 
         if ($mesg = Login::authError($email, $password)) {
-            return array(
-                'error' => array(
+            return [
+                'error' => [
                     'message' => $mesg,
                     'code' => 403
-                )
-            );
+                ]
+            ];
         }
 
         $expired = time() + 31536000;
         $cookie = Str::md5Uniq();
         $this->getApp()->options->setCookies($cookie, $expired);
 
-        return array(
+        return [
             'id' => $this->getApp()->options->user,
             'pass' => $cookie,
             'regservice' => 'email',
             'adminflag' => $this->getApp()->options->ingroup('admin') ? 'true' : '',
-        );
+        ];
     }
 
     public function email_reg(array $args)
     {
         if (!$this->getApp()->options->usersenabled || !$this->getApp()->options->reguser) {
-            return array(
-            'error' => array(
+            return [
+            'error' => [
                 'message' => Lang::admin('users')->regdisabled,
                 'code' => 403,
-            )
-            );
+            ]
+            ];
         }
 
         try {
             return RegUser::i()->regUser($args['email'], $args['name']);
         } catch (\Exception $e) {
-            return array(
-                'error' => array(
+            return [
+                'error' => [
                     'message' => $e->getMessage() ,
                     'code' => $e->getCode()
-                )
-            );
+                ]
+            ];
         }
     }
 
@@ -77,12 +77,12 @@ class EmailAuth extends \litepubl\core\Plugin
         try {
             return Password::i()->restore($args['email']);
         } catch (\Exception $e) {
-            return array(
-                'error' => array(
+            return [
+                'error' => [
                     'message' => $e->getMessage() ,
                     'code' => $e->getCode()
-                )
-            );
+                ]
+            ];
         }
     }
 }

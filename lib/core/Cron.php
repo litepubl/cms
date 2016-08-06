@@ -182,13 +182,13 @@ class Cron extends Events implements ResponsiveInterface
 
     protected function doAdd(string $type, string $class, string $func, $arg): int
     {
-        $id = $this->db->add(array(
+        $id = $this->db->add([
             'date' => Str::sqlDate() ,
             'type' => $type,
             'class' => $class,
             'func' => $func,
             'arg' => serialize($arg)
-        ));
+        ]);
 
         $this->added(['id' => $id]);
         return $id;
@@ -196,26 +196,26 @@ class Cron extends Events implements ResponsiveInterface
 
     public function addNightly(string $class, string $func, $arg): int
     {
-        $id = $this->db->add(array(
+        $id = $this->db->add([
             'date' => date('Y-m-d 03:15:00', time()) ,
             'type' => 'day',
             'class' => $class,
             'func' => $func,
             'arg' => serialize($arg)
-        ));
+        ]);
         $this->added(['id' => $id]);
         return $id;
     }
 
     public function addWeekly(string $class,string $func, $arg): int
     {
-        $id = $this->db->add(array(
+        $id = $this->db->add([
             'date' => date('Y-m-d 03:15:00', time()) ,
             'type' => 'week',
             'class' => $class,
             'func' => $func,
             'arg' => serialize($arg)
-        ));
+        ]);
 
         $this->added(['id' => $id]);
         return $id;
@@ -241,10 +241,10 @@ class Cron extends Events implements ResponsiveInterface
 
         static ::$pinged = true;
 
-        register_shutdown_function(array(
+        register_shutdown_function([
         static ::i() ,
             'ping'
-        ));
+        ]);
     }
 
     public function ping()

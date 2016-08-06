@@ -72,11 +72,11 @@ class Item extends Data
         if ($id != $this->id) {
             $name = $this->instanceName;
             if (!isset(static ::$instances)) {
-                static ::$instances = array();
+                static ::$instances = [];
             }
 
             if (!isset(static ::$instances[$name])) {
-                static ::$instances[$name] = array();
+                static ::$instances[$name] = [];
             }
 
             $a = & static ::$instances[$this->instanceName];

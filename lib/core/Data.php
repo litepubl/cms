@@ -196,10 +196,10 @@ class Data
             if (is_array($args)) {
                 array_unshift($args, $this);
             } else {
-                $args = array(
+                $args = [
                     $this,
                     $args
-                );
+                ];
             }
 
             return \call_user_func_array($fnc, $args);

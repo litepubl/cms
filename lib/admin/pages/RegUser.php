@@ -82,11 +82,11 @@ class RegUser extends Form
             $this->backurl = $_SESSION['backurl'];
             $users = Users::i();
             $id = $users->add(
-                array(
+                [
                 'password' => $_SESSION['password'],
                 'name' => $_SESSION['name'],
                 'email' => $_SESSION['email']
-                )
+                ]
             );
 
             session_destroy();

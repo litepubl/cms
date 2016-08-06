@@ -62,22 +62,22 @@ class StaticPages extends \litepubl\admin\Menu
         }
 
         $result.= Table::fromitems(
-            $pages->items, array(
-            array(
+            $pages->items, [
+            [
                 $lang->title,
                 '<a href="$site.url$url">$title</a>'
-            ) ,
-            array(
+            ] ,
+            [
                 'center',
                 $lang->edit,
                 "<a href='$this->adminurl=\$id'>$lang->edit</a>"
-            ) ,
-            array(
+            ] ,
+            [
                 'center',
                 $lang->delete,
                 "<a href='$this->adminurl=\$id&action=delete'>$lang->delete</a>"
-            ) ,
-            )
+            ] ,
+            ]
         );
 
         return $result;

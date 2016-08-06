@@ -26,21 +26,21 @@ class Admincatbread extends \litepubl\admin\Panel
         $args->showsimilar = $plugin->showsimilar;
 
         $lang->addsearch('sortnametags');
-        $sort = array(
+        $sort = [
             'title' => $lang->title,
             'itemscount' => $lang->count,
             'customorder' => $lang->customorder,
-        );
+        ];
 
         $args->sort = $this->theme->comboItems($sort, $plugin->childsortname);
 
-        $pos = array(
+        $pos = [
             'replace' => $lang->replace,
             'top' => $lang->top,
             'before' => $lang->before,
             'after' => $lang->after,
             'nothing' => $lang->nothing,
-        );
+        ];
 
         $args->breadpos = $this->theme->comboItems($pos, $plugin->breadpos);
         $args->similarpos = $this->theme->comboItems($pos, $plugin->similarpos);

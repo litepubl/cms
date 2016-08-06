@@ -39,46 +39,46 @@ class System extends Common
         switch ($name) {
         case 'system.listMethods':
         case 'mt.listMethods':
-            return array(
+            return [
                     'array'
-                );
+                ];
 
         case 'system.methodSignature':
-            return array(
+            return [
                     'array',
                     'string'
-                );
+                ];
 
         case 'system.methodHelp':
-            return array(
+            return [
                     'string',
                     'string'
-                );
+                ];
 
         case 'system.multicall':
-            return array(
+            return [
                     'array',
                     'array'
-                );
+                ];
 
         case 'methodExist':
-            return array(
+            return [
                     'boolean',
                     'string'
-                );
+                ];
 
         case 'demo.addTwoNumbers':
         case 'sample.add':
-            return array(
+            return [
                     'int',
                     'int',
                     'int'
-                );
+                ];
 
         case 'demo.sayHello':
-            return array(
+            return [
                     'string'
-                );
+                ];
 
         default:
             return new IXR_Error(-32601, "server error. requested signature of $name method does not exist.");
@@ -92,15 +92,15 @@ class System extends Common
 
     public function multicall(array $items)
     {
-        $result = array();
+        $result = [];
         $caller = Server::i();
         foreach ($items as $item) {
             $r = $caller->call($item['methodName'], isset($item['params']) ? $item['params'] : null);
             if ($r instanceof IXR_Error) {
-                $result[] = array(
+                $result[] = [
                     'faultCode' => $r->code,
                     'faultName' => $r->message
-                );
+                ];
             } else {
                 $result[] = $r;
             }

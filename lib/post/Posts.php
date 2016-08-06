@@ -56,7 +56,7 @@ class Posts extends \litepubl\core\Items
          $this->data['archivescount'] = 0;
         $this->data['revision'] = 0;
         $this->data['syncmeta'] = false;
-        $this->addmap('itemcoclasses', array());
+        $this->addmap('itemcoclasses', []);
     }
 
     public function getItem($id)
@@ -83,7 +83,7 @@ class Posts extends \litepubl\core\Items
     {
         //exclude already loaded items
         if (!isset(Post::$instances['post'])) {
-            Post::$instances['post'] = array();
+            Post::$instances['post'] = [];
         }
 
         $loaded = array_keys(Post::$instances['post']);
@@ -100,11 +100,11 @@ class Posts extends \litepubl\core\Items
     public function setAssoc(array $items)
     {
         if (!count($items)) {
-            return array();
+            return [];
         }
 
-        $result = array();
-        $fileitems = array();
+        $result = [];
+        $fileitems = [];
         foreach ($items as $a) {
             $post = Post::newPost($a['class']);
             $post->setAssoc($a);
@@ -153,10 +153,10 @@ class Posts extends \litepubl\core\Items
         );
 
         if (!count($items)) {
-            return array();
+            return [];
         }
 
-        $subclasses = array();
+        $subclasses = [];
         foreach ($items as $id => $item) {
             if (empty($item['class'])) {
                 $items[$id]['class'] = static ::POSTCLASS;
@@ -363,7 +363,7 @@ class Posts extends \litepubl\core\Items
     public function stripDrafts(array $items): array
     {
         if (count($items) == 0) {
-            return array();
+            return [];
         }
 
         $list = implode(', ', $items);
@@ -382,10 +382,10 @@ class Posts extends \litepubl\core\Items
     public function getSitemap($from, $count)
     {
         return $this->externalfunc(
-            __class__, 'Getsitemap', array(
+            __class__, 'Getsitemap', [
             $from,
             $count
-            )
+            ]
         );
     }
 }

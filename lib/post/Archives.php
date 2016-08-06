@@ -44,7 +44,7 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
     {
         $posts = Posts::i();
         $this->lock();
-        $this->items = array();
+        $this->items = [];
         //sort archive by months
         $linkgen = LinkGenerator::i();
         $db = $this->db;
@@ -55,14 +55,14 @@ class Archives extends \litepubl\core\Items implements \litepubl\view\ViewInterf
 
         while ($r = $db->fetchassoc($res)) {
             $this->date = mktime(0, 0, 0, $r['month'], 1, $r['year']);
-            $this->items[$this->date] = array(
+            $this->items[$this->date] = [
                 'idurl' => 0,
                 'url' => $linkgen->Createlink($this, 'archive', false) ,
                 'title' => Lang::date($this->date, 'F Y') ,
                 'year' => $r['year'],
                 'month' => $r['month'],
                 'count' => $r['count']
-            );
+            ];
         }
 
         $this->CreatePageLinks();
@@ -154,10 +154,10 @@ year(posted) = '{$item['year']}' and month(posted) = '{$item['month']}'
     public function getSitemap($from, $count)
     {
         return $this->externalfunc(
-            get_class($this), 'GetSitemap', array(
+            get_class($this), 'GetSitemap', [
             $from,
             $count
-            )
+            ]
         );
     }
 }

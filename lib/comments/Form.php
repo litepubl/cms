@@ -188,12 +188,12 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
                     $iduser = $cm->addcomuser($values['name'], $values['email'], $values['url'], $values['ip']);
                 }
 
-                $cookies = array();
-                foreach (array(
+                $cookies = [];
+                foreach ([
                 'name',
                 'email',
                 'url'
-                ) as $field) {
+                ] as $field) {
                     $cookies["comuser_$field"] = $values[$field];
                 }
                 break;
@@ -248,7 +248,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
 
         $app->cache->clearUrl($url);
-        return $this->sendResult($app->site->url . $url, isset($cookies) ? $cookies : array());
+        return $this->sendResult($app->site->url . $url, isset($cookies) ? $cookies : []);
     }
 
     public function confirmRecevied($confirmid)

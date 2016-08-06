@@ -32,9 +32,9 @@ class Items extends Events
         $this->addEvents('added', 'deleted');
         $this->idprop = 'id';
         if ($this->dbversion) {
-            $this->items = array();
+            $this->items = [];
         } else {
-            $this->addmap('items', array());
+            $this->addmap('items', []);
             $this->addmap('autoid', 0);
         }
     }
@@ -87,10 +87,10 @@ class Items extends Events
     public function res2items($res)
     {
         if (!$res) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
         $db = $this->getApp()->db;
         while ($item = $db->fetchassoc($res)) {
             $id = $item[$this->idprop];

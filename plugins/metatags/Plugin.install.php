@@ -23,10 +23,10 @@ function PluginInstall($self)
 
     $t = MainView::i();
     $t->heads = strtr(
-        $t->heads, array(
+        $t->heads, [
         '$template.keywords' => '$metatags.keywords',
         '$template.description' => '$metatags.description',
-        )
+        ]
     );
     $t->save();
 
@@ -38,10 +38,10 @@ function PluginUninstall($self)
 {
     $t = MainView::i();
     $t->heads = strtr(
-        $t->heads, array(
+        $t->heads, [
         '$metatags.keywords' => '$template.keywords',
         '$metatags.description' => '$template.description'
-        )
+        ]
     );
     $t->save();
 

@@ -32,8 +32,8 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
     {
         parent::create();
         $this->basename = 'openidserver';
-        $this->addmap('keys', array());
-        $this->addmap('trusted', array());
+        $this->addmap('keys', []);
+        $this->addmap('trusted', []);
         $this->data['confirm'] = false;
         $this->data['usebigmath'] = false;
         $this->url = '/openid/';
@@ -210,11 +210,11 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
     private function error_get($url, $key)
     {
         return $this->RedirKeys(
-            $url, array(
+            $url, [
             '
     mode' => 'error',
             'error' => $this->GetMessage($key, 'badrequest')
-            )
+            ]
         );
     }
 
@@ -227,7 +227,7 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
 
     private function append_openid($array)
     {
-        $r = array();
+        $r = [];
         foreach ($array as $key => $value) {
             $r["openid.$key"] = $value;
         }
@@ -257,11 +257,11 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
 
         $this->NewKeys($assoc_handle, $shared_secret, $lifetime);
 
-        $keys = array(
+        $keys = [
             'assoc_type' => $assoc_type,
             'expires_in' => $lifetime,
             'assoc_handle' => $assoc_handle
-        );
+        ];
 
         switch ($session_type) {
         case 'DH-SHA1':
@@ -299,10 +299,10 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         $shared_secret = new_secret();
         $lifetime = time() + 1200;
 
-        $this->keys[$assoc_handle] = array(
+        $this->keys[$assoc_handle] = [
             'secret' => $shared_secret,
             'expired' => $lifetime
-        );
+        ];
         $this->save();
     }
 
@@ -327,9 +327,9 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         $signed = $_REQUEST['openid_signed'];
 
         // Prepare the return keys
-        $keys = array(
+        $keys = [
             'openid.mode' => 'id_res'
-        );
+        ];
 
         // Invalidate the assoc handle if we need to
         if (!empty($_REQUEST['openid_invalidate_handle'])) {
@@ -485,11 +485,11 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
             }
         }
 
-        $keys = array(
+        $keys = [
             'mode' => 'id_res',
             'identity' => $this->getApp()->site->url . $this->url,
             'return_to' => $return_to
-        );
+        ];
 
         if (!($shared_secret = $this->GetSecret($assoc_handle))) {
             if ($assoc_handle != null) {
@@ -554,21 +554,21 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
             return true;
         }
 
-        $keys = array();
-        $parts = array();
-        $req = array(
+        $keys = [];
+        $parts = [];
+        $req = [
             'scheme',
             'host'
-        );
-        $bad = array(
+        ];
+        $bad = [
             'fragment',
             'pass',
             'user'
-        );
-        foreach (array(
+        ];
+        foreach ([
             'parent',
             'child'
-        ) as $name) {
+        ] as $name) {
             $parts[$name] = @parse_url($$name);
             if ($parts[$name] === false) {
                 return false;
@@ -579,7 +579,7 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
                 return false;
             }
 
-            if (array_intersect($keys[$name], $bad) != array()) {
+            if (array_intersect($keys[$name], $bad) != []) {
                 return false;
             }
 

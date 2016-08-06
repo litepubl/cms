@@ -30,11 +30,11 @@ class RegUser extends \litepubl\core\Items
         }
 
         $this->db->insert(
-            array(
+            [
             'id' => $id,
             'service' => $service,
             'uid' => $uid
-            )
+            ]
         );
 
         $this->added($id, $service);

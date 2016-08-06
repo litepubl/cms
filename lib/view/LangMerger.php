@@ -33,12 +33,12 @@ class LangMerger extends Merger
     public function addsection($name, $section, array $items)
     {
         if (!isset($this->items[$name])) {
-            $this->items[$name] = array(
-                'files' => array() ,
-                'texts' => array(
+            $this->items[$name] = [
+                'files' => [] ,
+                'texts' => [
                     $section => $items
-                )
-            );
+                ]
+            ];
         } elseif (!isset($this->items[$name]['texts'][$section])) {
             $this->items[$name]['texts'][$section] = $items;
         } else {
@@ -62,7 +62,7 @@ class LangMerger extends Merger
     public function merge()
     {
         $lang = Lang::getInstance();
-        $lang->ini = array();
+        $lang->ini = [];
         foreach ($this->items as $name => $items) {
             $this->parse($name);
         }
@@ -74,7 +74,7 @@ class LangMerger extends Merger
         if (!isset($this->items[$name])) {
             $this->error(sprintf('The "%s" partition not found', $name));
         }
-        $ini = array();
+        $ini = [];
         foreach ($this->items[$name]['files'] as $filename) {
             $realfilename = $this->getRealFilename($filename);
             if (!file_exists($realfilename)) {

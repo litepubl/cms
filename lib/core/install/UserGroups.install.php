@@ -23,13 +23,13 @@ function UserGroupsInstall($self)
     $moder = $self->add('moderator', $lang->moderator, '/admin/comments/');
     $commentator = $self->add('commentator', $lang->commentator, '/admin/comments/');
 
-    $self->items[$author]['parents'] = array(
+    $self->items[$author]['parents'] = [
         $editor
-    );
-    $self->items[$commentator]['parents'] = array(
+    ];
+    $self->items[$commentator]['parents'] = [
         $moder,
         $author
-    );
+    ];
 
     $self->unlock();
 }

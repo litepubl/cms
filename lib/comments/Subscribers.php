@@ -36,7 +36,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
         $this->basename = 'subscribers';
         $this->data['fromemail'] = '';
         $this->data['enabled'] = true;
-        $this->addmap('blacklist', array());
+        $this->addmap('blacklist', []);
     }
 
     public function getStorage()
@@ -112,7 +112,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
         $this->data['blacklist'] = $a;
         $this->save();
 
-        $dblist = array();
+        $dblist = [];
         foreach ($a as $s) {
             if ($s == '') {
                 continue;
@@ -184,7 +184,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
 
         $users = Users::i();
         $users->loaditems($subscribers);
-        $list = array();
+        $list = [];
         foreach ($subscribers as $uid) {
             $user = $users->getitem($uid);
             if ($user['status'] == 'hold') {
@@ -214,14 +214,14 @@ class Subscribers extends \litepubl\core\ItemsPosts
                 $admin.= rawurlencode($user['cookie']);
             }
 
-            $list[] = array(
+            $list[] = [
                 'fromname' => $this->getApp()->site->name,
                 'fromemail' => $this->fromemail,
                 'toname' => $user['name'],
                 'toemail' => $email,
                 'subject' => $subject,
                 'body' => $body . $admin
-            );
+            ];
         }
 
         if (count($list)) {

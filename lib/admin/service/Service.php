@@ -28,11 +28,11 @@ class Service extends Login
         $result.= $this->doupdate($_GET);
         $tb = $this->newTable();
         $result.= $tb->props(
-            array(
+            [
             'postscount' => Posts::i()->count,
             'commentscount' => Manager::i()->count,
             'version' => $this->getApp()->site->version
-            )
+            ]
         );
 
         $updater = Updater::i();

@@ -175,7 +175,7 @@ class Cache extends \litepubl\core\Items
 
     public function onClearCache()
     {
-        $this->items = array();
+        $this->items = [];
         $this->modified = false;
     }
 
@@ -385,11 +385,11 @@ class Contextual extends Widget
     private function isValue(string $name): bool
     {
         return in_array(
-            $name, array(
+            $name, [
             'ajax',
             'order',
             'sidebar'
-            )
+            ]
         );
     }
 
@@ -448,7 +448,7 @@ class Custom extends Widget
         parent::create();
         $this->basename = 'widgets.custom';
         $this->adminclass = '\litepubl\admin\widget\Custom';
-        $this->addMap('items', array());
+        $this->addMap('items', []);
         $this->addEvents('added', 'deleted');
     }
 
@@ -481,11 +481,11 @@ class Custom extends Widget
         $widgets = Widgets::i();
         $widgets->lock();
         $id = $widgets->addExt($this, $title, $template);
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'title' => $title,
             'content' => $content,
             'template' => $template
-        );
+        ];
 
         $sidebars = Sidebars::i($idschema);
         $sidebars->add($id);
@@ -497,11 +497,11 @@ class Custom extends Widget
 
     public function edit(int $id, string $title, string $content, string $template)
     {
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'title' => $title,
             'content' => $content,
             'template' => $template
-        );
+        ];
         $this->save();
 
         $widgets = Widgets::i();
@@ -563,7 +563,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         $this->basename = 'widgets.links';
         $this->template = 'links';
         $this->adminclass = '\litepubl\admin\widget\Links';
-        $this->addmap('items', array());
+        $this->addmap('items', []);
         $this->addmap('autoid', 0);
         $this->redirlink = '/linkswidget/';
         $this->data['redir'] = false;
@@ -605,11 +605,11 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
 
     public function add(string $url, string $title, string $text): int
     {
-        $this->items[++$this->autoid] = array(
+        $this->items[++$this->autoid] = [
             'url' => $url,
             'title' => $title,
             'text' => $text
-        );
+        ];
 
         $this->save();
         $this->added(['id' => $this->autoid]);
@@ -623,11 +623,11 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
             return false;
         }
 
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'url' => $url,
             'title' => $title,
             'text' => $text
-        );
+        ];
         $this->save();
     }
 
@@ -671,7 +671,7 @@ class Meta extends Widget
         $this->basename = 'widget.meta';
         $this->template = 'meta';
         $this->adminclass = '\litepubl\admin\widget\Meta';
-        $this->addmap('items', array());
+        $this->addmap('items', []);
     }
 
     public function getDeftitle(): string
@@ -681,11 +681,11 @@ class Meta extends Widget
 
     public function add(string $name, string $url, string $title)
     {
-        $this->items[$name] = array(
+        $this->items[$name] = [
             'enabled' => true,
             'url' => $url,
             'title' => $title
-        );
+        ];
         $this->save();
     }
 
@@ -760,10 +760,10 @@ class Order extends Widget
         }
 
         Arr::insert(
-            $items, array(
+            $items, [
             'id' => $this->id,
             'ajax' => $this->ajax
-            ), $order
+            ], $order
         );
     }
 }
@@ -848,10 +848,10 @@ class Sidebars extends \litepubl\core\Data
             return $this->error("Unknown sidebar $index");
         }
 
-        $item = array(
+        $item = [
             'id' => $id,
             'ajax' => $ajax
-        );
+        ];
         if (($order < 0) || ($order > count($this->items[$index]))) {
             $this->items[$index][] = $item;
         } else {
@@ -921,10 +921,10 @@ class Sidebars extends \litepubl\core\Data
         foreach ($sidebars as $i => $sidebar) {
             foreach ($sidebar as $j => $item) {
                 if ($id == $item['id']) {
-                    return array(
+                    return [
                         $i,
                         $j
-                    );
+                    ];
                 }
             }
         }
@@ -1175,30 +1175,30 @@ class Widgets extends \litepubl\core\Items
         $this->addEvents('onwidget', 'onadminlogged', 'onadminpanel', 'onsidebar', 'onFindContext');
         $this->basename = 'widgets';
         $this->currentSidebar = 0;
-        $this->addMap('classes', array());
+        $this->addMap('classes', []);
     }
 
     public function add(Widget $widget): int
     {
         return $this->addItem(
-            array(
+            [
             'class' => get_class($widget) ,
             'cache' => $widget->cache,
             'title' => $widget->getTitle(0) ,
             'template' => $widget->template
-            )
+            ]
         );
     }
 
     public function addExt(Widget $widget, string $title, string $template): int
     {
         return $this->addItem(
-            array(
+            [
             'class' => get_class($widget) ,
             'cache' => $widget->cache,
             'title' => $title,
             'template' => $template
-            )
+            ]
         );
     }
 
@@ -1207,15 +1207,15 @@ class Widgets extends \litepubl\core\Items
         $this->lock();
         $id = $this->add($widget);
         if (!isset($this->classes[$class])) {
-            $this->classes[$class] = array();
+            $this->classes[$class] = [];
         }
 
-        $this->classes[$class][] = array(
+        $this->classes[$class][] = [
             'id' => $id,
             'order' => 0,
             'sidebar' => 0,
             'ajax' => false
-        );
+        ];
 
         $this->unlock();
         return $id;
@@ -1257,7 +1257,7 @@ class Widgets extends \litepubl\core\Items
     public function deleteClass(string $class): bool
     {
         $this->unbind($class);
-        $deleted = array();
+        $deleted = [];
         foreach ($this->items as $id => $item) {
             if ($class == $item['class']) {
                 unset($this->items[$id]);
@@ -1361,7 +1361,7 @@ class Widgets extends \litepubl\core\Items
             $schema = Schema::i(1);
         }
 
-        $items = isset($schema->sidebars[$sidebar]) ? $schema->sidebars[$sidebar] : array();
+        $items = isset($schema->sidebars[$sidebar]) ? $schema->sidebars[$sidebar] : [];
 
         $subItems = $this->getSubItems($view, $sidebar);
         $items = $this->joinItems($items, $subItems);
@@ -1390,7 +1390,7 @@ class Widgets extends \litepubl\core\Items
 
     private function getSubItems(ViewInterface $view, int $sidebar): array
     {
-        $result = array();
+        $result = [];
         foreach ($this->classes as $class => $items) {
             if ($view instanceof $class) {
                 foreach ($items as $item) {
@@ -1747,11 +1747,11 @@ class CommonTags extends Widget
     {
         $view = $this->getView();
         $items = $this->owner->getView()->getSorted(
-            array(
+            [
             'item' => $view->getItem($this->template, $sidebar) ,
             'subcount' => $view->getTml($sidebar, $this->template, 'subcount') ,
             'subitems' => $this->showsubitems ? $view->getTml($sidebar, $this->template, 'subitems') : ''
-            ), 0, $this->sortname, $this->maxcount, $this->showcount
+            ], 0, $this->sortname, $this->maxcount, $this->showcount
         );
 
         return str_replace('$parent', 0, $view->getContent($items, $this->template, $sidebar));

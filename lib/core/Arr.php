@@ -31,12 +31,12 @@ class Arr
     public static function clean(array & $items)
     {
         $items = array_unique($items);
-        foreach (array(
+        foreach ([
             0,
             false,
             null,
             ''
-        ) as $v) {
+        ] as $v) {
             $i = array_search($v, $items);
             if (($i !== false) && ($items[$i] === $v)) {
                 array_splice($items, $i, 1);
@@ -47,9 +47,9 @@ class Arr
     public static function insert(array & $a, $item, $index)
     {
         array_splice(
-            $a, $index, 0, array(
+            $a, $index, 0, [
             $item
-            )
+            ]
         );
     }
 
@@ -63,9 +63,9 @@ class Arr
         $item = $a[$oldindex];
         array_splice($a, $oldindex, 1);
         array_splice(
-            $a, $newindex, 0, array(
+            $a, $newindex, 0, [
             $item
-            )
+            ]
         );
     }
 
@@ -77,7 +77,7 @@ class Arr
 
     public static function reIndex(array & $a)
     {
-        array_splice($a, count($a), 0, array());
+        array_splice($a, count($a), 0, []);
     }
 
     public static function append(array & $a, int $index, $value): int

@@ -38,12 +38,12 @@ class Users extends \litepubl\admin\Menu
             if (!$users->itemExists($id)) {
                 $result.= $this->notfound();
             } else {
-                $statuses = array();
-                foreach (array(
+                $statuses = [];
+                foreach ([
                 'approved',
                 'hold',
                 'comuser'
-                ) as $name) {
+                ] as $name) {
                     $statuses[$name] = $lang->$name;
                 }
 
@@ -88,7 +88,7 @@ class Users extends \litepubl\admin\Menu
 
             $tabs = $this->newTabs();
             $tabs->add($lang->login, '[text=email] [password=password] [text=name] [hidden=action]');
-            $tabs->add($lang->groups, GetPerm::groups(array()));
+            $tabs->add($lang->groups, GetPerm::groups([]));
 
             $result.= $admin->form($tabs->get(), $args);
         }
@@ -113,10 +113,10 @@ class Users extends \litepubl\admin\Menu
             $args->search = $search;
             $search = $this->getApp()->db->escape($search);
             $search = strtr(
-                $search, array(
+                $search, [
                 '%' => '\%',
                 '_' => '\_'
-                )
+                ]
             );
 
             $where = "email like '%$search%' or name like '%$search%' ";
@@ -126,35 +126,35 @@ class Users extends \litepubl\admin\Menu
 
         $items = $users->select($where, " order by id desc limit $from, $perpage");
         if (!$items) {
-            $items = array();
+            $items = [];
         }
 
         $tb = $this->newTable();
         $tb->args->adminurl = $this->adminurl;
         $tb->setowner($users);
         $tb->setStruct(
-            array(
+            [
             $tb->checkbox('user') ,
-            array(
+            [
                 $lang->edit,
                 sprintf('<a href="%s=$id&action=edit">$name</a>', $this->adminurl)
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->status,
                 '$status'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->comments,
                 sprintf('<a href="%s">%s</a>', Link::url('/admin/comments/', 'iduser=$id'), $lang->comments)
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->page,
                 sprintf('<a href="%s">%s</a>', Link::url('/admin/users/pages/', 'id=$id'), $lang->page)
-            ) ,
-            )
+            ] ,
+            ]
         );
 
         $form = new Form($args);

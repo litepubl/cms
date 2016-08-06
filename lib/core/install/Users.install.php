@@ -19,7 +19,7 @@ function UsersInstall($self)
     $manager->CreateTable($self->grouptable, file_get_contents($dir . 'users.groups.sql'));
 
     $id = $self->db->add(
-        array(
+        [
         'email' => $self->getApp()->options->email,
         'name' => $self->getApp()->site->author,
         'website' => $self->getApp()->site->url . '/',
@@ -28,13 +28,13 @@ function UsersInstall($self)
         'expired' => Str::sqlDate() ,
         'status' => 'approved',
         'idgroups' => '1',
-        )
+        ]
     );
 
     $self->setgroups(
-        $id, array(
+        $id, [
         1
-        )
+        ]
     );
 }
 

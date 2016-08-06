@@ -29,10 +29,10 @@ function LangMergerInstall($self)
     if ($self->getApp()->options->language != 'en') {
         $self->add('translit', "lib/languages/$lang/translit.ini");
     } else {
-        $self->items['translit'] = array(
-            'files' => array() ,
-            'texts' => array()
-        );
+        $self->items['translit'] = [
+            'files' => [] ,
+            'texts' => []
+        ];
     }
 
     $self->add('install', "lib/languages/$lang/install.ini");

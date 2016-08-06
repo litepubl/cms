@@ -122,7 +122,7 @@ class Parser extends BaseParser
             }
 
             if (!isset($this->theme->templates['sidebars'][$this->sidebar_index])) {
-                $this->theme->templates['sidebars'][$this->sidebar_index] = array();
+                $this->theme->templates['sidebars'][$this->sidebar_index] = [];
             }
         }
 
@@ -166,11 +166,11 @@ class Parser extends BaseParser
     public function getInfo($name, $child)
     {
         if (Str::begin($child, '$template.sidebar') && (substr_count($child, '.') == 1)) {
-            return array(
+            return [
                 'path' => substr($child, strlen('$template.')) ,
                 'tag' => $child,
                 'replace' => $child
-            );
+            ];
         }
 
         if (($name == '') || ($child == '$template')) {
@@ -195,19 +195,19 @@ class Parser extends BaseParser
 
         $path = $name . '.' . substr($child, 1);
         if (Str::begin($name, 'sidebar')) {
-            return array(
+            return [
                 'path' => $path,
                 'tag' => $child,
                 'replace' => $child == '$classes' ? '' : $child
-            );
+            ];
         }
 
         if (Str::begin($name, '$custom') || Str::begin($name, 'custom')) {
-            return array(
+            return [
                 'path' => $path,
                 'tag' => $child,
                 'replace' => ''
-            );
+            ];
         }
 
         $this->error("The '$child' not found in path '$name'");
@@ -254,13 +254,13 @@ class Parser extends BaseParser
     {
         $sidebar = & $this->theme->templates['sidebars'][$this->sidebar_index];
         if (!isset($sidebar[$widgetname])) {
-            foreach (array(
+            foreach ([
                 '',
                 '.items',
                 '.item',
                 '.subcount',
                 '.subitems'
-            ) as $name) {
+            ] as $name) {
                 $sidebar[$widgetname . $name] = isset($sidebar['widget' . $name]) ? $sidebar['widget' . $name] : '';
             }
             if ($widgetname == 'meta') {
@@ -294,7 +294,7 @@ class Parser extends BaseParser
             $tag = $names[3];
             $admin = & $this->theme->templates['customadmin'];
             if (!isset($admin[$name])) {
-                $admin[$name] = array();
+                $admin[$name] = [];
             }
 
             if ($tag == 'values') {
@@ -328,13 +328,13 @@ class Parser extends BaseParser
         $excerpt = 'content.excerpts.excerpt.';
 
         //normalize filelist
-        foreach (array(
+        foreach ([
             'file',
             'image',
             'audio',
             'video',
             'flash'
-        ) as $name) {
+        ] as $name) {
             if (!isset($templates["{$post}filelist.{$name}s"]) || empty($templates["{$post}filelist.{$name}s"])) {
                 $templates["{$post}filelist.{$name}s"] = "\$$name";
             }
@@ -353,7 +353,7 @@ class Parser extends BaseParser
             $templates["{$excerpt}filelist.preview"] = $templates["{$post}filelist.preview"];
         }
 
-        foreach (array(
+        foreach ([
             'date',
             'filelist',
             'filelist.file',
@@ -373,7 +373,7 @@ class Parser extends BaseParser
             'taglinks',
             'taglinks.item',
             'taglinks.divider'
-        ) as $name) {
+        ] as $name) {
             if (empty($templates[$excerpt . $name])) {
                 $templates[$excerpt . $name] = $templates[$post . $name];
             }
@@ -383,25 +383,25 @@ class Parser extends BaseParser
         for ($i = 0; $i < count($sidebars); $i++) {
             $sidebar = & $sidebars[$i];
             foreach (static ::getWidgetNames() as $widgetname) {
-                foreach (array(
+                foreach ([
                     '',
                     '.items',
                     '.item',
                     '.subcount',
                     '.subitems'
-                ) as $name) {
+                ] as $name) {
                     if (empty($sidebar[$widgetname . $name])) {
                         $sidebar[$widgetname . $name] = $sidebar['widget' . $name];
                     }
                 }
 
                 if (in_array(
-                    $widgetname, array(
+                    $widgetname, [
                     'widget',
                     'categories',
                     'tags',
                     'archives'
-                    )
+                    ]
                 )) {
                     $v = $sidebar[$widgetname . '.item'];
                     if (!strpos($v, '$subcount')) {
@@ -416,12 +416,12 @@ class Parser extends BaseParser
         }
 
         //add spaces
-        foreach (array(
+        foreach ([
             'content.excerpts.excerpt.taglinks.divider',
             'content.post.taglinks.divider',
             'content.excerpts.excerpt.catlinks.divider',
             'content.post.catlinks.divider'
-        ) as $k) {
+        ] as $k) {
             if (substr($templates[$k], -1) != ' ') {
                 $templates[$k].= ' ';
             }
@@ -438,11 +438,11 @@ class Parser extends BaseParser
         $regform = 'content.post.templatecomments.regform';
         if (!in_array($regform, $this->parsedtags) && in_array('content.admin.editor', $this->parsedtags)) {
             $editor = strtr(
-                $templates['content.admin.editor'], array(
+                $templates['content.admin.editor'], [
                 '$lang.$name' => $this->replacelang ? Lang::i('comment')->content : '$lang.content',
                 '$name' => 'content',
                 '$value' => ''
-                )
+                ]
             );
 
             $templates[$regform] = '								<div id="before-commentform">$mesg</div>
@@ -463,14 +463,14 @@ class Parser extends BaseParser
 
     public static function getMetaclasses($s)
     {
-        $result = array(
+        $result = [
             'rss' => '',
             'comments' => '',
             'media' => '',
             'foaf' => '',
             'profile' => '',
             'sitemap' => ''
-        );
+        ];
         foreach (explode(',', $s) as $class) {
             if ($i = strpos($class, '=')) {
                 $classname = trim(substr($class, 0, $i));
@@ -517,7 +517,7 @@ class Parser extends BaseParser
 
     public static function getWidgetNames()
     {
-        return array(
+        return [
             'categories',
             'tags',
             'archives',
@@ -526,6 +526,6 @@ class Parser extends BaseParser
             'comments',
             'friends',
             'meta'
-        );
+        ];
     }
 }

@@ -25,7 +25,7 @@ class DbOptimizer extends Events
     {
         parent::create();
         $this->basename = 'db.optimizer';
-        $this->addmap('childTables', array());
+        $this->addmap('childTables', []);
         $this->addevents('postsdeleted');
     }
 
@@ -71,11 +71,11 @@ class DbOptimizer extends Events
                 $db->table = 'posts';
                 $db->delete($deleted);
 
-            foreach (array(
+            foreach ([
                 'rawposts',
                 'pages',
                 'postsmeta'
-            ) as $table) {
+            ] as $table) {
                 $db->table = $table;
                 $db->delete($deleted);
                 $this->garbagePosts($table);

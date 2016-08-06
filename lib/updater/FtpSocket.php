@@ -206,7 +206,7 @@ class FtpSocket extends Remote
             return false;
         }
 
-        $result = array();
+        $result = [];
         foreach ($list as $a) {
             $name = $a['name'];
             if (($name == '.') || ($name == '..') || ($name == '.svn')) {

@@ -258,7 +258,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         $tags->loaditems($items);
 
         $args = new Args();
-        $list = array();
+        $list = [];
 
         foreach ($items as $id) {
             $item = $tags->getitem($id);
@@ -469,10 +469,10 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
 
         $result = strtr(
-            $theme->parse($theme->templates['content.post.prevnext']), array(
+            $theme->parse($theme->templates['content.post.prevnext']), [
             '$prev' => $prev,
             '$next' => $next
-            )
+            ]
         );
         unset(Theme::$vars['prevpost'], Theme::$vars['nextpost']);
         return $result;

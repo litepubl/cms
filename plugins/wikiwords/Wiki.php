@@ -32,9 +32,9 @@ class Wiki extends \litepubl\core\Items
         $this->itemsposts = new ItemsPosts();
         $this->itemsposts->table = $this->table . 'items';
 
-        $this->fix = array();
-        $this->words = array();
-        $this->links = array();
+        $this->fix = [];
+        $this->words = [];
+        $this->links = [];
     }
 
     public function __get($name)

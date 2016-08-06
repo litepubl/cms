@@ -191,10 +191,10 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
 
         $this->geshi->set_language($lang);
         $this->geshi->set_source($content);
-        return array(
+        return [
             'content' => $this->geshi->parse_code() ,
             'style' => $this->geshi->get_stylesheet()
-        );
+        ];
     }
 
     public function readzip($zipname)
@@ -205,7 +205,7 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
         }
 
         $this->creategeshi();
-        $dirlist = array();
+        $dirlist = [];
         $root = false;
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $filename = $zip->getNameIndex($i);
@@ -229,9 +229,9 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
             if (isset($dirlist[$path])) {
                 $dirlist[$path][] = basename($filename);
             } else {
-                $dirlist[$path] = array(
+                $dirlist[$path] = [
                     basename($filename)
-                );
+                ];
             }
 
             $item = $this->syntax($ext, $content);
@@ -254,7 +254,7 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
                 }
                 $dir.= $name;
                 if (!isset($dirlist[$dir])) {
-                    $dirlist[$dir] = array();
+                    $dirlist[$dir] = [];
                 }
             }
         }
@@ -271,7 +271,7 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
                 $list.= sprintf($tml, dirname($dir) == '.' ? '' : dirname($dir) . '/', '..');
             }
 
-            $subdirs = array();
+            $subdirs = [];
             foreach ($dirnames as $i => $subdir) {
                 if (($dir != $subdir) && ($dir == dirname($subdir))) {
                     $subdirs[] = basename($subdir);
@@ -290,12 +290,12 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
             }
 
             $this->saveitem(
-                $this->getfilename($dir), array(
+                $this->getfilename($dir), [
                 'type' => 'dir',
                 'filename' => $dir == '.' ? $root : $dir,
                 'content' => sprintf($tml_list, $list) ,
                 'style' => '',
-                )
+                ]
             );
         }
     }

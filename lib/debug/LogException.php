@@ -42,7 +42,7 @@ class LogException
 
             if (isset($item['args']) && count($item['args'])) {
                 $result.= "\n";
-                $args = array();
+                $args = [];
                 foreach ($item['args'] as $arg) {
                     $args[] = static ::dump($arg);
                 }

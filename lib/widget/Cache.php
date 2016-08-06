@@ -59,7 +59,7 @@ class Cache extends \litepubl\core\Items
 
     public function onClearCache()
     {
-        $this->items = array();
+        $this->items = [];
         $this->modified = false;
     }
 

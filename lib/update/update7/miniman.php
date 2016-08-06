@@ -168,7 +168,7 @@ class miniman
                 $result .= "LOCK TABLES `$name` WRITE;\n/*!40000 ALTER TABLE `$name` DISABLE KEYS */;\n";
                 $sql = '';
                 while ($row = $this->fetchnum($res)) {
-                    $values = array();
+                    $values = [];
                     foreach ($row as $v) {
                         $values[] = is_null($v) ? 'NULL' : $this->quote($v);
                     }

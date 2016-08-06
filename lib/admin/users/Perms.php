@@ -34,13 +34,13 @@ class Perms extends \litepubl\admin\Menu
             $tb = $this->newTable();
             $tb->setowner($perms);
             $tb->setStruct(
-                array(
+                [
                 $tb->checkbox('perm') ,
-                array(
+                [
                 $lang->edit,
                 "<a href=\"$this->adminurl=\$id&action=edit\">\$name</a>"
-                ) ,
-                )
+                ] ,
+                ]
             );
 
             $items = array_keys($perms->items);

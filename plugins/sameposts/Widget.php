@@ -45,12 +45,12 @@ class Widget extends \litepubl\widget\Contextual
         $posts = Posts::i();
         $post = Post::i($idpost);
         if (count($post->categories) == 0) {
-            return array();
+            return [];
         }
 
         $cats = $post->factory->cats;
         $cats->loadAll();
-        $same = array();
+        $same = [];
         foreach ($post->categories as $idcat) {
             if (!isset($cats->items[$idcat])) {
                 continue;
@@ -75,14 +75,14 @@ class Widget extends \litepubl\widget\Contextual
     {
         $items = $this->db->getValue($id, 'items');
         if (is_string($items)) {
-            return $items == '' ? array() : explode(',', $items);
+            return $items == '' ? [] : explode(',', $items);
         } else {
             $result = $this->findSame($id);
             $this->db->add(
-                array(
+                [
                 'id' => $id,
                 'items' => implode(',', $result)
-                )
+                ]
             );
             return $result;
         }

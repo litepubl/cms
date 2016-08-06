@@ -21,7 +21,7 @@ class DomRss extends \domDocument
     public function __construct()
     {
         parent::__construct();
-        $this->items = array();
+        $this->items = [];
     }
 
     public function CreateRoot($url, $title)

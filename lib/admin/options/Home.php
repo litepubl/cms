@@ -33,7 +33,7 @@ class Home extends \litepubl\admin\Menu
         $args->smallimage = $home->smallimage;
         $args->parsetags = $home->parsetags;
         $args->showmidle = $home->showmidle;
-        $args->midlecat = Editor::getCombocategories(array(), $home->midlecat);
+        $args->midlecat = Editor::getCombocategories([], $home->midlecat);
         $args->showposts = $home->showposts;
         $args->invertorder = $home->getSchema()->invertorder;
         $args->showpagenator = $home->showpagenator;
@@ -113,9 +113,9 @@ class Home extends \litepubl\admin\Menu
             return;
         }
 
-        $result = array(
+        $result = [
             'result' => 'error'
-        );
+        ];
 
         if (is_uploaded_file($_FILES[$name]['tmp_name']) && !$_FILES[$name]['error'] && Str::begin($_FILES[$name]['type'], 'image/') && ($data = file_get_contents($_FILES[$name]['tmp_name']))) {
             $home = HomePage::i();
@@ -170,12 +170,12 @@ class Home extends \litepubl\admin\Menu
 
                     $home->save();
 
-                    $result = array(
-                        'result' => array(
+                    $result = [
+                        'result' => [
                             'image' => $home->image,
                             'smallimage' => $home->smallimage
-                        )
-                    );
+                        ]
+                    ];
                 }
             }
         }

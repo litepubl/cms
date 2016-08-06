@@ -18,7 +18,7 @@ use litepubl\view\Parser;
 
 function UloginInstall($self)
 {
-    $self->data['nets'] = array(
+    $self->data['nets'] = [
         'vkontakte',
         'odnoklassniki',
         'mailru',
@@ -43,7 +43,7 @@ function UloginInstall($self)
     'uid',
     'instagram',
     'wargaming',
-    );
+    ];
 
     $man = DBManager::i();
     $man->createTable($self->table, str_replace('$names', implode("', '", $self->data['nets']), file_get_contents(dirname(__file__) . '/resource/ulogin.sql')));

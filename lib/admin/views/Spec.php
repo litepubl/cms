@@ -20,12 +20,12 @@ class Spec extends \litepubl\admin\Menu
 
     public static function getSpecclasses()
     {
-        return array(
+        return [
             'litepubl\pages\Home',
             'litepubl\post\Archives',
             'litepubl\pages\Notfound404',
             'litepubl\pages\Sitemap'
-        );
+        ];
     }
 
     public function getContent(): string

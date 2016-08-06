@@ -26,7 +26,7 @@ class Widget extends \litepubl\widget\Widget
         $this->data['user'] = '';
         $this->data['count'] = 2;
         $this->data['force'] = false;
-        $this->addmap('counts', array());
+        $this->addmap('counts', []);
     }
 
     public function getDeftitle(): string

@@ -235,7 +235,7 @@ class Files extends \litepubl\core\Items
         $this->basename = 'files';
         $this->table = 'files';
         $this->addEvents('changed', 'edited', 'ongetfilelist', 'onlist');
-        $this->cachetml = array();
+        $this->cachetml = [];
     }
 
     public function getItemsposts()
@@ -277,12 +277,12 @@ class Files extends \litepubl\core\Items
         $item['size'] = filesize($realfile);
 
         //fix empty props
-        foreach (array(
+        foreach ([
             'mime',
             'title',
             'description',
             'keywords'
-        ) as $prop) {
+        ] as $prop) {
             if (!isset($item[$prop])) {
                 $item[$prop] = '';
             }
@@ -302,11 +302,11 @@ class Files extends \litepubl\core\Items
 
     public function escape(array $item)
     {
-        foreach (array(
+        foreach ([
             'title',
             'description',
             'keywords'
-        ) as $name) {
+        ] as $name) {
             $item[$name] = Filter::escape(Filter::unescape($item[$name]));
         }
         return $item;
@@ -411,9 +411,9 @@ class Files extends \litepubl\core\Items
         }
 
         $theme = Theme::i();
-        $result = array(
+        $result = [
             'container' => $theme->templates[$basekey],
-        );
+        ];
 
         $key = $basekey . '.';
         foreach ($theme->templates as $k => $v) {
@@ -437,7 +437,7 @@ class Files extends \litepubl\core\Items
         $this->preload($list);
 
         //sort by media type
-        $items = array();
+        $items = [];
         foreach ($list as $id) {
             if (!isset($this->items[$id])) {
                 continue;
@@ -560,7 +560,7 @@ class Files extends \litepubl\core\Items
     {
         $item = $this->getitem($id);
         return Str::jsonAttr(
-            array(
+            [
             'id' => $id,
             'link' => $this->getApp()->site->files . '/files/' . $item['filename'],
             'width' => $item['width'],
@@ -568,7 +568,7 @@ class Files extends \litepubl\core\Items
             'size' => $item['size'],
             'midle' => $item['midle'],
             'preview' => $item['preview'],
-            )
+            ]
         );
     }
 }
@@ -693,7 +693,7 @@ class Meta extends \litepubl\core\Item
                 return;
             }
         } else {
-            static ::$instances['postmeta'] = array();
+            static ::$instances['postmeta'] = [];
         }
 
         $instances = & static ::$instances['postmeta'];
@@ -866,7 +866,7 @@ class Post extends \litepubl\core\Item
     public static function selectChildItems(string $table, array $items): array
     {
         if (! $table || ! count($items)) {
-            return array();
+            return [];
         }
         
         $db = static::getAppInstance()->db;
@@ -885,7 +885,7 @@ class Post extends \litepubl\core\Item
         $this->childTable = static::getChildTable();
         
         $options = $this->getApp()->options;
-        $this->data = array(
+        $this->data = [
             'id' => 0,
             'idschema' => 1,
             'idurl' => 0,
@@ -913,7 +913,7 @@ class Post extends \litepubl\core\Item
             'commentscount' => 0,
             'pingbackscount' => 0,
             'pagescount' => 0
-        );
+        ];
         
         $this->rawData = [];
         $this->childData = [];
@@ -1400,18 +1400,18 @@ class Post extends \litepubl\core\Item
         $this->data['pagescount'] = count($this->cacheData['pages']);
         if ($this->id > 0) {
             $this->getdb($this->pagesTable)->insert(
-                array(
+                [
                 'id' => $this->id,
                 'page' => $this->data['pagescount'] - 1,
                 'content' => $s
-                )
+                ]
             );
         }
     }
 
     public function deletePages()
     {
-        $this->cacheData['pages'] = array();
+        $this->cacheData['pages'] = [];
         $this->data['pagescount'] = 0;
         if ($this->id > 0) {
             $this->getdb($this->pagesTable)->idDelete($this->id);
@@ -1424,11 +1424,11 @@ class Post extends \litepubl\core\Item
             $db = $this->getDB($this->pagesTable);
             foreach ($this->cacheData['pages'] as $index => $content) {
                 $db->insert(
-                    array(
+                    [
                     'id' => $this->id,
                     'page' => $index,
                     'content' => $content
-                    )
+                    ]
                 );
             }
         }
@@ -1540,7 +1540,7 @@ class Posts extends \litepubl\core\Items
          $this->data['archivescount'] = 0;
         $this->data['revision'] = 0;
         $this->data['syncmeta'] = false;
-        $this->addmap('itemcoclasses', array());
+        $this->addmap('itemcoclasses', []);
     }
 
     public function getItem($id)
@@ -1567,7 +1567,7 @@ class Posts extends \litepubl\core\Items
     {
         //exclude already loaded items
         if (!isset(Post::$instances['post'])) {
-            Post::$instances['post'] = array();
+            Post::$instances['post'] = [];
         }
 
         $loaded = array_keys(Post::$instances['post']);
@@ -1584,11 +1584,11 @@ class Posts extends \litepubl\core\Items
     public function setAssoc(array $items)
     {
         if (!count($items)) {
-            return array();
+            return [];
         }
 
-        $result = array();
-        $fileitems = array();
+        $result = [];
+        $fileitems = [];
         foreach ($items as $a) {
             $post = Post::newPost($a['class']);
             $post->setAssoc($a);
@@ -1637,10 +1637,10 @@ class Posts extends \litepubl\core\Items
         );
 
         if (!count($items)) {
-            return array();
+            return [];
         }
 
-        $subclasses = array();
+        $subclasses = [];
         foreach ($items as $id => $item) {
             if (empty($item['class'])) {
                 $items[$id]['class'] = static ::POSTCLASS;
@@ -1847,7 +1847,7 @@ class Posts extends \litepubl\core\Items
     public function stripDrafts(array $items): array
     {
         if (count($items) == 0) {
-            return array();
+            return [];
         }
 
         $list = implode(', ', $items);
@@ -1866,10 +1866,10 @@ class Posts extends \litepubl\core\Items
     public function getSitemap($from, $count)
     {
         return $this->externalfunc(
-            __class__, 'Getsitemap', array(
+            __class__, 'Getsitemap', [
             $from,
             $count
-            )
+            ]
         );
     }
 }
@@ -2125,7 +2125,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         $tags->loaditems($items);
 
         $args = new Args();
-        $list = array();
+        $list = [];
 
         foreach ($items as $id) {
             $item = $tags->getitem($id);
@@ -2336,10 +2336,10 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
 
         $result = strtr(
-            $theme->parse($theme->templates['content.post.prevnext']), array(
+            $theme->parse($theme->templates['content.post.prevnext']), [
             '$prev' => $prev,
             '$next' => $next
-            )
+            ]
         );
         unset(Theme::$vars['prevpost'], Theme::$vars['nextpost']);
         return $result;

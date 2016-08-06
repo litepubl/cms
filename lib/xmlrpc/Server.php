@@ -83,10 +83,10 @@ class Server extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
 
     public function add($method, $Function, $ClassName)
     {
-        $this->items[$method] = array(
+        $this->items[$method] = [
             'class' => $ClassName,
             'func' => $Function
-        );
+        ];
         $this->save();
     }
 

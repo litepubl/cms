@@ -45,14 +45,14 @@ class Secure extends \litepubl\admin\Menu
         $args->useshell = Updater::i()->useshell;
         $backuper = Backuper::i();
         $args->filertype = $this->theme->comboItems(
-            array(
+            [
             'auto' => 'auto',
             'file' => 'file',
             'ftp' => 'ftp',
             'ftpsocket' => 'ftpsocket',
             //'ssh2' => 'ssh2'
             
-            ), $backuper->filertype
+            ], $backuper->filertype
         );
 
         $args->formtitle = $lang->securehead;

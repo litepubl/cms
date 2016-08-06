@@ -32,11 +32,11 @@ class Links extends Widget
             $args->mode = 'edit';
         } else {
             $args->mode = 'add';
-            $item = array(
+            $item = [
                 'url' => '',
                 'linktitle' => '',
                 'text' => ''
-            );
+            ];
         }
 
         $args->add($item);
@@ -54,25 +54,25 @@ class Links extends Widget
         $adminurl = $this->adminurl . intval($_GET['idwidget']) . '&idlink';
         $tb = $this->newTable($this->admin);
         $tb->setStruct(
-            array(
+            [
             $tb->checkbox('checklink') ,
-            array(
+            [
                 $lang->url,
                 '<a href=\'$url\'>$url</a>'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->anchor,
                 '$text'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->description,
                 '$title'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->edit,
                 "<a href='$adminurl=\$id'>$lang->edit</a>"
-            ) ,
-            )
+            ] ,
+            ]
         );
 
         $form = $this->newForm($args);

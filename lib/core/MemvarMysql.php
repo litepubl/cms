@@ -23,7 +23,7 @@ class MemvarMysql
     {
         $this->table = 'memstorage';
         $this->checked = false;
-        $this->data = array();
+        $this->data = [];
         $this->lifetime = 10800;
     }
 
@@ -146,7 +146,7 @@ class MemvarMysql
     public function saveAll()
     {
         $db = $this->getdb();
-        $a = array();
+        $a = [];
         foreach ($this->data as $name => $value) {
             $a[] = sprintf('(\'%s\',%s)', $name, $db->quote($this->serialize($value)));
         }

@@ -22,14 +22,14 @@ function AdminInstall($self)
     $admin = Menus::i();
     $admin->lock();
     $admin->additem(
-        array(
+        [
         'parent' => $admin->url2id('/admin/views/') ,
         'url' => '/admin/views/bootstraptheme/',
         'title' => $about['name'],
         'name' => 'bootstraptheme',
         'class' => get_class($self) ,
         'group' => 'admin'
-        )
+        ]
     );
 
     Header::i()->install();

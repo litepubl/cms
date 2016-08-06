@@ -34,7 +34,7 @@ class Router extends Items
         $this->addEvents('beforerequest', 'afterrequest');
         $this->data['disabledcron'] = false;
         $this->data['redirdom'] = false;
-        $this->addmap('prefilter', array());
+        $this->addmap('prefilter', []);
     }
 
     public function request(Context $context)
@@ -189,7 +189,7 @@ class Router extends Items
         }
 
         if (!in_array(
-            $type, array(
+            $type, [
             'normal',
             'get',
             'usernormal',
@@ -197,7 +197,7 @@ class Router extends Items
             'begin',
             'end',
             'regexp'
-            )
+            ]
         )) {
             $this->error(sprintf('Invalid url type %s', $type));
         }
@@ -206,22 +206,22 @@ class Router extends Items
             $this->error(sprintf('Url "%s" already exists', $url));
         }
 
-        $item = array(
+        $item = [
             'url' => $url,
             'class' => $class,
             'arg' => (string)$arg,
             'type' => $type
-        );
+        ];
 
         $item['id'] = $this->db->add($item);
         $this->items[$item['id']] = $item;
 
         if (in_array(
-            $type, array(
+            $type, [
             'begin',
             'end',
             'regexp'
-            )
+            ]
         )) {
             $this->prefilter[] = $item;
             $this->save();

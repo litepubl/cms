@@ -125,22 +125,22 @@ class Schemes extends \litepubl\admin\Menu
 
                 $tb = $this->newTable();
                 $tb->setStruct(
-                    array(
-                    array(
+                    [
+                    [
                         $lang->name,
                         "<a href=\"$adminurl=\$id\"><span class=\"fa fa-cog\"></span> \$name</a>"
-                    ) ,
+                    ] ,
 
-                    array(
+                    [
                         $lang->widgets,
                         "<a href=\"{$this->link}widgets/?idschema=\$id\"><span class=\"fa fa-list-alt\"></span> $lang->widgets</a>"
-                    ) ,
+                    ] ,
 
-                    array(
+                    [
                         $lang->delete,
                         "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\"><span class=\"fa fa-remove\"></span> $lang->delete</a>"
-                    )
-                    )
+                    ]
+                    ]
                 );
 
                 $result.= $tb->build($schemes->items);
@@ -156,7 +156,7 @@ class Schemes extends \litepubl\admin\Menu
 
             $dirlist = Filer::getDir($this->getApp()->paths->themes);
             sort($dirlist);
-            $list = array();
+            $list = [];
             foreach ($dirlist as $dir) {
                 if (!Str::begin($dir, 'admin')) {
                     $list[$dir] = $dir;
@@ -165,7 +165,7 @@ class Schemes extends \litepubl\admin\Menu
 
             $args->themename = $this->theme->comboItems($list, $itemview['themename']);
 
-            $list = array();
+            $list = [];
             foreach ($dirlist as $dir) {
                 if (Str::begin($dir, 'admin')) {
                     $list[$dir] = $dir;

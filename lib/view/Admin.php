@@ -53,10 +53,10 @@ class Admin extends Base
             foreach ($m as $item) {
                 $name = $item[1];
                 $replace = strtr(
-                    $this->templates['tabs.panel'], array(
+                    $this->templates['tabs.panel'], [
                     '$id' => $name,
                     '$content' => trim($item[2]) ,
-                    )
+                    ]
                 );
 
                 $result = str_replace($item[0], $replace, $result);
@@ -84,10 +84,10 @@ class Admin extends Base
                     }
 
                     $replace = strtr(
-                        $theme->templates["content.admin.$type"], array(
+                        $theme->templates["content.admin.$type"], [
                         '$name' => $name,
                         '$value' => $varname
-                        )
+                        ]
                     );
                     break;
 
@@ -99,42 +99,42 @@ class Admin extends Base
 
                 case 'tab':
                     $replace = strtr(
-                        $this->templates['tabs.tab'], array(
+                        $this->templates['tabs.tab'], [
                         '$id' => $name,
                         '$title' => $lang->__get($name) ,
                         '$url' => '',
-                        )
+                        ]
                     );
                     break;
 
 
                 case 'ajaxtab':
                     $replace = strtr(
-                        $this->templates['tabs.tab'], array(
+                        $this->templates['tabs.tab'], [
                         '$id' => $name,
                         '$title' => $lang->__get($name) ,
                         '$url' => "\$ajax=$name",
-                        )
+                        ]
                     );
                     break;
 
 
                 case 'tabpanel':
                     $replace = strtr(
-                        $this->templates['tabs.panel'], array(
+                        $this->templates['tabs.panel'], [
                         '$id' => $name,
                         '$content' => isset($args->data[$varname]) ? $varname : '',
-                        )
+                        ]
                     );
                     break;
 
 
                 default:
                     $replace = strtr(
-                        $theme->templates["content.admin.$type"], array(
+                        $theme->templates["content.admin.$type"], [
                         '$name' => $name,
                         '$value' => $varname
-                        )
+                        ]
                     );
                 }
 
@@ -161,12 +161,12 @@ class Admin extends Base
     public function getTable(string $head, string $body, string $footer = ''): string
     {
         return strtr(
-            $this->templates['table'], array(
+            $this->templates['table'], [
             '$class' => Theme::i()->templates['content.admin.tableclass'],
             '$head' => $head,
             '$body' => $body,
             '$footer' => $footer,
-            )
+            ]
         );
     }
 
@@ -189,20 +189,20 @@ class Admin extends Base
     public function getSection(string $title, string $content): string
     {
         return strtr(
-            $this->templates['section'], array(
+            $this->templates['section'], [
             '$title' => $title,
             '$content' => $content
-            )
+            ]
         );
     }
 
     public function getErr(string $content): string
     {
         return strtr(
-            $this->templates['error'], array(
+            $this->templates['error'], [
             '$title' => Lang::get('default', 'error') ,
             '$content' => $content
-            )
+            ]
         );
     }
 
@@ -291,9 +291,9 @@ class Admin extends Base
 
         if (is_callable($this->onfileperm)) {
             call_user_func_array(
-                $this->onfileperm, array(
+                $this->onfileperm, [
                 $args
-                )
+                ]
             );
         } elseif ($this->getApp()->options->show_file_perm) {
             $args->fileperm = GetPerm::combo(0, 'idperm_upload');
@@ -321,7 +321,7 @@ class Admin extends Base
 
     public function check2array(string $prefix): array
     {
-        $result = array();
+        $result = [];
         foreach ($_POST as $key => $value) {
             if (Str::begin($key, $prefix)) {
                 $result[] = is_numeric($value) ? (int)$value : $value;

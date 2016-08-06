@@ -332,7 +332,7 @@ function bmsub($l, $r)
 
 function bin($n)
 {
-    $bytes = array();
+    $bytes = [];
     while (bmcomp($n, 0) > 0) {
         array_unshift($bytes, bmmod($n, 256));
         $n = bmdiv($n, bmpow(2, 8));

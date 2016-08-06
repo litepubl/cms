@@ -36,9 +36,9 @@ function PluginInstall($self)
     $app->options->reguser = true;
 
     $groups = UserGroups::i();
-    $groups->defaults = array(
+    $groups->defaults = [
         $groups->getIdGroup('author')
-    );
+    ];
     $groups->save();
 
     $rights = AuthorRights::i();

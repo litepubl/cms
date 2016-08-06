@@ -25,28 +25,28 @@ class Blogger extends Common
     {
         $this->auth($login, $password, 'author');
 
-        $result = array(
+        $result = [
             //'isAdmin'  => true,
             'url' => $this->getApp()->site->url . '/',
             'blogid' => '1',
             'blogName' => $this->getApp()->site->name
-        );
-        return array(
+        ];
+        return [
             $result
-        );
+        ];
     }
 
     public function getUserInfo($appkey, $login, $password)
     {
         $this->auth($login, $password, 'author');
 
-        $result = array(
+        $result = [
             'nickname' => $login,
             'userid' => $this->getApp()->options->user,
             'url' => $this->getApp()->site->url . '/',
             'lastname' => '',
             'firstname' => ''
-        );
+        ];
         return $result;
     }
 
@@ -66,12 +66,12 @@ class Blogger extends Common
         $content.= '<category>' . $categories . '</category>';
         $content.= $Post->content;
 
-        $result = array(
+        $result = [
             'userid' => $Post->user,
             'dateCreated' => new IXR_Date($Post->posted) ,
             'content' => $content,
             'postid' => $id
-        );
+        ];
 
         return $result;
     }
@@ -90,12 +90,12 @@ class Blogger extends Common
             $content.= '<category>' . $categories . '</category>';
             $content.= $Post->content;
 
-            $result[] = array(
+            $result[] = [
                 'userid' => $this->getApp()->options->user,
                 'dateCreated' => new IXR_Date($Post->date) ,
                 'content' => $content,
                 'postid' => $Post->id,
-            );
+            ];
         }
 
         return $result;
@@ -119,9 +119,9 @@ class Blogger extends Common
             $result = trim($matchcat[1], ',');
             $result = explode(',', $result);
         } else {
-            $result = array(
+            $result = [
                 1
-            );
+            ];
         }
         return $result;
     }

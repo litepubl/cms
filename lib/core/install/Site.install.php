@@ -25,10 +25,10 @@ function SiteInstall($self)
     $site->jquery_version = '1.12.4';
     $site->author = 'Admin';
 
-    $site->mapoptions = array(
+    $site->mapoptions = [
         'version' => 'version',
         'language' => 'language',
-    );
+    ];
     $site->unlock();
 }
 

@@ -54,44 +54,44 @@ class Admin extends \litepubl\admin\Menu
         if ($count > 0) {
             $items = $downloaditems->select("status <> 'deleted' $where", " order by posted desc limit $from, $perpage");
             if (!$items) {
-                $items = array();
+                $items = [];
             }
         } else {
-            $items = array();
+            $items = [];
         }
 
         $form = $this->newForm(new Args());
         $form->body = $admintheme->getcount($from, $from + count($items), $count);
         $tb = $this->newTable();
         $tb->setPosts(
-            array(
-            array(
+            [
+            [
                 'right',
                 $lang->downloads,
                 '$post.downloads'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->posttitle,
                 '$post.bookmark'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->status,
                 '$ticket_status.status'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->tags,
                 '$post.tagnames'
-            ) ,
+            ] ,
 
-            array(
+            [
                 'center',
                 $lang->edit,
                 '<a href="' . $editurl . '=$post.id">' . $lang->edit . '</a>'
-            ) ,
-            )
+            ] ,
+            ]
         );
 
         $form->body.= $tb->build($items);

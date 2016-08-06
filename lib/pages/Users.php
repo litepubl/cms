@@ -19,17 +19,17 @@ use litepubl\view\Theme;
 
 class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 {
-    public static $userprops = array(
+    public static $userprops = [
         'email',
         'name',
         'website'
-    );
+    ];
 
-    public static $pageprops = array(
+    public static $pageprops = [
         'url',
         'content',
         'rawcontent'
-    );
+    ];
     public $id;
     protected $useritem;
 
@@ -231,7 +231,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
 
     public function add(int $id)
     {
-        $item = array(
+        $item = [
             'id' => $id,
             'idurl' => 0,
             'idschema' => 1,
@@ -243,7 +243,7 @@ class Users extends \litepubl\core\Items implements \litepubl\view\ViewInterface
             'keywords' => '',
             'description' => '',
             'head' => ''
-        );
+        ];
 
         if ($this->createpage) {
             $users = CoreUsers::i();

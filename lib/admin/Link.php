@@ -30,7 +30,7 @@ class Link
     public function parse($s)
     {
         $list = explode(',', $s);
-        $a = array();
+        $a = [];
         foreach ($list as $item) {
             if ($i = strpos($item, '=')) {
                 $a[trim(substr($item, 0, $i)) ] = trim(substr($item, $i + 1));
@@ -55,11 +55,11 @@ class Link
         }
 
         $attr = '';
-        foreach (array(
+        foreach ([
             'class',
             'title',
             'role'
-        ) as $name) {
+        ] as $name) {
             if (!empty($a[$name])) {
                 $attr.= sprintf(' %s="%s"', $name, $a[$name]);
             }

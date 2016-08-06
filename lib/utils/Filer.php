@@ -51,7 +51,7 @@ class Filer
 
     public static function getFiles($path)
     {
-        $result = array();
+        $result = [];
         if ($h = opendir($path)) {
             while (false !== ($filename = readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
@@ -69,7 +69,7 @@ class Filer
 
     public static function getDir($dir)
     {
-        $result = array();
+        $result = [];
         if ($fp = opendir($dir)) {
             while (false !== ($file = readdir($fp))) {
                 if (is_dir($dir . $file) && ($file != '.') && ($file != '..') && ($file != '.svn')) {

@@ -22,8 +22,8 @@ class Plugin extends \litepubl\core\Plugin
     protected function create()
     {
         parent::create();
-        $this->addmap('tree', array());
-        $this->addmap('exitems', array());
+        $this->addmap('tree', []);
+        $this->addmap('exitems', []);
     }
 
     public function getMenu($hover, $current)
@@ -97,10 +97,10 @@ class Plugin extends \litepubl\core\Plugin
 
     private function getSubTree($parent)
     {
-        $result = array();
+        $result = [];
         $categories = Cats::i();
         // first step is a find all childs and sort them
-        $sort = array();
+        $sort = [];
         foreach ($categories->items as $id => $item) {
             if ($item['parent'] == $parent) {
                 $sort[$id] = (int)$item['customorder'];

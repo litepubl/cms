@@ -69,7 +69,7 @@ class Comments extends Common
         $this->auth($login, $password, 'moderator');
         $comments = CommentItems::i((int)$idpost);
         $comment = $comments->getcomment((int)$id);
-        $result = array(
+        $result = [
             'id' => (int)$comment->id,
             'author' => (int)$comment->author,
             'name' => $comment->name,
@@ -77,7 +77,7 @@ class Comments extends Common
             'url' => $comment->website,
             'content' => $comment->content,
             'rawcontent' => $comment->rawcontent
-        );
+        ];
         return $result;
     }
 
@@ -120,12 +120,12 @@ class Comments extends Common
         $spam = $comments->getcount("post = $idpost and status = 'spam'");
         $total = $comments->getcount("post = $idpost");
 
-        return array(
+        return [
             "approved" => $approved,
             "awaiting_moderation" => $hold,
             "spam" => $spam,
             "total_comments" => $total
-        );
+        ];
     }
 
     public function wpgetComment($blog_id, $login, $password, $id)
@@ -145,7 +145,7 @@ class Comments extends Common
     {
         $data = $comment->data;
 
-        return array(
+        return [
             "date_created_gmt" => new IXR_Date($comment->posted - $this->getApp()->options->gmt) ,
             "user_id" => $data['author'],
             "comment_id" => $data['id'],
@@ -160,7 +160,7 @@ class Comments extends Common
             "author_email" => $data['email'],
             "author_ip" => $data['ip'],
             "type" => ''
-        );
+        ];
     }
 
     public function wpgeCommentItems($blog_id, $login, $password, $struct)
@@ -175,7 +175,7 @@ class Comments extends Common
 
         $comments = CommentItems::i();
         $items = $comments->select($where, $limit);
-        $result = array();
+        $result = [];
         $comment = new tcomment();
         foreach ($items as $id) {
             $comment->id = $id;
@@ -260,10 +260,10 @@ class Comments extends Common
     public function wpgeCommentItemstatusList($blog_id, $login, $password)
     {
         $this->auth($login, $password, 'moderator');
-        return array(
+        return [
             'hold' => 'Unapproved',
             'approve' => 'Approved',
             'spam' => 'Spam',
-        );
+        ];
     }
 }

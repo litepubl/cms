@@ -21,7 +21,7 @@ class Content extends \litepubl\core\Data
     {
         parent::__construct();
         $this->owner = $owner;
-        $this->items = array();
+        $this->items = [];
     }
 
     public function getItem($id)
@@ -30,13 +30,13 @@ class Content extends \litepubl\core\Data
             return $this->items[$id];
         }
 
-        $item = array(
+        $item = [
             'description' => '',
             'keywords' => '',
             'head' => '',
             'content' => '',
             'rawcontent' => ''
-        );
+        ];
 
         if ($r = $this->db->getitem($id)) {
             $item = $r;
@@ -61,13 +61,13 @@ class Content extends \litepubl\core\Data
     {
         $item = $this->getitem($id);
         $filter = Filter::i();
-        $item = array(
+        $item = [
             'content' => $filter->filter($content) ,
             'rawcontent' => $content,
             'description' => $description,
             'keywords' => $keywords,
             'head' => $head
-        );
+        ];
         $this->setitem($id, $item);
     }
 

@@ -202,7 +202,7 @@ $this->getApp()->redirExit($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
             return '';
         }
 
-        $items = array();
+        $items = [];
         $admin = $this->admintheme;
         foreach ($list as $filename) {
             if (Str::end($filename, '.gz') || Str::end($filename, '.zip')) {
@@ -216,18 +216,18 @@ $this->getApp()->redirExit($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 
         $lang = $this->lang;
         return $admin->h($lang->backupheader) . $this->tableItems(
-            $items, array(
-            array(
+            $items, [
+            [
                 'right',
                 $lang->download,
                 "<a href=\"$this->adminurl=\$filename&action=download\">\$filename</a>"
-            ) ,
-            array(
+            ] ,
+            [
                 'right',
                 $lang->delete,
                 "<a href=\"$this->adminurl=\$filename&action=delete\">$lang->delete</a>"
-            )
-            )
+            ]
+            ]
         );
     }
 }

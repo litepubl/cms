@@ -26,12 +26,12 @@ class Files extends \litepubl\admin\Menu
         $args->previewwidth = $parser->previewwidth;
         $args->previewheight = $parser->previewheight;
         $args->previewmode = $this->theme->getRadioItems(
-            'previewmode', array(
+            'previewmode', [
             'fixed' => $lang->fixedsize,
             'max' => $lang->maxsize,
             'min' => $lang->minsize,
             'none' => $lang->disablepreview,
-            ), $parser->previewmode
+            ], $parser->previewmode
         );
 
         $args->maxwidth = $parser->maxwidth;

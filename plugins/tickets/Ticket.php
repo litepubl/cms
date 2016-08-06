@@ -25,7 +25,7 @@ class Ticket extends \litepubl\post\Post
     protected function create()
     {
         parent::create();
-        $this->childData = array(
+        $this->childData = [
             'state' => 'opened',
             'prio' => 'major',
             'assignto' => 0,
@@ -34,7 +34,7 @@ class Ticket extends \litepubl\post\Post
             'os' => '*',
             'reproduced' => false,
             'code' => ''
-        );
+        ];
     }
 
     public function getFactory()

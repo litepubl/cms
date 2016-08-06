@@ -37,7 +37,7 @@ class Tidy extends \litepubl\core\Plugin
 
     public function filter(Event $event)
     {
-        $config = array(
+        $config = [
             'clean' => true,
             'enclose-block-text' => true,
             'enclose-text' => true,
@@ -50,7 +50,7 @@ class Tidy extends \litepubl\core\Plugin
             'indent' => 'auto', //true,
             'output-xhtml' => true,
             'wrap' => 200
-        );
+        ];
 
         $tidy = new \tidy;
         $tidy->parseString($this->gethtml($event->content), $config, 'utf8');

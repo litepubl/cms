@@ -27,19 +27,19 @@
 
 class Punycode
 {
-	private static $DECODE_TABLE = array(
+	private static $DECODE_TABLE = [
 		'a' =>  0, 'b' =>  1, 'c' =>  2, 'd' =>  3, 'e' =>  4, 'f' =>  5,
 		'g' =>  6, 'h' =>  7, 'i' =>  8, 'j' =>  9, 'k' => 10, 'l' => 11,
 		'm' => 12, 'n' => 13, 'o' => 14, 'p' => 15, 'q' => 16, 'r' => 17,
 		's' => 18, 't' => 19, 'u' => 20, 'v' => 21, 'w' => 22, 'x' => 23,
 		'y' => 24, 'z' => 25, '0' => 26, '1' => 27, '2' => 28, '3' => 29,
 		'4' => 30, '5' => 31, '6' => 32, '7' => 33, '8' => 34, '9' => 35
-	);
-	private static $ENCODE_TABLE = array(
+	];
+	private static $ENCODE_TABLE = [
 		'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
 		'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
 		'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-	);
+	];
 	const BASE = 36;
 	const TMIN = 1;
 	const TMAX = 26;
@@ -51,9 +51,9 @@ class Punycode
 	const PREFIX = 'xn--';
 	const SUFFIX = '';
 
-	private static $OPTIONS = array(
+	private static $OPTIONS = [
 		'charset' => 'UTF-8'
-	);
+	];
 
 	public static function set_options($options)
 	{
@@ -163,8 +163,8 @@ class Punycode
 		$output = null;
 
 		$ilen = mb_strlen($input, self::$OPTIONS['charset']);
-		$non_basic_codepoints = array();
-		$codepoints = array();
+		$non_basic_codepoints = [];
+		$codepoints = [];
 		for ($b = 0; $b < $ilen; ++$b) {
 			if (($code = ord($char = mb_substr($input, $b, 1, self::$OPTIONS['charset']))) < $n) {
 				$output .= $char;

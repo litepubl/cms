@@ -54,26 +54,26 @@ class MailRu extends Service
 
         $code = $_REQUEST['code'];
         $resp = Http::post(
-            'https://connect.mail.ru/oauth/token', array(
+            'https://connect.mail.ru/oauth/token', [
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'redirect_uri' => $this->getApp()->site->url . $this->url,
             'grant_type' => 'authorization_code'
-            )
+            ]
         );
 
         if ($resp) {
             $tokens = json_decode($resp);
 
-            $params = array(
+            $params = [
                 'method' => 'users.getInfo',
                 'app_id' => $this->client_id,
                 'session_key' => $tokens->access_token,
                 'uids' => $tokens->x_mailru_vid,
                 'secure' => '1',
                 'format' => 'json',
-            );
+            ];
 
             ksort($params);
             $params['sig'] = $this->sign($params, $this->client_secret);
@@ -81,12 +81,12 @@ class MailRu extends Service
                 $js = json_decode($r);
                 $info = $js[0];
                 return $this->addUser(
-                    $context, array(
+                    $context, [
                     'uid' => $info->uid,
                     'email' => isset($info->email) ? $info->email : '',
                     'name' => $info->nick,
                     'website' => isset($info->link) ? $info->link : ''
-                    ), $info
+                    ], $info
                 );
             }
         }
@@ -96,10 +96,10 @@ class MailRu extends Service
 
     protected function getAdminInfo(Lang $lang): array
     {
-        return array(
+        return [
             'regurl' => 'http://api.mail.ru/sites/my/add',
             'client_id' => 'ID',
             'client_secret' => $lang->mailru_secret
-        );
+        ];
     }
 }

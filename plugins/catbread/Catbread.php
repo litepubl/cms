@@ -48,7 +48,7 @@ class Catbread extends \litepubl\core\Plugin
         $result.= $this->getbread($idcat);
 
         if ($this->showsimilar) {
-            $list = array();
+            $list = [];
             $idposts = $cats->getidposts($idcat);
             foreach ($idposts as $idpost) {
                 $list = array_merge($list, Post::i($idpost)->categories);
@@ -180,7 +180,7 @@ class Catbread extends \litepubl\core\Plugin
 
         $cats = $this->cats;
         $cats->loadall();
-        $parents = array();
+        $parents = [];
         foreach ($list as $id) {
             $parents[] = $cats->getvalue($id, 'parent');
         }

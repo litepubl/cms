@@ -159,7 +159,7 @@ class Post extends \litepubl\core\Item
     public static function selectChildItems(string $table, array $items): array
     {
         if (! $table || ! count($items)) {
-            return array();
+            return [];
         }
         
         $db = static::getAppInstance()->db;
@@ -178,7 +178,7 @@ class Post extends \litepubl\core\Item
         $this->childTable = static::getChildTable();
         
         $options = $this->getApp()->options;
-        $this->data = array(
+        $this->data = [
             'id' => 0,
             'idschema' => 1,
             'idurl' => 0,
@@ -206,7 +206,7 @@ class Post extends \litepubl\core\Item
             'commentscount' => 0,
             'pingbackscount' => 0,
             'pagescount' => 0
-        );
+        ];
         
         $this->rawData = [];
         $this->childData = [];
@@ -693,18 +693,18 @@ class Post extends \litepubl\core\Item
         $this->data['pagescount'] = count($this->cacheData['pages']);
         if ($this->id > 0) {
             $this->getdb($this->pagesTable)->insert(
-                array(
+                [
                 'id' => $this->id,
                 'page' => $this->data['pagescount'] - 1,
                 'content' => $s
-                )
+                ]
             );
         }
     }
 
     public function deletePages()
     {
-        $this->cacheData['pages'] = array();
+        $this->cacheData['pages'] = [];
         $this->data['pagescount'] = 0;
         if ($this->id > 0) {
             $this->getdb($this->pagesTable)->idDelete($this->id);
@@ -717,11 +717,11 @@ class Post extends \litepubl\core\Item
             $db = $this->getDB($this->pagesTable);
             foreach ($this->cacheData['pages'] as $index => $content) {
                 $db->insert(
-                    array(
+                    [
                     'id' => $this->id,
                     'page' => $index,
                     'content' => $content
-                    )
+                    ]
                 );
             }
         }

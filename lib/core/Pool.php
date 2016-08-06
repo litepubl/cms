@@ -22,17 +22,17 @@ class Pool extends Data
         parent::create();
         $this->basename = 'poolitems';
         $this->perpool = 20;
-        $this->pool = array();
-        $this->modified = array();
+        $this->pool = [];
+        $this->modified = [];
     }
 
     public function getItem($id)
     {
         if (isset($this->ongetitem)) {
             return call_user_func_array(
-                $this->ongetitem, array(
+                $this->ongetitem, [
                 $id
-                )
+                ]
             );
         }
 
@@ -49,7 +49,7 @@ class Pool extends Data
         if ($data = $this->getApp()->cache->get($this->getFilename($idpool))) {
             $this->pool[$idpool] = $data;
         } else {
-            $this->pool[$idpool] = array();
+            $this->pool[$idpool] = [];
         }
     }
 

@@ -19,15 +19,15 @@ class SingleItems extends Items
     {
         $this->dbversion = false;
         parent::create();
-        $this->copyprops = array();
+        $this->copyprops = [];
     }
 
     public function addinstance($instance)
     {
         $classname = get_class($instance);
-        $item = array(
+        $item = [
             'classname' => $classname,
-        );
+        ];
 
         foreach ($this->copyprops as $prop) {
             $item[$prop] = $instance->{$prop};
@@ -40,9 +40,9 @@ class SingleItems extends Items
         if (isset(static ::$instances[$classname])) {
             static ::$instances[$classname][$id] = $instance;
         } else {
-            static ::$instances[$classname] = array(
+            static ::$instances[$classname] = [
                 $id => $instance
-            );
+            ];
         }
 
         return $id;
@@ -55,7 +55,7 @@ class SingleItems extends Items
         $result = static ::iGet($classname);
         if ($id != $result->id) {
             if (!isset(static ::$instances[$classname])) {
-                static ::$instances[$classname] = array();
+                static ::$instances[$classname] = [];
             }
 
             if (isset(static ::$instances[$classname][$id])) {

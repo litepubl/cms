@@ -20,7 +20,7 @@ class Action extends \litepubl\core\Items
     {
         parent::create();
         $this->basename = 'openaction';
-        $this->addmap('actions', array());
+        $this->addmap('actions', []);
     }
 
     public function send($id, $from, $name, $args)
@@ -60,9 +60,9 @@ class Action extends \litepubl\core\Items
     private function doaction($name, $args)
     {
         if (!is_array($args)) {
-            $args = array(
+            $args = [
             0 => $args
-            );
+            ];
         }
         $class = $this->items[$name]['class'];
         $func = $this->items[$name]['func'];
@@ -88,10 +88,10 @@ class Action extends \litepubl\core\Items
             //return $obj->$func($arg);
             try {
                 return call_user_func_array(
-                    array(
+                    [
                     $obj,
                     $func
-                    ), $args
+                    ], $args
                 );
             } catch (\Exception $e) {
                 return new IXR_Error($e->getCode(), $e->getMessage());
@@ -112,12 +112,12 @@ class Action extends \litepubl\core\Items
         $this->lock();
         $this->DeleteExpired();
         $id = Str::md5Uniq();
-        $this->actions[$id] = array(
+        $this->actions[$id] = [
             'date' => time() ,
             'to' => $to,
             'name' => $name,
             'args' => $args
-        );
+        ];
         $this->unlock();
 
         $Client = new IXR_Client($to);
@@ -141,10 +141,10 @@ class Action extends \litepubl\core\Items
 
     public function add($name, $class, $func)
     {
-        $this->items[$name] = array(
+        $this->items[$name] = [
             'class' => $class,
             'func' => $func
-        );
+        ];
         $this->save();
     }
 

@@ -77,14 +77,14 @@ class Menus extends \litepubl\pages\Menus
         $title = $this->getAdminTitle($name);
         $url = $this->createUrl($parent, $name);
         return $this->addItem(
-            array(
+            [
             'parent' => $parent,
             'url' => $url,
             'title' => $title,
             'name' => $name,
             'class' => $class,
             'group' => $group
-            )
+            ]
         );
     }
 
@@ -114,7 +114,7 @@ class Menus extends \litepubl\pages\Menus
     public function getChilds(int $id): array
     {
         if ($id == 0) {
-            $result = array();
+            $result = [];
             $options = $this->getApp()->options;
             foreach ($this->tree as $iditem => $items) {
                 if ($options->hasgroup($this->items[$iditem]['group'])) {
@@ -124,9 +124,9 @@ class Menus extends \litepubl\pages\Menus
             return $result;
         }
 
-        $parents = array(
+        $parents = [
             $id
-        );
+        ];
         $parent = $this->items[$id]['parent'];
         while ($parent != 0) {
             array_unshift($parents, $parent);

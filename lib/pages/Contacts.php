@@ -21,7 +21,7 @@ class Contacts extends SingleMenu
     protected function create()
     {
         parent::create();
-        $this->data['extra'] = array();
+        $this->data['extra'] = [];
         $this->data['subject'] = '';
         $this->data['errmesg'] = '';
         $this->data['success'] = '';

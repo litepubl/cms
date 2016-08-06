@@ -106,10 +106,10 @@ class MetaWeblog extends Common
 
     protected function MWSetDate(array & $struct, $post)
     {
-        foreach (array(
+        foreach ([
             'dateCreated',
             'pubDate'
-        ) as $name) {
+        ] as $name) {
             if (!empty($struct[$name])) {
                 if (is_object($struct[$name])) {
                     $post->posted = $struct[$name]->getTimestamp();
@@ -254,9 +254,9 @@ class MetaWeblog extends Common
 
         $categories = Cats::i();
         $categories->loadall();
-        $result = array();
+        $result = [];
         foreach ($categories->items as $id => $item) {
-            $result[] = array(
+            $result[] = [
                 'categoryId' => $id,
                 'parentId' => $item['parent'],
                 'description' => $categories->contents->getdescription($item['id']) ,
@@ -264,7 +264,7 @@ class MetaWeblog extends Common
                 'title' => $item['title'],
                 'htmlUrl' => $this->getApp()->site->url . $item['url'],
                 'rssUrl' => $this->getApp()->site->url . "/rss/categories/$id.xml"
-            );
+            ];
         }
 
         return $result;
@@ -348,7 +348,7 @@ class MetaWeblog extends Common
     private function GetStruct(Post $post)
     {
         $categories = Cats::i();
-        return array(
+        return [
             'dateCreated' => new IXR_Date($post->posted) ,
             'userid' => (string)$post->author,
             'postid' => (string)$post->id,
@@ -368,7 +368,7 @@ class MetaWeblog extends Common
             'wp_author_display_name' => 'admin',
             'date_created_gmt' => new IXR_Date($post->posted - $this->getApp()->options->gmt) ,
             'publish' => $post->status == 'published' ? 1 : 0
-        );
+        ];
     }
 
     // returns array of structs
@@ -378,7 +378,7 @@ class MetaWeblog extends Common
         $count = (int)$numberOfPosts;
         $posts = Posts::i();
         $list = $posts->getrecent($this->getApp()->options->user, $count);
-        $result = array();
+        $result = [];
         foreach ($list as $id) {
             $post = Post::i($id);
             $result[] = $this->GetStruct($post);
@@ -411,10 +411,10 @@ class MetaWeblog extends Common
         $files = Files::i();
         $item = $files->getitem($id);
 
-        return array(
+        return [
             'file' => $item['filename'],
             'url' => $files->geturl($id) ,
             'type' => $item['mime']
-        );
+        ];
     }
 }

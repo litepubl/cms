@@ -26,10 +26,10 @@ class Http
         }
 
         if (!isset($parsed['scheme']) || !in_array(
-            $parsed['scheme'], array(
+            $parsed['scheme'], [
             'http',
             'https'
-            )
+            ]
         )) {
             $url = 'http://' . $url;
             $parsed['scheme'] = 'http';
@@ -112,10 +112,10 @@ class Http
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         if (in_array(
-            $code, array(
+            $code, [
             '200',
             '201'
-            )
+            ]
         )) {
             return $response;
         }

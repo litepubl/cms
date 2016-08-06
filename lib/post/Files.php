@@ -41,7 +41,7 @@ class Files extends \litepubl\core\Items
         $this->basename = 'files';
         $this->table = 'files';
         $this->addEvents('changed', 'edited', 'ongetfilelist', 'onlist');
-        $this->cachetml = array();
+        $this->cachetml = [];
     }
 
     public function getItemsposts()
@@ -83,12 +83,12 @@ class Files extends \litepubl\core\Items
         $item['size'] = filesize($realfile);
 
         //fix empty props
-        foreach (array(
+        foreach ([
             'mime',
             'title',
             'description',
             'keywords'
-        ) as $prop) {
+        ] as $prop) {
             if (!isset($item[$prop])) {
                 $item[$prop] = '';
             }
@@ -108,11 +108,11 @@ class Files extends \litepubl\core\Items
 
     public function escape(array $item)
     {
-        foreach (array(
+        foreach ([
             'title',
             'description',
             'keywords'
-        ) as $name) {
+        ] as $name) {
             $item[$name] = Filter::escape(Filter::unescape($item[$name]));
         }
         return $item;
@@ -217,9 +217,9 @@ class Files extends \litepubl\core\Items
         }
 
         $theme = Theme::i();
-        $result = array(
+        $result = [
             'container' => $theme->templates[$basekey],
-        );
+        ];
 
         $key = $basekey . '.';
         foreach ($theme->templates as $k => $v) {
@@ -243,7 +243,7 @@ class Files extends \litepubl\core\Items
         $this->preload($list);
 
         //sort by media type
-        $items = array();
+        $items = [];
         foreach ($list as $id) {
             if (!isset($this->items[$id])) {
                 continue;
@@ -366,7 +366,7 @@ class Files extends \litepubl\core\Items
     {
         $item = $this->getitem($id);
         return Str::jsonAttr(
-            array(
+            [
             'id' => $id,
             'link' => $this->getApp()->site->files . '/files/' . $item['filename'],
             'width' => $item['width'],
@@ -374,7 +374,7 @@ class Files extends \litepubl\core\Items
             'size' => $item['size'],
             'midle' => $item['midle'],
             'preview' => $item['preview'],
-            )
+            ]
         );
     }
 }

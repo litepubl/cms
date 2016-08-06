@@ -85,7 +85,7 @@ class Schema extends \litepubl\core\Item
     {
         parent::create();
         $this->originalCustom = [];
-        $this->data = array(
+        $this->data = [
             'id' => 0,
             'class' => get_class($this) ,
             'name' => 'default',
@@ -100,9 +100,9 @@ class Schema extends \litepubl\core\Item
             'invertorder' => false,
             'perpage' => 0,
 
-            'custom' => array() ,
-            'sidebars' => array()
-        );
+            'custom' => [] ,
+            'sidebars' => []
+        ];
 
         $this->sidebars = & $this->data['sidebars'];
         $this->themeInstance = null;
@@ -227,7 +227,7 @@ class Schema extends \litepubl\core\Item
                 $default = static ::i(1);
                 $this->sidebars = $default->sidebars;
             } else {
-                $this->sidebars = array();
+                $this->sidebars = [];
             }
             $this->data['customsidebar'] = $value;
             $this->save();

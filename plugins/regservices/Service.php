@@ -42,7 +42,7 @@ class Service extends \litepubl\core\Plugin implements \litepubl\core\Responsive
         $this->data['url'] = '';
         $this->data['client_id'] = '';
         $this->data['client_secret'] = '';
-        $this->sessdata = array();
+        $this->sessdata = [];
         $this->session_id = '';
     }
 
@@ -93,7 +93,7 @@ class Service extends \litepubl\core\Plugin implements \litepubl\core\Responsive
             return $response->forbidden();
         }
 
-        $this->sessdata = isset($_SESSION['sessdata']) ? $_SESSION['sessdata'] : array();
+        $this->sessdata = isset($_SESSION['sessdata']) ? $_SESSION['sessdata'] : [];
         session_destroy();
     }
 
@@ -118,11 +118,11 @@ class Service extends \litepubl\core\Plugin implements \litepubl\core\Responsive
 
     protected function getAdminInfo(Lang $lang): array
     {
-        return array(
+        return [
             'regurl' => '',
             'client_id' => $lang->client_id,
             'client_secret' => $lang->client_secret
-        );
+        ];
     }
 
     public function getTab(Panel $admin): string
@@ -160,11 +160,11 @@ class Service extends \litepubl\core\Plugin implements \litepubl\core\Responsive
                 }
             } elseif ($this->getApp()->options->reguser) {
                 $id = $users->add(
-                    array(
+                    [
                     'email' => $item['email'],
                     'name' => $item['name'],
                     'website' => isset($item['website']) ? Filter::clean_website($item['website']) : ''
-                    )
+                    ]
                 );
 
                 if (isset($item['uid'])) {
@@ -188,11 +188,11 @@ class Service extends \litepubl\core\Plugin implements \litepubl\core\Responsive
                     //nothing
                 } elseif ($this->getApp()->options->reguser) {
                     $id = $users->add(
-                        array(
+                        [
                         'email' => '',
                         'name' => $item['name'],
                         'website' => isset($item['website']) ? Filter::clean_website($item['website']) : ''
-                        )
+                        ]
                     );
                     $users->approve($id);
                     $reguser->add($id, $this->name, $uid);

@@ -17,11 +17,11 @@ class Contextual extends Widget
     private function isValue(string $name): bool
     {
         return in_array(
-            $name, array(
+            $name, [
             'ajax',
             'order',
             'sidebar'
-            )
+            ]
         );
     }
 

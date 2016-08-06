@@ -40,13 +40,13 @@ class Sitemap extends \litepubl\core\Items implements \litepubl\view\ViewInterfa
         $this->data['date'] = time();
         $this->data['countfiles'] = 1;
         $this->addmap(
-            'classes', array(
+            'classes', [
             'litepubl\pages\Menus',
             'litepubl\post\Posts',
             'litepubl\tag\Cats',
             'litepubl\tag\Tags',
             'litepubl\post\Archives'
-            )
+            ]
         );
     }
 

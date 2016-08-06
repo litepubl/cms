@@ -232,11 +232,11 @@ class Login extends Form
 
         $users = Users::i();
         $id = $users->add(
-            array(
+            [
             'password' => $password,
             'name' => $_SESSION['name'],
             'email' => $email
-            )
+            ]
         );
 
         session_destroy();

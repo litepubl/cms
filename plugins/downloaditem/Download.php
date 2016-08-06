@@ -23,14 +23,14 @@ class Download extends \litepubl\post\Post
     protected function create()
     {
         parent::create();
-        $this->childData = array(
+        $this->childData = [
             'type' => 'plugin',
             'downloads' => 0,
             'downloadurl' => '',
             'authorurl' => '',
             'authorname' => '',
             'version' => '1.00',
-        );
+        ];
     }
 
     public function getFactory()
@@ -47,13 +47,13 @@ class Download extends \litepubl\post\Post
     {
         $names = trim($names);
         if ($names == '') {
-            $this->tags = array();
+            $this->tags = [];
             return;
         }
 
         $parent = $this->getParentTag();
         $tags = $this->factory->tags;
-        $items = array();
+        $items = [];
         $list = explode(',', $names);
         foreach ($list as $title) {
             $title = Filter::escape($title);

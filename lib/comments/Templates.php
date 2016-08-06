@@ -91,11 +91,11 @@ class Templates extends \litepubl\core\Events
         case 'comuser':
             $args->mesg = $this->getmesg('comuser', $this->getApp()->options->reguser ? 'regaccount' : false);
 
-            foreach (array(
+            foreach ([
             'name',
             'email',
             'url'
-            ) as $field) {
+            ] as $field) {
                 $args->$field = "<?php echo (isset(\$_COOKIE['comuser_$field']) ? \$_COOKIE['comuser_$field'] : ''); ?>";
             }
 
@@ -132,13 +132,13 @@ class Templates extends \litepubl\core\Events
     public function getJS(bool $confirmcomment, string $authstatus): string
     {
         $cm = Manager::i();
-        $params = array(
+        $params = [
             'confirmcomment' => $confirmcomment,
             'comuser' => 'comuser' == $authstatus,
             'canedit' => $cm->canedit,
             'candelete' => $cm->candelete,
             'ismoder' => $authstatus != 'logged' ? false : '<?php echo ($ismoder ? \'true\' : \'false\'); ?>'
-        );
+        ];
 
         $args = new Args();
         $args->params = json_encode($params);

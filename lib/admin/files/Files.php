@@ -35,13 +35,13 @@ class Files extends \litepubl\admin\Menu
         $args = new Args();
         if (!isset($_GET['action'])) {
             $args->add(
-                array(
+                [
                 'uploadmode' => 'file',
                 'downloadurl' => '',
                 'title' => '',
                 'description' => '',
                 'keywords' => ''
-                )
+                ]
             );
 
             $form = new Form($args);
@@ -102,40 +102,40 @@ class Files extends \litepubl\admin\Menu
         $from = $this->getfrom($perpage, $count);
         $list = $files->select($sql, " order by posted desc limit $from, $perpage");
         if (!$list) {
-            $list = array();
+            $list = [];
         }
         $result.= $admintheme->getcount($count, $from, $from + count($list));
 
         $args->adminurl = $this->adminurl;
         $result.= $this->tableItems(
-            $files->items, array(
-            array(
+            $files->items, [
+            [
                 'right',
                 'ID',
                 '$id'
-            ) ,
-            array(
+            ] ,
+            [
                 'right',
                 $lang->filename,
                 '<a href="$site.files/files/$filename">$filename</a>'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->image,
                 $type != 'icon' ? '$title' : '<img src="$site.files/files/$filename" alt="$filename" />'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->edit,
                 "<a href=\"$this->adminurl=\$id&action=edit\">$lang->edit</a>"
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->thumbnail,
                 '<a href="' . Link::url('/admin/files/thumbnail/?id=') . "\$id\" target=\"_blank\">$lang->thumbnail</a>"
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->delete,
                 "<a href=\"$this->adminurl=\$id&action=delete\" class=\"confirm-delete-link\">$lang->delete</a>"
-            )
-            )
+            ]
+            ]
         );
 
         $result.= $this->theme->getpages($this->url, $this->getApp()->context->request->page, ceil($count / $perpage));

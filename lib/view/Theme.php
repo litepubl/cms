@@ -34,15 +34,15 @@ class Theme extends Base
     protected function create()
     {
         parent::create();
-        $this->templates = array(
+        $this->templates = [
             'index' => '',
             'title' => '',
             'menu' => '',
             'content' => '',
-            'sidebars' => array() ,
-            'custom' => array() ,
-            'customadmin' => array()
-        );
+            'sidebars' => [] ,
+            'custom' => [] ,
+            'customadmin' => []
+        ];
     }
 
     public function __tostring()
@@ -75,12 +75,12 @@ class Theme extends Base
         }
 
         $iduser = 0;
-        foreach (array(
+        foreach ([
             'author',
             'idauthor',
             'user',
             'iduser'
-        ) as $propname) {
+        ] as $propname) {
             if (isset($model->$propname)) {
                 $iduser = $model->$propname;
                 break;
@@ -135,7 +135,7 @@ class Theme extends Base
         $to = $count;
         $perpage = $this->getApp()->options->perpage;
         $args->perpage = $perpage;
-        $items = array();
+        $items = [];
         if ($count > $perpage * 2) {
             //$page is midle of the bar
             $from = (int)max(1, $page - ceil($perpage / 2));
@@ -180,7 +180,7 @@ class Theme extends Base
             $params = $this->getApp()->site->q . $params;
         }
 
-        $a = array();
+        $a = [];
         if (($page > 1) && ($tml_prev = trim($this->templates['content.navi.prev']))) {
             $i = $page - 1;
             $args->page = $i;
@@ -228,46 +228,46 @@ class Theme extends Base
     public function getButton($title)
     {
         return strtr(
-            $this->templates['content.admin.button'], array(
+            $this->templates['content.admin.button'], [
             '$lang.$name' => $title,
             'name="$name"' => '',
             'id="submitbutton-$name"' => ''
-            )
+            ]
         );
     }
 
     public function getSubmit($title)
     {
         return strtr(
-            $this->templates['content.admin.submit'], array(
+            $this->templates['content.admin.submit'], [
             '$lang.$name' => $title,
             'name="$name"' => '',
             'id="submitbutton-$name"' => ''
-            )
+            ]
         );
     }
 
     public function getInput(string $type, string $name, string $value, string $title): string
     {
         return strtr(
-            $this->templates['content.admin.' . $type], array(
+            $this->templates['content.admin.' . $type], [
             '$lang.$name' => $title,
             '$name' => $name,
             '$value' => $value
-            )
+            ]
         );
     }
 
     public function getRadio($name, $value, $title, $checked)
     {
         return strtr(
-            $this->templates['content.admin.radioitem'], array(
+            $this->templates['content.admin.radioitem'], [
             '$lang.$name' => $title,
             '$name' => $name,
             '$value' => $title,
             '$index' => $value,
             '$checked' => $checked ? 'checked="checked"' : '',
-            )
+            ]
         );
     }
 

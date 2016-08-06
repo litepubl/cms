@@ -278,11 +278,11 @@ class Backuper extends \litepubl\core\Events
             $dir = rtrim($dir, '/') . '/';
             $hasindex = false;
             $path.= DIRECTORY_SEPARATOR;
-            $ignoredir = array(
+            $ignoredir = [
                 'languages',
                 'logs',
                 'themes'
-            );
+            ];
             foreach ($list as $name => $item) {
                 $filename = $path . $name;
                 if (is_dir($filename)) {
@@ -387,7 +387,7 @@ class Backuper extends \litepubl\core\Events
         if ($theme) {
             $this->setdir('themes');
             $schemes = Schemes::i();
-            $names = array();
+            $names = [];
             foreach ($schemes->items as $id => $item) {
                 if (in_array($item['themename'], $names)) {
                     continue;
@@ -571,7 +571,7 @@ class Backuper extends \litepubl\core\Events
         set_time_limit(300);
         $this->archtype = $archtype;
         $this->hasdata = false;
-        $this->existingfolders = array();
+        $this->existingfolders = [];
         $this->createArchive();
 
         switch ($archtype) {
@@ -695,7 +695,7 @@ $content = null;
         set_time_limit(300);
         $this->archtype = 'unzip';
         $this->hasdata = false;
-        $this->existingfolders = array();
+        $this->existingfolders = [];
 
         $mode = $this->filer->chmod_file;
         $path_checked = false;
@@ -762,7 +762,7 @@ $content = null;
 
     public function unpack($content, $archtype)
     {
-        $result = array();
+        $result = [];
         switch ($archtype) {
         case 'tar':
             $tar = $this->newTar();
@@ -854,7 +854,7 @@ $content = null;
     public function createshellbackup()
     {
         $dbconfig = $this->getApp()->options->dbconfig;
-        $cmd = array();
+        $cmd = [];
         $cmd[] = 'cd ' . $this->getApp()->paths->backup;
         $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])), $dbconfig['dbname']);
         $filename = $this->getshellfilename();
@@ -871,7 +871,7 @@ $content = null;
     public function createshellfullbackup()
     {
         $dbconfig = $this->getApp()->options->dbconfig;
-        $cmd = array();
+        $cmd = [];
         $cmd[] = 'cd ' . $this->getApp()->paths->backup;
         $cmd[] = sprintf('mysqldump -u%s -p%s %s>dump.sql', $dbconfig['login'], str_rot13(base64_decode($dbconfig['password'])), $dbconfig['dbname']);
         $filename = $this->getshellfilename();
@@ -887,7 +887,7 @@ $content = null;
 
     public function createshellfilesbackup()
     {
-        $cmd = array();
+        $cmd = [];
         $cmd[] = 'cd ' . $this->getApp()->paths->backup;
         $filename = 'files_' . $this->getApp()->site->domain . date('-Y-m-d');
         $cmd[] = sprintf('tar --exclude="*.bak.php" --exclude="*.lok" --exclude="*.log" -cf %s.tar ../../files/*', $filename);

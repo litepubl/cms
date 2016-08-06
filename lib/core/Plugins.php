@@ -140,9 +140,9 @@ class Plugins extends Items
         $classes = $this->getApp()->classes;
         $classes->lock();
         $this->lock();
-            $this->items[$name] = array(
+            $this->items[$name] = [
         'path' => $dirNames[$name],
-            );
+            ];
 
             $classes->installClass($classname);
         if ($about['adminclassname']) {

@@ -75,9 +75,9 @@ class Options extends Events
         unset($this->cache);
         $this->gmt = 0;
         $this->group = '';
-        $this->idgroups = array();
-        $this->addmap('groupnames', array());
-        $this->addmap('parentgroups', array());
+        $this->idgroups = [];
+        $this->addmap('groupnames', []);
+        $this->addmap('parentgroups', []);
     }
 
     public function afterLoad()

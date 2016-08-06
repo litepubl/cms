@@ -25,7 +25,7 @@ class Widget extends \litepubl\widget\Contextual
         $this->cache = 'nocache';
         $this->adminclass = __NAMESPACE__ . '\Admin';
         $this->basename = 'widget.postcat';
-        $this->addmap('items', array());
+        $this->addmap('items', []);
     }
 
     public function add(string $title, string $content, string $template, array $cats): int
@@ -36,12 +36,12 @@ class Widget extends \litepubl\widget\Contextual
         $widgets->items[$id]['title'] = $title;
         $widgets->unlock();
 
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'title' => $title,
             'content' => $content,
             'template' => $template,
             'cats' => $cats
-        );
+        ];
 
         $this->save();
         return $id;

@@ -21,8 +21,8 @@ class UserOptions extends Items
         parent::create();
         $this->basename = 'usersoptions';
         $this->table = 'useroptions';
-        $this->addmap('defvalues', array());
-        $this->defitems = array();
+        $this->addmap('defvalues', []);
+        $this->defitems = [];
     }
 
     public function getVal($name)

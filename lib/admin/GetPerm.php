@@ -26,11 +26,11 @@ class GetPerm
         $lang->section = 'perms';
         $theme = Theme::i();
         $result = strtr(
-            $theme->templates['content.admin.combo'], array(
+            $theme->templates['content.admin.combo'], [
             '$lang.$name' => $lang->perm,
             '$name' => $name,
             '$value' => static ::items($idperm)
-            )
+            ]
         );
 
         $lang->section = $section;

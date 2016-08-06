@@ -21,23 +21,23 @@ function SchemesInstall($self)
     $lang = Lang::admin('names');
     $default = $self->add($lang->default);
     $def = Schema::i($default);
-    $def->sidebars = array(
-        array() ,
-        array() ,
-        array()
-    );
+    $def->sidebars = [
+        [] ,
+        [] ,
+        []
+    ];
 
     $idadmin = $self->add($lang->adminpanel);
     $admin = Schema::i($idadmin);
     $admin->menuclass = 'litepubl\admin\Menus';
 
-    $self->defaults = array(
+    $self->defaults = [
         'post' => $default,
         'menu' => $default,
         'category' => $default,
         'tag' => $default,
         'admin' => $idadmin
-    );
+    ];
 
     $self->unlock();
 }

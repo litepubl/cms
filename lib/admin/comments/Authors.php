@@ -56,32 +56,32 @@ class Authors extends \litepubl\admin\Menu
         $editurl = Link::url('/admin/users/?id');
         $tb = $this->newTable();
         $tb->setStruct(
-            array(
-            array(
+            [
+            [
                 $lang->author,
                 '$name'
-            ) ,
+            ] ,
 
-            array(
+            [
                 'E-Mail',
                 '$email'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->website,
                 '$website'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->edit,
                 "<a href='$editurl=\$id&action=edit'>$lang->edit</a>"
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->delete,
                 "<a href='$adminurl=\$id&action=delete'>$lang->delete</a>"
-            )
-            )
+            ]
+            ]
         );
 
         $result.= $tb->build($items);

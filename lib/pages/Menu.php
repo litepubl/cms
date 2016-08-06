@@ -47,14 +47,14 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
 
     public $formresult;
 
-    public static $ownerprops = array(
+    public static $ownerprops = [
         'title',
         'url',
         'idurl',
         'parent',
         'order',
         'status'
-    );
+    ];
 
     public static function i($id = 0)
     {
@@ -110,7 +110,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
     {
         parent::create();
         $this->formresult = '';
-        $this->data = array(
+        $this->data = [
             'id' => 0,
             // not supported
             'author' => 0,
@@ -128,7 +128,7 @@ class Menu extends \litepubl\core\Item implements \litepubl\view\ViewInterface
             'parent' => 0,
             'order' => 0,
             'status' => 'published'
-        );
+        ];
     }
 
     public function getBasename()

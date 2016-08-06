@@ -41,7 +41,7 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         $this->addEvents('added', 'onadd', 'onphone');
         $this->table = 'ulogin';
         $this->data['url'] = '/admin/ulogin.php';
-        $this->data['nets'] = array();
+        $this->data['nets'] = [];
     }
 
     public function add($id, $service, $uid)
@@ -57,11 +57,11 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         }
 
         $this->db->insert(
-            array(
+            [
             'id' => $id,
             'service' => $service,
             'uid' => $uid
-            )
+            ]
         );
 
         $this->added(['id' => $id, 'service' => $service]);
@@ -171,11 +171,11 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
             } elseif ($this->getApp()->options->reguser) {
                 $newreg = true;
                 $id = $users->add(
-                    array(
+                    [
                     'email' => $info['email'],
                     'name' => $name,
                     'website' => empty($info['profile']) ? '' : Filter::clean_website($info['profile']) ,
-                    )
+                    ]
                 );
 
                 if ($phone) {
@@ -195,11 +195,11 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
                 } elseif ($this->getApp()->options->reguser) {
                     $newreg = true;
                     $id = $users->add(
-                        array(
+                        [
                         'email' => '',
                         'name' => $name,
                         'website' => empty($info['profile']) ? '' : Filter::clean_website($info['profile']) ,
-                        )
+                        ]
                     );
                     $users->approve($id);
                     if ($phone) {
@@ -235,11 +235,11 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
             ]
         );
 
-        return array(
+        return [
             'id' => $id,
             'pass' => $cookie,
             'regservice' => $info['network']
-        );
+        ];
     }
 
     public function ulogin_auth(array $args)
@@ -259,16 +259,16 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
     public function check_logged(array $args)
     {
         if ($this->getApp()->options->authCookies($args['litepubl_user_id'], $args['litepubl_user'])) {
-            return array(
+            return [
                 'logged' => true
-            );
+            ];
         } else {
-            return array(
-                'error' => array(
+            return [
+                'error' => [
                     'message' => 'Not logged',
                     'code' => 403
-                )
-            );
+                ]
+            ];
         }
     }
 
@@ -276,7 +276,7 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
     {
         $phone = trim(
             str_replace(
-                array(
+                [
                 ' ',
                 '+',
                 '=',
@@ -285,7 +285,7 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
                 '(',
                 ')',
                 '.'
-                ), '', trim($phone)
+                ], '', trim($phone)
             )
         );
         if (strlen($phone) && ($phone[0] == '9')) {

@@ -27,7 +27,7 @@ class Tickets extends \litepubl\post\Posts
     {
         parent::create();
         $this->childTable = 'tickets';
-        $this->addMap('cats', array());
+        $this->addMap('cats', []);
         $this->data['idcomauthor'] = 0;
     }
 
@@ -45,13 +45,13 @@ class Tickets extends \litepubl\post\Posts
     {
         $cats = array_intersect($post->categories, $this->cats);
         if (!count($cats)) {
-            $cats = array(
+            $cats = [
                 $this->cats[0]
-            );
+            ];
         } elseif (count($cats) > 1) {
-            $cats = array(
+            $cats = [
                 $cats[0]
-            );
+            ];
         }
 
         $post->categories = $cats;

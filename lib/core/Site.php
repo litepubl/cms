@@ -38,10 +38,10 @@ class Site extends Events
         parent::create();
         $this->basename = 'site';
         $this->addmap(
-            'mapoptions', array(
+            'mapoptions', [
             'version' => 'version',
             'language' => 'language',
-            )
+            ]
         );
     }
 
@@ -123,7 +123,7 @@ class Site extends Events
     {
         if ($id = $this->getApp()->options->user) {
             if (!isset($this->users)) {
-                $this->users = array();
+                $this->users = [];
             }
 
             if (isset($this->users[$id])) {

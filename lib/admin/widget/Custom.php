@@ -28,7 +28,7 @@ class Custom extends Widget
 
     public function getTemplates()
     {
-        $result = array();
+        $result = [];
         $lang = $this->lang;
         $lang->section = 'widgets';
         $result['widget'] = $lang->defaulttemplate;
@@ -53,11 +53,11 @@ class Custom extends Widget
             $form = $this->theme->getinput('text', 'title', '', $this->lang->widgettitle);
             $form.= GetSchema::combo(1);
             $args->mode = 'add';
-            $item = array(
+            $item = [
                 'title' => '',
                 'content' => '',
                 'template' => 'widget'
-            );
+            ];
         }
 
         $args->idwidget = $id;
@@ -80,13 +80,13 @@ class Custom extends Widget
         $lang = $this->lang;
         $tb = $this->newTable();
         $tb->setStruct(
-            array(
+            [
             $tb->checkbox('widgetcheck') ,
-            array(
+            [
                 $lang->widgettitle,
                 "<a href=\"$this->adminurl\$id\" title=\"\$title\">\$title</a>"
-            ) ,
-            )
+            ] ,
+            ]
         );
 
         $form = $this->newForm($this->args);

@@ -34,10 +34,10 @@ class Users extends Items
     public function res2items($res)
     {
         if (!$res) {
-            return array();
+            return [];
         }
 
-        $result = array();
+        $result = [];
         $db = $this->getApp()->db;
         while ($item = $db->fetchassoc($res)) {
             $id = (int)$item['id'];
@@ -71,10 +71,10 @@ class Users extends Items
         $db->delete("iduser = $id");
         foreach ($idgroups as $idgroup) {
             $db->add(
-                array(
+                [
                 'iduser' => $id,
                 'idgroup' => $idgroup
-                )
+                ]
             );
         }
     }
@@ -217,11 +217,11 @@ class Users extends Items
         }
 
         $this->db->updateassoc(
-            array(
+            [
             'id' => $id,
             'cookie' => $cookie,
             'expired' => $expired
-            )
+            ]
         );
     }
 }

@@ -88,10 +88,10 @@ class Pages extends \litepubl\admin\Menu
             return;
         }
 
-        $item = array(
+        $item = [
             'rawcontent' => trim($rawcontent) ,
             'content' => Filter::i()->filter($rawcontent)
-        );
+        ];
 
         if ('admin' == $this->getApp()->options->group) {
             $item['idschema'] = (int)$idschema;
@@ -105,10 +105,10 @@ class Pages extends \litepubl\admin\Menu
         $pages->edit($id, $item);
 
         UserItems::i()->edit(
-            $id, array(
+            $id, [
             'name' => $name,
             'website' => Filter::clean_website($website) ,
-            )
+            ]
         );
 
         $useroptions = UserOptions::i();
@@ -144,12 +144,12 @@ class Pages extends \litepubl\admin\Menu
         $tb = $this->newTable();
         $tb->setowner($users);
         $tb->setStruct(
-            array(
-            array(
+            [
+            [
                 $lang->edit,
                 sprintf('<a href="%s=$id">$name</a>', $this->adminurl)
-            )
-            )
+            ]
+            ]
         );
 
         $result.= $tb->build($items);

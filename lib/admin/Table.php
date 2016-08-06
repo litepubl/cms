@@ -49,9 +49,9 @@ const CENTER = 'text-center';
         $this->head = '';
         $this->body = '';
         $this->footer = '';
-        $this->callbacks = array();
+        $this->callbacks = [];
         $this->args = new Args();
-        $this->data = array();
+        $this->data = [];
     }
 
     public function setStruct(array $struct)
@@ -80,10 +80,10 @@ const CENTER = 'text-center';
                 $this->body.= sprintf('<td class="%s">%s</td>', $colclass, $name);
 
                 array_unshift($item, $this);
-                $this->callbacks[$name] = array(
+                $this->callbacks[$name] = [
                     'callback' => $s,
                     'params' => $item,
-                );
+                ];
             } else {
                 throw new Exception('Unknown column ' . var_export($s, true));
             }
@@ -94,13 +94,13 @@ const CENTER = 'text-center';
 
     public function addCallback(string $varname, $callback, $param = null)
     {
-        $this->callbacks[$varname] = array(
+        $this->callbacks[$varname] = [
             'callback' => $callback,
-            'params' => array(
+            'params' => [
                 $this,
                 $param
-            ) ,
-        );
+            ] ,
+        ];
     }
 
     public function addFooter(string $footer)
@@ -172,10 +172,10 @@ public function buildItems(array $items, array $struct): string
     public function setOwner(Items $owner)
     {
         $this->addCallback(
-            '$tempcallback' . count($this->callbacks), array(
+            '$tempcallback' . count($this->callbacks), [
             $this,
             'itemsCallback'
-            ), $owner
+            ], $owner
         );
     }
 
@@ -191,10 +191,10 @@ public function buildItems(array $items, array $struct): string
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setStruct($struct);
         $this->addCallback(
-            '$tempcallback' . count($this->callbacks), array(
+            '$tempcallback' . count($this->callbacks), [
             $this,
             'posts_callback'
-            ), false
+            ], false
         );
     }
 
@@ -202,17 +202,17 @@ public function buildItems(array $items, array $struct): string
     {
         $lang = Lang::i();
         $this->setStruct(
-            array(
-            array(
+            [
+            [
                 $lang->name,
                 '$name'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->property,
                 '$value'
-            )
-            )
+            ]
+            ]
         );
 
         $body = '';
@@ -251,17 +251,17 @@ public function buildItems(array $items, array $struct): string
     {
         $lang = Lang::i();
         $this->setStruct(
-            array(
-            array(
+            [
+            [
                 $lang->name,
                 '<label for="$name-input">$title</label>'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->property,
                 '$input'
-            )
-            )
+            ]
+            ]
         );
 
         $body = '';
@@ -304,32 +304,32 @@ public function buildItems(array $items, array $struct): string
     {
         $title = Lang::i()->__get($action);
 
-        return array(
+        return [
             $title,
             "<a href=\"$adminurl=\$id&action=$action\">$title</a>"
-        );
+        ];
     }
 
     public function checkbox(string $name): array
     {
         $admin = $this->getadmintheme();
 
-        return array(
+        return [
             'text-center col-checkbox',
             $admin->templates['checkbox.invert'],
             str_replace('$name', $name, $admin->templates['checkbox.id'])
-        );
+        ];
     }
 
     public function nameCheck(): array
     {
         $admin = Admin::i();
 
-        return array(
+        return [
             'text-center col-checkbox',
             $admin->templates['checkbox.stub'],
             $admin->templates['checkbox.name']
-        );
+        ];
     }
 
     public static function getColclass($s): string
@@ -339,11 +339,11 @@ public function buildItems(array $items, array $struct): string
             return 'text-left';
         }
 
-        $map = array(
+        $map = [
             'left' => 'text-left',
             'right' => 'text-right',
             'center' => 'text-center'
-        );
+        ];
 
         $list = explode(' ', $s);
         foreach ($list as $i => $v) {

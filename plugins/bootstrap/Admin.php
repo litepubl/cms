@@ -27,10 +27,10 @@ class Admin extends \litepubl\admin\Menu
         $lang = Lang::admin('adminbootstraptheme');
         $args = new Args();
 
-        $mainsidebars = array(
+        $mainsidebars = [
             'left' => $lang->left,
             'right' => $lang->right,
-        );
+        ];
 
         $schemes = Schemes::i();
         foreach ($schemes->items as $id => $item) {
@@ -59,10 +59,10 @@ class Admin extends \litepubl\admin\Menu
 
             $sidebar = $_POST["mainsidebar-$id"];
             if (!in_array(
-                $sidebar, array(
+                $sidebar, [
                 'left',
                 'right'
-                )
+                ]
             )) {
                 $sidebar = 'left';
             }

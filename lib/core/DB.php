@@ -30,7 +30,7 @@ class DB
     {
         $this->sql = '';
         $this->table = '';
-        $this->history = array();
+        $this->history = [];
 
         $this->setconfig($this->getconfig());
     }
@@ -105,10 +105,10 @@ class DB
     {
         $this->sql = $sql;
         if (Config::$debug) {
-            $this->history[] = array(
+            $this->history[] = [
                 'sql' => $sql,
                 'time' => 0
-            );
+            ];
             $microtime = microtime(true);
         }
 
@@ -212,7 +212,7 @@ class DB
 
     public function assoc2update(array $a)
     {
-        $list = array();
+        $list = [];
         foreach ($a as $name => $value) {
             if (is_bool($value)) {
                 $value = $value ? '1' : '0';
@@ -277,7 +277,7 @@ class DB
 
     public function assocToRow(array $a)
     {
-        $vals = array();
+        $vals = [];
         foreach ($a as $val) {
             if (is_bool($val)) {
                 $vals[] = $val ? '1' : '0';
@@ -394,7 +394,7 @@ $res = $this->query("select *  from $this->prefix$this->table where $where limit
 
     public function getValues($names, $where)
     {
-        $result = array();
+        $result = [];
         $res = $this->query("select $names from $this->prefix$this->table where $where");
         if (is_object($res)) {
             while ($r = $res->fetch_row()) {
@@ -406,7 +406,7 @@ $res = $this->query("select *  from $this->prefix$this->table where $where limit
 
     public function res2array($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($row = $res->fetch_row()) {
                 $result[] = $row;
@@ -417,7 +417,7 @@ $res = $this->query("select *  from $this->prefix$this->table where $where limit
 
     public function res2id($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($row = $res->fetch_row()) {
                 $result[] = $row[0];
@@ -428,7 +428,7 @@ $res = $this->query("select *  from $this->prefix$this->table where $where limit
 
     public function res2assoc($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($r = $res->fetch_assoc()) {
                 $result[] = $r;
@@ -439,7 +439,7 @@ $res = $this->query("select *  from $this->prefix$this->table where $where limit
 
     public function res2items($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($r = $res->fetch_assoc()) {
                 $result[(int)$r['id']] = $r;

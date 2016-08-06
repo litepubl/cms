@@ -66,10 +66,10 @@ trait CoInstances
         foreach ($this->coinstances as $coinstance) {
             if (method_exists($coinstance, $name) || $coinstance->method_exists($name)) {
                 return call_user_func_array(
-                    array(
+                    [
                     $coinstance,
                     $name
-                    ), $params
+                    ], $params
                 );
             }
         }

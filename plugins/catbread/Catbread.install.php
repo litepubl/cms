@@ -45,10 +45,10 @@ function CatbreadThemeparsed(Catbread $self, Base $theme)
     $tag1 = '$catbread.post';
     $tag2 = '$catbread.sim';
 
-    foreach (array(
+    foreach ([
         'content.post',
         'shop.product'
-    ) as $k) {
+    ] as $k) {
         if (isset($theme->templates[$k]) && !strpos($theme->templates[$k], '$catbread')) {
             $v = $theme->templates[$k];
             $replace = '$post.catlinks';
@@ -103,10 +103,10 @@ function CatbreadThemeparsed(Catbread $self, Base $theme)
 
     if (Parser::i()->replacelang) {
         $lang = Lang::i('catbread');
-        foreach (array(
+        foreach ([
         'catbread.items.childs',
         'catbread.similar',
-        ) as $name) {
+        ] as $name) {
             $theme->templates[$name] = $theme->replacelang($theme->templates[$name], $lang);
         }
     }

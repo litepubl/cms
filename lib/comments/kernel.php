@@ -11,7 +11,7 @@ use litepubl\view\Theme;
 
 class Comment extends \litepubl\core\Data
 {
-    private static $md5 = array();
+    private static $md5 = [];
     private $_posted;
 
     public function __construct($id = 0)
@@ -45,12 +45,12 @@ class Comment extends \litepubl\core\Data
         $this->db->UpdateAssoc(compact('id', 'post', 'author', 'parent', 'posted', 'status', 'content'));
 
         $this->getdb($this->rawtable)->UpdateAssoc(
-            array(
+            [
             'id' => $id,
             'modified' => Str::sqlDate() ,
             'rawcontent' => $rawcontent,
             'hash' => Str::baseMd5($rawcontent)
-            )
+            ]
         );
     }
 
@@ -241,14 +241,14 @@ class Comments extends \litepubl\core\Items
         $filter = Filter::i();
         $filtered = $filter->filtercomment($content);
 
-        $item = array(
+        $item = [
             'post' => $idpost,
             'parent' => 0,
             'author' => (int)$idauthor,
             'posted' => Str::sqlDate() ,
             'content' => $filtered,
             'status' => $status
-        );
+        ];
 
         $id = (int)$this->db->add($item);
         $item['id'] = $id;
@@ -256,14 +256,14 @@ class Comments extends \litepubl\core\Items
         $this->items[$id] = $item;
 
         $this->getdb($this->rawtable)->add(
-            array(
+            [
             'id' => $id,
             'created' => Str::sqlDate() ,
             'modified' => Str::sqlDate() ,
             'ip' => $ip,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-            )
+            ]
         );
 
         $this->added(['id' => $id]);
@@ -280,12 +280,12 @@ class Comments extends \litepubl\core\Items
         $filtered = Filter::i()->filtercomment($content);
         $this->db->setvalue($id, 'content', $filtered);
         $this->getdb($this->rawtable)->updateassoc(
-            array(
+            [
             'id' => $id,
             'modified' => Str::sqlDate() ,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-            )
+            ]
         );
 
         if (isset($this->items[$id])) {
@@ -313,11 +313,11 @@ class Comments extends \litepubl\core\Items
     public function setStatus($id, $status)
     {
         if (!in_array(
-            $status, array(
+            $status, [
             'approved',
             'hold',
             'spam'
-            )
+            ]
         )) {
             return false;
         }
@@ -391,28 +391,28 @@ class Comments extends \litepubl\core\Items
     public function insert($idauthor, $content, $ip, $posted, $status)
     {
         $filtered = Filter::i()->filtercomment($content);
-        $item = array(
+        $item = [
             'post' => $this->pid,
             'parent' => 0,
             'author' => $idauthor,
             'posted' => Str::sqlDate($posted) ,
             'content' => $filtered,
             'status' => $status
-        );
+        ];
 
         $id = $this->db->add($item);
         $item['rawcontent'] = $content;
         $this->items[$id] = $item;
 
         $this->getdb($this->rawtable)->add(
-            array(
+            [
             'id' => $id,
             'created' => Str::sqlDate($posted) ,
             'modified' => Str::sqlDate() ,
             'ip' => $ip,
             'rawcontent' => $content,
             'hash' => Str::baseMd5($content)
-            )
+            ]
         );
 
         return $id;
@@ -462,9 +462,9 @@ class Comments extends \litepubl\core\Items
         $lang = Lang::i('comment');
 
         $tml = strtr(
-            $theme->templates['content.post.templatecomments.comments.comment'], array(
+            $theme->templates['content.post.templatecomments.comments.comment'], [
             '$quotebuttons' => $view->comstatus != 'closed' ? $theme->templates['content.post.templatecomments.comments.comment.quotebuttons'] : ''
-            )
+            ]
         );
 
         $index = $from;
@@ -676,12 +676,12 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
                     $iduser = $cm->addcomuser($values['name'], $values['email'], $values['url'], $values['ip']);
                 }
 
-                $cookies = array();
-                foreach (array(
+                $cookies = [];
+                foreach ([
                 'name',
                 'email',
                 'url'
-                ) as $field) {
+                ] as $field) {
                     $cookies["comuser_$field"] = $values[$field];
                 }
                 break;
@@ -736,7 +736,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
 
         $app->cache->clearUrl($url);
-        return $this->sendResult($app->site->url . $url, isset($cookies) ? $cookies : array());
+        return $this->sendResult($app->site->url . $url, isset($cookies) ? $cookies : []);
     }
 
     public function confirmRecevied($confirmid)
@@ -953,10 +953,10 @@ class Json extends \litepubl\core\Events
 
         $comments = Comments::i();
         if ($comments->edit($id, $content)) {
-            return array(
+            return [
                 'id' => $id,
                 'content' => $comments->getvalue($id, 'content')
-            );
+            ];
         } else {
             return false;
         }
@@ -971,10 +971,10 @@ class Json extends \litepubl\core\Events
 
         $comments = Comments::i();
         $raw = $comments->raw->getvalue($id, 'rawcontent');
-        return array(
+        return [
             'id' => $id,
             'rawcontent' => $raw
-        );
+        ];
     }
 
     public function comments_get_hold(array $args)
@@ -992,20 +992,20 @@ class Json extends \litepubl\core\Events
             $where = "and $comments->thistable.author = " . $this->getApp()->options->user;
         }
 
-        return array(
+        return [
             'items' => $comments->getcontentwhere('hold', $where)
-        );
+        ];
     }
 
     public function comment_add(array $args)
     {
         if ($this->getApp()->options->commentsdisabled) {
-            return array(
-                'error' => array(
+            return [
+                'error' => [
                     'message' => 'Comments disabled',
                     'code' => 403
-                )
-            );
+                ]
+            ];
         }
 
         $commentform = Form::i();
@@ -1021,29 +1021,29 @@ class Json extends \litepubl\core\Events
     //commentform helper
     public function confirm($confirmid)
     {
-        return array(
+        return [
             'confirmid' => $confirmid,
             'code' => 'confirm',
-        );
+        ];
     }
 
     public function getErrorcontent($s)
     {
-        return array(
-            'error' => array(
+        return [
+            'error' => [
                 'message' => $s,
                 'code' => 'error'
-            )
-        );
+            ]
+        ];
     }
 
     public function sendresult($url, $cookies)
     {
-        return array(
+        return [
             'cookies' => $cookies,
             'posturl' => $url,
             'code' => 'success'
-        );
+        ];
     }
 
     public function comments_get_logged(array $args)
@@ -1129,13 +1129,13 @@ class Manager extends \litepubl\core\Events implements \litepubl\core\Responsive
     {
         $users = Users::i();
         $id = $users->add(
-            array(
+            [
             'email' => strtolower(trim($email)) ,
             'name' => $name,
             'website' => Filter::clean_website($website) ,
             'status' => 'comuser',
             'idgroups' => 'commentator'
-            )
+            ]
         );
 
         if ($id) {
@@ -1370,7 +1370,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
         $this->basename = 'subscribers';
         $this->data['fromemail'] = '';
         $this->data['enabled'] = true;
-        $this->addmap('blacklist', array());
+        $this->addmap('blacklist', []);
     }
 
     public function getStorage()
@@ -1446,7 +1446,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
         $this->data['blacklist'] = $a;
         $this->save();
 
-        $dblist = array();
+        $dblist = [];
         foreach ($a as $s) {
             if ($s == '') {
                 continue;
@@ -1518,7 +1518,7 @@ class Subscribers extends \litepubl\core\ItemsPosts
 
         $users = Users::i();
         $users->loaditems($subscribers);
-        $list = array();
+        $list = [];
         foreach ($subscribers as $uid) {
             $user = $users->getitem($uid);
             if ($user['status'] == 'hold') {
@@ -1548,14 +1548,14 @@ class Subscribers extends \litepubl\core\ItemsPosts
                 $admin.= rawurlencode($user['cookie']);
             }
 
-            $list[] = array(
+            $list[] = [
                 'fromname' => $this->getApp()->site->name,
                 'fromemail' => $this->fromemail,
                 'toname' => $user['name'],
                 'toemail' => $email,
                 'subject' => $subject,
                 'body' => $body . $admin
-            );
+            ];
         }
 
         if (count($list)) {
@@ -1648,11 +1648,11 @@ class Templates extends \litepubl\core\Events
         case 'comuser':
             $args->mesg = $this->getmesg('comuser', $this->getApp()->options->reguser ? 'regaccount' : false);
 
-            foreach (array(
+            foreach ([
             'name',
             'email',
             'url'
-            ) as $field) {
+            ] as $field) {
                 $args->$field = "<?php echo (isset(\$_COOKIE['comuser_$field']) ? \$_COOKIE['comuser_$field'] : ''); ?>";
             }
 
@@ -1689,13 +1689,13 @@ class Templates extends \litepubl\core\Events
     public function getJS(bool $confirmcomment, string $authstatus): string
     {
         $cm = Manager::i();
-        $params = array(
+        $params = [
             'confirmcomment' => $confirmcomment,
             'comuser' => 'comuser' == $authstatus,
             'canedit' => $cm->canedit,
             'candelete' => $cm->candelete,
             'ismoder' => $authstatus != 'logged' ? false : '<?php echo ($ismoder ? \'true\' : \'false\'); ?>'
-        );
+        ];
 
         $args = new Args();
         $args->params = json_encode($params);

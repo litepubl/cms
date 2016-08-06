@@ -33,7 +33,7 @@ class Usersman extends Data
 
         $password = empty($values['password']) ? Str::md5Uniq() : $values['password'];
 
-        $item = array(
+        $item = [
             'email' => $email,
             'name' => isset($values['name']) ? trim($values['name']) : '',
             'website' => isset($values['website']) ? trim($values['website']) : '',
@@ -43,7 +43,7 @@ class Usersman extends Data
             'idgroups' => implode(',', $idgroups) ,
             'trust' => 0,
             'status' => isset($values['status']) ? $values['status'] : 'approved',
-        );
+        ];
 
         $id = $users->db->add($item);
         $item['idgroups'] = $idgroups;
@@ -124,15 +124,15 @@ class Usersman extends Data
         }
 
         if ($id = $this->cleangroup($v)) {
-            return array(
+            return [
                 $id
-            );
+            ];
         }
     }
 
     public function checkgroups(array $a)
     {
-        $result = array();
+        $result = [];
         foreach ($a as $val) {
             if ($id = $this->cleangroup($val)) {
                 $result[] = $id;

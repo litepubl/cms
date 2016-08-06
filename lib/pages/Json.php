@@ -88,7 +88,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
 
         if ($rpc) {
-            $params = isset($args['params']) ? $args['params'] : array();
+            $params = isset($args['params']) ? $args['params'] : [];
         } else {
             $params = $args;
         }
@@ -116,9 +116,9 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         $r = $this->afterCall(['result' => $result, 'args' => $args]);
         $result = $r['result'];
 
-        $resp = array(
+        $resp = [
             'jsonrpc' => '2.0'
-        );
+        ];
 
         if (is_array($result) && isset($result['error'])) {
             $resp['error'] = $result['error'];
@@ -131,12 +131,12 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
                         $params['slave']['params']
                     );
                 } catch (\Exception $e) {
-                    $slave_result = array(
-                        'error' => array(
+                    $slave_result = [
+                        'error' => [
                             'message' => $e->getMessage() ,
                             'code' => $e->getCode()
-                        )
-                    );
+                        ]
+                    ];
                 }
 
                 $resp['result']['slave'] = $slave_result;
@@ -152,13 +152,13 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
     public function jsonError(Response $response, $id, $code, $message)
     {
-        $result = array(
+        $result = [
             'jsonrpc' => '2.0',
-            'error' => array(
+            'error' => [
                 'code' => $code,
                 'message' => $message,
-            )
-        );
+            ]
+        ];
 
         if ($id) {
             $result['id'] = $id;

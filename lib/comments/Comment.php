@@ -19,7 +19,7 @@ use litepubl\view\Theme;
 
 class Comment extends \litepubl\core\Data
 {
-    private static $md5 = array();
+    private static $md5 = [];
     private $_posted;
 
     public function __construct($id = 0)
@@ -53,12 +53,12 @@ class Comment extends \litepubl\core\Data
         $this->db->UpdateAssoc(compact('id', 'post', 'author', 'parent', 'posted', 'status', 'content'));
 
         $this->getdb($this->rawtable)->UpdateAssoc(
-            array(
+            [
             'id' => $id,
             'modified' => Str::sqlDate() ,
             'rawcontent' => $rawcontent,
             'hash' => Str::baseMd5($rawcontent)
-            )
+            ]
         );
     }
 

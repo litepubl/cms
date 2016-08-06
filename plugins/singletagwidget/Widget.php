@@ -26,7 +26,7 @@ class Widget extends \litepubl\widget\Widget
         parent::create();
         $this->adminclass = __NAMESPACE__ . '\Admin';
         $this->basename = 'widget.singletag';
-        $this->addmap('items', array());
+        $this->addmap('items', []);
         $this->tags = Cats::i();
     }
 
@@ -46,11 +46,11 @@ class Widget extends \litepubl\widget\Widget
         $tag = $this->tags->getItem($idtag);
         $widgets = Widgets::i();
         $id = $widgets->addExt($this, $tag['title'], 'widget');
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'idtag' => $idtag,
             'maxcount' => 10,
             'invertorder' => false
-        );
+        ];
 
         $sidebars = Sidebars::i();
         $sidebars->add($id);

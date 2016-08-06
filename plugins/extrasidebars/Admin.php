@@ -31,12 +31,12 @@ class Admin extends \litepubl\admin\Panel
         $dirnames = Filer::getDir($this->getApp()->paths->themes);
         foreach ($dirnames as $name) {
                 $themes .= strtr(
-                    $tml, array(
+                    $tml, [
                     '$name' => 'theme',
                     '$id' => $name,
                     '$checked' => in_array($name, $plugin->themes) ? 'checked="checked"' : '',
                     '$title' => $name,
-                    )
+                    ]
                 );
         }
 

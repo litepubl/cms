@@ -44,7 +44,7 @@ class Groups extends \litepubl\admin\Menu
       [text=name]
       [text=home]
       [hidden=action]
-' . $admin->h($lang->parentgroups) . GetPerm::groups(array()), $args
+' . $admin->h($lang->parentgroups) . GetPerm::groups([]), $args
             );
             break;
 
@@ -74,17 +74,17 @@ class Groups extends \litepubl\admin\Menu
 
         $tb = $this->newTable();
         $tb->setStruct(
-            array(
-            array(
+            [
+            [
                 $lang->name,
                 '<a href="' . $adminurl . '=$id&action=edit" title="$title">$title</a>'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->users,
                 sprintf('<a href="%s">%s</a>', Link::url('/admin/users/?idgroup=$id'), $lang->users)
-            ) ,
+            ] ,
             $tb->action('delete', $adminurl)
-            )
+            ]
         );
 
         $result.= $admin->h($lang->grouptable);
@@ -111,11 +111,11 @@ class Groups extends \litepubl\admin\Menu
         case 'edit':
             $id = $this->idget();
             if ($groups->itemExists($id)) {
-                foreach (array(
+                foreach ([
                     'name',
                     'title',
                     'home'
-                ) as $name) {
+                ] as $name) {
                     $groups->items[$id][$name] = $_POST[$name];
                 }
                 $groups->items[$id]['parents'] = $admin->check2array('idgroup-');

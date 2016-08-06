@@ -37,7 +37,7 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
         $this->basename = 'widgets.links';
         $this->template = 'links';
         $this->adminclass = '\litepubl\admin\widget\Links';
-        $this->addmap('items', array());
+        $this->addmap('items', []);
         $this->addmap('autoid', 0);
         $this->redirlink = '/linkswidget/';
         $this->data['redir'] = false;
@@ -79,11 +79,11 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
 
     public function add(string $url, string $title, string $text): int
     {
-        $this->items[++$this->autoid] = array(
+        $this->items[++$this->autoid] = [
             'url' => $url,
             'title' => $title,
             'text' => $text
-        );
+        ];
 
         $this->save();
         $this->added(['id' => $this->autoid]);
@@ -97,11 +97,11 @@ class Links extends Widget implements \litepubl\core\ResponsiveInterface
             return false;
         }
 
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'url' => $url,
             'title' => $title,
             'text' => $text
-        );
+        ];
         $this->save();
     }
 

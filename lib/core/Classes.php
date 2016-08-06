@@ -53,9 +53,9 @@ class Classes extends Items
         $this->dbversion = false;
         $this->addevents('onnewitem', 'onrename');
         $this->addmap('namespaces', ['litepubl' => 'lib']);
-        $this->addmap('kernel', array());
-        $this->addmap('remap', array());
-        $this->instances = array();
+        $this->addmap('kernel', []);
+        $this->addmap('remap', []);
+        $this->instances = [];
         $this->classmap = [];
         $this->aliases = [];
         $this->loaded = [];

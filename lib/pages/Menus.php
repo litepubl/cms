@@ -48,7 +48,7 @@ class Menus extends \litepubl\core\Items
 
         $this->dbversion = false;
         $this->basename = 'menus' . DIRECTORY_SEPARATOR . 'index';
-        $this->addmap('tree', array());
+        $this->addmap('tree', []);
         $this->data['idhome'] = 0;
         $this->data['home'] = false;
     }
@@ -91,10 +91,10 @@ class Menus extends \litepubl\core\Items
         }
 
         $id = ++$this->autoid;
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'id' => $id,
             'class' => get_class($item)
-        );
+        ];
         //move props
         foreach ($item->get_owner_props() as $prop) {
             if (array_key_exists($prop, $item->data)) {
@@ -134,11 +134,11 @@ class Menus extends \litepubl\core\Items
 
     public function addFakeMenu(Menu $menu): int
     {
-        $item = array(
+        $item = [
             'id' => ++$this->autoid,
             'idurl' => 0,
             'class' => get_class($menu)
-        );
+        ];
 
         //fix null fields
         foreach ($menu->get_owner_props() as $prop) {
@@ -307,9 +307,9 @@ class Menus extends \litepubl\core\Items
 
     private function getSubTree(int $parent): array
     {
-        $result = array();
+        $result = [];
         // first step is a find all childs and sort them
-        $sort = array();
+        $sort = [];
         foreach ($this->items as $id => $item) {
             if (($item['parent'] == $parent) && ($item['status'] == 'published')) {
                 $sort[$id] = (int)$item['order'];
@@ -332,7 +332,7 @@ class Menus extends \litepubl\core\Items
     //return array of id
     public function getParents(int $id): array
     {
-        $result = array();
+        $result = [];
         $id = $this->items[$id]['parent'];
         while ($id != 0) {
             //array_unshift ($result, $id);
@@ -346,16 +346,16 @@ class Menus extends \litepubl\core\Items
     public function getChilds(int $id): array
     {
         if ($id == 0) {
-            $result = array();
+            $result = [];
             foreach ($this->tree as $iditem => $items) {
                 $result[] = $iditem;
             }
             return $result;
         }
 
-        $parents = array(
+        $parents = [
             $id
-        );
+        ];
         $parent = $this->items[$id]['parent'];
         // fix of circle bug
         while ($parent && ($parent != $id)) {
@@ -466,10 +466,10 @@ class Menus extends \litepubl\core\Items
     public function getSitemap(int $from, int $count)
     {
         return $this->externalfunc(
-            __class__, 'Getsitemap', array(
+            __class__, 'Getsitemap', [
             $from,
             $count
-            )
+            ]
         );
     }
 

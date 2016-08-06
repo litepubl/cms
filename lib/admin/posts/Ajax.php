@@ -125,7 +125,7 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         case 'tags':
             $result = $theme->getInput('text', 'tags', $post->tagnames, $lang->tags);
             $result.= $theme->h($lang->addtags);
-            $items = array();
+            $items = [];
             $tags = $post->factory->tags;
             $list = $tags->getsorted(-1, 'name', 0);
             foreach ($list as $id) {
@@ -139,20 +139,20 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         case 'access':
             $args = new Args();
             $args->comstatus = $theme->comboItems(
-                array(
+                [
                 'closed' => $lang->closed,
                 'reg' => $lang->reg,
                 'guest' => $lang->guest,
                 'comuser' => $lang->comuser
-                ), $post->comstatus
+                ], $post->comstatus
             );
 
             $args->pingenabled = $post->pingenabled;
             $args->status = $theme->comboItems(
-                array(
+                [
                 'published' => $lang->published,
                 'draft' => $lang->draft
-                ), $post->status
+                ], $post->status
             );
 
             $args->perms = GetPerm::combo($post->idperm);
@@ -179,9 +179,9 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             $name = trim($_GET['get']);
             if (isset($this->events[$name])) {
                 $result = $this->callevent(
-                    $name, array(
+                    $name, [
                     $post
-                    )
+                    ]
                 );
             } else {
                 $result = var_export($_GET, true);

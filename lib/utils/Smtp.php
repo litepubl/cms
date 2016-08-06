@@ -18,12 +18,12 @@ class Smtp extends \litepubl\core\Events
     {
         parent::create();
         $this->basename = 'smtpmailer';
-        $this->data = $this->data + array(
+        $this->data = $this->data + [
             'host' => '',
             'login' => '',
             'password' => '',
             'port' => 25
-        );
+        ];
     }
 
     public function Mail($fromname, $fromemail, $toname, $toemail, $subj, $body)

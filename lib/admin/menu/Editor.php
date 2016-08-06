@@ -41,9 +41,9 @@ class Editor extends \litepubl\admin\Menu
     {
         $id = $this->idparam();
         $menus = Menus::i();
-        $parents = array(
+        $parents = [
             0 => '-----'
-        );
+        ];
 
         foreach ($menus->items as $item) {
             $parents[$item['id']] = $item['title'];
@@ -75,10 +75,10 @@ class Editor extends \litepubl\admin\Menu
         }
 
         $args->status = $this->theme->comboItems(
-            array(
+            [
             'draft' => $lang->draft,
             'published' => $lang->published
-            ), $status
+            ], $status
         );
 
         if (($this->name == 'editfake') || (($id > 0) && ($menuitem instanceof FakeMenu))) {

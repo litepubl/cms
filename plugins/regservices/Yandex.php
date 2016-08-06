@@ -44,12 +44,12 @@ class Yandex extends Service
 
         $code = $_REQUEST['code'];
         $resp = Http::post(
-            'https://oauth.yandex.ru/token', array(
+            'https://oauth.yandex.ru/token', [
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'grant_type' => 'authorization_code'
-            )
+            ]
         );
 
         if ($resp) {
@@ -57,12 +57,12 @@ class Yandex extends Service
             if ($r = Http::get('https://login.yandex.ru/info?format=json&oauth_token=' . $tokens->access_token)) {
                 $info = json_decode($r);
                 return $this->addUser(
-                    $context, array(
+                    $context, [
                     'service' => $this->name,
                     'uid' => $info->id,
                     'email' => isset($info->default_email) ? $info->default_email : $info->emails[0],
                     'name' => isset($info->real_name) ? $info->real_name : $info->display_name,
-                    ), $info
+                    ], $info
                 );
             }
         }
@@ -72,10 +72,10 @@ class Yandex extends Service
 
     protected function getAdminInfo(Lang $lang): array
     {
-        return array(
+        return [
             'regurl' => 'https://oauth.yandex.ru/client/new',
             'client_id' => $lang->yandex_id,
             'client_secret' => $lang->yandex_secret
-        );
+        ];
     }
 }

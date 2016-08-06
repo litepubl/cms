@@ -32,11 +32,11 @@ class Posts extends \litepubl\admin\Menu
     public function getContent(): string
     {
         if (isset($_GET['action']) && in_array(
-            $_GET['action'], array(
+            $_GET['action'], [
             'delete',
             'setdraft',
             'publish'
-            )
+            ]
         )) {
             return $this->doaction(PostItems::i(), $_GET['action']);
         }
@@ -104,7 +104,7 @@ class Posts extends \litepubl\admin\Menu
         $from = $this->getfrom($perpage, $count);
         $items = $posts->select($where, " order by posted desc limit $from, $perpage");
         if (!$items) {
-            $items = array();
+            $items = [];
         }
 
         $admintheme = $this->admintheme;
@@ -114,33 +114,33 @@ class Posts extends \litepubl\admin\Menu
 
         $tb = $this->newTable();
         $tb->setposts(
-            array(
-            array(
+            [
+            [
                 'center',
                 $lang->date,
                 '$post.date'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->posttitle,
                 '$post.bookmark'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->category,
                 '$post.category'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->status,
                 '$poststatus'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->edit,
                 '<a href="' . Link::url('/admin/posts/editor/?id') . '=$post.id">' . $lang->edit . '</a>'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->delete,
                 "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$post.id&action=delete\">$lang->delete</a>"
-            ) ,
-            )
+            ] ,
+            ]
         );
 
         $form->body.= $tb->build($items);

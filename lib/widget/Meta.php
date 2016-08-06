@@ -23,7 +23,7 @@ class Meta extends Widget
         $this->basename = 'widget.meta';
         $this->template = 'meta';
         $this->adminclass = '\litepubl\admin\widget\Meta';
-        $this->addmap('items', array());
+        $this->addmap('items', []);
     }
 
     public function getDeftitle(): string
@@ -33,11 +33,11 @@ class Meta extends Widget
 
     public function add(string $name, string $url, string $title)
     {
-        $this->items[$name] = array(
+        $this->items[$name] = [
             'enabled' => true,
             'url' => $url,
             'title' => $title
-        );
+        ];
         $this->save();
     }
 

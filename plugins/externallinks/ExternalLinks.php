@@ -24,7 +24,7 @@ class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\Respo
         parent::create();
         $this->table = 'externallinks';
         $this->basename = 'externallinks';
-        $this->addmap('exclude', array());
+        $this->addmap('exclude', []);
     }
 
     public function add($url)
@@ -33,10 +33,10 @@ class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\Respo
             return $id;
         }
 
-        $item = array(
+        $item = [
             'url' => $url,
             'clicked' => 0
-        );
+        ];
 
         $id = $this->db->add($item);
         $this->items[$id] = $item;
@@ -48,7 +48,7 @@ class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\Respo
         $filename = $this->getApp()->paths->data . 'logs' . DIRECTORY_SEPARATOR . 'externallinks.txt';
         if (@file_exists($filename) && ($s = @file_get_contents($filename))) {
             @unlink($filename);
-            $stat = array();
+            $stat = [];
             $a = explode("\n", $s);
             foreach ($a as $id) {
                 if ($id = (int)$id) {
@@ -97,7 +97,7 @@ class ExternalLinks extends \litepubl\core\Items implements \litepubl\core\Respo
 
         $redir = $this->getApp()->site->url . '/externallink.htm' . $this->getApp()->site->q . 'id=';
         $siteurl = $this->getApp()->site->url;
-        $external = array();
+        $external = [];
         foreach ($links[1] as $num => $link) {
             if (isset($external[$link])) {
                 continue;

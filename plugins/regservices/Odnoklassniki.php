@@ -58,13 +58,13 @@ class Odnoklassniki extends Service
 
         $code = $_REQUEST['code'];
         $resp = Http::post(
-            'http://api.odnoklassniki.ru/oauth/token.do', array(
+            'http://api.odnoklassniki.ru/oauth/token.do', [
             'grant_type' => 'authorization_code',
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'redirect_uri' => $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'state=' . $_GET['state'],
-            )
+            ]
         );
 
         if ($resp) {
@@ -73,12 +73,12 @@ class Odnoklassniki extends Service
                 return $context->response->forbidden();
             }
 
-            $params = array(
+            $params = [
             'application_key' => $this->public_key,
             'client_id' => $this->client_id,
             'method' => 'users.getCurrentUser',
             'format' => 'JSON',
-            );
+            ];
 
             $params['sig'] = strtolower($this->sign($params, md5($tokens->access_token . $this->client_secret)));
             $params['access_token'] = $tokens->access_token;
@@ -87,11 +87,11 @@ class Odnoklassniki extends Service
                 $js = json_decode($r);
                 if (!isset($js->error)) {
                     return $this->addUser(
-                        $context, array(
+                        $context, [
                         'uid' => $js->uid,
                         'name' => $js->name,
                         'website' => isset($js->link) ? $js->link : ''
-                        ), $js
+                        ], $js
                     );
                 }
             }
@@ -102,12 +102,12 @@ class Odnoklassniki extends Service
 
     protected function getAdminInfo(Lang $lang): array
     {
-        return array(
+        return [
             'regurl' => 'http://api.mail.ru/sites/my/add',
             'client_id' => $lang->odnoklass_id,
             'client_secret' => $lang->odnoklass_secret,
             'public_key' => $lang->odnoklass_public_key
-        );
+        ];
     }
 
     public function getTab(Panel $admin): string

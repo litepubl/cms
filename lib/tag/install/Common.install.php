@@ -45,7 +45,7 @@ function CommonUninstall($self)
 
 function CommonGetsitemap($self, $from, $count)
 {
-    $result = array();
+    $result = [];
     $self->loadAll();
     $options = $self->getApp()->options;
     foreach ($self->items as $id => $item) {
@@ -53,11 +53,11 @@ function CommonGetsitemap($self, $from, $count)
         $perpage = $schema->perpage ? $schema->perpage : $options->perpage;
         $pages = (int)ceil($item['itemscount'] / $perpage);
 
-        $result[] = array(
+        $result[] = [
             'url' => $item['url'],
             'title' => $item['title'],
             'pages' => $pages,
-        );
+        ];
     }
 
     return $result;

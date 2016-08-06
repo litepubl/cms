@@ -40,21 +40,21 @@ class UList
     public function li($name, $value)
     {
         return strtr(
-            is_int($name) ? $this->value : $this->item, array(
+            is_int($name) ? $this->value : $this->item, [
             '$name' => $name,
             '$value' => $value,
             '$site.url' => $this->getApp()->site->url,
-            )
+            ]
         );
     }
 
     public function link($url, $title)
     {
         return strtr(
-            $this->link, array(
+            $this->link, [
             '$name' => $url,
             '$value' => $title,
-            )
+            ]
         );
     }
 

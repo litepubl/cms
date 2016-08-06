@@ -20,7 +20,7 @@ class Menu extends \litepubl\pages\Menu
     use Factory;
     use Params;
 
-    public static $adminownerprops = array(
+    public static $adminownerprops = [
         'title',
         'url',
         'idurl',
@@ -29,7 +29,7 @@ class Menu extends \litepubl\pages\Menu
         'status',
         'name',
         'group'
-    );
+    ];
 
     public static function getInstanceName()
     {

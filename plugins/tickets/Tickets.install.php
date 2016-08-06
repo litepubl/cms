@@ -30,14 +30,14 @@ function TicketsInstall($self)
     $lang = Lang::admin('tickets');
     $lang->addSearch('ticket', 'tickets');
 
-    $self->data['cats'] = array();
+    $self->data['cats'] = [];
     $self->data['idcomauthor'] = Users::i()->add(
-        array(
+        [
         'email' => '',
         'name' => Lang::get('ticket', 'comname') ,
         'status' => 'approved',
         'idgroups' => 'commentator'
-        )
+        ]
     );
 
     $self->save();
@@ -98,10 +98,10 @@ function TicketsInstall($self)
     $groups = UserGroups::i();
     $groups->lock();
     $idticket = $groups->add('ticket', 'Tickets', '/admin/tickets/editor/');
-    $groups->defaults = array(
+    $groups->defaults = [
         $idticket,
         $groups->getidgroup('author')
-    );
+    ];
     $groups->items[$app->options->groupnames['author']]['parents'][] = $idticket;
     $groups->items[$app->options->groupnames['commentator']]['parents'][] = $idticket;
     $groups->unlock();

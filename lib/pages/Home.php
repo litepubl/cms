@@ -58,8 +58,8 @@ class Home extends SingleMenu
         $this->data['showmidle'] = false;
         $this->data['midlecat'] = 0;
         $this->data['showposts'] = true;
-        $this->data['includecats'] = array();
-        $this->data['excludecats'] = array();
+        $this->data['includecats'] = [];
+        $this->data['excludecats'] = [];
         $this->data['showpagenator'] = true;
         $this->data['archcount'] = 0;
         $this->data['parsetags'] = false;

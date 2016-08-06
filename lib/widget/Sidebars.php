@@ -56,10 +56,10 @@ class Sidebars extends \litepubl\core\Data
             return $this->error("Unknown sidebar $index");
         }
 
-        $item = array(
+        $item = [
             'id' => $id,
             'ajax' => $ajax
-        );
+        ];
         if (($order < 0) || ($order > count($this->items[$index]))) {
             $this->items[$index][] = $item;
         } else {
@@ -129,10 +129,10 @@ class Sidebars extends \litepubl\core\Data
         foreach ($sidebars as $i => $sidebar) {
             foreach ($sidebar as $j => $item) {
                 if ($id == $item['id']) {
-                    return array(
+                    return [
                         $i,
                         $j
-                    );
+                    ];
                 }
             }
         }

@@ -26,7 +26,7 @@ class Widget extends \litepubl\widget\Widget
         $this->data['count'] = 6;
         $this->data['notify'] = true;
         $this->data['trace'] = true;
-        $this->addmap('links', array());
+        $this->addmap('links', []);
     }
 
     public function getDefTitle(): string

@@ -33,11 +33,11 @@ function LangPreinstall($language)
 function preloadlanguage($lang, $language)
 {
     $dir = $lang->getApp()->paths->languages . $language . DIRECTORY_SEPARATOR;
-    foreach (array(
+    foreach ([
         'default',
         'admin',
         'install'
-    ) as $name) {
+    ] as $name) {
         $ini = parse_ini_file($dir . $name . '.ini', true);
         $lang->ini = $ini + $lang->ini;
         $lang->loaded[] = $name;

@@ -22,7 +22,7 @@ function installOptions($email, $language)
     $options->solt = Str::md5Uniq();
     if (config::$db) {
         //set empty dbconfig to options
-        $options->data['dbconfig'] = array(
+        $options->data['dbconfig'] = [
             'driver' => 'mysqli',
             'host' => 'localhost',
             'port' => 0,
@@ -31,10 +31,10 @@ function installOptions($email, $language)
             'password' => '',
         'crypt' => '',
             'prefix' => config::$db['prefix'],
-        );
+        ];
     } else {
         $usehost = isset($_REQUEST['usehost']) ? ($_REQUEST['usehost'] == '1') : false;
-        $options->data['dbconfig'] = array(
+        $options->data['dbconfig'] = [
             'driver' => 'mysqli',
             'host' => $usehost ? $_REQUEST['dbhost'] : 'localhost',
             'port' => $usehost ? (int)$_REQUEST['dbport'] : 0,
@@ -43,7 +43,7 @@ function installOptions($email, $language)
             'password' => '',
         'crypt' => '',
             'prefix' => $_REQUEST['dbprefix']
-        );
+        ];
 
         $options->setdbpassword($_REQUEST['dbpassword']);
     }

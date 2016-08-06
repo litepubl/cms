@@ -24,11 +24,11 @@ class Manager extends \litepubl\admin\Menu
     {
         $result = '';
         if (isset($_GET['action']) && in_array(
-            $_GET['action'], array(
+            $_GET['action'], [
             'delete',
             'setdraft',
             'publish'
-            )
+            ]
         )) {
             $result.= $this->doaction($this->idget(), $_GET['action']);
         }
@@ -37,42 +37,42 @@ class Manager extends \litepubl\admin\Menu
         $lang = Lang::admin();
         $editurl = Link::url("{$this->url}edit/?id");
         $result.= $this->tableItems(
-            $menus->items, array(
-            array(
+            $menus->items, [
+            [
                 $lang->menutitle,
                 function (Table $tb) use ($menus) {
                 
                     return $menus->getlink($tb->item['id']);
                 }
-            ) ,
+            ] ,
 
-            array(
+            [
                 'right',
                 $lang->order,
                 '$order'
-            ) ,
+            ] ,
 
-            array(
+            [
                 'center',
                 $lang->parent,
                 function (Table $tb) use ($menus) {
                 
                     return $tb->item['parent'] == 0 ? '---' : $menus->getlink($tb->item['parent']);
                 }
-            ) ,
+            ] ,
 
-            array(
+            [
                 'center',
                 $lang->edit,
                 "<a href='$editurl=\$id'>$lang->edit</a>"
-            ) ,
+            ] ,
 
-            array(
+            [
                 'center',
                 $lang->delete,
                 "<a class=\"confirm-delete-link\" href=\"$this->adminurl=\$id&action=delete\">$lang->delete</a>"
-            ) ,
-            )
+            ] ,
+            ]
         );
 
         return $result;

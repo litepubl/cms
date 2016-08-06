@@ -17,7 +17,7 @@ class MemvarMemcache extends CacheMemcache
     public function __construct()
     {
         parent::__construct();
-        $this->data = array();
+        $this->data = [];
     }
 
     public function getRevision(): int

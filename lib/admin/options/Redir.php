@@ -43,37 +43,37 @@ class Redir extends \litepubl\admin\Menu
         );
 
         $id = 1;
-        $items = array();
+        $items = [];
         foreach ($redir->items as $from => $to) {
-            $items[] = array(
+            $items[] = [
                 'id' => $id++,
                 'from' => $from,
                 'to' => $to
-            );
+            ];
         }
 
         $adminurl = Link::url($this->url, 'from');
         $table = $this->tableItems(
-            $items, array(
-            array(
+            $items, [
+            [
                 'center',
                 '+',
                 '<input type="checkbox" name="checkbox_$id" id="checkbox_$id" value="$from" />'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->from,
                 '<a href="$site.url$from" title="$from">$from</a>'
-            ) ,
-            array(
+            ] ,
+            [
                 $lang->to,
                 '<a href="$site.url$to" title="$to">$to</a>'
-            ) ,
-            array(
+            ] ,
+            [
                 'center',
                 $lang->edit,
                 "<a href=\"$adminurl=\$from\">$lang->edit</a>"
-            )
-            )
+            ]
+            ]
         );
 
         $form = $this->newForm($args);

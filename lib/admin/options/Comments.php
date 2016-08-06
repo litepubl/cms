@@ -29,12 +29,12 @@ class Comments extends \litepubl\admin\Menu
         $args = new Args();
         $tabs = $this->newTabs($this->admintheme);
         $args->comstatus = $this->theme->comboItems(
-            array(
+            [
             'closed' => $lang->closed,
             'reg' => $lang->reg,
             'guest' => $lang->guest,
             'comuser' => $lang->comuser
-            ), $options->comstatus
+            ], $options->comstatus
         );
 
         $args->filterstatus = $cm->filterstatus;

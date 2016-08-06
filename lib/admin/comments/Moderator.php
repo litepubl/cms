@@ -130,14 +130,14 @@ class Moderator extends \litepubl\admin\Menu
         $lang = Lang::admin();
         $tb = $this->newTable();
         $result = $tb->props(
-            array(
+            [
             'commentonpost' => "<a href=\"$comment->url\">$comment->posttitle</a>",
             'author' => $comment->name,
             'E-Mail' => $comment->email,
             'IP' => $comment->ip,
             'website' => $comment->website ? "<a href=\"$comment->website\">$comment->website</a>" : '',
             'status' => $comment->localstatus,
-            )
+            ]
         );
 
         $result.= $admin->help($lang->content);
@@ -221,67 +221,67 @@ class Moderator extends \litepubl\admin\Menu
 
         $Table = $this->newTable();
         $Table->addcallback(
-            '$excerpt', array(
+            '$excerpt', [
             $this,
             'get_excerpt'
-            ), $comment
+            ], $comment
         );
         $Table->args->adminurl = $this->adminurl;
 
         $Table->setStruct(
-            array(
+            [
             $Table->checkbox('id') ,
 
-            array(
+            [
                 $lang->date,
                 '$comment.date',
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->status,
                 '$comment.localstatus',
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->author,
                 '<a href="$site.url/admin/users/{$site.q}id=$comment.author&action=edit">$comment.name</a>',
-            ) ,
+            ] ,
 
-            array(
+            [
                 'E-Mail',
                 '$email',
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->website,
                 '$website',
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->post,
                 '<a href="$comment.url">$comment.posttitle</a>',
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->content,
                 '$excerpt',
-            ) ,
+            ] ,
 
-            array(
+            [
                 'IP',
                 '$comment.ip',
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->reply,
                 '<a href="$adminurl=$comment.id&action=reply">$lang.reply</a>',
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->edit,
                 '<a href="$adminurl=$comment.id&action=edit">$lang.edit</a>',
-            ) ,
-            )
+            ] ,
+            ]
         );
 
         $form->before = $this->admintheme->templates['tablecols'];

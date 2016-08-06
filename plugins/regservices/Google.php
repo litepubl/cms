@@ -45,13 +45,13 @@ class Google extends Service
 
         $code = $_REQUEST['code'];
         $resp = Http::post(
-            'https://accounts.google.com/o/oauth2/token', array(
+            'https://accounts.google.com/o/oauth2/token', [
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'redirect_uri' => $this->getApp()->site->url . $this->url,
             'grant_type' => 'authorization_code'
-            )
+            ]
         );
 
         if ($resp) {
@@ -59,13 +59,13 @@ class Google extends Service
             if ($r = Http::get('https://www.googleapis.com/oauth2/v1/userinfo?access_token=' . $tokens->access_token)) {
                 $info = json_decode($r);
                 return $this->addUser(
-                    $context, array(
+                    $context, [
                     //'uid' => $info->id, session depended
                     'service' => $this->name,
                     'email' => isset($info->email) ? $info->email : '',
                     'name' => $info->name,
                     'website' => isset($info->link) ? $info->link : ''
-                    ), $info
+                    ], $info
                 );
             }
         }
@@ -75,10 +75,10 @@ class Google extends Service
 
     protected function getAdminInfo(Lang $lang): array
     {
-        return array(
+        return [
             'regurl' => 'https://code.google.com/apis/console/',
             'client_id' => $lang->client_id,
             'client_secret' => $lang->client_secret
-        );
+        ];
     }
 }

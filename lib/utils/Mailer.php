@@ -58,14 +58,14 @@ class Mailer
     {
         if ($onshutdown) {
             if (!isset(static ::$hold)) {
-                static ::$hold = array();
+                static ::$hold = [];
                 register_shutdown_function([get_called_class() , 'onshutdown']);
             }
 
-            static ::$hold[] = array(
+            static ::$hold[] = [
                 'subject' => $subject,
                 'body' => $body
-            );
+            ];
         } else {
                 $app = static::getAppInstance();
             static ::sendMail($app->site->name, $app->options->fromemail, 'admin', $app->options->email, $subject, $body);

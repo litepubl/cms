@@ -24,7 +24,7 @@ class minidb
     {
         $this->sql = '';
         $this->table = '';
-        $this->history = array();
+        $this->history = [];
     }
 
     public function setConfig($dbconfig)
@@ -153,7 +153,7 @@ class minidb
 
     public function assoc2update(array $a)
     {
-        $list = array();
+        $list = [];
         foreach ($a as $name => $value) {
             if (is_bool($value)) {
                 $value = $value ? '1' : '0';
@@ -218,7 +218,7 @@ class minidb
 
     public function assocToRow(array $a)
     {
-        $vals = array();
+        $vals = [];
         foreach ($a as $val) {
             if (is_bool($val)) {
                 $vals[] = $val ? '1' : '0';
@@ -334,7 +334,7 @@ class minidb
 
     public function getValues($names, $where)
     {
-        $result = array();
+        $result = [];
         $res = $this->query("select $names from $this->prefix$this->table where $where");
         if (is_object($res)) {
             while ($r = $res->fetch_row()) {
@@ -346,7 +346,7 @@ class minidb
 
     public function res2array($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($row = $res->fetch_row()) {
                 $result[] = $row;
@@ -357,7 +357,7 @@ class minidb
 
     public function res2id($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($row = $res->fetch_row()) {
                 $result[] = $row[0];
@@ -368,7 +368,7 @@ class minidb
 
     public function res2assoc($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($r = $res->fetch_assoc()) {
                 $result[] = $r;
@@ -379,7 +379,7 @@ class minidb
 
     public function res2items($res)
     {
-        $result = array();
+        $result = [];
         if (is_object($res)) {
             while ($r = $res->fetch_assoc()) {
                 $result[(int)$r['id']] = $r;

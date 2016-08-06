@@ -30,7 +30,7 @@ class Custom extends Widget
         parent::create();
         $this->basename = 'widgets.custom';
         $this->adminclass = '\litepubl\admin\widget\Custom';
-        $this->addMap('items', array());
+        $this->addMap('items', []);
         $this->addEvents('added', 'deleted');
     }
 
@@ -63,11 +63,11 @@ class Custom extends Widget
         $widgets = Widgets::i();
         $widgets->lock();
         $id = $widgets->addExt($this, $title, $template);
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'title' => $title,
             'content' => $content,
             'template' => $template
-        );
+        ];
 
         $sidebars = Sidebars::i($idschema);
         $sidebars->add($id);
@@ -79,11 +79,11 @@ class Custom extends Widget
 
     public function edit(int $id, string $title, string $content, string $template)
     {
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'title' => $title,
             'content' => $content,
             'template' => $template
-        );
+        ];
         $this->save();
 
         $widgets = Widgets::i();

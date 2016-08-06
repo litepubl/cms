@@ -23,7 +23,7 @@ class UserGroups extends Items
     {
         parent::create();
         $this->basename = 'usergroups';
-        $this->addmap('defaults', array());
+        $this->addmap('defaults', []);
         $this->data['defaulthome'] = '/admin/';
     }
 
@@ -33,12 +33,12 @@ class UserGroups extends Items
             return $id;
         }
 
-        $this->items[++$this->autoid] = array(
+        $this->items[++$this->autoid] = [
             'name' => $name,
             'title' => $title,
             'home' => $home,
-            'parents' => array()
-        );
+            'parents' => []
+        ];
         $this->save();
         return $this->autoid;
     }
@@ -71,9 +71,9 @@ class UserGroups extends Items
 
     public function update()
     {
-        $this->getApp()->options->data['groupnames'] = array();
+        $this->getApp()->options->data['groupnames'] = [];
         $groupnames = & $this->getApp()->options->data['groupnames'];
-        $this->getApp()->options->data['parentgroups'] = array();
+        $this->getApp()->options->data['parentgroups'] = [];
         $parentgroups = & $this->getApp()->options->data['parentgroups'];
 
         foreach ($this->items as $id => $group) {

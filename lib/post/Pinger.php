@@ -76,7 +76,7 @@ class Pinger extends \litepubl\core\Events
             $meta->lastpinged = time();
         }
 
-        $pinged = isset($meta->pinged) ? unserialize($meta->pinged) : array();
+        $pinged = isset($meta->pinged) ? unserialize($meta->pinged) : [];
         $links = $this->getlinks($post);
         $m = microtime(true);
         foreach ($links as $link) {
@@ -107,7 +107,7 @@ class Pinger extends \litepubl\core\Events
     private function getLinks(Post $post)
     {
         $posturl = $post->link;
-        $result = array();
+        $result = [];
         $punc = '.:?\-';
         $any = '\w/#~:.?+=&%@!\-' . $punc;
 

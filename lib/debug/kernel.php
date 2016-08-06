@@ -3,7 +3,7 @@
 namespace litepubl\debug;
 
 $dir = dirname(__DIR__) . '/core/';
-foreach (array(
+foreach ([
 'Paths.php',
 'Singleton.php',
 //'debugproxy.class.php');
@@ -35,6 +35,6 @@ foreach (array(
 'Arr.php',
 'Str.php',
 'litepubl.php',
-) as $filename) {
+] as $filename) {
     include_once $dir . $filename;
 }

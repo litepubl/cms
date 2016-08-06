@@ -85,7 +85,7 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
         $title = Filter::escape($title);
         $linkgen = LinkGenerator::i();
         $url = $linkgen->createurl($title, 'menu', true);
-        $this->items[++$this->autoid] = array(
+        $this->items[++$this->autoid] = [
             'idurl' => $this->getApp()->router->add($url, get_class($this), $this->autoid) ,
             'url' => $url,
             'title' => $title,
@@ -94,7 +94,7 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
             'description' => Filter::escape($description) ,
             'keywords' => Filter::escape($keywords) ,
             'idschema' => 1
-        );
+        ];
         $this->save();
         return $this->autoid;
     }
@@ -107,7 +107,7 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
 
         $filter = Filter::i();
         $item = $this->items[$id];
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'idurl' => $item['idurl'],
             'url' => $item['url'],
             'title' => $title,
@@ -116,7 +116,7 @@ class StaticPages extends \litepubl\core\Items implements \litepubl\view\ViewInt
             'description' => Filter::escape($description) ,
             'keywords' => Filter::escape($keywords) ,
             'idschema' => $item['idschema']
-        );
+        ];
         $this->save();
         $this->getApp()->cache->clear();
     }

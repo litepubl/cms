@@ -64,11 +64,11 @@ class Livejournal extends Common
     {
         $this->_auth($struct);
         $profile = tprofile::i();
-        $result = array(
+        $result = [
             'userid' => 1,
             'fullname' => $profile->nick,
-            'friendgroups' => array()
-        );
+            'friendgroups' => []
+        ];
         return $result;
     }
 
@@ -79,12 +79,12 @@ class Livejournal extends Common
             $this->expired = time() + 3600;
             $this->save();
         }
-        return array(
+        return [
             'auth_scheme' => 'c0',
             'challenge' => $this->_challenge,
             'expire_time' => $this->expired,
             'server_time' => $this->expired - 3600
-        );
+        ];
     }
 
     public function postevent($struct)
@@ -151,11 +151,11 @@ class Livejournal extends Common
             $posts->edit($post);
         }
 
-        return array(
+        return [
             'itemid' => $id,
             'anum' => $post->url,
             'url' => $post->url
-        );
+        ];
     }
 
     public function editevent($struct)
@@ -171,11 +171,11 @@ class Livejournal extends Common
             $post = Post::i($id);
             $url = $post->url;
             $posts->delete($id);
-            return array(
+            return [
                 'itemid' => $id,
                 'anum' => $url,
                 'url' => $url
-            );
+            ];
         }
 
         return $this->EditPost($id, $struct);

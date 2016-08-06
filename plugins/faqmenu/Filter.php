@@ -25,15 +25,15 @@ class Filter
     {
         $result = '';
         $content = str_replace(
-            array(
+            [
             "\r\n",
             "\r"
-            ), "\n", trim($content)
+            ], "\n", trim($content)
         );
 
         $lines = explode("\n", $content);
-        $q = array();
-        $a = array();
+        $q = [];
+        $a = [];
 
         $filter = ViewFilter::i();
         foreach ($lines as $s) {
@@ -45,8 +45,8 @@ class Filter
             } elseif ($s) {
                 $result.= $this->createlist($q, $a);
                 $result.= $filter->simplefilter($s);
-                $q = array();
-                $a = array();
+                $q = [];
+                $a = [];
             }
         }
 

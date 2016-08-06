@@ -25,7 +25,7 @@ class Widget extends \litepubl\widget\Widget
         parent::create();
         $this->adminclass = __NAMESPACE__ . '\Admin';
         $this->basename = 'widget.subcat';
-        $this->addmap('items', array());
+        $this->addmap('items', []);
         $this->tags = Cats::i();
     }
 
@@ -45,14 +45,14 @@ class Widget extends \litepubl\widget\Widget
         $tag = $this->tags->getItem($idtag);
         $widgets = Widgets::i();
         $id = $widgets->addExt($this, $tag['title'], 'categories');
-        $this->items[$id] = array(
+        $this->items[$id] = [
             'idtag' => $idtag,
             'sortname' => 'count',
             'showsubitems' => true,
             'showcount' => true,
             'maxcount' => 0,
             'template' => 'categories'
-        );
+        ];
 
         $sidebars = Sidebars::i();
         $sidebars->add($id);
@@ -106,11 +106,11 @@ class Widget extends \litepubl\widget\Widget
         $item = $this->items[$id];
         $view = $this->getView();
         return $this->tags->getView()->getSorted(
-            array(
+            [
             'item' => $view->getItem($item['template'], $sidebar) ,
             'subcount' => $view->getTml($sidebar, $item['template'], 'subcount') ,
             'subitems' => $item['showsubitems'] ? $view->getTml($sidebar, $item['template'], 'subitems') : '',
-            ), $item['idtag'], $item['sortname'], $item['maxcount'], $item['showcount']
+            ], $item['idtag'], $item['sortname'], $item['maxcount'], $item['showcount']
         );
     }
 }

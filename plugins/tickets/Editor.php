@@ -47,11 +47,11 @@ class Editor extends \litepubl\admin\posts\Editor
     public function getTabsTemplate()
     {
         return strtr(
-            $this->admintheme->templates['tabs'], array(
+            $this->admintheme->templates['tabs'], [
             '$id' => 'tabs',
             '$tab' => '[tab=ticket] [ajaxtab=tags]',
             '$panel' => '[tabpanel=ticket] [tabpanel=tags]'
-            )
+            ]
         );
     }
 
@@ -67,28 +67,28 @@ class Editor extends \litepubl\admin\posts\Editor
         $args->version = $ticket->version;
         $args->os = $ticket->os;
 
-        $states = array();
-        foreach (array(
+        $states = [];
+        foreach ([
             'fixed',
             'opened',
             'wontfix',
             'invalid',
             'duplicate',
             'reassign'
-        ) as $state) {
+        ] as $state) {
             $states[$state] = $lang->$state;
         }
 
         $args->state = $this->theme->comboItems($states, $ticket->state);
 
-        $prio = array();
-        foreach (array(
+        $prio = [];
+        foreach ([
             'trivial',
             'minor',
             'major',
             'critical',
             'blocker'
-        ) as $p) {
+        ] as $p) {
             $prio[$p] = $lang->$p;
         }
 
@@ -97,13 +97,13 @@ class Editor extends \litepubl\admin\posts\Editor
         $tb = $this->newTable($this->admintheme);
         $tb->args = $args;
         $args->ticket = $tb->inputs(
-            array(
+            [
             'category' => 'combo',
             'state' => 'combo',
             'prio' => 'combo',
             'version' => 'text',
             'os' => 'text',
-            )
+            ]
         );
     }
 
@@ -162,9 +162,9 @@ class Editor extends \litepubl\admin\posts\Editor
         $ticket->set_state($state);
         $ticket->version = $version;
         $ticket->os = $os;
-        $ticket->categories = array(
+        $ticket->categories = [
             (int)$category
-        );
+        ];
 
         if (isset($tags)) {
             $ticket->tagnames = $tags;

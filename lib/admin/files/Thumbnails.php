@@ -119,12 +119,12 @@ class Thumbnails extends \litepubl\admin\Menu
         $resize = !isset($_POST['noresize']);
 
         $idpreview = $parser->add(
-            array(
+            [
             'filename' => $filename,
             'tempfilename' => $newtemp,
             'enabledpreview' => $resize,
             'ispreview' => $resize
-            )
+            ]
         );
 
         if ($idpreview) {

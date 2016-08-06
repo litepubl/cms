@@ -37,10 +37,10 @@ class Order extends Widget
         }
 
         Arr::insert(
-            $items, array(
+            $items, [
             'id' => $this->id,
             'ajax' => $this->ajax
-            ), $order
+            ], $order
         );
     }
 }

@@ -80,7 +80,7 @@ class Widgets extends \litepubl\admin\Menu
         $sidebarnames = static ::getSidebarNames($schema);
 
         //items for table builder
-        $items = array();
+        $items = [];
         $tmlButton = $admintheme->templates['radiogroup.button'];
         $tmlActiveButton = $admintheme->templates['radiogroup.active'];
 
@@ -99,7 +99,7 @@ class Widgets extends \litepubl\admin\Menu
 
                 $widgetItem = $widgets->getItem($id);
 
-                $items[] = array(
+                $items[] = [
                     'id' => $id,
                     'title' => $widgetItem['title'],
                     'sidebarcombo' => $this->getCombobox("sidebar-$id", $sidebarnames, $i) ,
@@ -107,63 +107,63 @@ class Widgets extends \litepubl\admin\Menu
                     'ajaxbuttons' => str_replace(
                         '$button',
                         strtr(
-                            $ajax == 'disabled' ? $tmlActiveButton : $tmlButton, array(
+                            $ajax == 'disabled' ? $tmlActiveButton : $tmlButton, [
                             '$name' => "ajax-$id",
                             '$value' => 'disabled',
                             '$title' => $lang->noajax
-                            )
+                            ]
                         )
 
                         . strtr(
-                            $ajax == 'ajax' ? $tmlActiveButton : $tmlButton, array(
+                            $ajax == 'ajax' ? $tmlActiveButton : $tmlButton, [
                             '$name' => "ajax-$id",
                             '$value' => 'ajax',
                             '$title' => $lang->ajax
-                            )
+                            ]
                         )
 
                         . (($widgetItem['cache'] == 'cache') || ($widgetItem['cache'] == 'nocache') ? strtr(
-                            $ajax == 'inline' ? $tmlActiveButton : $tmlButton, array(
+                            $ajax == 'inline' ? $tmlActiveButton : $tmlButton, [
                             '$name' => "ajax-$id",
                             '$value' => 'inline',
                             '$title' => $lang->inline
-                            )
+                            ]
                         ) : ''),
                         $admintheme->templates['radiogroup']
                     )
-                );
+                ];
             }
         }
 
         $tb = $this->newTable();
         $tb->args->adminurl = Link::url('/admin/views/widgets/', 'idwidget');
         $tb->setStruct(
-            array(
-            array(
+            [
+            [
                 $lang->widget,
                 '<a href="$adminurl=$id">$title</a>'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->sidebar,
                 '$sidebarcombo'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->order,
                 '$ordercombo'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->delete,
                 '<a href="$adminurl=$id&action=delete" class="btn btn-default confirm-delete-link" role="button"><span class="fa fa-remove text-danger"></span> $lang.delete</a>',
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->collapse,
                 '$ajaxbuttons'
-            )
-            )
+            ]
+            ]
         );
 
         $form->items.= $tb->build($items);
@@ -292,10 +292,10 @@ class Widgets extends \litepubl\admin\Menu
                         continue;
                     }
 
-                    $schema->sidebars[0][] = array(
+                    $schema->sidebars[0][] = [
                         'id' => $id,
                         'ajax' => false
-                    );
+                    ];
                 }
             }
             break;

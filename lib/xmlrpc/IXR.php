@@ -185,9 +185,9 @@ class IXR_Message
     var $params;
 
     // Current variable stacks
-    var $_arraystructs = array();   // The stack used to keep track of the current array/struct
-    var $_arraystructstypes = array(); // Stack keeping track of if things are structs or array
-    var $_currentStructName = array();  // A stack as well
+    var $_arraystructs = [];   // The stack used to keep track of the current array/struct
+    var $_arraystructstypes = []; // Stack keeping track of if things are structs or array
+    var $_currentStructName = [];  // A stack as well
     var $_param;
     var $_value;
     var $_currentTag;
@@ -253,11 +253,11 @@ class IXR_Message
                 /* Deal with stacks of arrays and structs */
             case 'data':    // data is to all intents and puposes more interesting than array
                 $this->_arraystructstypes[] = 'array';
-                $this->_arraystructs[] = array();
+                $this->_arraystructs[] = [];
                 break;
             case 'struct':
                 $this->_arraystructstypes[] = 'struct';
-                $this->_arraystructs[] = array();
+                $this->_arraystructs[] = [];
                 break;
         }
     }
@@ -349,7 +349,7 @@ class IXR_Message
 class IXR_Server
 {
     var $data;
-    var $callbacks = array();
+    var $callbacks = [];
     var $message;
     var $capabilities;
 
@@ -489,20 +489,20 @@ EOD;
     function setCapabilities()
     {
         // Initialises capabilities array
-        $this->capabilities = array(
-            'xmlrpc' => array(
+        $this->capabilities = [
+            'xmlrpc' => [
                 'specUrl' => 'http://www.xmlrpc.com/spec',
                 'specVersion' => 1
-        ),
-            'faults_interop' => array(
+        ],
+            'faults_interop' => [
                 'specUrl' => 'http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php',
                 'specVersion' => 20010516
-        ),
-            'system.multicall' => array(
+        ],
+            'system.multicall' => [
                 'specUrl' => 'http://www.xmlrpc.com/discuss/msgReader$1208',
                 'specVersion' => 1
-        ),
-        );
+        ],
+        ];
     }
 
     function getCapabilities($args)
@@ -527,7 +527,7 @@ EOD;
     function multiCall($methodcalls)
     {
         // See http://www.xmlrpc.com/discuss/msgReader$1208
-        $return = array();
+        $return = [];
         foreach ($methodcalls as $call) {
             $method = $call['methodName'];
             $params = $call['params'];
@@ -539,12 +539,12 @@ EOD;
         //litepublisher fix Strict Standards:  is_a(): Deprecated. Please use the instanceof operator 
             //if (is_a($result, 'IXR_Error')) {
             if ($result instanceof IXR_Error) {
-                $return[] = array(
+                $return[] = [
                     'faultCode' => $result->code,
                     'faultString' => $result->message
-                );
+                ];
             } else {
-                $return[] = array($result);
+                $return[] = [$result];
             }
         }
         return $return;
@@ -640,7 +640,7 @@ class IXR_Client
   $this->useragent = 'LitePublisher';
         $this->timeout = $timeout;
 //litepublisher init props
-$this->headers = array();
+$this->headers = [];
 $this->ResponseHeaders = '';
     }
 
@@ -900,32 +900,32 @@ public function __construct()
     {
         $this->setCallbacks();
         $this->setCapabilities();
-        $this->capabilities['introspection'] = array(
+        $this->capabilities['introspection'] = [
             'specUrl' => 'http://xmlrpc.usefulinc.com/doc/reserved.html',
             'specVersion' => 1
-        );
+        ];
         $this->addCallback(
             'system.methodSignature',
             'this:methodSignature',
-            array('array', 'string'),
+            ['array', 'string'],
             'Returns an array describing the return type and required parameters of a method'
         );
         $this->addCallback(
             'system.getCapabilities',
             'this:getCapabilities',
-            array('struct'),
+            ['struct'],
             'Returns a struct describing the XML-RPC specifications supported by this server'
         );
         $this->addCallback(
             'system.listMethods',
             'this:listMethods',
-            array('array'),
+            ['array'],
             'Returns an array of available methods on this server'
         );
         $this->addCallback(
             'system.methodHelp',
             'this:methodHelp',
-            array('string', 'string'),
+            ['string', 'string'],
             'Returns a documentation string for the specified method'
         );
     }
@@ -941,7 +941,7 @@ public function __construct()
     {
         // Make sure it's in an array
         if ($args && !is_array($args)) {
-            $args = array($args);
+            $args = [$args];
         }
 
         // Over-rides default call method, adds signature check
@@ -1011,7 +1011,7 @@ public function __construct()
         }
         // We should be returning an array of types
         $types = $this->signatures[$method];
-        $return = array();
+        $return = [];
         foreach ($types as $type) {
             switch ($type) {
                 case 'string':
@@ -1034,10 +1034,10 @@ public function __construct()
                     $return[] = new IXR_Base64('base64');
                     break;
                 case 'array':
-                    $return[] = array('array');
+                    $return[] = ['array'];
                     break;
                 case 'struct':
-                    $return[] = array('struct' => 'struct');
+                    $return[] = ['struct' => 'struct'];
                     break;
             }
         }
@@ -1058,7 +1058,7 @@ public function __construct()
  */
 class IXR_ClientMulticall extends IXR_Client
 {
-    var $calls = array();
+    var $calls = [];
 
     function __construct($server, $path = false, $port = 80, $timeout = 15)
 {
@@ -1070,10 +1070,10 @@ class IXR_ClientMulticall extends IXR_Client
     {
         $args = func_get_args();
         $methodName = array_shift($args);
-        $struct = array(
+        $struct = [
             'methodName' => $methodName,
             'params' => $args
-        );
+        ];
         $this->calls[] = $struct;
     }
 
@@ -1236,9 +1236,9 @@ class IXR_ClientSSL extends IXR_Client
         curl_setopt($curl, CURLOPT_POST, 1);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $xml);
         curl_setopt($curl, CURLOPT_PORT, $this->port);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
                                     "Content-Type: text/xml",
-                                    "Content-length: {$length}"));
+                                    "Content-length: {$length}"]);
 
         // Process the SSL certificates, etc. to use
         if (!($this->_certFile === false)) {
@@ -1327,9 +1327,9 @@ parent::__construct();
 
     function IXR_ClassServer($delim = '.', $wait = false)
     {
-        $this->IXR_Server(array(), false, $wait);
+        $this->IXR_Server([], false, $wait);
         $this->_delimiter = $delim;
-        $this->_objects = array();
+        $this->_objects = [];
     }
 
     function addMethod($rpcName, $functionName)
@@ -1357,7 +1357,7 @@ parent::__construct();
             {
                 $targetMethod = $method;
             }
-            $this->callbacks[$prefix . $this->_delimiter . $method]=array($prefix, $targetMethod);
+            $this->callbacks[$prefix . $this->_delimiter . $method]=[$prefix, $targetMethod];
         }
     }
 

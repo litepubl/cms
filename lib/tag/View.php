@@ -38,7 +38,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     {
         parent::create();
         $this->addEvents('onbeforecontent', 'oncontent');
-        $this->cachedIdPosts = array();
+        $this->cachedIdPosts = [];
     }
 
     public function setTags(Common $tags)
@@ -244,11 +244,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     {
         return sprintf(
             '<ul>%s</ul>', $this->getSorted(
-                array(
+                [
                 'item' => '<li><a href="$link" title="$title">$title</a>$subcount</li>',
                 'subcount' => '<strong>($itemscount)</strong>',
                 'subitems' => '<ul>$item</ul>'
-                ), 0, 'count', 0, 0, false
+                ], 0, 'count', 0, 0, false
             )
         );
     }

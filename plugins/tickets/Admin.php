@@ -42,10 +42,10 @@ class Admin extends \litepubl\admin\Menu
         if ($count > 0) {
             $items = $tickets->select("status <> 'deleted' $where", " order by posted desc limit $from, $perpage");
             if (!$items) {
-                $items = array();
+                $items = [];
             }
         } else {
-            $items = array();
+            $items = [];
         }
 
         $admintheme = $this->admintheme;
@@ -56,47 +56,47 @@ class Admin extends \litepubl\admin\Menu
 
         $tb = $this->newTable();
         $tb->setPosts(
-            array(
-            array(
+            [
+            [
                 'right',
                 $lang->date,
                 '$post.date'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->posttitle,
                 '$post.bookmark'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->author,
                 '$post.authorlink'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->status,
                 '$poststatus'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->category,
                 '$post.category'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->state,
                 function (Table $t) {
                 
                     return Lang::i()->__get(Ticket::i($t->id)->state);
                 }
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->edit,
                 '<a href="' . Link::url('/admin/tickets/editor/', 'id') . '=$post.id">' . $lang->edit . '</a>'
-            ) ,
+            ] ,
 
-            )
+            ]
         );
 
         $table = $tb->build($items);

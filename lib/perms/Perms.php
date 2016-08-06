@@ -22,13 +22,13 @@ class Perms extends \litepubl\core\Items
         $this->dbversion = false;
         parent::create();
         $this->basename = 'perms';
-        $this->addmap('classes', array());
-        $this->tables = array(
+        $this->addmap('classes', []);
+        $this->tables = [
             'files',
             'posts',
             'tags',
             'categories'
-        );
+        ];
     }
 
     public function addclass(Perm $perm)

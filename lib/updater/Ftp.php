@@ -240,13 +240,13 @@ class Ftp extends Remote
     private function perm2mode($mode)
     {
         $realmode = '';
-        $legal = array(
+        $legal = [
             '',
             'w',
             'r',
             'x',
             '-'
-        );
+        ];
         $attarray = preg_split('//', $mode);
 
         for ($i = 0; $i < count($attarray);
@@ -257,12 +257,12 @@ class Ftp extends Remote
         }
 
         $mode = str_pad($realmode, 9, '-');
-        $trans = array(
+        $trans = [
             '-' => '0',
             'r' => '4',
             'w' => '2',
             'x' => '1'
-        );
+        ];
         $mode = strtr($mode, $trans);
 
         $newmode = '';
@@ -279,7 +279,7 @@ class Ftp extends Remote
             $is_windows = strpos(strtolower(ftp_systype($this->handle)), 'win') !== false;
         }
         if ($is_windows && preg_match("/([0-9]\x7b2\x7d)-([0-9]\x7b2\x7d)-([0-9]\x7b2\x7d) +([0-9]\x7b2\x7d):([0-9]\x7b2\x7d)(AM|PM) +([0-9]+|<DIR>) +(.+)/", $line, $lucifer)) {
-            $b = array();
+            $b = [];
             if ($lucifer[3] < 70) {
                 $lucifer[3]+= 2000;
             } else {
@@ -306,7 +306,7 @@ class Ftp extends Remote
                 return '';
             }
 
-            $b = array();
+            $b = [];
             $b['isdir'] = $lucifer[0] {
                 0
             } === "d";
@@ -359,7 +359,7 @@ class Ftp extends Remote
             return false;
         }
 
-        $result = array();
+        $result = [];
         foreach ($list as $k => $v) {
             $a = $this->parselisting($v);
             if (empty($a)) {

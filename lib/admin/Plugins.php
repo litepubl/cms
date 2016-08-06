@@ -60,25 +60,25 @@ class Plugins extends Menu
 
             $tb = new Table();
             $tb->setStruct(
-                array(
+                [
                 $tb->nameCheck() ,
 
-                array(
+                [
                     $lang->name,
                     '$short'
-                ) ,
+                ] ,
 
-                array(
+                [
                     'right',
                     $lang->version,
                     '$version'
-                ) ,
+                ] ,
 
-                array(
+                [
                     $lang->description,
                     '$description'
-                ) ,
-                )
+                ] ,
+                ]
             );
 
             $body = '';

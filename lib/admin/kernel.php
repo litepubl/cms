@@ -354,13 +354,13 @@ class Form
         $title = $this->title ? str_replace('$title', $this->title, $admin->templates['form.title']) : '';
 
         $attr = "action=\"$this->action\"";
-        foreach (array(
+        foreach ([
             'method',
             'enctype',
             'target',
             'id',
             'class'
-        ) as $k) {
+        ] as $k) {
             if ($v = $this->$k) {
                 $attr.= sprintf(' %s="%s"', $k, $v);
             }
@@ -383,12 +383,12 @@ class Form
         }
 
         return strtr(
-            $admin->templates['form'], array(
+            $admin->templates['form'], [
             '$title' => $title,
             '$before' => $this->before,
             '$attr' => $attr,
             '$body' => $body,
-            )
+            ]
         );
     }
 
@@ -406,10 +406,10 @@ class Form
         $a = func_get_args();
         foreach ($a as $name) {
             $result.= strtr(
-                $theme->templates['content.admin.button'], array(
+                $theme->templates['content.admin.button'], [
                 '$lang.$name' => $lang->__get($name) ,
                 '$name' => $name,
-                )
+                ]
             );
         }
 
@@ -436,11 +436,11 @@ class GetPerm
         $lang->section = 'perms';
         $theme = Theme::i();
         $result = strtr(
-            $theme->templates['content.admin.combo'], array(
+            $theme->templates['content.admin.combo'], [
             '$lang.$name' => $lang->perm,
             '$name' => $name,
             '$value' => static ::items($idperm)
-            )
+            ]
         );
 
         $lang->section = $section;
@@ -507,11 +507,11 @@ class GetSchema
         $lang->addsearch('views');
         $theme = Theme::i();
         return strtr(
-            $theme->templates['content.admin.combo'], array(
+            $theme->templates['content.admin.combo'], [
             '$lang.$name' => $lang->schema,
             '$name' => $name,
             '$value' => static ::items($idschema)
-            )
+            ]
         );
     }
 
@@ -550,7 +550,7 @@ class Link
     public function parse($s)
     {
         $list = explode(',', $s);
-        $a = array();
+        $a = [];
         foreach ($list as $item) {
             if ($i = strpos($item, '=')) {
                 $a[trim(substr($item, 0, $i)) ] = trim(substr($item, $i + 1));
@@ -575,11 +575,11 @@ class Link
         }
 
         $attr = '';
-        foreach (array(
+        foreach ([
             'class',
             'title',
             'role'
-        ) as $name) {
+        ] as $name) {
             if (!empty($a[$name])) {
                 $attr.= sprintf(' %s="%s"', $name, $a[$name]);
             }
@@ -602,7 +602,7 @@ class Menu extends \litepubl\pages\Menu
     use Factory;
     use Params;
 
-    public static $adminownerprops = array(
+    public static $adminownerprops = [
         'title',
         'url',
         'idurl',
@@ -611,7 +611,7 @@ class Menu extends \litepubl\pages\Menu
         'status',
         'name',
         'group'
-    );
+    ];
 
     public static function getInstanceName()
     {
@@ -811,14 +811,14 @@ class Menus extends \litepubl\pages\Menus
         $title = $this->getAdminTitle($name);
         $url = $this->createUrl($parent, $name);
         return $this->addItem(
-            array(
+            [
             'parent' => $parent,
             'url' => $url,
             'title' => $title,
             'name' => $name,
             'class' => $class,
             'group' => $group
-            )
+            ]
         );
     }
 
@@ -848,7 +848,7 @@ class Menus extends \litepubl\pages\Menus
     public function getChilds(int $id): array
     {
         if ($id == 0) {
-            $result = array();
+            $result = [];
             $options = $this->getApp()->options;
             foreach ($this->tree as $iditem => $items) {
                 if ($options->hasgroup($this->items[$iditem]['group'])) {
@@ -858,9 +858,9 @@ class Menus extends \litepubl\pages\Menus
             return $result;
         }
 
-        $parents = array(
+        $parents = [
             $id
-        );
+        ];
         $parent = $this->items[$id]['parent'];
         while ($parent != 0) {
             array_unshift($parents, $parent);
@@ -1026,9 +1026,9 @@ class Table
         $this->head = '';
         $this->body = '';
         $this->footer = '';
-        $this->callbacks = array();
+        $this->callbacks = [];
         $this->args = new Args();
-        $this->data = array();
+        $this->data = [];
     }
 
     public function setStruct(array $struct)
@@ -1057,10 +1057,10 @@ class Table
                 $this->body.= sprintf('<td class="%s">%s</td>', $colclass, $name);
 
                 array_unshift($item, $this);
-                $this->callbacks[$name] = array(
+                $this->callbacks[$name] = [
                     'callback' => $s,
                     'params' => $item,
-                );
+                ];
             } else {
                 throw new Exception('Unknown column ' . var_export($s, true));
             }
@@ -1071,13 +1071,13 @@ class Table
 
     public function addCallback(string $varname, $callback, $param = null)
     {
-        $this->callbacks[$varname] = array(
+        $this->callbacks[$varname] = [
             'callback' => $callback,
-            'params' => array(
+            'params' => [
                 $this,
                 $param
-            ) ,
-        );
+            ] ,
+        ];
     }
 
     public function addFooter(string $footer)
@@ -1143,10 +1143,10 @@ class Table
     public function setOwner(Items $owner)
     {
         $this->addCallback(
-            '$tempcallback' . count($this->callbacks), array(
+            '$tempcallback' . count($this->callbacks), [
             $this,
             'itemsCallback'
-            ), $owner
+            ], $owner
         );
     }
 
@@ -1162,10 +1162,10 @@ class Table
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setStruct($struct);
         $this->addCallback(
-            '$tempcallback' . count($this->callbacks), array(
+            '$tempcallback' . count($this->callbacks), [
             $this,
             'posts_callback'
-            ), false
+            ], false
         );
     }
 
@@ -1173,17 +1173,17 @@ class Table
     {
         $lang = Lang::i();
         $this->setStruct(
-            array(
-            array(
+            [
+            [
                 $lang->name,
                 '$name'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->property,
                 '$value'
-            )
-            )
+            ]
+            ]
         );
 
         $body = '';
@@ -1222,17 +1222,17 @@ class Table
     {
         $lang = Lang::i();
         $this->setStruct(
-            array(
-            array(
+            [
+            [
                 $lang->name,
                 '<label for="$name-input">$title</label>'
-            ) ,
+            ] ,
 
-            array(
+            [
                 $lang->property,
                 '$input'
-            )
-            )
+            ]
+            ]
         );
 
         $body = '';
@@ -1275,32 +1275,32 @@ class Table
     {
         $title = Lang::i()->__get($action);
 
-        return array(
+        return [
             $title,
             "<a href=\"$adminurl=\$id&action=$action\">$title</a>"
-        );
+        ];
     }
 
     public function checkbox(string $name): array
     {
         $admin = $this->getadmintheme();
 
-        return array(
+        return [
             'text-center col-checkbox',
             $admin->templates['checkbox.invert'],
             str_replace('$name', $name, $admin->templates['checkbox.id'])
-        );
+        ];
     }
 
     public function nameCheck(): array
     {
         $admin = Admin::i();
 
-        return array(
+        return [
             'text-center col-checkbox',
             $admin->templates['checkbox.stub'],
             $admin->templates['checkbox.name']
-        );
+        ];
     }
 
     public static function getColclass($s): string
@@ -1310,11 +1310,11 @@ class Table
             return 'text-left';
         }
 
-        $map = array(
+        $map = [
             'left' => 'text-left',
             'right' => 'text-right',
             'center' => 'text-center'
-        );
+        ];
 
         $list = explode(' ', $s);
         foreach ($list as $i => $v) {
@@ -1361,8 +1361,8 @@ class Tabs
     public function __construct($admintheme = null)
     {
         $this->_admintheme = $admintheme;
-        $this->tabs = array();
-        $this->panels = array();
+        $this->tabs = [];
+        $this->panels = [];
     }
 
     public function getAdmintheme()
@@ -1377,11 +1377,11 @@ class Tabs
     public function get()
     {
         return strtr(
-            $this->getadmintheme()->templates['tabs'], array(
+            $this->getadmintheme()->templates['tabs'], [
             '$id' => $this->id ? $this->id : 'tabs-' . static ::$index++,
             '$tab' => implode("\n", $this->tabs) ,
             '$panel' => implode("\n", $this->panels) ,
-            )
+            ]
         );
     }
 
@@ -1405,21 +1405,21 @@ class Tabs
     public function getTab($id, $url, $title)
     {
         return strtr(
-            $this->getadmintheme()->templates['tabs.tab'], array(
+            $this->getadmintheme()->templates['tabs.tab'], [
             '$id' => $id,
             '$title' => $title,
             '$url' => $url,
-            )
+            ]
         );
     }
 
     public function getPanel($id, $content)
     {
         return strtr(
-            $this->getadmintheme()->templates['tabs.panel'], array(
+            $this->getadmintheme()->templates['tabs.panel'], [
             '$id' => $id,
             '$content' => $content,
-            )
+            ]
         );
     }
 }
@@ -1457,21 +1457,21 @@ class UList
     public function li($name, $value)
     {
         return strtr(
-            is_int($name) ? $this->value : $this->item, array(
+            is_int($name) ? $this->value : $this->item, [
             '$name' => $name,
             '$value' => $value,
             '$site.url' => $this->getApp()->site->url,
-            )
+            ]
         );
     }
 
     public function link($url, $title)
     {
         return strtr(
-            $this->link, array(
+            $this->link, [
             '$name' => $url,
             '$value' => $title,
-            )
+            ]
         );
     }
 

@@ -33,7 +33,7 @@ class Polls extends \litepubl\core\Items
     {
         $best = $template == 'stars' ? 5 : 2;
         return $this->addItem(
-            array(
+            [
             'idobject' => (int)$idobject,
             'typeobject' => $typeobject,
             'votes' => 0,
@@ -42,7 +42,7 @@ class Polls extends \litepubl\core\Items
             'created' => Str::sqlDate() ,
             'status' => 'opened',
             'template' => $template,
-            )
+            ]
         );
     }
 
@@ -111,12 +111,12 @@ class Polls extends \litepubl\core\Items
     {
         $lang = Lang::i('poll');
 
-        return array(
-            'error' => array(
+        return [
+            'error' => [
                 'code' => 403,
                 'message' => $lang->$mesg
-            )
-        );
+            ]
+        ];
     }
 
     public function polls_sendvote(array $args)
@@ -145,11 +145,11 @@ class Polls extends \litepubl\core\Items
             $this->addvote($idpoll, $iduser, (int)$vote);
             $item = $this->getitem($idpoll);
 
-            $result = array(
+            $result = [
                 'code' => 'success',
                 'item' => $item,
                 'html' => $this->getpoll($idpoll) ,
-            );
+            ];
         }
 
         return $result;
@@ -164,11 +164,11 @@ class Polls extends \litepubl\core\Items
     {
         $db = $this->getdb(static ::votes);
         $db->insert(
-            array(
+            [
             'idpoll' => (int)$id,
             'iduser' => (int)$iduser,
             'vote' => (int)$vote,
-            )
+            ]
         );
 
         $t = $db->prefix . static ::votes;
@@ -206,11 +206,11 @@ where idpoll = $id group by vote order by vote asc"
         $item = $this->getitem($id);
         $best = (int)$item['best'];
         $this->getdb(static ::votes)->insert(
-            array(
+            [
             'idpoll' => (int)$id,
             'iduser' => 1,
             'vote' => $best,
-            )
+            ]
         );
 
         $item['votes'] = mt_rand(7, 167);

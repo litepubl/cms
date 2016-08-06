@@ -229,7 +229,7 @@ class Ssh2 extends Remote
             return false;
         }
 
-        $result = array();
+        $result = [];
         if ($dir = @dir($this->getfilename($path))) {
             while (false !== ($name = $dir->read())) {
                 if (($name == '.') || ($name == '..') || ($name == '.svn')) {

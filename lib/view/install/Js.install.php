@@ -23,10 +23,10 @@ function JsInstall($self)
 
     $language = $self->getApp()->options->language;
     $self->lock();
-    $self->items = array();
+    $self->items = [];
     $section = 'default';
 
-    $defaults = array(
+    $defaults = [
         '/js/jquery/jquery-$site.jquery_version.min.js',
         '/js/plugins/class-extend.min.js',
         '/js/plugins/jquery.cookie.min.js',
@@ -55,14 +55,14 @@ function JsInstall($self)
 
         //effects
         '/js/litepubl/effects/homeimage.min.js',
-    );
+    ];
 
     foreach ($defaults as $filename) {
         $self->add($section, $filename);
     }
 
     //Js_switch($self, Js_pretty_files(), array());
-    Js_switch($self, Js_bootstrap_files(), array());
+    Js_switch($self, Js_bootstrap_files(), []);
 
     $self->add($section, "/lib/languages/$language/default.min.js");
 
@@ -123,19 +123,19 @@ function Js_switch($self, $add, $delete)
 
 function Js_pretty_files()
 {
-    return array(
+    return [
         '/js/prettyphoto/js/jquery.prettyPhoto.js',
         '/js/litepubl/pretty/dialog.pretty.min.js',
         '/js/litepubl/pretty/pretty.init.min.js',
         '/js/litepubl/pretty/youtubefix.min.js',
         '/js/litepubl/pretty/player.pretty.min.js',
         '/js/litepubl/common/widgets.min.js',
-    );
+    ];
 }
 
 function Js_bootstrap_files()
 {
-    return array(
+    return [
         // fix
         '/js/fix/ie10.min.js',
         '/js/fix/android-select.min.js',
@@ -167,23 +167,23 @@ function Js_bootstrap_files()
         // fonts
         '/js/fonts/css/lobster.min.js',
         '/js/fonts/css/font-awesome.min.js',
-    );
+    ];
 }
 
 function Js_bootstrap_admin($js, $add = true)
 {
-    $items = array(
-        'admin' => array(
+    $items = [
+        'admin' => [
             '/js/bootstrap/tab.min.js',
             '/js/litepubl/bootstrap/tabs.keys.min.js',
             '/js/litepubl/bootstrap/tabs.tml.min.js',
             '/js/litepubl/bootstrap/tabs.adapter.min.js',
-        ) ,
+        ] ,
 
-        'posteditor' => array(
+        'posteditor' => [
             '/js/litepubl/bootstrap/progressbar.adapter.min.js',
-        ) ,
-    );
+        ] ,
+    ];
 
     foreach ($items as $section => $filenames) {
         foreach ($filenames as $filename) {
@@ -201,8 +201,8 @@ function Js_ui_admin($js, $add = true)
 {
     $js->getApp()->getLogger()->debug(var_export($add, true));
     $js->getApp()->getLogManager()->trace();
-    $items = array(
-        'admin' => array(
+    $items = [
+        'admin' => [
             '/js/jquery/ui/core.min.js',
             '/js/jquery/ui/widget.min.js',
             '/js/jquery/ui/mouse.min.js',
@@ -212,13 +212,13 @@ function Js_ui_admin($js, $add = true)
 
             '/js/litepubl/ui/tabs.tml.min.js',
             '/js/litepubl/ui/tabs.adapter.min.js',
-        ) ,
+        ] ,
 
-        'posteditor' => array(
+        'posteditor' => [
             '/js/jquery/ui/progressbar.min.js',
             '/js/litepubl/ui/progressbar.adapter.min.js',
-        ) ,
-    );
+        ] ,
+    ];
 
     foreach ($items as $section => $filenames) {
         foreach ($filenames as $filename) {

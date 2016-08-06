@@ -33,7 +33,7 @@ class Editor extends \litepubl\admin\posts\Editor
     {
         $admintheme = $this->admintheme;
         return strtr(
-            $admintheme->templates['tabs'], array(
+            $admintheme->templates['tabs'], [
             '$id' => 'tabs',
             '$tab' => '[tab=downloaditem]' . $admintheme->templates['posteditor.tabs.tabs'],
             '$panel' => '[tabpanel=downloaditem{
@@ -43,7 +43,7 @@ class Editor extends \litepubl\admin\posts\Editor
 [text=authorname]
 [text=version]
 }]' . $admintheme->templates['posteditor.tabs.panels'],
-            )
+            ]
         );
     }
 
@@ -56,10 +56,10 @@ class Editor extends \litepubl\admin\posts\Editor
         $args->authorurl = $post->authorurl;
         $args->version = $post->version;
 
-        $types = array(
+        $types = [
             'theme' => Lang::get('downloaditem', 'theme') ,
             'plugin' => Lang::get('downloaditem', 'plugin')
-        );
+        ];
 
         $args->type = $this->theme->comboItems($types, $post->type);
     }

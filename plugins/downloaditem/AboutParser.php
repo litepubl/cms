@@ -38,9 +38,9 @@ class AboutParser
                     if ($screenshot = static ::getfile($files, 'screenshot.png')) {
                         $media = MediaParser::i();
                         $idscreenshot = $media->uploadThumbnail($about['name'] . '.png', $screenshot);
-                        $item->files = array(
+                        $item->files = [
                             $idscreenshot
-                        );
+                        ];
                     }
 
                     return $item;

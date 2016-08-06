@@ -42,7 +42,7 @@ class Group extends \litepubl\admin\Menu
 
         $dirlist = Filer::getdir($this->getApp()->paths->themes);
         sort($dirlist);
-        $list = array();
+        $list = [];
         foreach ($dirlist as $dir) {
             if (!Str::begin($dir, 'admin')) {
                 $list[$dir] = $dir;

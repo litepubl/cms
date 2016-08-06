@@ -85,14 +85,14 @@ class Pingbacks extends \litepubl\core\Items
 
     public function doadd($url, $title)
     {
-        $item = array(
+        $item = [
             'url' => $url,
             'title' => $title,
             'post' => $this->pid,
             'posted' => Str::sqlDate() ,
             'status' => 'hold',
             'ip' => preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR'])
-        );
+        ];
         $id = $this->db->add($item);
         $item['id'] = $id;
         $this->items[$id] = $item;
@@ -136,14 +136,14 @@ class Pingbacks extends \litepubl\core\Items
 
     public function import($url, $title, $posted, $ip, $status)
     {
-        $item = array(
+        $item = [
             'url' => $url,
             'title' => $title,
             'post' => $this->pid,
             'posted' => Str::sqlDate($posted) ,
             'status' => $status,
             'ip' => $ip
-        );
+        ];
         $id = $this->db->add($item);
         $item['id'] = $id;
         $this->items[$id] = $item;

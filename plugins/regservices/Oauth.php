@@ -30,13 +30,13 @@ class Oauth
         $this->token = '';
         $this->tokensecret = '';
         $this->timeout = 2;
-        $this->urllist = array(
+        $this->urllist = [
             'request' => 'https://api.twitter.com/oauth/request_token',
             'authorize' => 'https://api.twitter.com/oauth/authorize',
             'access' => 'https://api.twitter.com/oauth/access_token',
             //'callback' =>  $this->getApp()->site->url . '/twitter-oauth1callback.php'
             'callback' => ''
-        );
+        ];
     }
 
     //to override in child classes
@@ -49,12 +49,12 @@ class Oauth
 
     public function getKeys()
     {
-        return array();
+        return [];
     }
 
     public function getExtraheaders()
     {
-        return array();
+        return [];
     }
 
     private function getSign($keys, $url, $method = 'GET')
@@ -82,7 +82,7 @@ class Oauth
         return $this->normalize_url($url) . '?' . $this->getparams($this->getsign($keys, $url, $method));
     }
 
-    public function getData(array $keys, $url, $params = array(), $method = 'GET')
+    public function getData(array $keys, $url, $params = [], $method = 'GET')
     {
         $url = $this->get_url($keys, $url, $params, $method);
         if ($method == 'POST') {
@@ -96,11 +96,11 @@ class Oauth
 
     private function getSignature($keys, $url, $method)
     {
-        $sig = array(
+        $sig = [
             rawurlencode(strtoupper($method)) ,
             preg_replace('/%7E/', '~', rawurlencode($this->normalize_url($url))) ,
             rawurlencode($this->get_signable($keys))
-        );
+        ];
 
         $key = rawurlencode($this->secret) . '&';
         if ($this->tokensecret != '') {
@@ -127,7 +127,7 @@ class Oauth
             unset($params['oauth_signature']);
         }
         ksort($params);
-        $total = array();
+        $total = [];
         foreach ($params as $k => $v) {
             $total[] = rawurlencode($k) . '=' . rawurlencode($v);
         }
@@ -136,7 +136,7 @@ class Oauth
 
     private function getParams($params)
     {
-        $result = array();
+        $result = [];
         foreach ($params as $k => $v) {
             $result[] = rawurlencode($k) . '=' . rawurlencode($v);
         }
@@ -147,7 +147,7 @@ class Oauth
     {
         $params = $this->getsign($keys, $url, 'post');
         ksort($params);
-        $result = array();
+        $result = [];
         foreach ($params as $k => $v) {
             $result[] = sprintf('%s="%s"', $k, rawurlencode($v));
         }
@@ -194,7 +194,7 @@ class Oauth
     {
         if ($crap = $this->dorequest($url)) {
             $bits = explode('&', $crap);
-            $result = array();
+            $result = [];
             foreach ($bits as $bit) {
                 list($k, $v) = explode('=', $bit, 2);
                 $result[urldecode($k) ] = urldecode($v);
@@ -221,9 +221,9 @@ class Oauth
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt(
-            $ch, CURLOPT_HTTPHEADER, array(
+            $ch, CURLOPT_HTTPHEADER, [
             'Expect:'
-            )
+            ]
         ); // Get around error 417
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -279,21 +279,21 @@ class Oauth
 
     public function postdata($url, array $post)
     {
-        $a = array();
+        $a = [];
         foreach ($post as $k => $v) {
             $a[] = sprintf('%s=%s', rawurlencode($k), rawurlencode($v));
         }
         $postdata = implode('&', $a);
 
-        $keys = array(
+        $keys = [
             'oauth_token' => $this->token
-        );
+        ];
 
         $authorization = $this->getauthorization($keys, $url . '?' . $postdata);
-        $headers = array(
+        $headers = [
             'Authorization: OAuth ' . $authorization,
             'Content-Length: ' . strlen($postdata)
-        );
+        ];
 
         $headers = array_merge($headers, $this->getextraheaders());
 

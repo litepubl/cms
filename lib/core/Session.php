@@ -26,21 +26,21 @@ class Session
         $this->memcache = $memcache;
         $this->prefix = 'ses-' . $prefix;
         $this->lifetime = 3600;
-        $truefunc = array(
+        $truefunc = [
             $this,
             'truefunc'
-        );
+        ];
         session_set_save_handler(
-            $truefunc, $truefunc, array(
+            $truefunc, $truefunc, [
             $this,
             'read'
-            ), array(
+            ], [
             $this,
             'write'
-            ), array(
+            ], [
             $this,
             'destroy'
-            ), $truefunc
+            ], $truefunc
         );
     }
 

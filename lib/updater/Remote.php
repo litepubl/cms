@@ -65,7 +65,7 @@ class Remote
         }
 
         if (!isset($modes)) {
-            foreach (array(
+            foreach ([
                 0644,
                 0666,
                 0640,
@@ -74,7 +74,7 @@ class Remote
                 0755,
                 0770,
                 0750
-            ) as $value) {
+            ] as $value) {
                 $modes[$value] = $value;
                 $modes[octdec($value) ] = $value;
                 $d = (int)sprintf('%o', $value);
@@ -148,7 +148,7 @@ class Remote
 
     protected function getFileinfo($filename)
     {
-        $result = array();
+        $result = [];
         $result['mode'] = $this->getchmod($filename);
         $result['owner'] = $this->owner($filename);
         $result['group'] = $this->group($filename);
@@ -162,14 +162,14 @@ class Remote
     {
         $dir = rtrim($dir, '/');
         if ($list = $this->getdir($dir)) {
-            $call = array(
+            $call = [
                 $this,
                 $func
-            );
+            ];
             if (!is_array($args)) {
-                $args = isset($args) ? array(
+                $args = isset($args) ? [
                     0 => $args
-                ) : array();
+                ] : [];
             }
             array_unshift($args, 0);
             foreach ($list as $name => $item) {
