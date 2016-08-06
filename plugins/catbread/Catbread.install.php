@@ -18,7 +18,7 @@ use litepubl\view\Parser;
 function CatbreadInstall($self)
 {
     LangMerger::i()->addplugin(basename(dirname(__file__)));
-    $self->cats->onbeforecontent = $self->beforecat;
+    $self->cats->view->onBeforeContent = $self->beforeCat;
 
     $parser = Parser::i();
     $parser->lock();

@@ -37,15 +37,15 @@ class Catbread extends \litepubl\core\Plugin
         return Cats::i();
     }
 
-    public function beforecat(&$result)
+    public function beforeCat(Event $event)
     {
         $cats = $this->cats;
         $idcat = $cats->id;
         if (!$idcat) {
-            return $result;
+            return;
         }
 
-        $result.= $this->getbread($idcat);
+        $event->content .= $this->getBread($idcat);
 
         if ($this->showsimilar) {
             $list = [];
@@ -56,10 +56,8 @@ class Catbread extends \litepubl\core\Plugin
 
             Arr::clean($list);
             Arr::deleteValue($list, $idcat);
-            $result.= $this->getsimilar($list);
+            $event->content .= $this->getSimilar($list);
         }
-
-        return $result;
     }
 
     public function getPost()
