@@ -13,7 +13,7 @@ namespace litepubl\admin\widget;
 class ShowCount extends Widget
 {
 
-    protected function getForm()
+    protected function getForm(): string
     {
         $this->args->showcount = $this->widget->showcount;
         return parent::getForm() . '[checkbox=showcount]';

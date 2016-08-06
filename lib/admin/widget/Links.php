@@ -14,7 +14,7 @@ class Links extends Widget
 {
     use \litepubl\admin\Factory;
 
-    protected function getForm()
+    protected function getForm(): string
     {
         $this->args->redir = $this->widget->redir;
         return parent::getForm()

@@ -16,7 +16,7 @@ class Order extends Widget
 {
     use \litepubl\admin\Params;
 
-    protected function getForm()
+    protected function getForm(): string
     {
         $idschema = $this->getparam('idschema', 1);
         $schema = Schema::i($idschema);

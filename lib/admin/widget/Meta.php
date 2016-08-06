@@ -13,7 +13,7 @@ namespace litepubl\admin\widget;
 class Meta extends Widget
 {
 
-    protected function getForm()
+    protected function getForm(): string
     {
         $result = parent::getForm();
         $theme = $this->theme;

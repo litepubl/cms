@@ -20,7 +20,7 @@ class Admin extends \litepubl\admin\widget\Order
         $this->widget->id = $this->widget->getWidgets()->find($this->widget);
     }
 
-    protected function getForm()
+    protected function getForm(): string
     {
         $result= parent::getForm();
         $this->args->maxcount = $this->widget->maxcount;

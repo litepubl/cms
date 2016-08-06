@@ -32,7 +32,7 @@ class Admin extends \litepubl\admin\widget\Widget
         if ($widget->id != 0) {
             $args->maxcount = $widget->counts[$widget->id];
             $form = parent::getForm();
-            $forrm .= '[text=maxcount]';
+            $form .= '[text=maxcount]';
         }
 
         $args->user = $widget->user;

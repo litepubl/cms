@@ -13,7 +13,7 @@ namespace litepubl\admin\widget;
 class MaxCount extends Widget
 {
 
-    protected function getForm()
+    protected function getForm(): string
     {
         $this->args->maxcount = $this->widget->maxcount;
         return parent::getForm() . '[text=maxcount]';

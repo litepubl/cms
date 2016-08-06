@@ -19,7 +19,7 @@ class Admin extends \litepubl\admin\widget\Order
         $this->widget = Oldestposts::i();
     }
 
-    protected function getForm()
+    protected function getForm(): string
     {
         $this->args->maxcount = $this->widget->maxcount;
         return parent::getForm() . '[text=maxcount]';

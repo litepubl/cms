@@ -15,7 +15,7 @@ use litepubl\view\Lang;
 class Tags extends Widget
 {
 
-    protected function getForm()
+    protected function getForm(): string
     {
         $args = $this->args;
         $widget = $this->widget;

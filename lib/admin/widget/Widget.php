@@ -42,7 +42,7 @@ class Widget extends \litepubl\admin\Panel
         $title = $this->widget->gettitle($this->widget->id);
         $this->args->title = $title;
         $this->args->formtitle = $title . ' ' . $this->lang->widget;
-        return $this->theme->getinput('text', 'title', $title, $this->lang->widgettitle);
+        return $this->theme->getInput('text', 'title', $title, $this->lang->widgettitle);
     }
 
     public function getContent(): string
