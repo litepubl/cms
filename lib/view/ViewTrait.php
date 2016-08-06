@@ -43,6 +43,16 @@ trait ViewTrait
         return $this->data['description'];
     }
 
+    public function getTitle(): string
+    {
+        return isset($this->data['title']) ? $this->data['title'] : '';
+    }
+
+    public function getCont(): string
+    {
+        return '';
+    }
+
     public function getIdSchema(): int
     {
         return $this->data['idschema'];
