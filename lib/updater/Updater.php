@@ -87,7 +87,7 @@ $this->getApp()->options->version = $ver;
         }
     }
 
-public function getScriptFileName(string $ver): sgtring
+public function getScriptFileName(string $ver): string
 {
 return $this->getApp()->paths->lib . "update/update.$ver.php";
 }
