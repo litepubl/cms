@@ -29,18 +29,27 @@ class Plugins extends Items
         $this->addMap('paths', []);
     }
 
-    public function __get($name)
-    {
-        if (isset($this->items[$name])) {
-            $section = $this->items[$name]['path'] ?? '';
+private function getNamedPath(string$name, string $section): string
+{
             if (isset($this->paths[$section])) {
                 return trim($this->paths[$section], '\/') . '/' . $name;
             } else {
                 return 'plugins/' . $name;
             }
+}
+
+    public function __get($name)
+    {
+        if (isset($this->items[$name])) {
+return $this->getNamedPath($name, $this->items[$name]['path'] ?? '');
         } elseif (isset($this->paths[$name])) {
             return $this->paths[$name];
         } else {
+$list = $this->getDirNames();
+if (isset($list[$name])) {
+return $this->getNamedPath($name, $list[$name]);
+}
+
             return parent::__get($name);
         }
     }
@@ -222,7 +231,7 @@ class Plugins extends Items
     {
         $add = array_diff($list, array_keys($this->items));
         $delete = array_diff(array_keys($this->items), $list);
-        $delete = array_intersect($delete, Filer::getdir($this->getApp()->paths->plugins));
+        $delete = array_intersect($delete, array_keys($this->getDirNames()));
 
         $this->lock();
         foreach ($delete as $name) {
