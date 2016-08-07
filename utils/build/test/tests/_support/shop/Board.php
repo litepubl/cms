@@ -17,9 +17,10 @@ class Board extends \page\Base
     public $cabinetUrl = '/admin/cabinet/';
 public $error = '.text-warning';
 
-public function check()
+public function check(string $name)
 {
-$this->tester->wantTo('Page found');
+$this->tester->wantTo("Exists $name page");
 $this->tester->dontSeeElement($this->error);
+$this->screenshot($name);
 }
 }
