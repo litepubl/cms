@@ -15,7 +15,7 @@ class Plugin extends Base
     public $url = '/admin/plugins/';
 
 
-    public function install(string $name)
+    public function install(string $name, int $timeout = 10)
     {
         $this->open();
         $i = $this->tester;
@@ -24,7 +24,7 @@ class Plugin extends Base
         $i->checkOption("input[name=$name]");
         $i->click($this->updateButton);
         $i->checkError();
-        $i->waitForElement("input[name=$name]", 10);
+        $i->waitForElement("input[name=$name]", $timeout);
         $i->seeCheckboxIsChecked("input[name=$name]");
     }
 

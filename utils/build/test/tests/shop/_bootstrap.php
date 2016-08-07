@@ -10,4 +10,4 @@
 
 // Here you can initialize variables that will be available to your tests
 
-include_once __DIR__ . '/../acceptance/_bootstrap.php');
+include_once __DIR__ . '/../acceptance/_bootstrap.php';
