@@ -1,6 +1,6 @@
 $template.content.notfound = [
 <div class="jumbotron">
-    <h2>$lang.notfound </h2>
-    <p>$lang.nocontent</p>
+    <h3>$lang.notfound </h3>
+    <p class="text-warning">$lang.nocontent</p>
 </div>
 ]

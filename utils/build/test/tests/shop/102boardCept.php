@@ -11,6 +11,13 @@
 use shop\Board;
 
 $i = new AcceptanceTester($scenario);
-$i->wantTo('Test admin hop dashboard');
-$board = new Board($i, '09home');
-$board->open();
+$i->wantTo('Test admin shop dashboard');
+$board = new Board($i, '102board');
+$i->openPage($board->url);
+$board->check();
+
+$i->openPage($board->cabinetUrl);
+$board->check();
+
+$i->openPage($board->failUrl);
+$board->check();

@@ -37,7 +37,7 @@ public function checkError()
 {
 $this->wantTo('Check errors');
 $text = htmlspecialchars_decode($this->getVisibleText());
-foreach (['exception', 'warning', 'Parse error', 'Fatal error', 'Notice: Undefined'] as $err) {
+foreach (['exception', 'Warning:', 'Parse error', 'Fatal error', 'Notice: Undefined'] as $err) {
 if (strpos($text, $err) !== false) {
 return $this->assertTrue(false, $err);
 }

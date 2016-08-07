@@ -15,5 +15,11 @@ class Board extends \page\Base
     public $url = '/admin/shop/';
     public $failUrl = '/admin/cabinet/fail/';
     public $cabinetUrl = '/admin/cabinet/';
+public $error = '.text-warning';
 
+public function check()
+{
+$this->tester->wantTo('Page found');
+$this->tester->dontSeeElement($this->error);
+}
 }
