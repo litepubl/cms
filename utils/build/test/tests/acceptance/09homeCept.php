@@ -12,7 +12,7 @@ use Page\Home;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test home image');
-$home = new home($i, '09home');
+$home = new Home($i, '09home');
 $home->open();
 $i->wantTo('Remove current image');
 $home->clickTab($home->imageTab);
