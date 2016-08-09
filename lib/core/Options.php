@@ -110,10 +110,10 @@ class Options extends Events
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
             $this->save();
-return true;
+            return true;
         }
 
-return false;
+        return false;
     }
 
     public function getAdminFlag(): bool

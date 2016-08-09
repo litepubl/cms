@@ -29,26 +29,26 @@ class Plugins extends Items
         $this->addMap('paths', []);
     }
 
-private function getNamedPath(string$name, string $section): string
-{
-            if (isset($this->paths[$section])) {
-                return trim($this->paths[$section], '\/') . '/' . $name;
-            } else {
-                return 'plugins/' . $name;
-            }
-}
+    private function getNamedPath(string$name, string $section): string
+    {
+        if (isset($this->paths[$section])) {
+            return trim($this->paths[$section], '\/') . '/' . $name;
+        } else {
+            return 'plugins/' . $name;
+        }
+    }
 
     public function __get($name)
     {
         if (isset($this->items[$name])) {
-return $this->getNamedPath($name, $this->items[$name]['path'] ?? '');
+            return $this->getNamedPath($name, $this->items[$name]['path'] ?? '');
         } elseif (isset($this->paths[$name])) {
             return $this->paths[$name];
         } else {
-$list = $this->getDirNames();
-if (isset($list[$name])) {
-return $this->getNamedPath($name, $list[$name]);
-}
+            $list = $this->getDirNames();
+            if (isset($list[$name])) {
+                        return $this->getNamedPath($name, $list[$name]);
+            }
 
             return parent::__get($name);
         }
@@ -154,14 +154,14 @@ return $this->getNamedPath($name, $list[$name]);
             ];
 
             $classes->installClass($classname);
-        if ($about['adminclassname']) {
-            $classes->installClass($about['adminclassname']);
-        }
+            if ($about['adminclassname']) {
+                $classes->installClass($about['adminclassname']);
+            }
 
-        $this->unlock();
-        $classes->unlock();
-        $this->added(['name' => $name]);
-        return $name;
+            $this->unlock();
+            $classes->unlock();
+            $this->added(['name' => $name]);
+            return $name;
     }
 
     public function has(string $name): bool

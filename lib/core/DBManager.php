@@ -52,10 +52,10 @@ class DBManager
     {
         if ($this->tableExists($name)) {
             $this->exec("DROP TABLE $this->prefix$name");
-return true;
+            return true;
         }
 
-return false;
+        return false;
     }
 
     public function deleteAllTables()

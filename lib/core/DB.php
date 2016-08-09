@@ -327,7 +327,7 @@ class DB
 
     public function exists(string $where): bool
     {
-$res = $this->query("select *  from $this->prefix$this->table where $where limit 1");
+        $res = $this->query("select *  from $this->prefix$this->table where $where limit 1");
         return (bool) $res->num_rows;
     }
 

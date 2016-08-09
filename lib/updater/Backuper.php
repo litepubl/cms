@@ -582,11 +582,11 @@ class Backuper extends \litepubl\core\Events
                 return $this->errorarch();
             }
 
-if (is_object($content)) {
-$content->file = null;
-}
+            if (is_object($content)) {
+                        $content->file = null;
+            }
 
-$content = null;
+            $content = null;
             $path_checked = false;
             $path_root = false;
 
@@ -620,11 +620,11 @@ $content = null;
                 return $this->errorarch();
             }
 
-if (is_object($content)) {
-$content->file = null;
-}
+            if (is_object($content)) {
+                        $content->file = null;
+            }
 
-$content = null;
+            $content = null;
 
             $path_checked = false;
             $path_root = false;

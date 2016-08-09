@@ -527,7 +527,7 @@ class BaseParser extends \litepubl\core\Events
         Arr::clean($this->themefiles);
         Arr::clean($this->tagfiles);
         $this->save();
-$this->paths = [];
+        $this->paths = [];
         Base::clearcache();
     }
 
@@ -538,7 +538,7 @@ $this->paths = [];
         Arr::clean($this->themefiles);
         Arr::clean($this->tagfiles);
         $this->save();
-$this->paths = [];
+        $this->paths = [];
         Base::clearcache();
     }
 }

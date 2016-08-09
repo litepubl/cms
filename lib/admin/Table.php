@@ -19,9 +19,9 @@ use litepubl\view\Lang;
 
 class Table
 {
-const LEFT = 'text-left';
-const RIGHT = 'text-right';
-const CENTER = 'text-center';
+    const LEFT = 'text-left';
+    const RIGHT = 'text-right';
+    const CENTER = 'text-center';
 
     //current item in items
     public $item;
@@ -156,11 +156,11 @@ const CENTER = 'text-center';
         return $this->getAdminTheme()->parseArg($this->body, $args);
     }
 
-public function buildItems(array $items, array $struct): string
-{
+    public function buildItems(array $items, array $struct): string
+    {
         $this->setStruct($struct);
         return $this->build($items);
-}
+    }
 
     //predefined callbacks
     public function itemsCallback(Table $self, Items $owner)

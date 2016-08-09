@@ -58,15 +58,15 @@ class Updater extends \litepubl\core\Events
         return $this->getnext($this->versions);
     }
 
-public function getCurrentVersion(): string
-{
-return $this->getApp()->options->version;
-}
+    public function getCurrentVersion(): string
+    {
+        return $this->getApp()->options->version;
+    }
 
-public function setCurrentVersion(string $ver)
-{
-$this->getApp()->options->version = $ver;
-}
+    public function setCurrentVersion(string $ver)
+    {
+        $this->getApp()->options->version = $ver;
+    }
 
     public function getNext(array $versions): string
     {
@@ -87,15 +87,15 @@ $this->getApp()->options->version = $ver;
         }
     }
 
-public function getScriptFileName(string $ver): string
-{
-return $this->getApp()->paths->lib . "update/update.$ver.php";
-}
+    public function getScriptFileName(string $ver): string
+    {
+        return $this->getApp()->paths->lib . "update/update.$ver.php";
+    }
 
-public function getScriptFuncName(string $ver): string
-{
-return 'litepubl\update\update' . str_replace('.', '', $ver);
-}
+    public function getScriptFuncName(string $ver): string
+    {
+        return 'litepubl\update\update' . str_replace('.', '', $ver);
+    }
 
     public function run($ver)
     {
@@ -119,12 +119,12 @@ return 'litepubl\update\update' . str_replace('.', '', $ver);
                 call_user_func_array($func, []);
                 $app->poolStorage->commit();
                 $this->log("$func is called", 'update');
-} else {
+            } else {
                 $this->log("$func not exists", 'update');
             }
         } else {
                 $this->log("Update file $filename not exists");
-}
+        }
     }
 
     public function update()
@@ -142,7 +142,7 @@ return 'litepubl\update\update' . str_replace('.', '', $ver);
         $nextver = (float) $this->nextversion;
         $app = $this->getApp();
         $v = $this->getCurrentVersion();
-$v += 0.01;
+        $v += 0.01;
 
         while (version_compare($v, $nextver) <= 0) {
             $ver = (string)$v;
@@ -155,7 +155,7 @@ $v += 0.01;
 
             $this->log("$v selected to update", 'update');
             $this->run($v);
-$this->setCurrentVersion($ver);
+            $this->setCurrentVersion($ver);
             $app->poolStorage->commit();
             $v = $v + 0.01;
         }
@@ -245,13 +245,13 @@ $this->setCurrentVersion($ver);
         return false;
     }
 
-public function getVersionUrls(): array
-{
-return [
-'http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . $this->getApp()->db->mysqli->server_info . '&litepubl=' . $this->getApp()->options->version,
-'https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'
-];
-}
+    public function getVersionUrls(): array
+    {
+        return [
+        'http://litepublisher.ru/service/versions.php' . '?php=' . PHP_VERSION . '&mysql=' . $this->getApp()->db->mysqli->server_info . '&litepubl=' . $this->getApp()->options->version,
+        'https://github.com/litepubl/cms/raw/master/lib/install/versions.txt'
+        ];
+    }
 
     public function downloadReleases()
     {
@@ -259,37 +259,37 @@ return [
             return $this->releases;
         }
 
-$urls = $this->getVersionUrls();
-foreach ($urls as $url) {
-if ($s = Http::get($url)) {
-            $this->releases = Str::toArray($s);
-            return $this->releases;
+        $urls = $this->getVersionUrls();
+        foreach ($urls as $url) {
+            if ($s = Http::get($url)) {
+                    $this->releases = Str::toArray($s);
+                    return $this->releases;
+            }
         }
-}
 
         return false;
     }
 
-public function getDownloadUrls(string $version): array
-{
-return [
-"https://codeload.github.com/litepubl/cms/tar.gz/v$version",
-"https://github.com/litepubl/cms/archive/v$version.tar.gz",
-"http://litepublisher.com/download/litepublisher.$version.tar.gz",
-];
-}
+    public function getDownloadUrls(string $version): array
+    {
+        return [
+        "https://codeload.github.com/litepubl/cms/tar.gz/v$version",
+        "https://github.com/litepubl/cms/archive/v$version.tar.gz",
+        "http://litepublisher.com/download/litepublisher.$version.tar.gz",
+        ];
+    }
 
-public function downloadFile(array $urls)
-{
-$result = new \StdClass();
-foreach ($urls as $url) {
-if ($result->file = Http::get($url)) {
-return $result;
-}
-}
+    public function downloadFile(array $urls)
+    {
+        $result = new \StdClass();
+        foreach ($urls as $url) {
+            if ($result->file = Http::get($url)) {
+                return $result;
+            }
+        }
 
-return false;
-}
+        return false;
+    }
 
     public function download(string $version)
     {
@@ -299,12 +299,12 @@ return false;
             $this->result = $lang->errorwrite;
             return false;
         }
-$urls = $this->getDownloadUrls($version);
-$s = $this->downloadFile($urls);
-if (!$s) {
+        $urls = $this->getDownloadUrls($version);
+        $s = $this->downloadFile($urls);
+        if (!$s) {
             $this->result = $lang->errordownload;
             return false;
-}
+        }
 
         if (!$backuper->upload($s, $this->isZip($s) ? 'zip' : 'tar')) {
             $this->result = $backuper->result;
@@ -314,28 +314,28 @@ if (!$s) {
         return true;
     }
 
-public function isZip($content): bool
-{
-$sign = "\x50\x4b\x03\x04";
-if (is_string($content)) {
-return Str::begin($content, $sign);
-} elseif (is_object($content)) {
-for ($i = strlen($sign) - 1; $i >= 0; $i--) {
-if ($sign[$i] != $content->file[$i]) {
-return false;
-}
-}
+    public function isZip($content): bool
+    {
+        $sign = "\x50\x4b\x03\x04";
+        if (is_string($content)) {
+            return Str::begin($content, $sign);
+        } elseif (is_object($content)) {
+            for ($i = strlen($sign) - 1; $i >= 0; $i--) {
+                if ($sign[$i] != $content->file[$i]) {
+                    return false;
+                }
+            }
 
-return true;
-}
+            return true;
+        }
 
-return false;
-}
+        return false;
+    }
 
 
     public function downloadShell(string $version)
     {
-$urls = $this->getDownloadUrls($version);
+        $urls = $this->getDownloadUrls($version);
 
         $cmd = [];
         $cmd[] = 'cd ' . $this->getApp()->paths->backup;

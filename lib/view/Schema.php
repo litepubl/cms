@@ -15,22 +15,21 @@ use litepubl\core\Str;
 /**
  * Schema class
  *
- * @property int $id
- * @property string $class
- * @property string $name
- * @property string $themename
- * @property string $adminname
- * @property string $menuclass
- * @property bool $hovermenu
- * @property bool $customsidebar
- * @property bool $disableajax
- * @property string $postannounce
- * @property bool $invertorder
- * @property int $perpage
- * @property array $custom
+ * @property      int $id
+ * @property      string $class
+ * @property      string $name
+ * @property      string $themename
+ * @property      string $adminname
+ * @property      string $menuclass
+ * @property      bool $hovermenu
+ * @property      bool $customsidebar
+ * @property      bool $disableajax
+ * @property      string $postannounce
+ * @property      bool $invertorder
+ * @property      int $perpage
+ * @property      array $custom
  * @property-read Theme $theme
  * @property-read Admin $adminTheme
-
  */
 
 class Schema extends \litepubl\core\Item
