@@ -5,14 +5,14 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.02
+ * @version   7.03
   */
 
 use Page\Admin;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test admin panel');
-$admin = new Admin($i, 05admin');
+$admin = new Admin($i, '05admin');
 $admin->open();
 
 $list = $admin->getLinks('ajaxLinks');

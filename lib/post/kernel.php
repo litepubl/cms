@@ -81,7 +81,12 @@ class Announce extends \litepubl\core\Events
     public function getNavi(array $items, Schema $schema, string $url, int $count): string
     {
         $result = $this->getPosts($items, $schema);
+$result .= $this->getPages($schema, $url, $count);
+return $result;
+}
 
+    public function getPages(Schema $schema, string $url, int $count): string
+{
         $app = $this->getApp();
         if ($schema->perpage) {
             $perpage = $schema->perpage;
@@ -89,8 +94,7 @@ class Announce extends \litepubl\core\Events
             $perpage = $app->options->perpage;
         }
         
-        $result.= $schema->theme->getPages($url, $app->context->request->page, ceil($count / $perpage));
-        return $result;
+return $schema->theme->getPages($url, $app->context->request->page, ceil($count / $perpage));
     }
 
     //used in plugins such as singlecat

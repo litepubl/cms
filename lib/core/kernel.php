@@ -1861,9 +1861,10 @@ class DB
         return false;
     }
 
-    public function exists($where)
+    public function exists(string $where): bool
     {
-        return $this->query("select *  from $this->prefix$this->table where $where limit 1")->num_rows;
+$res = $this->query("select *  from $this->prefix$this->table where $where limit 1");
+        return (bool) $res->num_rows;
     }
 
     public function getList(array $list)
@@ -2811,12 +2812,15 @@ class Options extends Events
         }
     }
 
-    public function delete(string $name)
+    public function delete(string $name): bool
     {
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
             $this->save();
+return true;
         }
+
+return false;
     }
 
     public function getAdminFlag(): bool
@@ -5666,7 +5670,7 @@ abstract class AbstractHandler implements HandlerInterface
      * @var FormatterInterface
      */
     protected $formatter;
-    protected $processors = [];
+    protected $processors = array();
 
     /**
      * @param int     $level  The minimum logging level at which this handler will be triggered
@@ -5980,7 +5984,7 @@ class Logger implements LoggerInterface
      *
      * @var array $levels Logging levels
      */
-    protected static $levels = [
+    protected static $levels = array(
         self::DEBUG     => 'DEBUG',
         self::INFO      => 'INFO',
         self::NOTICE    => 'NOTICE',
@@ -5989,7 +5993,7 @@ class Logger implements LoggerInterface
         self::CRITICAL  => 'CRITICAL',
         self::ALERT     => 'ALERT',
         self::EMERGENCY => 'EMERGENCY',
-    ];
+    );
 
     /**
      * @var \DateTimeZone
@@ -6027,7 +6031,7 @@ class Logger implements LoggerInterface
      * @param HandlerInterface[] $handlers   Optional stack of handlers, the first one in the array is called first, etc.
      * @param callable[]         $processors Optional array of processors
      */
-    public function __construct($name, array $handlers = [], array $processors = [])
+    public function __construct($name, array $handlers = array(), array $processors = array())
     {
         $this->name = $name;
         $this->handlers = $handlers;
@@ -6092,7 +6096,7 @@ class Logger implements LoggerInterface
      */
     public function setHandlers(array $handlers)
     {
-        $this->handlers = [];
+        $this->handlers = array();
         foreach (array_reverse($handlers) as $handler) {
             $this->pushHandler($handler);
         }
@@ -6172,7 +6176,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addRecord($level, $message, array $context = [])
+    public function addRecord($level, $message, array $context = array())
     {
         if (!$this->handlers) {
             $this->pushHandler(new StreamHandler('php://stderr', static::DEBUG));
@@ -6184,7 +6188,7 @@ class Logger implements LoggerInterface
         $handlerKey = null;
         reset($this->handlers);
         while ($handler = current($this->handlers)) {
-            if ($handler->isHandling(['level' => $level])) {
+            if ($handler->isHandling(array('level' => $level))) {
                 $handlerKey = key($this->handlers);
                 break;
             }
@@ -6207,15 +6211,15 @@ class Logger implements LoggerInterface
         }
         $ts->setTimezone(static::$timezone);
 
-        $record = [
+        $record = array(
             'message' => (string) $message,
             'context' => $context,
             'level' => $level,
             'level_name' => $levelName,
             'channel' => $this->name,
             'datetime' => $ts,
-            'extra' => [],
-        ];
+            'extra' => array(),
+        );
 
         foreach ($this->processors as $processor) {
             $record = call_user_func($processor, $record);
@@ -6239,7 +6243,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addDebug($message, array $context = [])
+    public function addDebug($message, array $context = array())
     {
         return $this->addRecord(static::DEBUG, $message, $context);
     }
@@ -6251,7 +6255,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addInfo($message, array $context = [])
+    public function addInfo($message, array $context = array())
     {
         return $this->addRecord(static::INFO, $message, $context);
     }
@@ -6263,7 +6267,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addNotice($message, array $context = [])
+    public function addNotice($message, array $context = array())
     {
         return $this->addRecord(static::NOTICE, $message, $context);
     }
@@ -6275,7 +6279,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addWarning($message, array $context = [])
+    public function addWarning($message, array $context = array())
     {
         return $this->addRecord(static::WARNING, $message, $context);
     }
@@ -6287,7 +6291,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addError($message, array $context = [])
+    public function addError($message, array $context = array())
     {
         return $this->addRecord(static::ERROR, $message, $context);
     }
@@ -6299,7 +6303,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addCritical($message, array $context = [])
+    public function addCritical($message, array $context = array())
     {
         return $this->addRecord(static::CRITICAL, $message, $context);
     }
@@ -6311,7 +6315,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addAlert($message, array $context = [])
+    public function addAlert($message, array $context = array())
     {
         return $this->addRecord(static::ALERT, $message, $context);
     }
@@ -6323,7 +6327,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function addEmergency($message, array $context = [])
+    public function addEmergency($message, array $context = array())
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
     }
@@ -6376,9 +6380,9 @@ class Logger implements LoggerInterface
      */
     public function isHandling($level)
     {
-        $record = [
+        $record = array(
             'level' => $level,
-        ];
+        );
 
         foreach ($this->handlers as $handler) {
             if ($handler->isHandling($record)) {
@@ -6399,7 +6403,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function log($level, $message, array $context = [])
+    public function log($level, $message, array $context = array())
     {
         $level = static::toMonologLevel($level);
 
@@ -6415,7 +6419,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function debug($message, array $context = [])
+    public function debug($message, array $context = array())
     {
         return $this->addRecord(static::DEBUG, $message, $context);
     }
@@ -6429,7 +6433,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function info($message, array $context = [])
+    public function info($message, array $context = array())
     {
         return $this->addRecord(static::INFO, $message, $context);
     }
@@ -6443,7 +6447,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function notice($message, array $context = [])
+    public function notice($message, array $context = array())
     {
         return $this->addRecord(static::NOTICE, $message, $context);
     }
@@ -6457,7 +6461,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function warn($message, array $context = [])
+    public function warn($message, array $context = array())
     {
         return $this->addRecord(static::WARNING, $message, $context);
     }
@@ -6471,7 +6475,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function warning($message, array $context = [])
+    public function warning($message, array $context = array())
     {
         return $this->addRecord(static::WARNING, $message, $context);
     }
@@ -6485,7 +6489,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function err($message, array $context = [])
+    public function err($message, array $context = array())
     {
         return $this->addRecord(static::ERROR, $message, $context);
     }
@@ -6499,7 +6503,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function error($message, array $context = [])
+    public function error($message, array $context = array())
     {
         return $this->addRecord(static::ERROR, $message, $context);
     }
@@ -6513,7 +6517,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function crit($message, array $context = [])
+    public function crit($message, array $context = array())
     {
         return $this->addRecord(static::CRITICAL, $message, $context);
     }
@@ -6527,7 +6531,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function critical($message, array $context = [])
+    public function critical($message, array $context = array())
     {
         return $this->addRecord(static::CRITICAL, $message, $context);
     }
@@ -6541,7 +6545,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function alert($message, array $context = [])
+    public function alert($message, array $context = array())
     {
         return $this->addRecord(static::ALERT, $message, $context);
     }
@@ -6555,7 +6559,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function emerg($message, array $context = [])
+    public function emerg($message, array $context = array())
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
     }
@@ -6569,7 +6573,7 @@ class Logger implements LoggerInterface
      * @param  array   $context The log context
      * @return Boolean Whether the record has been processed
      */
-    public function emergency($message, array $context = [])
+    public function emergency($message, array $context = array())
     {
         return $this->addRecord(static::EMERGENCY, $message, $context);
     }
@@ -6614,7 +6618,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function emergency($message, array $context = []);
+    public function emergency($message, array $context = array());
 
     /**
      * Action must be taken immediately.
@@ -6626,7 +6630,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function alert($message, array $context = []);
+    public function alert($message, array $context = array());
 
     /**
      * Critical conditions.
@@ -6637,7 +6641,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function critical($message, array $context = []);
+    public function critical($message, array $context = array());
 
     /**
      * Runtime errors that do not require immediate action but should typically
@@ -6647,7 +6651,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function error($message, array $context = []);
+    public function error($message, array $context = array());
 
     /**
      * Exceptional occurrences that are not errors.
@@ -6659,7 +6663,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function warning($message, array $context = []);
+    public function warning($message, array $context = array());
 
     /**
      * Normal but significant events.
@@ -6668,7 +6672,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function notice($message, array $context = []);
+    public function notice($message, array $context = array());
 
     /**
      * Interesting events.
@@ -6679,7 +6683,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function info($message, array $context = []);
+    public function info($message, array $context = array());
 
     /**
      * Detailed debug information.
@@ -6688,7 +6692,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function debug($message, array $context = []);
+    public function debug($message, array $context = array());
 
     /**
      * Logs with an arbitrary level.
@@ -6698,7 +6702,7 @@ interface LoggerInterface
      * @param array $context
      * @return null
      */
-    public function log($level, $message, array $context = []);
+    public function log($level, $message, array $context = array());
 }
 
 //vendor/psr/log/Psr/Log/LogLevel.php
@@ -6760,11 +6764,12 @@ class ErrorHandler
 
     private $previousErrorHandler;
     private $errorLevelMap;
+    private $handleOnlyReportedErrors;
 
     private $hasFatalErrorHandler;
     private $fatalLevel;
     private $reservedMemory;
-    private static $fatalErrors = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
+    private static $fatalErrors = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
 
     public function __construct(LoggerInterface $logger)
     {
@@ -6782,7 +6787,7 @@ class ErrorHandler
      * @param  int|false       $fatalLevel     a LogLevel::* constant, or false to disable fatal error handling
      * @return ErrorHandler
      */
-    public static function register(LoggerInterface $logger, $errorLevelMap = [], $exceptionLevel = null, $fatalLevel = null)
+    public static function register(LoggerInterface $logger, $errorLevelMap = array(), $exceptionLevel = null, $fatalLevel = null)
     {
         $handler = new static($logger);
         if ($errorLevelMap !== false) {
@@ -6800,25 +6805,27 @@ class ErrorHandler
 
     public function registerExceptionHandler($level = null, $callPrevious = true)
     {
-        $prev = set_exception_handler([$this, 'handleException']);
+        $prev = set_exception_handler(array($this, 'handleException'));
         $this->uncaughtExceptionLevel = $level;
         if ($callPrevious && $prev) {
             $this->previousExceptionHandler = $prev;
         }
     }
 
-    public function registerErrorHandler(array $levelMap = [], $callPrevious = true, $errorTypes = -1)
+    public function registerErrorHandler(array $levelMap = array(), $callPrevious = true, $errorTypes = -1, $handleOnlyReportedErrors = true)
     {
-        $prev = set_error_handler([$this, 'handleError'], $errorTypes);
+        $prev = set_error_handler(array($this, 'handleError'), $errorTypes);
         $this->errorLevelMap = array_replace($this->defaultErrorLevelMap(), $levelMap);
         if ($callPrevious) {
             $this->previousErrorHandler = $prev ?: true;
         }
+
+        $this->handleOnlyReportedErrors = $handleOnlyReportedErrors;
     }
 
     public function registerFatalHandler($level = null, $reservedMemorySize = 20)
     {
-        register_shutdown_function([$this, 'handleFatalError']);
+        register_shutdown_function(array($this, 'handleFatalError'));
 
         $this->reservedMemory = str_repeat(' ', 1024 * $reservedMemorySize);
         $this->fatalLevel = $level;
@@ -6827,7 +6834,7 @@ class ErrorHandler
 
     protected function defaultErrorLevelMap()
     {
-        return [
+        return array(
             E_ERROR             => LogLevel::CRITICAL,
             E_WARNING           => LogLevel::WARNING,
             E_PARSE             => LogLevel::ALERT,
@@ -6843,7 +6850,7 @@ class ErrorHandler
             E_RECOVERABLE_ERROR => LogLevel::ERROR,
             E_DEPRECATED        => LogLevel::NOTICE,
             E_USER_DEPRECATED   => LogLevel::NOTICE,
-        ];
+        );
     }
 
     /**
@@ -6854,7 +6861,7 @@ class ErrorHandler
         $this->logger->log(
             $this->uncaughtExceptionLevel === null ? LogLevel::ERROR : $this->uncaughtExceptionLevel,
             sprintf('Uncaught Exception %s: "%s" at %s line %s', get_class($e), $e->getMessage(), $e->getFile(), $e->getLine()),
-            ['exception' => $e]
+            array('exception' => $e)
         );
 
         if ($this->previousExceptionHandler) {
@@ -6867,16 +6874,16 @@ class ErrorHandler
     /**
      * @private
      */
-    public function handleError($code, $message, $file = '', $line = 0, $context = [])
+    public function handleError($code, $message, $file = '', $line = 0, $context = array())
     {
-        if (!(error_reporting() & $code)) {
+        if ($this->handleOnlyReportedErrors && !(error_reporting() & $code)) {
             return;
         }
 
         // fatal error codes are ignored if a fatal error handler is present as well to avoid duplicate log entries
         if (!$this->hasFatalErrorHandler || !in_array($code, self::$fatalErrors, true)) {
             $level = isset($this->errorLevelMap[$code]) ? $this->errorLevelMap[$code] : LogLevel::CRITICAL;
-            $this->logger->log($level, self::codeToString($code).': '.$message, ['code' => $code, 'message' => $message, 'file' => $file, 'line' => $line, 'context' => $context]);
+            $this->logger->log($level, self::codeToString($code).': '.$message, array('code' => $code, 'message' => $message, 'file' => $file, 'line' => $line));
         }
 
         if ($this->previousErrorHandler === true) {
@@ -6898,7 +6905,7 @@ class ErrorHandler
             $this->logger->log(
                 $this->fatalLevel === null ? LogLevel::ALERT : $this->fatalLevel,
                 'Fatal Error ('.self::codeToString($lastError['type']).'): '.$lastError['message'],
-                ['code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line']]
+                array('code' => $lastError['type'], 'message' => $lastError['message'], 'file' => $lastError['file'], 'line' => $lastError['line'])
             );
 
             if ($this->logger instanceof Logger) {
@@ -7047,7 +7054,7 @@ class StreamHandler extends AbstractProcessingHandler
             }
             $this->createDir();
             $this->errorMessage = null;
-            set_error_handler([$this, 'customErrorHandler']);
+            set_error_handler(array($this, 'customErrorHandler'));
             $this->stream = fopen($this->url, 'a');
             if ($this->filePermission !== null) {
                 @chmod($this->url, $this->filePermission);
@@ -7105,7 +7112,7 @@ class StreamHandler extends AbstractProcessingHandler
         $dir = $this->getDirFromStream($this->url);
         if (null !== $dir && !is_dir($dir)) {
             $this->errorMessage = null;
-            set_error_handler([$this, 'customErrorHandler']);
+            set_error_handler(array($this, 'customErrorHandler'));
             $status = mkdir($dir, 0777, true);
             restore_error_handler();
             if (false === $status) {
@@ -7140,7 +7147,7 @@ abstract class MailHandler extends AbstractProcessingHandler
      */
     public function handleBatch(array $records)
     {
-        $messages = [];
+        $messages = array();
 
         foreach ($records as $record) {
             if ($record['level'] < $this->level) {
@@ -7167,7 +7174,7 @@ abstract class MailHandler extends AbstractProcessingHandler
      */
     protected function write(array $record)
     {
-        $this->send((string) $record['formatted'], [$record]);
+        $this->send((string) $record['formatted'], array($record));
     }
 
     protected function getHighestRecord(array $records)
@@ -7345,7 +7352,7 @@ class NormalizerFormatter implements FormatterInterface
         }
 
         if (is_array($data) || $data instanceof \Traversable) {
-            $normalized = [];
+            $normalized = array();
 
             $count = 1;
             foreach ($data as $key => $value) {
@@ -7394,12 +7401,26 @@ class NormalizerFormatter implements FormatterInterface
             throw new \InvalidArgumentException('Exception/Throwable expected, got '.gettype($e).' / '.get_class($e));
         }
 
-        $data = [
+        $data = array(
             'class' => get_class($e),
             'message' => $e->getMessage(),
             'code' => $e->getCode(),
             'file' => $e->getFile().':'.$e->getLine(),
-        ];
+        );
+
+        if ($e instanceof \SoapFault) {
+            if (isset($e->faultcode)) {
+                $data['faultcode'] = $e->faultcode;
+            }
+
+            if (isset($e->faultactor)) {
+                $data['faultactor'] = $e->faultactor;
+            }
+
+            if (isset($e->detail)) {
+                $data['detail'] = $e->detail;
+            }
+        }
 
         $trace = $e->getTrace();
         foreach ($trace as $frame) {
@@ -7480,7 +7501,7 @@ class NormalizerFormatter implements FormatterInterface
         if (is_string($data)) {
             $this->detectAndCleanUtf8($data);
         } elseif (is_array($data)) {
-            array_walk_recursive($data, [$this, 'detectAndCleanUtf8']);
+            array_walk_recursive($data, array($this, 'detectAndCleanUtf8'));
         } else {
             $this->throwEncodeError($code, $data);
         }
@@ -7548,8 +7569,8 @@ class NormalizerFormatter implements FormatterInterface
                 $data
             );
             $data = str_replace(
-                ['¤', '¦', '¨', '´', '¸', '¼', '½', '¾'],
-                ['€', 'Š', 'š', 'Ž', 'ž', 'Œ', 'œ', 'Ÿ'],
+                array('¤', '¦', '¨', '´', '¸', '¼', '½', '¾'),
+                array('€', 'Š', 'š', 'Ž', 'ž', 'Œ', 'œ', 'Ÿ'),
                 $data
             );
         }
@@ -7721,7 +7742,7 @@ class LineFormatter extends NormalizerFormatter
             return $str;
         }
 
-        return str_replace(["\r\n", "\r", "\n"], ' ', $str);
+        return str_replace(array("\r\n", "\r", "\n"), ' ', $str);
     }
 }
 
@@ -7787,7 +7808,7 @@ class HtmlFormatter extends NormalizerFormatter
     /**
      * Translates Monolog log levels to html color priorities.
      */
-    protected $logLevels = [
+    protected $logLevels = array(
         Logger::DEBUG     => '#cccccc',
         Logger::INFO      => '#468847',
         Logger::NOTICE    => '#3a87ad',
@@ -7796,7 +7817,7 @@ class HtmlFormatter extends NormalizerFormatter
         Logger::CRITICAL  => '#FF7708',
         Logger::ALERT     => '#C12A19',
         Logger::EMERGENCY => '#000000',
-    ];
+    );
 
     /**
      * @param string $dateFormat The format of the timestamp: one supported by DateTime::format

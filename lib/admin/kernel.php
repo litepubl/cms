@@ -168,49 +168,49 @@ use litepubl\view\Lang;
 trait Factory
 {
 
-    public function getLang()
+    public function getLang(string $name = ''): Lang
     {
-        return Lang::admin();
+        return Lang::admin($name);
     }
 
-    public function newTable($admin = null)
+    public function newTable($admin = null): Table
     {
         return new Table($admin ? $admin : $this->admintheme);
     }
 
-    public function tableItems(array $items, array $struct)
+    public function tableItems(array $items, array $struct): string
     {
         $table = $this->newTable();
         $table->setStruct($struct);
         return $table->build($items);
     }
 
-    public function newList()
+    public function newList(): UList
     {
         return new UList($this->admintheme);
     }
 
-    public function newTabs()
+    public function newTabs(): Tabs
     {
         return new Tabs($this->admintheme);
     }
 
-    public function newForm($args = null)
+    public function newForm($args = null): Form
     {
         return new Form($args ? $args : new Args());
     }
 
-    public function newArgs()
+    public function newArgs(): Args
     {
         return new Args();
     }
 
-    public function getNotfound()
+    public function getNotfound(): string
     {
         return $this->admintheme->geterr(Lang::i()->notfound);
     }
 
-    public function getFrom($perpage, $count)
+    public function getFrom(int $perpage, int $count): int
     {
         if ($this->getApp()->context->request->page <= 1) {
             return 0;
@@ -547,7 +547,7 @@ class Link
         }
     }
 
-    public function parse($s)
+    public static function parse(string $s): string
     {
         $list = explode(',', $s);
         $a = [];
@@ -735,9 +735,9 @@ class Menu extends \litepubl\pages\Menu
         return $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';
     }
 
-    public function getLang(): Lang
+    public function getLang(string $name = ''): Lang
     {
-        return Lang::i($this->name);
+        return Lang::i($name ? $name : ($this->name ? $this->name : ''));
     }
 }
 
@@ -801,7 +801,7 @@ class Menus extends \litepubl\pages\Menus
         return $name;
     }
 
-    public function createurl($parent, $name)
+    public function createUrl(int $parent, string $name): string
     {
         return $parent == 0 ? "/admin/$name/" : $this->items[$parent]['url'] . "$name/";
     }
@@ -937,7 +937,7 @@ trait PanelTrait
         $this->args = new Args();
     }
 
-    public function getSchema()
+    public function getSchema(): Schema
     {
         $app = $this->getApp();
         if (isset($app->context) && isset($app->context->view)) {
@@ -947,7 +947,7 @@ trait PanelTrait
         }
     }
 
-    public function getLangAbout()
+    public function getLangAbout(): Lang
     {
         $reflector = new \ReflectionClass($this);
         $filename = $reflector->getFileName();
@@ -999,6 +999,10 @@ use litepubl\view\Lang;
 
 class Table
 {
+const LEFT = 'text-left';
+const RIGHT = 'text-right';
+const CENTER = 'text-center';
+
     //current item in items
     public $item;
     //id or index of current item
@@ -1013,12 +1017,11 @@ class Table
     public $admintheme;
     public $callbacks;
 
-    public static function fromitems(array $items, array $struct): string
+    public static function fromItems(array $items, array $struct): string
     {
-        $classname = __class__;
+        $classname = get_called_class();
         $self = new $classname();
-        $self->setStruct($struct);
-        return $self->build($items);
+        return $self->buildItems($items, $struct);
     }
 
     public function __construct()
@@ -1130,8 +1133,14 @@ class Table
             $args->data[$name] = call_user_func_array($callback['callback'], $callback['params']);
         }
 
-        return $this->getadmintheme()->parseArg($this->body, $args);
+        return $this->getAdminTheme()->parseArg($this->body, $args);
     }
+
+public function buildItems(array $items, array $struct): string
+{
+        $this->setStruct($struct);
+        return $this->build($items);
+}
 
     //predefined callbacks
     public function itemsCallback(Table $self, Items $owner)

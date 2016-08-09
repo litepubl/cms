@@ -854,7 +854,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
             $list = $this->getIdPosts($this->id);
             $item = $this->tags->getItem($this->id);
-            $announce = Announce::i($theme);
+            $announce = Announce::i();
             $result['content'] .= $announce->getNavi($list, $schema, $item['url'], $item['itemscount']);
         }
 

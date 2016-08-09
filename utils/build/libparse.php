@@ -45,13 +45,12 @@ function ParseFile($filename)
         $s = libReplace($s);
         $s = afterFix($s);
         $s = afterFix2($s);
-*/
 
 $s = strtr($s, [
 '{ continue;' => "{\n continue;",
 '{ return' => "{\n return",
 ]);
-
+*/
         $s = sortUse($s);
 
         if (strend($filename, '.install.php')) {

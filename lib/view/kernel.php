@@ -531,7 +531,6 @@ namespace litepubl\view;
 trait Factory
 {
 
-
     public function newArgs(): Args
     {
         return new Args();
@@ -1047,6 +1046,27 @@ namespace litepubl\view;
 
 use litepubl\core\Str;
 
+/**
+ * Schema class
+ *
+ * @property int $id
+ * @property string $class
+ * @property string $name
+ * @property string $themename
+ * @property string $adminname
+ * @property string $menuclass
+ * @property bool $hovermenu
+ * @property bool $customsidebar
+ * @property bool $disableajax
+ * @property string $postannounce
+ * @property bool $invertorder
+ * @property int $perpage
+ * @property array $custom
+ * @property-read Theme $theme
+ * @property-read Admin $adminTheme
+
+ */
+
 class Schema extends \litepubl\core\Item
 {
     use \litepubl\core\ItemOwnerTrait;
@@ -1078,7 +1098,7 @@ class Schema extends \litepubl\core\Item
         return 'schema';
     }
 
-    public static function getSchema($instance)
+    public static function getSchema($instance): Schema
     {
         $id = $instance->getIdSchema();
         if (isset(static ::$instances['schema'][$id])) {
@@ -1151,7 +1171,7 @@ class Schema extends \litepubl\core\Item
         return Admin::getTheme($name);
     }
 
-    public function setThemename($name)
+    public function setThemeName(string $name)
     {
         if ($name == $this->themename) {
             return false;
@@ -1173,7 +1193,7 @@ class Schema extends \litepubl\core\Item
         static ::getOwner()->themechanged(['schema' => $this]);
     }
 
-    public function setAdminname($name)
+    public function setAdminName(string $name)
     {
         if ($name != $this->adminname) {
             if (!Str::begin($name, 'admin')) {
@@ -1189,7 +1209,7 @@ class Schema extends \litepubl\core\Item
         }
     }
 
-    public function getTheme()
+    public function getTheme(): Theme
     {
         if ($this->themeInstance) {
             return $this->themeInstance;
@@ -1212,7 +1232,7 @@ class Schema extends \litepubl\core\Item
         return $this->themeInstance;
     }
 
-    public function getAdmintheme()
+    public function getAdmintheme(): Admin
     {
         if ($this->adminInstance) {
             return $this->adminInstance;
@@ -1277,7 +1297,7 @@ class Schemes extends \litepubl\core\Items
         $this->addmap('defaults', []);
     }
 
-    public function add($name)
+    public function add(string $name)
     {
         $this->lock();
         $id = ++$this->autoid;
@@ -1320,7 +1340,7 @@ class Schemes extends \litepubl\core\Items
         return parent::delete($id);
     }
 
-    public function get($name)
+    public function get(string $name)
     {
         foreach ($this->items as $id => $item) {
             if ($name == $item['name']) {
@@ -1477,7 +1497,7 @@ class Theme extends Base
         return $this->parse($this->templates['content.notfound']);
     }
 
-    public function getPages($url, $page, $count, $params = '')
+    public function getPages(string $url, int $page, int $count, string $params = ''): string
     {
         if (!(($count > 1) && ($page >= 1) && ($page <= $count))) {
             return '';
@@ -1601,7 +1621,7 @@ class Theme extends Base
         );
     }
 
-    public function getInput($type, $name, $value, $title)
+    public function getInput(string $type, string $name, string $value, string $title): string
     {
         return strtr(
             $this->templates['content.admin.' . $type], [
@@ -1612,7 +1632,7 @@ class Theme extends Base
         );
     }
 
-    public function getRadio($name, $value, $title, $checked)
+    public function getRadio(string $name, string $value, string $title, bool $checked): string
     {
         return strtr(
             $this->templates['content.admin.radioitem'], [
@@ -1625,7 +1645,7 @@ class Theme extends Base
         );
     }
 
-    public function getRadioItems($name, array $items, $selected)
+    public function getRadioItems(string $name, array $items, $selected): string
     {
         $result = '';
         foreach ($items as $index => $title) {
@@ -1735,6 +1755,16 @@ trait ViewTrait
     public function getDescription(): string
     {
         return $this->data['description'];
+    }
+
+    public function getTitle(): string
+    {
+        return isset($this->data['title']) ? $this->data['title'] : '';
+    }
+
+    public function getCont(): string
+    {
+        return '';
     }
 
     public function getIdSchema(): int
