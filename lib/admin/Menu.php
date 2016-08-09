@@ -153,8 +153,8 @@ class Menu extends \litepubl\pages\Menu
         return $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';
     }
 
-    public function getLang(): Lang
+    public function getLang(string $name = ''): Lang
     {
-        return Lang::i($this->name);
+        return Lang::i($name ? $name : ($this->name ? $this->name : ''));
     }
 }

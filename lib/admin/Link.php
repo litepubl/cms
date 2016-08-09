@@ -27,7 +27,7 @@ class Link
         }
     }
 
-    public function parse($s)
+    public static function parse(string $s): string
     {
         $list = explode(',', $s);
         $a = [];

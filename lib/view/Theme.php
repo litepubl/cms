@@ -258,7 +258,7 @@ class Theme extends Base
         );
     }
 
-    public function getRadio($name, $value, $title, $checked)
+    public function getRadio(string $name, string $value, string $title, bool $checked): string
     {
         return strtr(
             $this->templates['content.admin.radioitem'], [
@@ -271,7 +271,7 @@ class Theme extends Base
         );
     }
 
-    public function getRadioItems($name, array $items, $selected)
+    public function getRadioItems(string $name, array $items, $selected): string
     {
         $result = '';
         foreach ($items as $index => $title) {

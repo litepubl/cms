@@ -16,49 +16,49 @@ use litepubl\view\Lang;
 trait Factory
 {
 
-    public function getLang()
+    public function getLang(string $name = ''): Lang
     {
-        return Lang::admin();
+        return Lang::admin($name);
     }
 
-    public function newTable($admin = null)
+    public function newTable($admin = null): Table
     {
         return new Table($admin ? $admin : $this->admintheme);
     }
 
-    public function tableItems(array $items, array $struct)
+    public function tableItems(array $items, array $struct): string
     {
         $table = $this->newTable();
         $table->setStruct($struct);
         return $table->build($items);
     }
 
-    public function newList()
+    public function newList(): UList
     {
         return new UList($this->admintheme);
     }
 
-    public function newTabs()
+    public function newTabs(): Tabs
     {
         return new Tabs($this->admintheme);
     }
 
-    public function newForm($args = null)
+    public function newForm($args = null): Form
     {
         return new Form($args ? $args : new Args());
     }
 
-    public function newArgs()
+    public function newArgs(): Args
     {
         return new Args();
     }
 
-    public function getNotfound()
+    public function getNotfound(): string
     {
         return $this->admintheme->geterr(Lang::i()->notfound);
     }
 
-    public function getFrom($perpage, $count)
+    public function getFrom(int $perpage, int $count): int
     {
         if ($this->getApp()->context->request->page <= 1) {
             return 0;

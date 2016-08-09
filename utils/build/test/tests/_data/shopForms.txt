@@ -1,0 +1,3 @@
+shop/options/paymethods/?name=cash
+shop/options/deliveries/?name=courier
+cabinet/mesgcenter/?options=1

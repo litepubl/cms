@@ -40,25 +40,11 @@ class Admin extends Base
         //codecept_debug(date('i:s'));
     }
 
-    public function getLinks($name)
+    public function getLinks(string $name): array
     {
         $s = file_get_contents(config::$_data . "/$name.txt");
         $s = trim(str_replace("\r", '', $s));
         return explode("\n", $s);
     }
 
-    public function getPages()
-    {
-        return $this->getLinks('adminPages');
-    }
-
-    public function getForms()
-    {
-        return $this->getLinks('adminForms');
-    }
-
-    public function getAjax()
-    {
-        return $this->getLinks('ajaxLinks');
-    }
 }

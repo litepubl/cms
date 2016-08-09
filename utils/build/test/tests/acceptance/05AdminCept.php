@@ -12,22 +12,16 @@ use Page\Admin;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test admin panel');
-$admin = new Admin($i);
+$admin = new Admin($i, 05admin');
 $admin->open();
 
-$list = $admin->getPages();
+$list = $admin->getLinks('ajaxLinks');
 foreach ($list as $url) {
     $i->wantTo("Test page $url");
     $i->openPage('/admin/' . $url);
 }
 
-$list = $admin->getAjax();
-foreach ($list as $url) {
-    $i->wantTo("Test page $url");
-    $i->openPage('/admin/' . $url);
-}
-
-$list = $admin->getForms();
+$list = $admin->getLinks('adminForms');
 foreach ($list as $url) {
     $i->wantTo("Test form $url");
     $i->openPage('/admin/' . $url);
@@ -40,7 +34,7 @@ foreach ($list as $j => $url) {
     $i->wantTo("Test page $url");
     $i->amOnUrl($url);
     $i->checkError();
-    $i->screenShot('06-' . $j . str_replace('/', '-', trim(substr($url, strpos($url, '/', 9)), '/')));
+    $admin->screenShot(str_replace('/', '-', trim($url, '/')));
     $admin->submit();
     $i->checkError();
 }
