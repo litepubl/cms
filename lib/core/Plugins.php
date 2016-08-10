@@ -222,6 +222,44 @@ class Plugins extends Items
         }
     }
 
+public function addNamespace($instance)
+{
+$className = static::getClassName($instance);
+        if ($i = strrpos($className, '\\')) {
+            $ns = substr($className, 0, $i);
+        $reflector = new \ReflectionClass($instance);
+        $fileName = $reflector->getFileName();
+$path = $this->getRelativePath(dirname($fileName));
+$this->getApp()->classes->addNamespace($ns, $path);
+}
+}
+
+public function getRelativePath(string $to): string
+{
+$to = str_replace('\\', '/', $to);
+$to = rtrim($to, '/') . '/';
+    $to       = explode('/', $to);
+$result = $to;
+
+    $from     = explode('/', str_replace('\\', '/', $this->getApp()->paths->home));
+foreach($from as $i => $dir) {
+    if($dir === $to[$i]) {
+        array_shift($result);
+    } else {
+        $count = count($from) - $i;
+        if($count > 1) {
+            $padLength = (count($result) + $i - 1) * -1;
+            $result = array_pad($result, $padLength, '..');
+            break;
+        } else {
+            $result[0] = './' . $result[0];
+        }
+    }
+}
+
+    return implode('/', $result);
+}
+
     public function getPlugins()
     {
         return array_keys($this->items);

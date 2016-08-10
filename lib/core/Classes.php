@@ -81,7 +81,7 @@ class Classes extends Items
         return $this->instances[$class] = $this->newinstance($class);
     }
 
-    public function newinstance(string $class)
+    public function newInstance(string $class)
     {
         if (!empty($this->remap[$class])) {
             $class = $this->remap[$class];
@@ -106,6 +106,23 @@ class Classes extends Items
 
         return new $info['class']();
     }
+
+public function addNamespace(string $ns, string $path)
+{
+$this->namespaces[$ns] = $path;
+$this->save();
+}
+
+public function deleteNamespace(string $ns): bool
+{
+if (isset($this->namespaces[$ns])) {
+unset($this->namespaces[$ns]);
+$this->save();
+return true;
+}
+
+return false;
+}
 
     public function add($class, $filename, $deprecatedPath = false)
     {

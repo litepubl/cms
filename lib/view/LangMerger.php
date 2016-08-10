@@ -108,23 +108,22 @@ class LangMerger extends Merger
         }
     }
 
-    public function addplugin($name)
+    public function addPlugin(string $name)
     {
         $language = $this->getApp()->options->language;
-        $dir = $this->getApp()->paths->plugins . $name . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
+$plugins = Plugins::i();
+        $dir = $this->getApp()->paths->home . $plugins->__get($name) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
         $this->lock();
         if (file_exists($dir . $language . '.ini')) {
-            $this->add('default', "plugins/$name/resource/$language.ini");
+            $this->add('default', "\$plugins.$name/resource/$language.ini");
         }
-        if (file_exists($dir . $language . '.admin.ini')) {
-            $this->add('admin', "plugins/$name/resource/$language.admin.ini");
+
+foreach (['admin', 'mail', 'install' as $section) {
+        if (file_exists($dir . "$language.$section.ini")) {
+            $this->add($section, "\$plugins.$name/resource/$language.$section.ini");
         }
-        if (file_exists($dir . $language . '.mail.ini')) {
-            $this->add('mail', "plugins/$name/resource/$language.mail.ini");
-        }
-        if (file_exists($dir . $language . '.install.ini')) {
-            $this->add('install', "plugins/$name/resource/$language.install.ini");
-        }
+}
+
         $this->unlock();
     }
 

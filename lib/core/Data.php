@@ -251,7 +251,7 @@ class Data
         return $this->lockcount > 0;
     }
 
-    public function Getclass()
+    public function getClass(): string
     {
         return get_class($this);
     }
