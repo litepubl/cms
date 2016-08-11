@@ -112,13 +112,13 @@ class LangMerger extends Merger
     {
         $language = $this->getApp()->options->language;
 $plugins = Plugins::i();
-        $dir = $this->getApp()->paths->home . $plugins->__get($name) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
+        $dir = $plugins->getPluginDir($name) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
         $this->lock();
         if (file_exists($dir . $language . '.ini')) {
             $this->add('default', "\$plugins.$name/resource/$language.ini");
         }
 
-foreach (['admin', 'mail', 'install' as $section) {
+foreach (['admin', 'mail', 'install'] as $section) {
         if (file_exists($dir . "$language.$section.ini")) {
             $this->add($section, "\$plugins.$name/resource/$language.$section.ini");
         }
@@ -127,14 +127,18 @@ foreach (['admin', 'mail', 'install' as $section) {
         $this->unlock();
     }
 
-    public function deleteplugin($name)
+    public function deletePlugin(string $name)
     {
         $language = $this->getApp()->options->language;
         $this->lock();
-        $this->deletefile('default', "plugins/$name/resource/$language.ini");
-        $this->deletefile('admin', "plugins/$name/resource/$language.admin.ini");
-        $this->deletefile('mail', "plugins/$name/resource/$language.mail.ini");
-        $this->deletefile('install', "plugins/$name/resource/$language.install.ini");
+        $this->deleteFile('default', "plugins/$name/resource/$language.ini");
+        $this->deleteFile('default', "\$plugins$name/resource/$language.ini");
+
+foreach (['admin', 'mail', 'install'] as $section) {
+        $this->deleteFile($section, "plugins/$name/resource/$language.$section.ini");
+        $this->deleteFile($section, "\$plugins.$name/resource/$language.$section.ini");
+}
+
         $this->unlock();
     }
 }
