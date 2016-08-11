@@ -30,10 +30,11 @@ class Password extends Perm
         if ($this->password) {
             $response->body.= sprintf('<?php %s::i(%d)->auth(); ?>', get_class($this), $this->id);
         }
+
         return '';
     }
 
-    public function hasPerm($obj)
+    public function hasPerm($obj): bool
     {
         return $this->authcookie();
     }

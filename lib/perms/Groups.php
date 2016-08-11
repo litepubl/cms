@@ -38,12 +38,12 @@ class Groups extends Perm
         $idgroups = implode(',', $g);
         $response->body.= "<?php
  if (!\\litepubl\\core\\litepubl::\$app->options->ingroups([$idgroups]) $author) {
-return ->forbidden();
+return \\litepubl\\core\\litepubl::\$app->context->response->forbidden();
 }
  ?>";
     }
 
-    public function hasPerm($obj)
+    public function hasPerm($obj): bool
     {
         $g = $this->groups;
         if (!$this->author && !count($g)) {
@@ -53,6 +53,7 @@ return ->forbidden();
         if ($this->getApp()->options->ingroups($g)) {
             return true;
         }
+
         return $this->author && isset($obj->author) && ($obj->author > 1) && ($this->getApp()->options->user == $obj->author);
     }
 }

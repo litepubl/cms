@@ -60,7 +60,7 @@ class Perm extends \litepubl\core\Item
     {
     }
 
-    public function hasperm($obj)
+    public function hasPerm($obj): bool
     {
         return true;
     }

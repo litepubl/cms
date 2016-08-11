@@ -28,7 +28,6 @@ function ParseFile($filename)
     $s = trim(file_get_contents($filename));
     $s = str_replace("\r\n", "\n", $s);
     $s = str_replace("\r", "\n", $s);
-    $s = str_replace('2014', '2016', $s);
 
     //$s = preg_replace_callback('/\s*\/\*.*?\*\/\s*/sm', function($sc) {
     //return preg_replace('/\n{2,}/sm', "\n", $sc[0]);
@@ -36,21 +35,7 @@ function ParseFile($filename)
 
     if (strend($filename, '.php')) {
         $s = replace_copyright($s, 'php');
-//$s = str_replace(' triggered when new item has been added', '', $s);
-        if (strend($s, '//class')) {
-            $s = substr($s, 0, strlen($s) - strlen('//class'));
-        }
 
-/*
-        $s = libReplace($s);
-        $s = afterFix($s);
-        $s = afterFix2($s);
-
-$s = strtr($s, [
-'{ continue;' => "{\n continue;",
-'{ return' => "{\n return",
-]);
-*/
         $s = sortUse($s);
 
         if (strend($filename, '.install.php')) {

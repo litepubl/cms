@@ -10,7 +10,6 @@
 
 namespace litepubl\core;
 
-use litepubl\utils\Filer;
 use litepubl\view\Lang;
 
 class Plugins extends Items

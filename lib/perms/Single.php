@@ -30,7 +30,7 @@ class Single extends Perm
         }
     }
 
-    public function hasPerm($obj)
+    public function hasPerm($obj): bool
     {
         if (isset($obj->password) && ($p = $obj->password)) {
             return static ::authcookie(static ::encryptpassword($p));
@@ -39,9 +39,10 @@ class Single extends Perm
         return true;
     }
 
-    public static function encryptpassword($p)
+    public static function encryptPassword(string $p): string
     {
-        return md5(static::getAppInstance()->context->itemRoute['id'] . Config::$secret . $p . static::getAppInstance()->options->solt);
+$app = static::getAppInstance();
+        return md5($app->context->itemRoute['id'] . Config::$secret . $p . $app->options->solt);
     }
 
     public static function hash($password, $solt)
