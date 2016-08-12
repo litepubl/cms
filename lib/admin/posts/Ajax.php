@@ -91,29 +91,30 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             return;
         }
 
+$options = $this->getApp()->options;
         $this->idpost = $this->idparam();
-        $this->isauthor = $this->getApp()->options->ingroup('author');
+        $this->isauthor = $->options->inGroup('author');
         if ($this->idpost > 0) {
             $posts = PostItems::i();
             if (!$posts->itemExists($this->idpost)) {
                 return $response->forbidden();
             }
 
-            if (!$this->getApp()->options->hasgroup('editor')) {
-                if ($this->getApp()->options->hasgroup('author')) {
+            if (!$options->hasGroup('editor')) {
+                if ($options->hasGroup('author')) {
                     $this->isauthor = true;
                     $post = Post::i($this->idpost);
-                    if ($this->getApp()->options->user != $post->author) {
+                    if ($options->user != $post->author) {
                         return $response->forbidden();
                     }
                 }
             }
         }
 
-        $response->body = $this->getcontent();
+        $response->body = $this->getContent();
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $theme = Schema::i(Schemes::i()->defaults['admin'])->theme;
         $lang = Lang::admin('editor');
@@ -177,12 +178,9 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
         default:
             $name = trim($_GET['get']);
-            if (isset($this->events[$name])) {
-                $result = $this->callevent(
-                    $name, [
-                    $post
-                    ]
-                );
+            if (isset($this->data['events'][$name])) {
+                $r = $this->callEvent($name, ['post'  => $post, 'result' => '']);
+$result = $r['result'];
             } else {
                 $result = var_export($_GET, true);
             }
