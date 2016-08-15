@@ -146,7 +146,12 @@ class App
 
             if (!$this->controller->cached($context)) {
                 $this->router->request($context);
+if ($context->response->isRedir()) {
+$context->response->send();
+} else {
                 $this->controller->request($context);
+}
+
                 $this->router->afterRequest(['context' => $context]);
             }
 

@@ -93,7 +93,7 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
 $options = $this->getApp()->options;
         $this->idpost = $this->idparam();
-        $this->isauthor = $->options->inGroup('author');
+        $this->isauthor = $options->inGroup('author');
         if ($this->idpost > 0) {
             $posts = PostItems::i();
             if (!$posts->itemExists($this->idpost)) {
