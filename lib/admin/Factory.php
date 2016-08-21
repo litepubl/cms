@@ -101,4 +101,19 @@ trait Factory
         $args->confirm = $lang->confirmdelete;
         return $admin->parseArg($admin->templates['confirmform'], $args);
     }
+
+/*
+* method can used as: extract($this->getStdInstances());
+*/
+public function getStdInstances(): array
+{
+return [
+'result' => '',
+'lang' => $this->getLang(),
+'admin' => $this->adminTheme,
+'theme' => $this->theme,
+'args' => $this->newArgs(),
+'id' => $this->idGet(),
+];
+}
 }

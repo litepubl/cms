@@ -364,7 +364,7 @@ class Table
         }
     }
 
-    public function datetime($date): string
+    public function dateTime($date): string
     {
         if ($date == Lang::ZERODATE) {
             return Lang::i()->noword;
