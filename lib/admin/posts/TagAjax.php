@@ -43,7 +43,7 @@ class TagAjax extends Ajax
         }
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $type = !empty($_GET['type']) ? $_GET['type'] : (!empty($_POST['type']) ? $_POST['type'] : 'tags');
         if ($type != 'tags') {

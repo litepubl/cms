@@ -35,7 +35,7 @@ class Widget extends \litepubl\core\Events
     {
         $widgets = Widgets::i();
         $id = $widgets->add($this);
-        $sidebars = Sidebars::i();
+        $sidebars = $this->getSidebars();
         $sidebars->insert($id, false, $sidebar, -1);
 
         $this->getApp()->cache->clear();
@@ -56,6 +56,11 @@ class Widget extends \litepubl\core\Events
     {
         return Widgets::i();
     }
+
+public function getSidebars(): Sidebars
+{
+return Sidebars::i();
+}
 
     public function getView()
     {

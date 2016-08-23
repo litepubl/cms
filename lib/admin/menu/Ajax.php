@@ -40,7 +40,7 @@ class Ajax extends \litepubl\admin\posts\Ajax
         }
     }
 
-    public function getContent()
+    public function getContent(): string
     {
         $id = $this->idparam();
         $menus = Menus::i();

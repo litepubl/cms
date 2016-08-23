@@ -13,7 +13,6 @@ namespace litepubl\plugins\openid;
 use litepubl\Config;
 use litepubl\admin\Form;
 use litepubl\core\Context;
-use litepubl\core\Str;
 use litepubl\core\TempProps;
 use litepubl\pages\Simple;
 use litepubl\view\Admin;
@@ -237,7 +236,7 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
     //modes
     private function associate()
     {
-        //другие типы не поддерживаются, поэтому и проверять не надо
+        //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ
         $assoc_type = 'HMAC-SHA1';
         $session_type = $this->usebigmath && isset($_REQUEST['openid_session_type']) && ($_REQUEST['openid_session_type'] == 'DH-SHA1') ? 'DH-SHA1' : '';
 
@@ -448,14 +447,14 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         $cancel_url = $return_to . $q . 'openid.mode=cancel';
 
         if ($wait && (!in_array($trust_root, $this->trusted) || $this->confirm)) {
-            //вывести форму и проверит результат формы
+            //пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
             if (empty($_POST['submit'])) {
                 if (!empty($_REQUEST['openid_assoc_handle']) && isset($this->keys[$_REQUEST['openid_assoc_handle']])) {
                     $this->keys[$_REQUEST['openid_assoc_handle']]['request'] = $_REQUEST;
                     $this->save();
                 }
 
-                $lang = Lang::i('openidserver');
+                Lang::i('openidserver');
                 $args = new Args();
                 $args->trust_root = $trust_root;
                 $args->assoc_handle = $assoc_handle;

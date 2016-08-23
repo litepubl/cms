@@ -89,8 +89,9 @@ class Sidebars extends \litepubl\core\Data
 
     public function deleteClass($classname)
     {
-        if ($id = Widgets::i()->class2id($classname)) {
-            Schemes::i()->widgetdeleted($id);
+$widgets = Widgets::i();
+        if ($id = $widgets->class2id($classname)) {
+            $widgets->deleted(['id' => $id]);
         }
     }
 

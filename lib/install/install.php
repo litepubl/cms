@@ -10,9 +10,8 @@
 
 namespace litepubl\install;
 
-use litepubl\Config;
 use litepubl\core\Litepubl;
-use litepubl\utils\Filer;
+
 
 //echo "<pre>\n";
 if (!defined('litepubl\mode')) {
