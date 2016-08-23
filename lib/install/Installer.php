@@ -191,6 +191,16 @@ class Installer
         return $password;
     }
 
+private function getDefaultArgs(): array
+{
+return [
+                '$site.url' => 'http://' . strtolower($_SERVER['HTTP_HOST']),
+                '$site.files' => 'http://' . strtolower($_SERVER['HTTP_HOST']),
+                '{$site.q}' => '?',
+                '$site.q' => '?',
+            ];
+}
+
     public function installClasses()
     {
         $classes = $this->app->classes;
@@ -206,7 +216,10 @@ class Installer
         $xmlrpc = xmlrpc\Server::i();
         $xmlrpc->lock();
 
+//to prevent get properties fron non installet core\Site
+            Args::$defaultArgs = $this->getDefaultArgs();
         $theme = Theme::getTheme('default');
+            Args::$defaultArgs = null;
 
         $items = explode("\n", file_get_contents(__DIR__ . '/classes.txt'));
         foreach ($items as $classname) {

@@ -498,7 +498,16 @@ class BaseParser extends \litepubl\core\Events
     {
         $result = [];
         $paths = $this->getApp()->paths;
+        $vars = new Vars();
+        $vars->plugins = Plugins::i();
+$base = new Base();
+
         foreach ($this->tagfiles as $filename) {
+            if (!$filename) {
+                continue;
+            }
+
+            $filename = $base->parse($filename);
             $filename = $paths->home . trim($filename, '/');
             if ($filename && file_exists($filename) && ($a = parse_ini_file($filename, true))) {
                 if (isset($a['remap'])) {
