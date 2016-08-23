@@ -11,11 +11,6 @@
 namespace litepubl\post;
 
 use litepubl\core\Event;
-use litepubl\core\Str;
-use litepubl\view\Args;
-use litepubl\view\Filter;
-use litepubl\view\Theme;
-use litepubl\view\Vars;
 
 /**
  * Manage uploaded files
@@ -32,7 +27,7 @@ use litepubl\view\Vars;
 
 class Files extends \litepubl\core\Items
 {
-    public $cachetml;
+    public $templates;
 
     protected function create()
     {
@@ -41,7 +36,7 @@ class Files extends \litepubl\core\Items
         $this->basename = 'files';
         $this->table = 'files';
         $this->addEvents('changed', 'edited', 'ongetfilelist', 'onlist');
-        $this->cachetml = [];
+        $this->templates = [];
     }
 
     public function getItemsposts()
@@ -212,8 +207,8 @@ class Files extends \litepubl\core\Items
 
     public function getTml($basekey)
     {
-        if (isset($this->cachetml[$basekey])) {
-            return $this->cachetml[$basekey];
+        if (isset($this->templates[$basekey])) {
+            return $this->templates[$basekey];
         }
 
         $theme = Theme::i();
@@ -228,7 +223,7 @@ class Files extends \litepubl\core\Items
             }
         }
 
-        $this->cachetml[$basekey] = $result;
+        $this->templates[$basekey] = $result;
         return $result;
     }
 
