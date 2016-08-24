@@ -6,7 +6,7 @@ use litepubl\post\Files;
 use litepubl\view\Admin;
 use litepubl\view\Args;
 
-class Upload
+class FileList
 {
     public $onfileperm;
 private $adminTheme;
@@ -21,7 +21,7 @@ public function getFiles()
 return Files::i();
 }
 
-    public function getFilelist(array $list): string
+    public function get(array $list): string
     {
         $files = $this->getFiles();
 $app = $this->adminTheme->getApp();
