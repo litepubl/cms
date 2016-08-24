@@ -33,6 +33,7 @@ echo "<pre>\n";
 echo $e;
 }
 
+echo '<br>', gc_collect_cycles();
 return;
 echo "<pre>\n";
 echo ltrim(str_replace(__DIR__, '', implode("\n", get_included_files())), '/\\');

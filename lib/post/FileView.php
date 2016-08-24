@@ -87,11 +87,11 @@ $files = $this->getFiles();
         //sort by media type
         $items = [];
         foreach ($list as $id) {
-            if (!isset($this->items[$id])) {
+            if (!isset($files->items[$id])) {
                 continue;
             }
 
-            $item = $this->items[$id];
+            $item = $files->items[$id];
             $type = $item['media'];
             if (isset($tml[$type])) {
                 $items[$type][] = $id;
@@ -175,12 +175,12 @@ $files = $this->getFiles();
                 $args->link = $baseurl . $item['filename'];
                 $args->json = $this->getJson($id);
 
-                $preview = new \ArrayObject($this->getitem($idpreview), \ArrayObject::ARRAY_AS_PROPS);
+                $preview = new \ArrayObject($files->getItem($idpreview), \ArrayObject::ARRAY_AS_PROPS);
                 $preview->link = $baseurl . $preview->filename;
 
                 $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
                 if ($idmidle = (int)$item['midle']) {
-                    $midle->exchangeArray($this->getitem($idmidle));
+                    $midle->exchangeArray($files->getItem($idmidle));
                     $midle->link = $baseurl . $midle->filename;
                     $midle->json = $this->getJson($idmidle);
                 } else {
