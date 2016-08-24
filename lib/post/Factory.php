@@ -36,6 +36,11 @@ class Factory
         return Files::i();
     }
 
+    public function getFileView()
+    {
+        return FileView::i();
+    }
+
     public function getTags()
     {
         return Tags::i();

@@ -15,19 +15,15 @@ use litepubl\core\Event;
 /**
  * Manage uploaded files
  *
+ * @property-read FilesItems $itemsPosts
  * @property-write callable $changed
  * @property-write callable $edited
- * @property-write callable $onGetFilelist
- * @property-write callable $onlist
  * @method         array changed(array $params)
  * @method         array edited(array $params)
- * @method         array onGetFilelist(array $params)
- * @method         array onlist(array $params)
  */
 
 class Files extends \litepubl\core\Items
 {
-    public $templates;
 
     protected function create()
     {
@@ -35,11 +31,10 @@ class Files extends \litepubl\core\Items
         parent::create();
         $this->basename = 'files';
         $this->table = 'files';
-        $this->addEvents('changed', 'edited', 'ongetfilelist', 'onlist');
-        $this->templates = [];
+        $this->addEvents('changed', 'edited');
     }
 
-    public function getItemsposts()
+    public function getItemsPosts(): FilesItems
     {
         return FilesItems::i();
     }
@@ -52,24 +47,24 @@ class Files extends \litepubl\core\Items
         }
     }
 
-    public function getUrl($id)
+    public function getUrl(int $id): string
     {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         return $this->getApp()->site->files . '/files/' . $item['filename'];
     }
 
-    public function getLink($id)
+    public function getLink(int $id): string
     {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', $this->getApp()->site->files, $item['filename'], $item['title'], $item['description']);
     }
 
-    public function getHash($filename)
+    public function getHash(string $filename): string
     {
         return trim(base64_encode(md5_file($filename, true)), '=');
     }
 
-    public function additem(array $item)
+    public function addItem(array $item): int
     {
         $realfile = $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
         $item['author'] = $this->getApp()->options->user;
@@ -78,20 +73,16 @@ class Files extends \litepubl\core\Items
         $item['size'] = filesize($realfile);
 
         //fix empty props
-        foreach ([
-            'mime',
-            'title',
-            'description',
-            'keywords'
-        ] as $prop) {
+        foreach (['mime', 'title', 'description', 'keywords'] as $prop) {
             if (!isset($item[$prop])) {
                 $item[$prop] = '';
             }
         }
+
         return $this->insert($item);
     }
 
-    public function insert(array $item)
+    public function insert(array $item): int
     {
         $item = $this->escape($item);
         $id = $this->db->add($item);
@@ -101,21 +92,17 @@ class Files extends \litepubl\core\Items
         return $id;
     }
 
-    public function escape(array $item)
+    public function escape(array $item): array
     {
-        foreach ([
-            'title',
-            'description',
-            'keywords'
-        ] as $name) {
+        foreach (['title', 'description', 'keywords'] as $name) {
             $item[$name] = Filter::escape(Filter::unescape($item[$name]));
         }
         return $item;
     }
 
-    public function edit($id, $title, $description, $keywords)
+    public function edit(int $id, string $title, string $description, string $keywords)
     {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         if (($item['title'] == $title) && ($item['description'] == $description) && ($item['keywords'] == $keywords)) {
             return false;
         }
@@ -138,10 +125,10 @@ class Files extends \litepubl\core\Items
         }
 
         $list = $this->itemsposts->getposts($id);
-        $this->itemsposts->deleteitem($id);
-        $this->itemsposts->updateposts($list, 'files');
+        $this->itemsPosts->deleteItem($id);
+        $this->itemsPosts->updatePosts($list, 'files');
 
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         if ($item['idperm'] == 0) {
             @unlink($this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
         } else {
@@ -165,7 +152,7 @@ class Files extends \litepubl\core\Items
         return true;
     }
 
-    public function setContent($id, $content)
+    public function setContent(int $id, string $content): bool
     {
         if (!$this->itemExists($id)) {
             return false;
@@ -177,199 +164,22 @@ class Files extends \litepubl\core\Items
             $item['hash'] = $this->gethash($realfile);
             $item['size'] = filesize($realfile);
             $this->items[$id] = $item;
-            if ($this->dbversion) {
                 $item['id'] = $id;
                 $this->db->updateassoc($item);
-            } else {
-                $this->save();
-            }
         }
+
+return true;
     }
 
-    public function exists($filename)
+    public function exists(string $filename): bool
     {
-        return $this->indexof('filename', $filename);
-    }
-
-    public function getFilelist(array $list, $excerpt)
-    {
-        $r = $this->onGetFilelist(['list' => $list, 'excerpt' => $excerpt, 'result' => false]);
-        if ($r['result']) {
-            return $r['result'];
-        }
-
-        if (count($list) == 0) {
-            return '';
-        }
-
-        return $this->getlist($list, $excerpt ? $this->gettml('content.excerpts.excerpt.filelist') : $this->gettml('content.post.filelist'));
-    }
-
-    public function getTml($basekey)
-    {
-        if (isset($this->templates[$basekey])) {
-            return $this->templates[$basekey];
-        }
-
-        $theme = Theme::i();
-        $result = [
-            'container' => $theme->templates[$basekey],
-        ];
-
-        $key = $basekey . '.';
-        foreach ($theme->templates as $k => $v) {
-            if (Str::begin($k, $key)) {
-                $result[substr($k, strlen($key)) ] = $v;
-            }
-        }
-
-        $this->templates[$basekey] = $result;
-        return $result;
-    }
-
-    public function getList(array $list, array $tml)
-    {
-        if (!count($list)) {
-            return '';
-        }
-
-        $this->onlist(['list' => $list]);
-        $result = '';
-        $this->preload($list);
-
-        //sort by media type
-        $items = [];
-        foreach ($list as $id) {
-            if (!isset($this->items[$id])) {
-                continue;
-            }
-
-            $item = $this->items[$id];
-            $type = $item['media'];
-            if (isset($tml[$type])) {
-                $items[$type][] = $id;
-            } else {
-                $items['file'][] = $id;
-            }
-        }
-
-        $theme = Theme::i();
-        $args = new Args();
-        $args->count = count($list);
-
-        $url = $this->getApp()->site->files . '/files/';
-
-        $preview = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-        Theme::$vars['preview'] = $preview;
-        $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-        Theme::$vars['midle'] = $midle;
-
-        $index = 0;
-
-        foreach ($items as $type => $subitems) {
-            $args->subcount = count($subitems);
-            $sublist = '';
-            foreach ($subitems as $typeindex => $id) {
-                $item = $this->items[$id];
-                $args->add($item);
-                $args->link = $url . $item['filename'];
-                $args->id = $id;
-                $args->typeindex = $typeindex;
-                $args->index = $index++;
-                $args->preview = '';
-                $preview->exchangeArray([]);
-
-                if ($idmidle = (int)$item['midle']) {
-                    $midle->exchangeArray($this->getitem($idmidle));
-                    $midle->link = $url . $midle->filename;
-                    $midle->json = $this->getjson($idmidle);
-                } else {
-                    $midle->exchangeArray([]);
-                    $midle->link = '';
-                    $midle->json = '';
-                }
-
-                if ((int)$item['preview']) {
-                    $preview->exchangeArray($this->getitem($item['preview']));
-                } elseif ($type == 'image') {
-                    $preview->exchangeArray($item);
-                    $preview->id = $id;
-                } elseif ($type == 'video') {
-                    $args->preview = $theme->parseArg($tml['videos.fallback'], $args);
-                    $preview->exchangeArray([]);
-                }
-
-                if ($preview->count()) {
-                    $preview->link = $url . $preview->filename;
-                    $args->preview = $theme->parseArg($tml['preview'], $args);
-                }
-
-                $args->json = $this->getjson($id);
-                $sublist.= $theme->parseArg($tml[$type], $args);
-            }
-
-            $args->__set($type, $sublist);
-            $result.= $theme->parseArg($tml[$type . 's'], $args);
-        }
-
-        unset(Theme::$vars['preview'], $preview, Theme::$vars['midle'], $midle);
-        $args->files = $result;
-        return $theme->parseArg($tml['container'], $args);
+        return $this->indexOf('filename', $filename);
     }
 
     public function postEdited(Event $event)
     {
         $post = Post::i($event->id);
-        $this->itemsposts->setitems($event->id, $post->files);
+        $this->itemsPosts->setItems($post->id, $post->files);
     }
 
-    public function getFirstimage(array $items)
-    {
-        foreach ($items as $id) {
-            $item = $this->getitem($id);
-            if (('image' == $item['media']) && ($idpreview = (int)$item['preview'])) {
-                $baseurl = $this->getApp()->site->files . '/files/';
-                $args = new Args();
-                $args->add($item);
-                $args->link = $baseurl . $item['filename'];
-                $args->json = $this->getjson($id);
-
-                $preview = new \ArrayObject($this->getitem($idpreview), \ArrayObject::ARRAY_AS_PROPS);
-                $preview->link = $baseurl . $preview->filename;
-
-                $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-                if ($idmidle = (int)$item['midle']) {
-                    $midle->exchangeArray($this->getitem($idmidle));
-                    $midle->link = $baseurl . $midle->filename;
-                    $midle->json = $this->getjson($idmidle);
-                } else {
-                    $midle->json = '';
-                }
-
-                $vars = new Vars();
-                $vars->preview = $preview;
-                $vars->midle = $midle;
-                $theme = Theme::i();
-                return $theme->parseArg($theme->templates['content.excerpts.excerpt.firstimage'], $args);
-            }
-        }
-
-        return '';
-    }
-
-    public function getJson($id)
-    {
-        $item = $this->getitem($id);
-        return Str::jsonAttr(
-            [
-            'id' => $id,
-            'link' => $this->getApp()->site->files . '/files/' . $item['filename'],
-            'width' => $item['width'],
-            'height' => $item['height'],
-            'size' => $item['size'],
-            'midle' => $item['midle'],
-            'preview' => $item['preview'],
-            ]
-        );
-    }
 }

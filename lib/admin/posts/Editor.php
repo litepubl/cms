@@ -124,7 +124,7 @@ class Editor extends \litepubl\admin\Menu
     public function getFilelist($post = null)
     {
         $post = $this->getVarPost($post);
-        return $this->admintheme->getfilelist($post->id ? $post->factory->files->itemsposts->getitems($post->id) : []);
+        return $this->admintheme->getFileList($post->id ? $post->factory->files->itemsposts->getitems($post->id) : []);
     }
 
     public function getText($post = null)

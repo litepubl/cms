@@ -189,53 +189,54 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $this->getApp()->site->url . "/comments/$this->id.xml";
     }
 
-    public function getIdimage()
+    public function getIdImage(): int
     {
         if (!count($this->files)) {
-            return false;
+            return 0;
         }
 
         $files = $this->factory->files;
         foreach ($this->files as $id) {
-            $item = $files->getitem($id);
+            $item = $files->getItem($id);
             if ('image' == $item['media']) {
                 return $id;
             }
         }
 
-        return false;
+        return 0;
     }
 
-    public function getImage()
+    public function getImage(): string
     {
-        if ($id = $this->getidimage()) {
-            return $this->factory->files->geturl($id);
+        if ($id = $this->getIdImage()) {
+            return $this->factory->files->getUrl($id);
         }
 
-        return false;
+        return '';
     }
 
-    public function getThumb()
+    public function getThumb(): string
     {
-        if (count($this->files) == 0) {
-            return false;
+        if (!count($this->files)) {
+            return '';
         }
 
         $files = $this->factory->files;
         foreach ($this->files as $id) {
-            $item = $files->getitem($id);
+            $item = $files->getItem($id);
             if ((int)$item['preview']) {
-                return $files->geturl($item['preview']);
+                return $files->getUrl($item['preview']);
             }
         }
 
-        return false;
+        return '';
     }
 
-    public function getFirstImage()
+    public function getFirstImage(): string
     {
-        if (count($this->files)) {
-            return $this->factory->files->getfirstimage($this->files);
+$items = $this->files;
+        if (count($items)) {
+            return $this->factory->fileView->getFirstImage($items);
         }
 
         return '';
@@ -397,24 +398,26 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     }
 
     //to override schema in post, id schema not changed
-    public function getFileList()
+    public function getFileList(): string
     {
-        if (!count($this->files) || (($this->page > 1) && $this->getApp()->options->hidefilesonpage)) {
+$items = $this->files;
+        if (!count($items) || (($this->page > 1) && $this->getApp()->options->hidefilesonpage)) {
             return '';
         }
 
-        $files = $this->factory->files;
-        return $files->getFileList($this->files, false);
+        $fileView = $this->factory->fileView;
+        return $fileView->getFileList($items, false, $this->theme);
     }
 
-    public function getExcerptFileList()
+    public function getExcerptFileList(): string
     {
-        if (count($this->files) == 0) {
+$items = $this->files;
+        if (count($items) == 0) {
             return '';
         }
 
-        $files = $this->factory->files;
-        return $files->getfilelist($this->files, true);
+        $fileView = $this->factory->fileView;
+        return $fileView->getFileList($items, true, $this->theme);
     }
 
     public function getIndexTml()
