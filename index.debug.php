@@ -11,7 +11,9 @@ require (__DIR__ . '/index.php');
 Config::$debug = true;
 //Config::$classes['storage'] = 'litepubl\core\storageinc';
 Config::$afterInit = function($app) {
+if (file_exists(__DIR__ . '/temp/zdebug.php')) {
 include (__DIR__ . '/temp/zdebug.php');
+}
 };
 
 include (__DIR__ . '/lib/utils/Filer.php');
@@ -33,8 +35,8 @@ echo "<pre>\n";
 echo $e;
 }
 
-echo '<br>', gc_collect_cycles();
 return;
 echo "<pre>\n";
+echo gc_collect_cycles();
 echo ltrim(str_replace(__DIR__, '', implode("\n", get_included_files())), '/\\');
 echo "\n", count(get_included_files());
