@@ -11,6 +11,7 @@
 namespace litepubl\post;
 
 use litepubl\core\Event;
+use litepubl\core\Str;
 use litepubl\view\Filter;
 
 /**

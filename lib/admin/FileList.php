@@ -5,6 +5,7 @@ namespace litepubl\admin;
 use litepubl\post\Files;
 use litepubl\view\Admin;
 use litepubl\view\Args;
+use litepubl\core\Str;
 
 class FileList
 {
