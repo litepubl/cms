@@ -11,6 +11,7 @@
 namespace litepubl\admin\posts;
 
 use litepubl\admin\DateFilter;
+use litepubl\admin\FileList;
 use litepubl\core\Str;
 use litepubl\post\Post;
 use litepubl\post\Posts as PostItems;
@@ -124,7 +125,8 @@ class Editor extends \litepubl\admin\Menu
     public function getFilelist($post = null)
     {
         $post = $this->getVarPost($post);
-        return $this->admintheme->getFileList($post->id ? $post->factory->files->itemsposts->getitems($post->id) : []);
+$fileList = new FileList($this->adminTheme);
+        return $fileList->get($post->id ? $post->factory->files->itemsposts->getitems($post->id) : []);
     }
 
     public function getText($post = null)
