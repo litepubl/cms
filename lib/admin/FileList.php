@@ -8,7 +8,7 @@ use litepubl\view\Args;
 
 class FileList
 {
-    public $onfileperm;
+    public $onFilePerm;
 private $adminTheme;
 
 public function __construct(Admin $adminTheme)
@@ -28,8 +28,8 @@ $app = $this->adminTheme->getApp();
         $args = new Args();
         $args->fileperm = '';
 
-        if (is_callable($this->onfileperm)) {
-            call_user_func_array($this->onfileperm, [$args]);
+        if (is_callable($this->onFilePerm)) {
+            call_user_func_array($this->onFilePerm, [$args]);
         } elseif ($app->options->show_file_perm) {
             $args->fileperm = GetPerm::combo(0, 'idperm_upload');
         }
@@ -52,3 +52,4 @@ $app = $this->adminTheme->getApp();
         return $this->adminTheme->parseArg($this->adminTheme->templates['posteditor.filelist'], $args);
     }
 
+}

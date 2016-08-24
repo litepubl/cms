@@ -11,6 +11,7 @@
 namespace litepubl\post;
 
 use litepubl\core\Event;
+use litepubl\view\Filter;
 
 /**
  * Manage uploaded files

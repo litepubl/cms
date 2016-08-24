@@ -4,7 +4,6 @@ namespace litepubl\post;
 
 use litepubl\core\Str;
 use litepubl\view\Args;
-use litepubl\view\Filter;
 use litepubl\view\Theme;
 use litepubl\view\Vars;
 
@@ -25,7 +24,7 @@ class FileView extends \litepubl\core\Events
     {
         parent::create();
         $this->basename = 'fileview';
-        $this->addEvents(''ongetfilelist', 'onlist');
+        $this->addEvents('ongetfilelist', 'onlist');
         $this->templates = [];
     }
 
