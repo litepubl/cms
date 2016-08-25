@@ -11,6 +11,7 @@
 namespace litepubl\updater;
 
 use litepubl\core\Str;
+use litepubl\Config;
 use litepubl\utils\Filer;
 use litepubl\utils\Http;
 use litepubl\view\Css;
@@ -31,7 +32,6 @@ class Updater extends \litepubl\core\Events
     protected $releases;
     public $versions;
     public $result;
-    public $log;
 
     protected function create()
     {
@@ -40,7 +40,6 @@ class Updater extends \litepubl\core\Events
         $this->addevents('onupdated');
         $this->data['useshell'] = false;
         $this->versions = $this->getVersions();
-        $this->log = false;
     }
 
     public function getVersions(): array
@@ -82,7 +81,7 @@ class Updater extends \litepubl\core\Events
 
     public function log($mesg)
     {
-        if ($this->log) {
+        if (Config::$debug) {
             $this->getApp()->getLogger()->debug($mesg);
         }
     }
