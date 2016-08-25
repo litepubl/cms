@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\install;
@@ -191,15 +191,15 @@ class Installer
         return $password;
     }
 
-private function getDefaultArgs(): array
-{
-return [
+    private function getDefaultArgs(): array
+    {
+        return [
                 '$site.url' => 'http://' . strtolower($_SERVER['HTTP_HOST']),
                 '$site.files' => 'http://' . strtolower($_SERVER['HTTP_HOST']),
                 '{$site.q}' => '?',
                 '$site.q' => '?',
             ];
-}
+    }
 
     public function installClasses()
     {
@@ -216,7 +216,7 @@ return [
         $xmlrpc = xmlrpc\Server::i();
         $xmlrpc->lock();
 
-//to prevent get properties fron non installet core\Site
+        //to prevent get properties fron non installet core\Site
             Args::$defaultArgs = $this->getDefaultArgs();
         $theme = Theme::getTheme('default');
             Args::$defaultArgs = null;

@@ -1,4 +1,12 @@
 <?php
+/**
+ * Lite Publisher CMS
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.04
+  */
 
 namespace litepubl\post;
 
@@ -28,10 +36,10 @@ class FileView extends \litepubl\core\Events
         $this->templates = [];
     }
 
-public function getFiles(): Files
-{
-return Files::i();
-}
+    public function getFiles(): Files
+    {
+        return Files::i();
+    }
 
     public function getFileList(array $list, bool $excerpt, Theme $theme): string
     {
@@ -44,7 +52,7 @@ return Files::i();
             return '';
         }
 
-$tml = $excerpt ? $this->getTml($theme, 'content.excerpts.excerpt.filelist') : $this->getTml($theme, 'content.post.filelist');
+        $tml = $excerpt ? $this->getTml($theme, 'content.excerpts.excerpt.filelist') : $this->getTml($theme, 'content.post.filelist');
         return $this->getList($list,  $tml);
     }
 
@@ -65,9 +73,9 @@ $tml = $excerpt ? $this->getTml($theme, 'content.excerpts.excerpt.filelist') : $
             }
         }
 
-if (!isset($this->templates[$theme->name])) {
-$this->templates[$theme->name] = [];
-}
+        if (!isset($this->templates[$theme->name])) {
+                $this->templates[$theme->name] = [];
+        }
 
         $this->templates[$theme->name][$basekey] = $result;
         return $result;
@@ -81,7 +89,7 @@ $this->templates[$theme->name] = [];
 
         $this->onList(['list' => $list]);
         $result = '';
-$files = $this->getFiles();
+        $files = $this->getFiles();
         $files->preLoad($list);
 
         //sort by media type
@@ -107,7 +115,7 @@ $files = $this->getFiles();
         $url = $this->getApp()->site->files . '/files/';
 
         $preview = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-$vars = new Vars();
+        $vars = new Vars();
         $vars->preview = $preview;
         $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
         $vars->midle = $midle;
@@ -165,7 +173,7 @@ $vars = new Vars();
 
     public function getFirstImage(array $items): string
     {
-$files = $this->getFiles();
+        $files = $this->getFiles();
         foreach ($items as $id) {
             $item = $files->getItem($id);
             if (('image' == $item['media']) && ($idpreview = (int)$item['preview'])) {

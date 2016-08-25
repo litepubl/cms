@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\view;
@@ -500,7 +500,7 @@ class BaseParser extends \litepubl\core\Events
         $paths = $this->getApp()->paths;
         $vars = new Vars();
         $vars->plugins = Plugins::i();
-$base = new Base();
+        $base = new Base();
 
         foreach ($this->tagfiles as $filename) {
             if (!$filename) {

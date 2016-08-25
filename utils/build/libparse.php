@@ -37,9 +37,11 @@ function ParseFile($filename)
         $s = replace_copyright($s, 'php');
         $s = sortUse($s);
 
+/*
         if (strend($filename, '.install.php')) {
             $s = str_replace('$this', '$self', $s);
         }
+*/
 
         $s .= "\n";
     } else if (strend($filename, '.js')) {

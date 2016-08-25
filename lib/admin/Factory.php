@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\admin;
@@ -102,18 +102,18 @@ trait Factory
         return $admin->parseArg($admin->templates['confirmform'], $args);
     }
 
-/*
-* method can used as: extract($this->getStdInstances());
-*/
-public function getStdInstances(): array
-{
-return [
-'result' => '',
-'lang' => $this->getLang(),
-'admin' => $this->adminTheme,
-'theme' => $this->theme,
-'args' => $this->newArgs(),
-'id' => $this->idGet(),
-];
-}
+    /*
+    * method can used as: extract($this->getStdInstances());
+    */
+    public function getStdInstances(): array
+    {
+        return [
+        'result' => '',
+        'lang' => $this->getLang(),
+        'admin' => $this->adminTheme,
+        'theme' => $this->theme,
+        'args' => $this->newArgs(),
+        'id' => $this->idGet(),
+        ];
+    }
 }

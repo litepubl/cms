@@ -485,7 +485,12 @@ class App
 
             if (!$this->controller->cached($context)) {
                 $this->router->request($context);
+if ($context->response->isRedir()) {
+$context->response->send();
+} else {
                 $this->controller->request($context);
+}
+
                 $this->router->afterRequest(['context' => $context]);
             }
 
@@ -1511,7 +1516,7 @@ class Data
         return $this->lockcount > 0;
     }
 
-    public function Getclass()
+    public function getClass(): string
     {
         return get_class($this);
     }
@@ -1863,7 +1868,7 @@ class DB
 
     public function exists(string $where): bool
     {
-$res = $this->query("select *  from $this->prefix$this->table where $where limit 1");
+        $res = $this->query("select *  from $this->prefix$this->table where $where limit 1");
         return (bool) $res->num_rows;
     }
 
@@ -2817,10 +2822,10 @@ class Options extends Events
         if (array_key_exists($name, $this->data)) {
             unset($this->data[$name]);
             $this->save();
-return true;
+            return true;
         }
 
-return false;
+        return false;
     }
 
     public function getAdminFlag(): bool
@@ -4305,7 +4310,7 @@ class Classes extends Items
         return $this->instances[$class] = $this->newinstance($class);
     }
 
-    public function newinstance(string $class)
+    public function newInstance(string $class)
     {
         if (!empty($this->remap[$class])) {
             $class = $this->remap[$class];
@@ -4330,6 +4335,23 @@ class Classes extends Items
 
         return new $info['class']();
     }
+
+public function addNamespace(string $ns, string $path)
+{
+$this->namespaces[$ns] = $path;
+$this->save();
+}
+
+public function deleteNamespace(string $ns): bool
+{
+if (isset($this->namespaces[$ns])) {
+unset($this->namespaces[$ns]);
+$this->save();
+return true;
+}
+
+return false;
+}
 
     public function add($class, $filename, $deprecatedPath = false)
     {

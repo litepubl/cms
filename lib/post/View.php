@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\post;
@@ -234,7 +234,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
     public function getFirstImage(): string
     {
-$items = $this->files;
+        $items = $this->files;
         if (count($items)) {
             return $this->factory->fileView->getFirstImage($items);
         }
@@ -400,7 +400,7 @@ $items = $this->files;
     //to override schema in post, id schema not changed
     public function getFileList(): string
     {
-$items = $this->files;
+        $items = $this->files;
         if (!count($items) || (($this->page > 1) && $this->getApp()->options->hidefilesonpage)) {
             return '';
         }
@@ -411,7 +411,7 @@ $items = $this->files;
 
     public function getExcerptFileList(): string
     {
-$items = $this->files;
+        $items = $this->files;
         if (count($items) == 0) {
             return '';
         }

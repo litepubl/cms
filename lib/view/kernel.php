@@ -1049,22 +1049,21 @@ use litepubl\core\Str;
 /**
  * Schema class
  *
- * @property int $id
- * @property string $class
- * @property string $name
- * @property string $themename
- * @property string $adminname
- * @property string $menuclass
- * @property bool $hovermenu
- * @property bool $customsidebar
- * @property bool $disableajax
- * @property string $postannounce
- * @property bool $invertorder
- * @property int $perpage
- * @property array $custom
+ * @property      int $id
+ * @property      string $class
+ * @property      string $name
+ * @property      string $themename
+ * @property      string $adminname
+ * @property      string $menuclass
+ * @property      bool $hovermenu
+ * @property      bool $customsidebar
+ * @property      bool $disableajax
+ * @property      string $postannounce
+ * @property      bool $invertorder
+ * @property      int $perpage
+ * @property      array $custom
  * @property-read Theme $theme
  * @property-read Admin $adminTheme
-
  */
 
 class Schema extends \litepubl\core\Item
@@ -1795,15 +1794,12 @@ trait ViewTrait
 namespace litepubl\view;
 
 use litepubl\admin\DateFilter;
-use litepubl\admin\GetPerm;
 use litepubl\core\Arr;
 use litepubl\core\Str;
-use litepubl\post\Files;
 use litepubl\tag\Cats;
 
 class Admin extends Base
 {
-    public $onfileperm;
 
     public static function i()
     {
@@ -2066,41 +2062,6 @@ class Admin extends Base
         Arr::clean($result);
         Arr::deleteValue($result, 0);
         return $result;
-    }
-
-    public function getFilelist(array $list): string
-    {
-        $args = new Args();
-        $args->fileperm = '';
-
-        if (is_callable($this->onfileperm)) {
-            call_user_func_array(
-                $this->onfileperm, [
-                $args
-                ]
-            );
-        } elseif ($this->getApp()->options->show_file_perm) {
-            $args->fileperm = GetPerm::combo(0, 'idperm_upload');
-        }
-
-        $files = Files::i();
-        $where = $this->getApp()->options->ingroup('editor') ? '' : ' and author = ' . $this->getApp()->options->user;
-
-        $db = $files->db;
-        //total count files
-        $args->count = (int)$db->getcount(" parent = 0 $where");
-        //already loaded files
-        $args->items = '{}';
-        // attrib for hidden input
-        $args->files = '';
-
-        if (count($list)) {
-            $items = implode(',', $list);
-            $args->files = $items;
-            $args->items = Str::toJson($db->res2items($db->query("select * from $files->thistable where id in ($items) or parent in ($items)")));
-        }
-
-        return $this->parseArg($this->templates['posteditor.filelist'], $args);
     }
 
     public function check2array(string $prefix): array

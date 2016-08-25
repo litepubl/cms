@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\perms;
@@ -41,7 +41,7 @@ class Single extends Perm
 
     public static function encryptPassword(string $p): string
     {
-$app = static::getAppInstance();
+        $app = static::getAppInstance();
         return md5($app->context->itemRoute['id'] . Config::$secret . $p . $app->options->solt);
     }
 

@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\core;
@@ -107,22 +107,22 @@ class Classes extends Items
         return new $info['class']();
     }
 
-public function addNamespace(string $ns, string $path)
-{
-$this->namespaces[$ns] = $path;
-$this->save();
-}
+    public function addNamespace(string $ns, string $path)
+    {
+        $this->namespaces[$ns] = $path;
+        $this->save();
+    }
 
-public function deleteNamespace(string $ns): bool
-{
-if (isset($this->namespaces[$ns])) {
-unset($this->namespaces[$ns]);
-$this->save();
-return true;
-}
+    public function deleteNamespace(string $ns): bool
+    {
+        if (isset($this->namespaces[$ns])) {
+            unset($this->namespaces[$ns]);
+            $this->save();
+            return true;
+        }
 
-return false;
-}
+        return false;
+    }
 
     public function add($class, $filename, $deprecatedPath = false)
     {

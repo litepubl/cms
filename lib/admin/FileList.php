@@ -1,31 +1,39 @@
 <?php
+/**
+ * Lite Publisher CMS
+ *
+ * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
+ * @link      https://github.com/litepubl\cms
+ * @version   7.04
+  */
 
 namespace litepubl\admin;
 
+use litepubl\core\Str;
 use litepubl\post\Files;
 use litepubl\view\Admin;
 use litepubl\view\Args;
-use litepubl\core\Str;
 
 class FileList
 {
     public $onFilePerm;
-private $adminTheme;
+    private $adminTheme;
 
-public function __construct(Admin $adminTheme)
-{
-$this->adminTheme = $adminTheme;
-}
+    public function __construct(Admin $adminTheme)
+    {
+        $this->adminTheme = $adminTheme;
+    }
 
-public function getFiles()
-{
-return Files::i();
-}
+    public function getFiles()
+    {
+        return Files::i();
+    }
 
     public function get(array $list): string
     {
         $files = $this->getFiles();
-$app = $this->adminTheme->getApp();
+        $app = $this->adminTheme->getApp();
         $args = new Args();
         $args->fileperm = '';
 

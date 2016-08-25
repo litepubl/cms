@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\admin\posts;
@@ -91,7 +91,7 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             return;
         }
 
-$options = $this->getApp()->options;
+        $options = $this->getApp()->options;
         $this->idpost = $this->idparam();
         $this->isauthor = $options->inGroup('author');
         if ($this->idpost > 0) {
@@ -180,7 +180,7 @@ $options = $this->getApp()->options;
             $name = trim($_GET['get']);
             if (isset($this->data['events'][$name])) {
                 $r = $this->callEvent($name, ['post'  => $post, 'result' => '']);
-$result = $r['result'];
+                $result = $r['result'];
             } else {
                 $result = var_export($_GET, true);
             }

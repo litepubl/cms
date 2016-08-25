@@ -48,10 +48,10 @@ class Announce extends \litepubl\core\Events
     {
         $r = $this->before(['content' => '', 'items' => $items, 'schema' => $schema]);
         $result = $r['content'];
+            $theme = $schema->theme;
         $items = $r['items'];
         if (count($items)) {
             Posts::i()->loadItems($items);
-            $theme = $schema->theme;
             $tml = $theme->templates['content.excerpts.' . ($schema->postannounce == 'excerpt' ? 'excerpt' : $schema->postannounce . '.excerpt')];
             $vars = new Vars();
             $vars->lang = Lang::i('default');
@@ -81,12 +81,12 @@ class Announce extends \litepubl\core\Events
     public function getNavi(array $items, Schema $schema, string $url, int $count): string
     {
         $result = $this->getPosts($items, $schema);
-$result .= $this->getPages($schema, $url, $count);
-return $result;
-}
+        $result .= $this->getPages($schema, $url, $count);
+        return $result;
+    }
 
     public function getPages(Schema $schema, string $url, int $count): string
-{
+    {
         $app = $this->getApp();
         if ($schema->perpage) {
             $perpage = $schema->perpage;
@@ -94,7 +94,7 @@ return $result;
             $perpage = $app->options->perpage;
         }
         
-return $schema->theme->getPages($url, $app->context->request->page, ceil($count / $perpage));
+        return $schema->theme->getPages($url, $app->context->request->page, ceil($count / $perpage));
     }
 
     //used in plugins such as singlecat
@@ -154,6 +154,11 @@ class Factory
         return Files::i();
     }
 
+    public function getFileView()
+    {
+        return FileView::i();
+    }
+
     public function getTags()
     {
         return Tags::i();
@@ -210,27 +215,20 @@ namespace litepubl\post;
 
 use litepubl\core\Event;
 use litepubl\core\Str;
-use litepubl\view\Args;
 use litepubl\view\Filter;
-use litepubl\view\Theme;
-use litepubl\view\Vars;
 
 /**
  * Manage uploaded files
  *
+ * @property-read FilesItems $itemsPosts
  * @property-write callable $changed
  * @property-write callable $edited
- * @property-write callable $onGetFilelist
- * @property-write callable $onlist
  * @method         array changed(array $params)
  * @method         array edited(array $params)
- * @method         array onGetFilelist(array $params)
- * @method         array onlist(array $params)
  */
 
 class Files extends \litepubl\core\Items
 {
-    public $cachetml;
 
     protected function create()
     {
@@ -238,11 +236,10 @@ class Files extends \litepubl\core\Items
         parent::create();
         $this->basename = 'files';
         $this->table = 'files';
-        $this->addEvents('changed', 'edited', 'ongetfilelist', 'onlist');
-        $this->cachetml = [];
+        $this->addEvents('changed', 'edited');
     }
 
-    public function getItemsposts()
+    public function getItemsPosts(): FilesItems
     {
         return FilesItems::i();
     }
@@ -255,24 +252,24 @@ class Files extends \litepubl\core\Items
         }
     }
 
-    public function getUrl($id)
+    public function getUrl(int $id): string
     {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         return $this->getApp()->site->files . '/files/' . $item['filename'];
     }
 
-    public function getLink($id)
+    public function getLink(int $id): string
     {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         return sprintf('<a href="%1$s/files/%2$s" title="%3$s">%4$s</a>', $this->getApp()->site->files, $item['filename'], $item['title'], $item['description']);
     }
 
-    public function getHash($filename)
+    public function getHash(string $filename): string
     {
         return trim(base64_encode(md5_file($filename, true)), '=');
     }
 
-    public function additem(array $item)
+    public function addItem(array $item): int
     {
         $realfile = $this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']);
         $item['author'] = $this->getApp()->options->user;
@@ -281,20 +278,16 @@ class Files extends \litepubl\core\Items
         $item['size'] = filesize($realfile);
 
         //fix empty props
-        foreach ([
-            'mime',
-            'title',
-            'description',
-            'keywords'
-        ] as $prop) {
+        foreach (['mime', 'title', 'description', 'keywords'] as $prop) {
             if (!isset($item[$prop])) {
                 $item[$prop] = '';
             }
         }
+
         return $this->insert($item);
     }
 
-    public function insert(array $item)
+    public function insert(array $item): int
     {
         $item = $this->escape($item);
         $id = $this->db->add($item);
@@ -304,21 +297,17 @@ class Files extends \litepubl\core\Items
         return $id;
     }
 
-    public function escape(array $item)
+    public function escape(array $item): array
     {
-        foreach ([
-            'title',
-            'description',
-            'keywords'
-        ] as $name) {
+        foreach (['title', 'description', 'keywords'] as $name) {
             $item[$name] = Filter::escape(Filter::unescape($item[$name]));
         }
         return $item;
     }
 
-    public function edit($id, $title, $description, $keywords)
+    public function edit(int $id, string $title, string $description, string $keywords)
     {
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         if (($item['title'] == $title) && ($item['description'] == $description) && ($item['keywords'] == $keywords)) {
             return false;
         }
@@ -341,10 +330,10 @@ class Files extends \litepubl\core\Items
         }
 
         $list = $this->itemsposts->getposts($id);
-        $this->itemsposts->deleteitem($id);
-        $this->itemsposts->updateposts($list, 'files');
+        $this->itemsPosts->deleteItem($id);
+        $this->itemsPosts->updatePosts($list, 'files');
 
-        $item = $this->getitem($id);
+        $item = $this->getItem($id);
         if ($item['idperm'] == 0) {
             @unlink($this->getApp()->paths->files . str_replace('/', DIRECTORY_SEPARATOR, $item['filename']));
         } else {
@@ -368,7 +357,7 @@ class Files extends \litepubl\core\Items
         return true;
     }
 
-    public function setContent($id, $content)
+    public function setContent(int $id, string $content): bool
     {
         if (!$this->itemExists($id)) {
             return false;
@@ -380,41 +369,95 @@ class Files extends \litepubl\core\Items
             $item['hash'] = $this->gethash($realfile);
             $item['size'] = filesize($realfile);
             $this->items[$id] = $item;
-            if ($this->dbversion) {
                 $item['id'] = $id;
                 $this->db->updateassoc($item);
-            } else {
-                $this->save();
-            }
         }
+
+return true;
     }
 
-    public function exists($filename)
+    public function exists(string $filename): bool
     {
-        return $this->indexof('filename', $filename);
+        return $this->indexOf('filename', $filename);
     }
 
-    public function getFilelist(array $list, $excerpt)
+    public function postEdited(Event $event)
+    {
+        $post = Post::i($event->id);
+        $this->itemsPosts->setItems($post->id, $post->files);
+    }
+
+}
+
+//FilesItems.php
+namespace litepubl\post;
+
+class FilesItems extends \litepubl\core\ItemsPosts
+{
+    protected function create()
+    {
+        $this->dbversion = true;
+        parent::create();
+        $this->basename = 'fileitems';
+        $this->table = 'filesitemsposts';
+    }
+}
+
+//FileView.php
+namespace litepubl\post;
+
+use litepubl\core\Str;
+use litepubl\view\Args;
+use litepubl\view\Theme;
+use litepubl\view\Vars;
+
+/**
+ * View file list
+ *
+ * @property-write callable $onGetFilelist
+ * @property-write callable $onlist
+ * @method         array onGetFilelist(array $params)
+ * @method         array onlist(array $params)
+ */
+
+class FileView extends \litepubl\core\Events
+{
+    protected $templates;
+
+    protected function create()
+    {
+        parent::create();
+        $this->basename = 'fileview';
+        $this->addEvents('ongetfilelist', 'onlist');
+        $this->templates = [];
+    }
+
+public function getFiles(): Files
+{
+return Files::i();
+}
+
+    public function getFileList(array $list, bool $excerpt, Theme $theme): string
     {
         $r = $this->onGetFilelist(['list' => $list, 'excerpt' => $excerpt, 'result' => false]);
         if ($r['result']) {
             return $r['result'];
         }
 
-        if (count($list) == 0) {
+        if (!count($list)) {
             return '';
         }
 
-        return $this->getlist($list, $excerpt ? $this->gettml('content.excerpts.excerpt.filelist') : $this->gettml('content.post.filelist'));
+$tml = $excerpt ? $this->getTml($theme, 'content.excerpts.excerpt.filelist') : $this->getTml($theme, 'content.post.filelist');
+        return $this->getList($list,  $tml);
     }
 
-    public function getTml($basekey)
+    public function getTml(Theme $theme, string $basekey): array
     {
-        if (isset($this->cachetml[$basekey])) {
-            return $this->cachetml[$basekey];
+        if (isset($this->templates[$theme->name][$basekey])) {
+            return $this->templates[$theme->name][$basekey];
         }
 
-        $theme = Theme::i();
         $result = [
             'container' => $theme->templates[$basekey],
         ];
@@ -426,28 +469,33 @@ class Files extends \litepubl\core\Items
             }
         }
 
-        $this->cachetml[$basekey] = $result;
+if (!isset($this->templates[$theme->name])) {
+$this->templates[$theme->name] = [];
+}
+
+        $this->templates[$theme->name][$basekey] = $result;
         return $result;
     }
 
-    public function getList(array $list, array $tml)
+    public function getList(array $list, array $tml): string
     {
         if (!count($list)) {
             return '';
         }
 
-        $this->onlist(['list' => $list]);
+        $this->onList(['list' => $list]);
         $result = '';
-        $this->preload($list);
+$files = $this->getFiles();
+        $files->preLoad($list);
 
         //sort by media type
         $items = [];
         foreach ($list as $id) {
-            if (!isset($this->items[$id])) {
+            if (!isset($files->items[$id])) {
                 continue;
             }
 
-            $item = $this->items[$id];
+            $item = $files->items[$id];
             $type = $item['media'];
             if (isset($tml[$type])) {
                 $items[$type][] = $id;
@@ -463,17 +511,17 @@ class Files extends \litepubl\core\Items
         $url = $this->getApp()->site->files . '/files/';
 
         $preview = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-        Theme::$vars['preview'] = $preview;
+$vars = new Vars();
+        $vars->preview = $preview;
         $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-        Theme::$vars['midle'] = $midle;
+        $vars->midle = $midle;
 
         $index = 0;
-
         foreach ($items as $type => $subitems) {
             $args->subcount = count($subitems);
             $sublist = '';
             foreach ($subitems as $typeindex => $id) {
-                $item = $this->items[$id];
+                $item = $files->items[$id];
                 $args->add($item);
                 $args->link = $url . $item['filename'];
                 $args->id = $id;
@@ -483,9 +531,9 @@ class Files extends \litepubl\core\Items
                 $preview->exchangeArray([]);
 
                 if ($idmidle = (int)$item['midle']) {
-                    $midle->exchangeArray($this->getitem($idmidle));
+                    $midle->exchangeArray($files->getItem($idmidle));
                     $midle->link = $url . $midle->filename;
-                    $midle->json = $this->getjson($idmidle);
+                    $midle->json = $this->getJson($idmidle);
                 } else {
                     $midle->exchangeArray([]);
                     $midle->link = '';
@@ -493,7 +541,7 @@ class Files extends \litepubl\core\Items
                 }
 
                 if ((int)$item['preview']) {
-                    $preview->exchangeArray($this->getitem($item['preview']));
+                    $preview->exchangeArray($files->getItem($item['preview']));
                 } elseif ($type == 'image') {
                     $preview->exchangeArray($item);
                     $preview->id = $id;
@@ -507,7 +555,7 @@ class Files extends \litepubl\core\Items
                     $args->preview = $theme->parseArg($tml['preview'], $args);
                 }
 
-                $args->json = $this->getjson($id);
+                $args->json = $this->getJson($id);
                 $sublist.= $theme->parseArg($tml[$type], $args);
             }
 
@@ -515,36 +563,30 @@ class Files extends \litepubl\core\Items
             $result.= $theme->parseArg($tml[$type . 's'], $args);
         }
 
-        unset(Theme::$vars['preview'], $preview, Theme::$vars['midle'], $midle);
         $args->files = $result;
         return $theme->parseArg($tml['container'], $args);
     }
 
-    public function postEdited(Event $event)
+    public function getFirstImage(array $items): string
     {
-        $post = Post::i($event->id);
-        $this->itemsposts->setitems($event->id, $post->files);
-    }
-
-    public function getFirstimage(array $items)
-    {
+$files = $this->getFiles();
         foreach ($items as $id) {
-            $item = $this->getitem($id);
+            $item = $files->getItem($id);
             if (('image' == $item['media']) && ($idpreview = (int)$item['preview'])) {
                 $baseurl = $this->getApp()->site->files . '/files/';
                 $args = new Args();
                 $args->add($item);
                 $args->link = $baseurl . $item['filename'];
-                $args->json = $this->getjson($id);
+                $args->json = $this->getJson($id);
 
-                $preview = new \ArrayObject($this->getitem($idpreview), \ArrayObject::ARRAY_AS_PROPS);
+                $preview = new \ArrayObject($files->getItem($idpreview), \ArrayObject::ARRAY_AS_PROPS);
                 $preview->link = $baseurl . $preview->filename;
 
                 $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
                 if ($idmidle = (int)$item['midle']) {
-                    $midle->exchangeArray($this->getitem($idmidle));
+                    $midle->exchangeArray($files->getItem($idmidle));
                     $midle->link = $baseurl . $midle->filename;
-                    $midle->json = $this->getjson($idmidle);
+                    $midle->json = $this->getJson($idmidle);
                 } else {
                     $midle->json = '';
                 }
@@ -560,9 +602,9 @@ class Files extends \litepubl\core\Items
         return '';
     }
 
-    public function getJson($id)
+    public function getJson(int $id): string
     {
-        $item = $this->getitem($id);
+        $item = $this->getFiles()->getItem($id);
         return Str::jsonAttr(
             [
             'id' => $id,
@@ -574,20 +616,6 @@ class Files extends \litepubl\core\Items
             'preview' => $item['preview'],
             ]
         );
-    }
-}
-
-//FilesItems.php
-namespace litepubl\post;
-
-class FilesItems extends \litepubl\core\ItemsPosts
-{
-    protected function create()
-    {
-        $this->dbversion = true;
-        parent::create();
-        $this->basename = 'fileitems';
-        $this->table = 'filesitemsposts';
     }
 }
 
@@ -2060,53 +2088,54 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $this->getApp()->site->url . "/comments/$this->id.xml";
     }
 
-    public function getIdimage()
+    public function getIdImage(): int
     {
         if (!count($this->files)) {
-            return false;
+            return 0;
         }
 
         $files = $this->factory->files;
         foreach ($this->files as $id) {
-            $item = $files->getitem($id);
+            $item = $files->getItem($id);
             if ('image' == $item['media']) {
                 return $id;
             }
         }
 
-        return false;
+        return 0;
     }
 
-    public function getImage()
+    public function getImage(): string
     {
-        if ($id = $this->getidimage()) {
-            return $this->factory->files->geturl($id);
+        if ($id = $this->getIdImage()) {
+            return $this->factory->files->getUrl($id);
         }
 
-        return false;
+        return '';
     }
 
-    public function getThumb()
+    public function getThumb(): string
     {
-        if (count($this->files) == 0) {
-            return false;
+        if (!count($this->files)) {
+            return '';
         }
 
         $files = $this->factory->files;
         foreach ($this->files as $id) {
-            $item = $files->getitem($id);
+            $item = $files->getItem($id);
             if ((int)$item['preview']) {
-                return $files->geturl($item['preview']);
+                return $files->getUrl($item['preview']);
             }
         }
 
-        return false;
+        return '';
     }
 
-    public function getFirstImage()
+    public function getFirstImage(): string
     {
-        if (count($this->files)) {
-            return $this->factory->files->getfirstimage($this->files);
+$items = $this->files;
+        if (count($items)) {
+            return $this->factory->fileView->getFirstImage($items);
         }
 
         return '';
@@ -2268,24 +2297,26 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     }
 
     //to override schema in post, id schema not changed
-    public function getFileList()
+    public function getFileList(): string
     {
-        if (!count($this->files) || (($this->page > 1) && $this->getApp()->options->hidefilesonpage)) {
+$items = $this->files;
+        if (!count($items) || (($this->page > 1) && $this->getApp()->options->hidefilesonpage)) {
             return '';
         }
 
-        $files = $this->factory->files;
-        return $files->getFileList($this->files, false);
+        $fileView = $this->factory->fileView;
+        return $fileView->getFileList($items, false, $this->theme);
     }
 
-    public function getExcerptFileList()
+    public function getExcerptFileList(): string
     {
-        if (count($this->files) == 0) {
+$items = $this->files;
+        if (count($items) == 0) {
             return '';
         }
 
-        $files = $this->factory->files;
-        return $files->getfilelist($this->files, true);
+        $fileView = $this->factory->fileView;
+        return $fileView->getFileList($items, true, $this->theme);
     }
 
     public function getIndexTml()

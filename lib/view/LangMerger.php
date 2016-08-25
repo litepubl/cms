@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\view;
@@ -111,18 +111,18 @@ class LangMerger extends Merger
     public function addPlugin(string $name)
     {
         $language = $this->getApp()->options->language;
-$plugins = Plugins::i();
+        $plugins = Plugins::i();
         $dir = $plugins->getPluginDir($name) . DIRECTORY_SEPARATOR . 'resource' . DIRECTORY_SEPARATOR;
         $this->lock();
         if (file_exists($dir . $language . '.ini')) {
             $this->add('default', "\$plugins.$name/resource/$language.ini");
         }
 
-foreach (['admin', 'mail', 'install'] as $section) {
-        if (file_exists($dir . "$language.$section.ini")) {
-            $this->add($section, "\$plugins.$name/resource/$language.$section.ini");
+        foreach (['admin', 'mail', 'install'] as $section) {
+            if (file_exists($dir . "$language.$section.ini")) {
+                $this->add($section, "\$plugins.$name/resource/$language.$section.ini");
+            }
         }
-}
 
         $this->unlock();
     }
@@ -134,10 +134,10 @@ foreach (['admin', 'mail', 'install'] as $section) {
         $this->deleteFile('default', "plugins/$name/resource/$language.ini");
         $this->deleteFile('default', "\$plugins$name/resource/$language.ini");
 
-foreach (['admin', 'mail', 'install'] as $section) {
-        $this->deleteFile($section, "plugins/$name/resource/$language.$section.ini");
-        $this->deleteFile($section, "\$plugins.$name/resource/$language.$section.ini");
-}
+        foreach (['admin', 'mail', 'install'] as $section) {
+                $this->deleteFile($section, "plugins/$name/resource/$language.$section.ini");
+                $this->deleteFile($section, "\$plugins.$name/resource/$language.$section.ini");
+        }
 
         $this->unlock();
     }

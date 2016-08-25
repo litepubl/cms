@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\post;
@@ -17,7 +17,7 @@ use litepubl\view\Filter;
 /**
  * Manage uploaded files
  *
- * @property-read FilesItems $itemsPosts
+ * @property-read  FilesItems $itemsPosts
  * @property-write callable $changed
  * @property-write callable $edited
  * @method         array changed(array $params)
@@ -170,7 +170,7 @@ class Files extends \litepubl\core\Items
                 $this->db->updateassoc($item);
         }
 
-return true;
+        return true;
     }
 
     public function exists(string $filename): bool

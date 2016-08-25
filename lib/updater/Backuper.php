@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\updater;
@@ -591,9 +591,9 @@ class Backuper extends \litepubl\core\Events
             $path_root = false;
 
             foreach ($this->tar->files as $i => $item) {
-            if (!($i % 50)) {
+                if (!($i % 50)) {
                       $this->ping();
-            }
+                }
 
                 if (!$path_checked) {
                     $path_checked = true;
@@ -634,9 +634,9 @@ class Backuper extends \litepubl\core\Events
             $path_root = false;
 
             for ($i = 0; $i < $this->zip->numFiles; $i++) {
-            if (!($i % 50)) {
+                if (!($i % 50)) {
                       $this->ping();
-            }
+                }
 
                 if ($s = $this->zip->getFromIndex($i)) {
                     $filename = $this->zip->getNameIndex($i);
@@ -951,8 +951,8 @@ class Backuper extends \litepubl\core\Events
         return false;
     }
 
-public function ping()
-{
+    public function ping()
+    {
                       $this->getApp()->db->mysqli->ping();
-}
+    }
 }

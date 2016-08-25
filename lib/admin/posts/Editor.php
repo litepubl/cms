@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.03
+ * @version   7.04
   */
 
 namespace litepubl\admin\posts;
@@ -125,7 +125,7 @@ class Editor extends \litepubl\admin\Menu
     public function getFilelist($post = null)
     {
         $post = $this->getVarPost($post);
-$fileList = new FileList($this->adminTheme);
+        $fileList = new FileList($this->adminTheme);
         return $fileList->get($post->id ? $post->factory->files->itemsposts->getitems($post->id) : []);
     }
 

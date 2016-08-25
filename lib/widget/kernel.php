@@ -881,8 +881,9 @@ class Sidebars extends \litepubl\core\Data
 
     public function deleteClass($classname)
     {
-        if ($id = Widgets::i()->class2id($classname)) {
-            Schemes::i()->widgetdeleted($id);
+$widgets = Widgets::i();
+        if ($id = $widgets->class2id($classname)) {
+            $widgets->deleted(['id' => $id]);
         }
     }
 
@@ -1631,7 +1632,7 @@ class Widget extends \litepubl\core\Events
     {
         $widgets = Widgets::i();
         $id = $widgets->add($this);
-        $sidebars = Sidebars::i();
+        $sidebars = $this->getSidebars();
         $sidebars->insert($id, false, $sidebar, -1);
 
         $this->getApp()->cache->clear();
@@ -1652,6 +1653,11 @@ class Widget extends \litepubl\core\Events
     {
         return Widgets::i();
     }
+
+public function getSidebars(): Sidebars
+{
+return Sidebars::i();
+}
 
     public function getView()
     {
