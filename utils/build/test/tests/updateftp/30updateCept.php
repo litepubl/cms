@@ -8,16 +8,14 @@
  * @version   7.03
   */
 
-use Page\Cats;
+use Page\Service;
 
 $i = new AcceptanceTester($scenario);
-$i->wantTo('Test category editor');
-$cats = new Cats($i);
-$cats->open();
-$i->screenShot('07.01addcats');
+$i->wantTo('Test update');
+$service = new Service($i, 30update');
+$service->open($service-.runUrl);
+$i->fillField($service->title, $cats->titleFixture);
 
-$i->fillField($cats->title, $cats->titleFixture);
-//$i->selectOption($cats->parent, 
 $i->screenShot('06.02title');
 
 //final submit
