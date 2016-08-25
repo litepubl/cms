@@ -284,6 +284,8 @@ class Updater extends \litepubl\core\Events
         $result = new \StdClass();
         foreach ($urls as $url) {
             if ($result->file = Http::get($url)) {
+//due to timeout to download we need ping mysql
+                      $this->getApp()->db->mysqli->ping();
                 return $result;
             }
         }
