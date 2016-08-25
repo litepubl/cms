@@ -590,7 +590,11 @@ class Backuper extends \litepubl\core\Events
             $path_checked = false;
             $path_root = false;
 
-            foreach ($this->tar->files as $item) {
+            foreach ($this->tar->files as $i => $item) {
+            if (!($i % 50)) {
+                      $this->ping();
+            }
+
                 if (!$path_checked) {
                     $path_checked = true;
                     $path_root = $this->get_path_root($item['name']);
@@ -631,7 +635,7 @@ class Backuper extends \litepubl\core\Events
 
             for ($i = 0; $i < $this->zip->numFiles; $i++) {
             if (!($i % 50)) {
-                      $this->getApp()->db->mysqli->ping();
+                      $this->ping();
             }
 
                 if ($s = $this->zip->getFromIndex($i)) {
@@ -712,7 +716,7 @@ class Backuper extends \litepubl\core\Events
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
             if (!($i % 50)) {
-                      $this->getApp()->db->mysqli->ping();
+                      $this->ping();
             }
 
             if ($s = $zip->getFromIndex($i)) {
@@ -946,4 +950,9 @@ class Backuper extends \litepubl\core\Events
 
         return false;
     }
+
+public function ping()
+{
+                      $this->getApp()->db->mysqli->ping();
+}
 }
