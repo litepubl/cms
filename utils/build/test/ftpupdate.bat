@@ -8,3 +8,5 @@ del cms.cms\temp.zip
 copy cms.cms\index.debug.php shop.cms\
 cd %cur%
 php tests\updateftp\install.php
+del tests\_output\*.* /f /q
+vendor\bin\codecept.bat run updateftp --steps --html --debug>bresult.txt

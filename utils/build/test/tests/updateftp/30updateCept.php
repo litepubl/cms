@@ -12,13 +12,16 @@ use Page\Service;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test update');
-$service = new Service($i, 30update');
-$service->open($service-.runUrl);
-$i->fillField($service->title, $cats->titleFixture);
-
-$i->screenShot('06.02title');
-
-//final submit
-$i->executeJs('$("form:last").submit();');
+$service = new Service($i, '30update');
+$service->open($service->runUrl);
+$i->fillField($service->runText, $service->runFixture);
+$service->screenShot('runscript');
+$service->submit();
+return;
+$service->open($service->url);
+$i->fillField($service->hostText, $service->hostFixture);
+$i->fillField($service->loginText, $service->loginFixture);
+$i->fillField($service->passwordText, $service->passwordFixture);
+$i->click($service->autoButton);
+        $i->waitForElement('table', 300);
 $i->checkError();
-$i->screenShot('07.07saved');

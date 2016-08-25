@@ -13,11 +13,16 @@ namespace Page;
 class Service extends Base
 {
     public $url = '/admin/service/';
-    public $runUrl = '/admin/service/run/';
-    public $title = '#text-title';
-    public $content = '#editor-raw';
-    public $parent = 'select[name=parent]';
+public $hostText = '#text-host';
+public $hostFixture = 'shop.cms';
+public $loginText = '#text-login';
+public $loginFixture = 'super';
+public $passwordText = '#password-password';
+public $passwordFixture = 'super';
+public $autoButton = '#submitbutton-autoupdate';
 
-    public $titleFixture = 'New category';
-    public $contentFixture = 'Some category content';
+    public $runUrl = '/admin/service/run/';
+    public $runText = '#editor-content';
+    public $runFixture = '$o = \litepubl\core\litepubl::$app->options;
+$o->version -= 0.02;';
 }

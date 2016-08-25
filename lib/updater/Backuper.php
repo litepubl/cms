@@ -630,6 +630,10 @@ class Backuper extends \litepubl\core\Events
             $path_root = false;
 
             for ($i = 0; $i < $this->zip->numFiles; $i++) {
+            if (!($i % 50)) {
+                      $this->getApp()->db->mysqli->ping();
+            }
+
                 if ($s = $this->zip->getFromIndex($i)) {
                     $filename = $this->zip->getNameIndex($i);
 
@@ -707,6 +711,10 @@ class Backuper extends \litepubl\core\Events
         }
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
+            if (!($i % 50)) {
+                      $this->getApp()->db->mysqli->ping();
+            }
+
             if ($s = $zip->getFromIndex($i)) {
                 $filename = $zip->getNameIndex($i);
 
