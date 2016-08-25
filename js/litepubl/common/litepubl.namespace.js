@@ -7,7 +7,7 @@
  *  version   7.04
   */
 
-(function($, document, window) {
+(function($, window) {
   'use strict';
 
   window.litepubl = {
@@ -91,12 +91,8 @@
     });
   };
 
-  window.$ready = function(fn) {
-    $(document).ready(fn);
-  };
-
   window.erralert = function(e) {
     alert('error ' + e.message);
   };
 
-}(jQuery, document, window));
+}(jQuery, window));
