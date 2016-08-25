@@ -56,10 +56,10 @@ class Announce extends \litepubl\core\Events
     {
         $r = $this->before(['content' => '', 'items' => $items, 'schema' => $schema]);
         $result = $r['content'];
+            $theme = $schema->theme;
         $items = $r['items'];
         if (count($items)) {
             Posts::i()->loadItems($items);
-            $theme = $schema->theme;
             $tml = $theme->templates['content.excerpts.' . ($schema->postannounce == 'excerpt' ? 'excerpt' : $schema->postannounce . '.excerpt')];
             $vars = new Vars();
             $vars->lang = Lang::i('default');

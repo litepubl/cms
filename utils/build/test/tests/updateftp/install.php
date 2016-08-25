@@ -15,5 +15,3 @@ false, stream_context_create([
     ]]));
 
 file_put_contents(__DIR__ . '/../_data/admin.json', $json);
-
-//require __DIR__ . '/../acceptance/01installCept.php';
