@@ -55,18 +55,18 @@ class Service extends Login
     private function doUpdate($req)
     {
         $admin = $this->admintheme;
-        $lang = Lang::i();
+        $lang = Lang::i('service');
         $updater = Updater::i();
         if (isset($req['autoupdate'])) {
-            if (!$this->checkbackuper()) {
-                return $admin->geterr($lang->erroraccount);
+            if (!$this->checkBackuper()) {
+                return $admin->getErr($lang->erroraccount);
             }
 
-            if ($updater->autoupdate()) {
+            if ($updater->autoUpdate()) {
                 return $admin->success($lang->successupdated);
             }
 
-            return $admin->h($updater->result);
+            return $admin->getErr($updater->result);
         } elseif (isset($req['manualupdate'])) {
             $updater->update();
             return $admin->success($lang->successupdated);
