@@ -5,7 +5,7 @@
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
  *  version   7.04
-  */
+ */
 
 (function($, document, window) {
   'use strict';
@@ -104,7 +104,7 @@
                 $(status == "hold" ? options.holdcomments : options.comments).append($(options.comment + id));
                 self.setenabled(true);
               } catch (e) {
-                erralert(e);
+                litepubl.onerror(e);
               }
             },
 
@@ -126,7 +126,7 @@
               try {
                 self.edit(id, resp.rawcontent);
               } catch (e) {
-                erralert(e);
+                litepubl.onerror(e);
               }
             },
 
@@ -178,7 +178,7 @@
                 self.restore_submit();
                 location.hash = cc.substring(1);
               } catch (e) {
-                erralert(e);
+                litepubl.onerror(e);
               }
             },
 
@@ -190,7 +190,7 @@
           });
 
         } catch (e) {
-          erralert(e);
+          litepubl.onerror(e);
         }
         return false;
       });
@@ -242,7 +242,7 @@
         comtheme.holdcomments = holdcontainer.parent().find(comtheme.hold);
         this.create_buttons(comtheme.holdcomments);
       } catch (e) {
-        erralert(e);
+        litepubl.onerror(e);
       }
     },
 

@@ -5,7 +5,7 @@
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
  *  version   7.04
-  */
+ */
 
 (function($, window) {
   'use strict';
@@ -39,9 +39,6 @@
       };
     },
 
-    //forward declaration for future plugins as yandex metrika or google analitik
-    stat: function(name, param) {},
-
     // current image galery
     openimage: function(image) {
       //image = {url, title, description...}
@@ -70,12 +67,29 @@
       image.description = $("img", link).attr("alt");
 
       return this.openimage(image);
+    },
+
+    //forward declaration for future plugins as yandex metrika or google analitik
+    stat: function(name, param) {},
+
+    dump: function(obj) {
+      alert(JSON.stringify(obj));
+    },
+
+    showError: false,
+    onerror: function(error) {
+      var mesg = "error \n" + error.message;
+      if ("stack" in error) {
+        mesg = mesg + "\n" + error.stack;
+      }
+
+      Logger.error(mesg);
+
+      if (this.showError) {
+        alert(mesg);
+      }
     }
 
-  };
-
-  window.dump = function(obj) {
-    alert(JSON.stringify(obj));
   };
 
   //cookies
@@ -89,10 +103,6 @@
       expires: expires ? expires : 3650,
       secure: "secure" in ltoptions ? ltoptions.secure : false
     });
-  };
-
-  window.erralert = function(e) {
-    alert('error ' + e.message);
   };
 
 }(jQuery, window));

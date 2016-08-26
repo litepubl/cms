@@ -5,7 +5,7 @@
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
  *  version   7.04
-  */
+ */
 
 (function($, litepubl, window) {
   'use strict';
@@ -95,7 +95,7 @@
           this.error(resp.error.message);
         }
       } catch (e) {
-        erralert(e);
+        litepubl.onerror(e);
       }
     },
 
