@@ -220,7 +220,7 @@ use litepubl\view\Filter;
 /**
  * Manage uploaded files
  *
- * @property-read FilesItems $itemsPosts
+ * @property-read  FilesItems $itemsPosts
  * @property-write callable $changed
  * @property-write callable $edited
  * @method         array changed(array $params)
@@ -373,7 +373,7 @@ class Files extends \litepubl\core\Items
                 $this->db->updateassoc($item);
         }
 
-return true;
+        return true;
     }
 
     public function exists(string $filename): bool
@@ -432,10 +432,10 @@ class FileView extends \litepubl\core\Events
         $this->templates = [];
     }
 
-public function getFiles(): Files
-{
-return Files::i();
-}
+    public function getFiles(): Files
+    {
+        return Files::i();
+    }
 
     public function getFileList(array $list, bool $excerpt, Theme $theme): string
     {
@@ -448,7 +448,7 @@ return Files::i();
             return '';
         }
 
-$tml = $excerpt ? $this->getTml($theme, 'content.excerpts.excerpt.filelist') : $this->getTml($theme, 'content.post.filelist');
+        $tml = $excerpt ? $this->getTml($theme, 'content.excerpts.excerpt.filelist') : $this->getTml($theme, 'content.post.filelist');
         return $this->getList($list,  $tml);
     }
 
@@ -469,9 +469,9 @@ $tml = $excerpt ? $this->getTml($theme, 'content.excerpts.excerpt.filelist') : $
             }
         }
 
-if (!isset($this->templates[$theme->name])) {
-$this->templates[$theme->name] = [];
-}
+        if (!isset($this->templates[$theme->name])) {
+                $this->templates[$theme->name] = [];
+        }
 
         $this->templates[$theme->name][$basekey] = $result;
         return $result;
@@ -485,7 +485,7 @@ $this->templates[$theme->name] = [];
 
         $this->onList(['list' => $list]);
         $result = '';
-$files = $this->getFiles();
+        $files = $this->getFiles();
         $files->preLoad($list);
 
         //sort by media type
@@ -511,7 +511,7 @@ $files = $this->getFiles();
         $url = $this->getApp()->site->files . '/files/';
 
         $preview = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
-$vars = new Vars();
+        $vars = new Vars();
         $vars->preview = $preview;
         $midle = new \ArrayObject([], \ArrayObject::ARRAY_AS_PROPS);
         $vars->midle = $midle;
@@ -569,7 +569,7 @@ $vars = new Vars();
 
     public function getFirstImage(array $items): string
     {
-$files = $this->getFiles();
+        $files = $this->getFiles();
         foreach ($items as $id) {
             $item = $files->getItem($id);
             if (('image' == $item['media']) && ($idpreview = (int)$item['preview'])) {
@@ -2133,7 +2133,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
     public function getFirstImage(): string
     {
-$items = $this->files;
+        $items = $this->files;
         if (count($items)) {
             return $this->factory->fileView->getFirstImage($items);
         }
@@ -2299,7 +2299,7 @@ $items = $this->files;
     //to override schema in post, id schema not changed
     public function getFileList(): string
     {
-$items = $this->files;
+        $items = $this->files;
         if (!count($items) || (($this->page > 1) && $this->getApp()->options->hidefilesonpage)) {
             return '';
         }
@@ -2310,7 +2310,7 @@ $items = $this->files;
 
     public function getExcerptFileList(): string
     {
-$items = $this->files;
+        $items = $this->files;
         if (count($items) == 0) {
             return '';
         }

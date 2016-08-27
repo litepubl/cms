@@ -485,11 +485,11 @@ class App
 
             if (!$this->controller->cached($context)) {
                 $this->router->request($context);
-if ($context->response->isRedir()) {
-$context->response->send();
-} else {
-                $this->controller->request($context);
-}
+                if ($context->response->isRedir()) {
+                                $context->response->send();
+                } else {
+                                $this->controller->request($context);
+                }
 
                 $this->router->afterRequest(['context' => $context]);
             }
@@ -4336,22 +4336,22 @@ class Classes extends Items
         return new $info['class']();
     }
 
-public function addNamespace(string $ns, string $path)
-{
-$this->namespaces[$ns] = $path;
-$this->save();
-}
+    public function addNamespace(string $ns, string $path)
+    {
+        $this->namespaces[$ns] = $path;
+        $this->save();
+    }
 
-public function deleteNamespace(string $ns): bool
-{
-if (isset($this->namespaces[$ns])) {
-unset($this->namespaces[$ns]);
-$this->save();
-return true;
-}
+    public function deleteNamespace(string $ns): bool
+    {
+        if (isset($this->namespaces[$ns])) {
+            unset($this->namespaces[$ns]);
+            $this->save();
+            return true;
+        }
 
-return false;
-}
+        return false;
+    }
 
     public function add($class, $filename, $deprecatedPath = false)
     {

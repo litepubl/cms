@@ -254,20 +254,20 @@ trait Factory
         return $admin->parseArg($admin->templates['confirmform'], $args);
     }
 
-/*
-* method can used as: extract($this->getStdInstances());
-*/
-public function getStdInstances(): array
-{
-return [
-'result' => '',
-'lang' => $this->getLang(),
-'admin' => $this->adminTheme,
-'theme' => $this->theme,
-'args' => $this->newArgs(),
-'id' => $this->idGet(),
-];
-}
+    /*
+    * method can used as: extract($this->getStdInstances());
+    */
+    public function getStdInstances(): array
+    {
+        return [
+        'result' => '',
+        'lang' => $this->getLang(),
+        'admin' => $this->adminTheme,
+        'theme' => $this->theme,
+        'args' => $this->newArgs(),
+        'id' => $this->idGet(),
+        ];
+    }
 }
 
 //FileList.php
@@ -281,22 +281,22 @@ use litepubl\view\Args;
 class FileList
 {
     public $onFilePerm;
-private $adminTheme;
+    private $adminTheme;
 
-public function __construct(Admin $adminTheme)
-{
-$this->adminTheme = $adminTheme;
-}
+    public function __construct(Admin $adminTheme)
+    {
+        $this->adminTheme = $adminTheme;
+    }
 
-public function getFiles()
-{
-return Files::i();
-}
+    public function getFiles()
+    {
+        return Files::i();
+    }
 
     public function get(array $list): string
     {
         $files = $this->getFiles();
-$app = $this->adminTheme->getApp();
+        $app = $this->adminTheme->getApp();
         $args = new Args();
         $args->fileperm = '';
 
