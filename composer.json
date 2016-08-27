@@ -1,32 +1,38 @@
 {
-    "name": "litepubl/cms",
-    "type": "project",
-"version": "7.04.0",
+    "name": "litepubl\/cms",
+    "type": "litepubl-core",
+    "version": "7.04.0",
     "description": "Fast powerfull CMS",
-    "keywords": ["CMS","framework", "blog"],
-    "homepage": "https://github.com/litepubl/cms",
+    "keywords": [
+        "CMS",
+        "framework",
+        "blog"
+    ],
+    "homepage": "https:\/\/github.com\/litepubl\/cms",
     "license": "MIT",
     "authors": [
         {
             "name": "Vladimir Yushko",
             "email": "yarrowsoft@gmail.com",
-            "homepage": "http://litepublisher.com",
+            "homepage": "http:\/\/litepublisher.com",
             "role": "Developer"
         }
     ],
     "support": {
         "email": "yarrowsoft@gmail.com",
-"source": "https://github.com/litepubl/cms/releases",
-"doc": "http://litepublisher.ru/"
+        "source": "https:\/\/github.com\/litepubl\/cms\/releases",
+        "doc": "http:\/\/litepublisher.ru\/"
     },
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.00.0",
         "ext-mysqli": "*",
-        "ext-dom": "*"
+        "ext-dom": "*",
+        "litepubl\/cms-composer-installer": "*"
     },
     "autoload": {
-        "psr-0": {
-            "Monolog": "src"
+        "psr-4": {
+            "litepubl\\": "lib\/",
+            "litepubl\\plugins\\": "plugins\/"
         }
     }
 }
