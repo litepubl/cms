@@ -439,9 +439,9 @@ class Classes extends Items
         return false;
     }
 
-    public function subSpace(string $namespace, string $root)
+    public function subSpace(string $namespace, string $root): string
     {
-        return str_replace('\\', DIRECTORY_SEPARATOR, strtolower(substr($namespace, strlen($root) + 1)));
+        return str_replace('\\', DIRECTORY_SEPARATOR, substr($namespace, strlen($root) + 1));
     }
 
     public function exists(string $class): bool
