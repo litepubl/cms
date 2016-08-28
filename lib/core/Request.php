@@ -33,7 +33,7 @@ class Request
             if ($app->site->q == '?') {
                 $this->url = substr($url, strlen($app->site->subdir));
             } else {
-                $this->url = $_GET['url'];
+                $this->url = $this->getArg('url', '');
             }
         } else {
             $this->url = '';
@@ -71,9 +71,10 @@ class Request
         return $_POST;
     }
 
-    public function getArg($name, $default = false)
+    public function getArg(string $name, $default = false)
     {
-        return isset($_GET[$name]) ? $_GET[$name] : $default;
+$get = $this->getGet();
+        return $get[$name] ?? $default;
     }
 
     public function getNextPage()
@@ -92,10 +93,9 @@ class Request
         return $this->getApp()->site->url . rtrim($url, '/') . '/page/' . ($this->page - 1) . '/';
     }
 
-    public function signedRef()
+    public function signedRef(): bool
     {
-        if (isset($_GET['ref'])) {
-            $ref = $_GET['ref'];
+        if ($ref = $this->getArg('ref')) {
             $url = $this->url;
             $url = substr($url, 0, strpos($url, '&ref='));
             $app = $this->getApp();
@@ -103,9 +103,11 @@ class Request
                 return true;
             }
         }
+
+return false;
     }
 
-    public function isXXX()
+    public function isXXX(): bool
     {
         if ($this->signedRef()) {
             return false;
@@ -120,7 +122,7 @@ class Request
         return $host != $this->host;
     }
 
-    public function checkAttack()
+    public function checkAttack(): bool
     {
         return $this->getApp()->options->xxxcheck && $this->isXXX();
     }
