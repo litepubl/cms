@@ -32,9 +32,9 @@ $i->wantTo('Wait finish update');
 $i->wantTo('Check errors');
 $text = htmlspecialchars_decode($i->getVisibleText());
 foreach (['exception', 'Parse error', 'Fatal error', 'Notice: Undefined'] as $err) {
-if (strpos($text, $err) !== false) {
-$i->assertTrue(false, $err);
-}
+    if (strpos($text, $err) !== false) {
+        $i->assertTrue(false, $err);
+    }
 }
 
 $service->screenshot('updated');
