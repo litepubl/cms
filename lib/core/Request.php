@@ -73,7 +73,7 @@ class Request
 
     public function getArg(string $name, $default = false)
     {
-$get = $this->getGet();
+        $get = $this->getGet();
         return $get[$name] ?? $default;
     }
 
@@ -104,7 +104,7 @@ $get = $this->getGet();
             }
         }
 
-return false;
+        return false;
     }
 
     public function isXXX(): bool

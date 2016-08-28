@@ -18,11 +18,11 @@ class Sidebars extends \litepubl\core\Data
 {
     public $items;
 
-    public static function i($id = 0)
+    public static function i(int $id = 0)
     {
         $result = static ::iGet(get_called_class());
         if ($id) {
-            $schema = Schema::i((int)$id);
+            $schema = Schema::i($id);
             $result->items = & $schema->sidebars;
         }
 
@@ -45,12 +45,12 @@ class Sidebars extends \litepubl\core\Data
         Schema::i()->save();
     }
 
-    public function add($id)
+    public function add(int $id)
     {
         $this->insert($id, false, 0, -1);
     }
 
-    public function insert($id, $ajax, $index, $order)
+    public function insert(int $id, $ajax, int $index, int $order)
     {
         if (!isset($this->items[$index])) {
             return $this->error("Unknown sidebar $index");
@@ -68,7 +68,7 @@ class Sidebars extends \litepubl\core\Data
         $this->save();
     }
 
-    public function remove($id)
+    public function remove(int $id)
     {
         if ($pos = static ::getpos($this->items, $id)) {
             Arr::delete($this->items[$pos[0]], $pos[1]);
@@ -87,7 +87,7 @@ class Sidebars extends \litepubl\core\Data
         return false;
     }
 
-    public function deleteClass($classname)
+    public function deleteClass(string $classname)
     {
         $widgets = Widgets::i();
         if ($id = $widgets->class2id($classname)) {
