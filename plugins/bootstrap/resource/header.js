@@ -157,7 +157,7 @@
 
   });
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.headereditor = new litepubl.Headereditor();
   });
 }(jQuery, litepubl, window));

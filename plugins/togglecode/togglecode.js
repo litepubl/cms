@@ -5,7 +5,7 @@
 * and GPL (gpl.txt) licenses.
 **/
 
-  $(document).ready(function() {
+  $(function() {
 var html = '<h4><a class="togglecode" href="">' + lang.widgetlang.collapse + '</a></h4>';
 $("code").each(function() {
 //alert($(this).before(html)

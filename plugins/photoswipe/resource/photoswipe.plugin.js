@@ -7,7 +7,7 @@
  *  version   7.04
   */
 
-(function($, litepubl, document) {
+(function($, litepubl) {
   'use strict';
 
   litepubl.photoswipePlugin = Class.extend({
@@ -324,8 +324,8 @@
 
   });
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.photoswipe = new litepubl.photoswipePlugin($(".photo"));
   });
 
-})(jQuery, litepubl, document);
+})(jQuery, litepubl);

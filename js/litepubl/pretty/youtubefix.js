@@ -8,8 +8,8 @@
   */
 
 ;
-(function($, document, window) {
-  $(document).ready(function() {
+(function($, window) {
+  $(function() {
     window.setTimeout(function() {
       var prettyClose = $.prettyPhoto.close;
       $.prettyPhoto.close = function() {
@@ -26,4 +26,4 @@
       };
     }, 20);
   });
-}(jQuery, document, window));
+}(jQuery, window));

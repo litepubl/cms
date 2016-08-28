@@ -7,7 +7,7 @@
  *  version   7.04
   */
 
-(function($, document) {
+(function($) {
   'use strict';
 
   function likebuttons(holder) {
@@ -61,8 +61,8 @@
     holder.append(html);
   }
 
-  $(document).ready(function() {
+  $(function() {
     likebuttons($("#likebuttons-container"));
   });
 
-})(jQuery, document);
+})(jQuery);

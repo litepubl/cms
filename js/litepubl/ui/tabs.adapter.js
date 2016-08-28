@@ -7,7 +7,7 @@
  *  version   7.04
   */
 
-(function($, document, litepubl) {
+(function($, litepubl) {
   'use strict';
 
   litepubl.ui = litepubl.ui || {};
@@ -98,8 +98,8 @@
 
   });
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.tabs = new litepubl.ui.Tabs();
   });
 
-})(jQuery, document, litepubl);
+})(jQuery, litepubl);

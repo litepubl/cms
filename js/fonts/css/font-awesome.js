@@ -5,8 +5,8 @@
  * You can use one license on one website
  **/
 
-(function($, document) {
-  $(document).ready(function() {
+(function($) {
+  $(function() {
     $.load_css(ltoptions.files + "/js/fonts/css/font-awesome.min.css?v=4.6.3");
   });
-})(jQuery, document);
+})(jQuery);

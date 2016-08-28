@@ -53,7 +53,7 @@
     }
   });
 
-  $(document).ready(function() {
+  $(function() {
     if (ltoptions.theme.comments.form.length) {
       litepubl.commentquote = new litepubl.Commentquote();
     }

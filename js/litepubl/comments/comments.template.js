@@ -7,10 +7,10 @@
  *  version   7.04
   */
 
-(function($, document, ltoptions) {
+(function($, ltoptions) {
   'use strict';
 
-  $(document).ready(function() {
+  $(function() {
     var theme = ltoptions.theme;
     theme.comments = $.extend({
       comments: "#commentlist",
@@ -48,4 +48,4 @@
       comtheme.editor = comtheme.form.find(comtheme.editor);
     }
   });
-}(jQuery, document, ltoptions));
+}(jQuery, ltoptions));

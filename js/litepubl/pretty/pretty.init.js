@@ -8,8 +8,8 @@
   */
 
 ;
-(function($, document) {
-  $(document).ready(function() {
+(function($) {
+  $(function() {
     $("a[rel^='prettyPhoto']").prettyPhoto({
       social_tools: false
     });
@@ -23,4 +23,4 @@
     };
 
   });
-}(jQuery, document));
+}(jQuery));

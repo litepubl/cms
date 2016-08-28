@@ -86,7 +86,7 @@
 
   }); //posteditor
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.posteditor = new litepubl.Posteditor();
   });
 

@@ -40,7 +40,7 @@
     e.stopPropagation()
   }
 
-  $(document).ready(function() {
-    $(document).on('keydown.tab.data-api', '[data-toggle="tab"], [data-toggle="pill"]', $.fn.tab.Constructor.prototype.keydown)
+  $(function() {
+    $(document).on('keydown.tab.data-api', '[data-toggle="tab"], [data-toggle="pill"]', $.fn.tab.Constructor.prototype.keydown);
   });
 })(jQuery, document);

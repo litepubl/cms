@@ -10,7 +10,7 @@
 (function($) {
   'use strict';
 
-  $(document).ready(function() {
+  $(function() {
 
     function set_lowvision(on) {
       var method = on ? "addClass" : "removeClass";

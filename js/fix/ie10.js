@@ -5,12 +5,12 @@
  * and GPL (gpl.txt) licenses.
  **/
 
-(function($, document) {
+(function($) {
   'use strict';
 
   if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-    $(document).ready(function() {
+    $(function() {
       $('<style type="text/css">@-ms-viewport{width:auto!important}</style>').appendTo("head:first");
     });
   }
-}(jQuery, document));
+}(jQuery));

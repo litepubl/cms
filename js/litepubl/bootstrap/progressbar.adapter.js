@@ -7,7 +7,7 @@
  *  version   7.04
   */
 
-(function($, document, litepubl) {
+(function($, litepubl) {
   'use strict';
 
   litepubl.bootstrap = litepubl.bootstrap || {};
@@ -40,8 +40,8 @@
 
   });
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.progressbar = new litepubl.bootstrap.Progressbar();
   });
 
-})(jQuery, document, litepubl);
+})(jQuery, litepubl);

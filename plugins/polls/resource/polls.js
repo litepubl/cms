@@ -77,7 +77,7 @@
 
   });
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.polls = new litepubl.Polls();
   });
 

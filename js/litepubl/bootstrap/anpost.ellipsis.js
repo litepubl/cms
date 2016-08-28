@@ -10,7 +10,7 @@
 (function($, document) {
   'use strict';
 
-  $(document).ready(function() {
+  $(function() {
     $(document).on("click.postcard", ".postcard-title", function(event) {
       if (event.target.nodeName.toLowerCase() != "a") {
         location.href = $(event.target).find("a").attr("href");

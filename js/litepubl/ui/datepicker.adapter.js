@@ -7,7 +7,7 @@
  *  version   7.04
   */
 
-(function($, document, litepubl) {
+(function($, litepubl) {
   'use strict';
 
   litepubl.ui = litepubl.ui || {};
@@ -55,8 +55,8 @@
     }
 
   });
-  $(document).ready(function() {
+  $(function() {
     litepubl.datepicker = new litepubl.ui.Datepicker();
   });
 
-})(jQuery, document, litepubl);
+})(jQuery, litepubl);

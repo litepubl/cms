@@ -7,10 +7,10 @@
  *  version   7.04
   */
 
-(function($, document) {
+(function($) {
   'use strict';
 
-  $(document).ready(function() {
+  $(function() {
     $("#addwidgets-header").on("click.addwidgets", function(e) {
       e.preventDefault();
 
@@ -33,4 +33,4 @@
       $.load_script(ltoptions.files + "/js/bootstrap/button.min.js");
     }
   });
-}(jQuery, document));
+}(jQuery));

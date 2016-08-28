@@ -44,7 +44,7 @@ function widget_toggle(node) {
   $(node).data("litepublisher_widget").slideToggle();
 }
 
-$(document).ready(function() {
+$(function() {
   window.setTimeout(function() {
     $("*[rel~='inlinewidget']").one('click', function() {
       widget_inline(this);

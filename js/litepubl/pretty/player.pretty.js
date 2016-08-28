@@ -8,7 +8,7 @@
   */
 
 ;
-(function($, document, window) {
+(function($, document) {
   'use strict';
 
   litepubl.Prettyplayer = litepubl.Mediaplayer.extend({
@@ -67,7 +67,7 @@
 
   }); //class
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.mediaplayer = new litepubl.Prettyplayer($("audio"), $(".videofile"));
   });
-})(jQuery, document, window);
+})(jQuery, document);

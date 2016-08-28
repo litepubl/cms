@@ -7,7 +7,7 @@
  *  version   7.04
   */
 
-(function($, document, window) {
+(function($, litepubl) {
   'use strict';
 
   litepubl.Calendar = Class.extend({
@@ -84,7 +84,7 @@
 
   }); //class
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.calendar = new litepubl.Calendar();
   });
-}(jQuery, document, window));
+}(jQuery, litepubl));

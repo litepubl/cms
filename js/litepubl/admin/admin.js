@@ -7,10 +7,10 @@
  *  version   7.04
   */
 
-(function($, document) {
+(function($) {
   'use strict';
 
-  $(document).ready(function() {
+  $(function() {
     $(".checkall").click(function() {
       $(this).closest("form").find("input[type='checkbox']").prop("checked", true);
       $(this).prop("checked", false);
@@ -55,4 +55,4 @@
 
   });
 
-}(jQuery, document));
+}(jQuery));

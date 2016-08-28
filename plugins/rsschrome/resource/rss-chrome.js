@@ -10,7 +10,7 @@
 ;
 (function($, document, window) {
   if (typeof(chrome) !== 'undefined') {
-    $(document).ready(function() {
+    $(function() {
       $(document).on("click.rss", "a[href$='.xml']", function() {
         var url = $(this).attr("href");
         $.confirmbox(lang.dialog.confirm, lang.rsschrome.warn, lang.rsschrome.follow, lang.dialog.cancel,

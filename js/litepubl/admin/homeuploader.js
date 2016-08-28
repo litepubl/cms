@@ -101,7 +101,7 @@
 
   });
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.homeuploader = new litepubl.Homeuploader();
   });
 }(jQuery, litepubl, window));

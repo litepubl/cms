@@ -158,7 +158,7 @@
 
   });
 
-  $(document).ready(function() {
+  $(function() {
     litepubl.tabs = new litepubl.bootstrap.Tabs();
   });
 
