@@ -317,7 +317,7 @@ class migrate
         \litepubl\core\litepubl::$app->router->updateFilter();
         \litepubl\core\litepubl::$app->poolStorage->commit();
 
-        $contact = \litepubl\pages\Contcts::i();
+        $contact = \litepubl\pages\Contacts::i();
         $contact->externalFunc($contact, 'update', null);
 
         \litepubl\core\litepubl::$app->cache->clear();
