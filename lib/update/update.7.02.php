@@ -14,8 +14,8 @@ use litepubl\Config;
 use litepubl\core\DBManager;
 use litepubl\core\Plugins;
 use litepubl\core\litepubl;
-use litepubl\plugins\photoswipeThumbnail\PhotoSwwipeThumbnail;
-use litepubl\plugins\photoswipe\Photoswipe;
+use litepubl\plugins\photoswipeThumbnail\PhotoSwipeThumbnail;
+use litepubl\plugins\photoswipe\PhotoSwipe;
 use litepubl\view\Js;
 
 function update702()
@@ -62,7 +62,7 @@ function update702()
     $plugin->delete('default');
     $plugin->add('photoswipe');
 
-    $thumb = PhotoSwwipeThumbnail::i();
+    $thumb = PhotoSwipeThumbnail::i();
     $thumb->deleteJs();
     $thumb->addJs();
 
