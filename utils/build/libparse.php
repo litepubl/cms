@@ -36,6 +36,7 @@ function ParseFile($filename)
     if (strend($filename, '.php')) {
         $s = replace_copyright($s, 'php');
         $s = sortUse($s);
+$s = str_replace('zerodate', 'ZERODATE', $s);
 
 /*
         if (strend($filename, '.install.php')) {
