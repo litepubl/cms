@@ -11,6 +11,7 @@
 namespace litepubl\plugins\catbread;
 
 use litepubl\view\Base;
+use litepubl\view\AutoVars;
 use litepubl\view\Lang;
 use litepubl\view\LangMerger;
 use litepubl\view\Parser;
@@ -25,6 +26,8 @@ function CatbreadInstall($self)
     $parser->parsed = $self->themeParsed;
     $parser->addtags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
     $parser->unlock();
+
+AutoVars::i()->add('catbread', get_class($self));
     Base::clearcache();
 }
 
@@ -37,6 +40,7 @@ function CatbreadUninstall($self)
     $parser->unbind($self);
     $parser->removeTags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
     $parser->unlock();
+AutoVars::i()->delete('catbread');
     Base::clearcache();
 }
 
