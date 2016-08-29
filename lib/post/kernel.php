@@ -1022,7 +1022,7 @@ class Post extends \litepubl\core\Item
 
     public function __isset($name)
     {
-        return parent::__isset($name) || array_key_exists($name, $this->cacheData) || array_key_exists($name, $this->childData) || array_key_exists($name, $this->rawData);
+        return parent::__isset($name) || array_key_exists($name, $this->cacheData) || array_key_exists($name, $this->childData) || array_key_exists($name, $this->rawData) || method_exists($this, 'getCache' . $name);
     }
 
     public function load()

@@ -134,8 +134,8 @@ class AutoVars extends \litepubl\core\Items
         parent::create();
         $this->basename = 'autovars';
         $this->defaults = [
-        'post' => '\litepubl\post\Post',
-        'files' => '\litepubl\post\Files',
+        'post' => '\litepubl\post\View',
+        'files' => '\litepubl\post\FileView',
         'archives' => '\litepubl\post\Archives',
         'categories' => '\litepubl\tag\Cats',
         'cats' => '\litepubl\tag\Cats',
@@ -150,14 +150,20 @@ class AutoVars extends \litepubl\core\Items
     public function get($name)
     {
         if (isset($this->items[$name])) {
-            return $this->app->classes->getInstance($this->items[$name]);
-        }
-
-        if (isset($this->defaults[$name])) {
-            return $this->app->classes->getInstance($this->defaults[$name]);
-        }
-
+            $result = $this->app->classes->getInstance($this->items[$name]);
+        } elseif (isset($this->defaults[$name])) {
+            $result = $this->app->classes->getInstance($this->defaults[$name]);
+        } else {
         return false;
+}
+
+if ($result instanceof ViewInterface) {
+return $result;
+} elseif (isset($result->view)) {
+return $result->view;
+} else {
+return $result;
+}
     }
 
     public function add(string $name, string $class)
