@@ -258,7 +258,7 @@ class Home extends SingleMenu
         $this->save();
     }
 
-    public function getMidletitle(): string
+    public function getMidleTitle(): string
     {
         if ($idcat = $this->midlecat) {
             return $this->getdb('categories')->getvalue($idcat, 'title');
@@ -267,7 +267,7 @@ class Home extends SingleMenu
         return '';
     }
 
-    public function getMidleposts(): array
+    public function getMidlePosts(): array
     {
         if (is_array($this->midleposts)) {
             return $this->midleposts;
@@ -293,7 +293,7 @@ class Home extends SingleMenu
     public function getMidle(): string
     {
         $result = '';
-        $items = $this->getmidleposts();
+        $items = $this->getMidlePosts();
         if (!count($items)) {
             return '';
         }
@@ -304,7 +304,7 @@ class Home extends SingleMenu
         $theme = $this->theme;
         $tml = $theme->templates['content.home.midle.post'];
         foreach ($items as $id) {
-            $vars->post = Post::i($id);
+            $vars->post = Post::i($id)->view;
             $result.= $theme->parse($tml);
             // has $author.* tags in tml
             if (isset($vars->author)) {
@@ -316,7 +316,7 @@ class Home extends SingleMenu
         if ($tml) {
             $args = new Args();
             $args->post = $result;
-            $args->midletitle = $this->midletitle;
+            $args->midletitle = $this->midleTitle;
             $result = $theme->parseArg($tml, $args);
         }
 
