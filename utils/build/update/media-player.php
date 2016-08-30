@@ -7,7 +7,7 @@ $context = stream_context_create([
     ]]);
 
 $s = file_get_contents($url, false, $context);
-$home = __DIR__ . '/../../';
+$home = __DIR__ . '/../../../';
 $tempfile = $home . 'temp/media.zip';
 file_put_contents($tempfile , $s);
 $zip = new \ZipArchive();
