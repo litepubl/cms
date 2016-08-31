@@ -43,9 +43,9 @@ $i->checkError();
 $i->wantTo('Check comment sent');
 $i->waitForText($text, 6);
 $ulogin->screenshot('comment');
+
 $i->wantTo('test ulogin without dialog box');
 $ulogin->logout();
-//$i->openPage('/admin/login/');
 sleep(2);
 codecept_debug($i->grabFromCurrentUrl());
 $ulogin->screenshot('login');

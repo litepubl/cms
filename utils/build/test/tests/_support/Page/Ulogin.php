@@ -49,7 +49,8 @@ class Ulogin extends Base
         $i = $this->tester;
         $i->wantTo("click $name button");
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
-        $i->waitForJS('return litepubl.authdialog.ulogin.status != \'wait\';', 7);
+        $i->waitForElement("[data-uloginbutton=$name]", 10);
+       $i->waitForJS('return litepubl.authdialog.ulogin.status != \'wait\';', 7);
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
         $i->wantTo('Click social network button');
         $i->executeJs("\$('[data-uloginbutton=$name]').click();");

@@ -87,7 +87,7 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
     public function getForm(): string
     {
-        if ($result = $this->getApp()->cache->getString($this->getbasename())) {
+        if ($result = $this->getApp()->cache->getString($this->getBaseName())) {
             return $result;
         }
 

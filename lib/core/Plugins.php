@@ -159,7 +159,9 @@ class Plugins extends Items
 
             $this->unlock();
             $classes->unlock();
+
             $this->added(['name' => $name]);
+$this->getApp()->cache->clear();
             return $name;
     }
 
@@ -209,6 +211,7 @@ class Plugins extends Items
         }
 
         $this->deleted(['name' => $name]);
+$this->getApp()->cache->clear();
         return true;
     }
 

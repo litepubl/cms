@@ -146,21 +146,22 @@ class Login extends Form
         $context->response->redir($url);
     }
 
-    public function createform(): string
+    public function createForm(): string
     {
         $theme = $this->theme;
         $result = $theme->parse($theme->templates['content.login']);
         //str::dump($result);
         $args = new Args();
 
-        if ($this->getApp()->options->usersenabled && $this->getApp()->options->reguser) {
+$options = $this->getApp()->options;
+        if ($options->usersenabled && $options->reguser) {
             $lang = Lang::admin('users');
             $form = new adminform($args);
             $form->title = $lang->regform;
             $form->action = '$site.url/admin/reguser/{$site.q}backurl=';
             $form->id = 'form-reguser';
-            $form->body = $theme->getinput('email', 'email', '', 'E-Mail');
-            $form->body.= $theme->getinput('text', 'name', '', $lang->name);
+            $form->body = $theme->getInput('email', 'email', '', 'E-Mail');
+            $form->body.= $theme->getInput('text', 'name', '', $lang->name);
             $form->submit = 'signup';
             $result.= $form->get();
         }
