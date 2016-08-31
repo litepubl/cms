@@ -70,19 +70,19 @@ class CacheFile extends BaseCache
 
     public function clear()
     {
-        $this->clearDir($path = $this->getdir());
+        $this->clearDir($this->getDir());
         parent::clear();
     }
 
     public function clearDir(string $dir)
     {
-        if ($h = @opendir($path)) {
-            while (false !== ($filename = @readdir($h))) {
+        if ($h = opendir($dir)) {
+            while (false !== ($filename = readdir($h))) {
                 if (($filename == '.') || ($filename == '..') || ($filename == '.svn')) {
                     continue;
                 }
 
-                $file = $path . $filename;
+                $file = $dir . $filename;
                 if (is_dir($file)) {
                     $this->clearDir($file . DIRECTORY_SEPARATOR);
                     unlink($file);
