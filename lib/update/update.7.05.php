@@ -10,7 +10,6 @@
 
 namespace litepubl\update;
 
-use litepubl\Config;
 use litepubl\core\DBManager;
 use litepubl\plugins\ulogin\Ulogin;
 
