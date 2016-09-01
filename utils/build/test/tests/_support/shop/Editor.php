@@ -8,15 +8,21 @@
  * @version   7.06
   */
 
-namespace Page;
+namespace shop;
 
-class Simpler extends Editor 
+class Editor extends \Page\Editor 
 {
-    const URL = '/admin/shop/products/simpler/';
+    const URL = '/admin/shop/products/editor/';
     public $price = '#text-price';
-    public $gtin = '#text-gtin';
     public $currency = '#combo-currency';
-    public $cat = '#combo-cat';
+    public $gtin = '#text-gtin';
+public $sale_disabled = '#checkbox-sale_disabled',
+public $sale_price = '#text-sale_price';
+public $availability = '#combo-availability';
+public $cond = '#combo-cond';
+public $quant = '#text-product_quant';
+public $mpn = '#text-mpn';
+public $sku = '#text-sku';
 
     public function __construct(\AcceptanceTester $I, string $screenshotName = '')
     {

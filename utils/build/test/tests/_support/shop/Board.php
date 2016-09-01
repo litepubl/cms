@@ -10,7 +10,7 @@
 
 namespace shop;
 
-class Board extends \page\Base
+class Board extends \Page\Base
 {
     public $url = '/admin/shop/';
     public $failUrl = '/admin/cabinet/fail/';
