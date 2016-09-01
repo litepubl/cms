@@ -122,7 +122,6 @@ class Plugins extends Menu
             $plugins = PluginItems::i();
         if (!isset($_GET['plugin'])) {
             $list = array_keys($_POST);
-            array_pop($list);
 
             try {
                 $plugins->update($list);

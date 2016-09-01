@@ -272,6 +272,7 @@ $this->getApp()->cache->clear();
     public function update(array $list)
     {
         $add = array_diff($list, array_keys($this->items));
+        $add = array_intersect($add, array_keys($this->getDirNames()));
         $delete = array_diff(array_keys($this->items), $list);
         $delete = array_intersect($delete, array_keys($this->getDirNames()));
 

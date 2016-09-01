@@ -34,7 +34,9 @@ foreach ($list as $j => $url) {
     $i->wantTo("Test page $url");
     $i->amOnUrl($url);
     $i->checkError();
+$i->waitForElement('body', 10);
     $admin->screenShot(str_replace('/', '-', trim($url, '/')));
     $admin->submit();
     $i->checkError();
+$i->waitForElement('body', 10);
 }
