@@ -60,16 +60,16 @@ class Announce extends \litepubl\core\Events
         $items = $r['items'];
         if (count($items)) {
             Posts::i()->loadItems($items);
-            $tml = $theme->templates['content.excerpts.' . ($schema->postannounce == 'excerpt' ? 'excerpt' : $schema->postannounce . '.excerpt')];
+
             $vars = new Vars();
             $vars->lang = Lang::i('default');
 
             foreach ($items as $id) {
                 $post = Post::i($id);
                 $view = $post->view;
-                $view->setTheme($theme);
                 $vars->post = $view;
-                $result.= $theme->parse($tml);
+                $view->setTheme($theme);
+                $result.= $view->getAnnounce($schema->postannounce);
 
                 // has $author.* tags in tml
                 if (isset($vars->author)) {
