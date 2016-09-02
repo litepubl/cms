@@ -13,9 +13,7 @@ namespace shop;
 class BuyPage extends \Page\Base
 {
     public $url = '/admin/shop/';
-    public $failUrl = '/admin/cabinet/fail/';
-    public $cabinetUrl = '/admin/cabinet/';
-public $error = '.text-warning';
+public $productLink = '.product-link';
 
 public function check(string $name)
 {

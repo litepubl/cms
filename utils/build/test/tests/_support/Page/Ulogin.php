@@ -116,13 +116,13 @@ public $deleteButton = '#submitbutton-delete';
         $data = $this->load('yandex');
         $i = $this->tester;
         $i->waitForElementVisible($this->yandexLogin, 10);
-        $i->screenshot('20.ulogin.01auth');
+        $i->screenshot('yandex');
         $i->fillField($this->yandexLogin, $data->login);
         $i->fillField($this->yandexPassword, $data->password);
         $i->wantTo('Auth app');
         $i->click($this->yandexSubmit);
-        $i->screenshot('20.ulogin.03allow');
-        $i->savehtml('auth');
+        $i->screenshot('allow');
+        //$i->savehtml('auth');
         $i->click($this->yandexAllow);
     }
 

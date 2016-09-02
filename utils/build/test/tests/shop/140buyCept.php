@@ -8,16 +8,18 @@
  * @version   7.07
   */
 
+use shop\BuyPage;
 use Page\Ulogin;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test purchase');
-$ulogin = new Ulogin($i, '140buy');
+$buypage = new BuyPage($i, '140buypage');
+$ulogin = new Ulogin($i, $buypage->screenshotName );
 $ulogin->logout();
-$data = $comment->load('comment');
+$data = $buypate->load('buypate');
 $i->openPage('/');
 $i->wantTo('Open first product');
-$i->click($comment->postlink);
+$i->click($buypage->productLink);
 $i->waitForJs('return (\'litepubl\' in window) && (\'authdialog\' in window.litepubl);', 7);
 $i->wantTo('Open auth dialog');
 $ulogin->screenshot('post');

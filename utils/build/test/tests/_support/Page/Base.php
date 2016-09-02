@@ -17,6 +17,7 @@ class Base
     public $loginUrl = '/admin/login/';
     public $logoutUrl = '/admin/logout/';
     public $updateButton = '#submitbutton-update';
+    public $postlink= '.post-bookmark';
     public $screenshotName = '00base';
     protected $screenshotIndex = 1;
     protected $tester;
