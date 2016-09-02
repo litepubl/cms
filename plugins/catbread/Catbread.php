@@ -39,7 +39,7 @@ class Catbread extends \litepubl\core\Plugin
 
     public function beforeCat(Event $event)
     {
-        $cats = $this->cats;
+        $cats = $event->target;
         $idcat = $cats->id;
         if (!$idcat) {
             return;
