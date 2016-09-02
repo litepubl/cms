@@ -9,6 +9,7 @@
   */
 
 namespace shop;
+use test\config;
 
 class CommonEditor extends \Page\Editor 
 {
