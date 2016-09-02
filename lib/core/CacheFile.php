@@ -75,7 +75,7 @@ class CacheFile extends BaseCache
         parent::clear();
     }
 
-    public function clearDir(string $dir)
+    public function clearDir(string $path)
     {
         if ($h = @opendir($path)) {
             while (false !== ($filename = @readdir($h))) {

@@ -16,7 +16,7 @@ use litepubl\view\Css;
 use litepubl\view\Js;
 use litepubl\view\Parser;
 
-class PhotoSwwipeThumbnail extends \litepubl\core\Plugin
+class PhotoSwipeThumbnail extends \litepubl\core\Plugin
 {
 
     public function install()
