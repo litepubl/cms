@@ -15,8 +15,8 @@ use litepubl\view\AutoVars;
 
 function update706()
 {
-$plugins = Plugins::i();
-if (isset($plugins->items['catbread'])) {
-AutoVars::i()->add('catbread', 'litepubl\plugins\catbread\CatBread');
-}
+    $plugins = Plugins::i();
+    if (isset($plugins->items['catbread'])) {
+        AutoVars::i()->add('catbread', 'litepubl\plugins\catbread\CatBread');
+    }
 }

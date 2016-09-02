@@ -221,12 +221,12 @@ class App
         return $this->getLogManager()->logger;
     }
 
-public function log(string $mesg, array $context = [])
-{
-if (Config::$debug) {
-$this->getLogger()->debug($mesg, $context);
-}
-}
+    public function log(string $mesg, array $context = [])
+    {
+        if (Config::$debug) {
+            $this->getLogger()->debug($mesg, $context);
+        }
+    }
 
     public function logException(\Throwable $e)
     {

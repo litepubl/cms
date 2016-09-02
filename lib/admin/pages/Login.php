@@ -153,7 +153,7 @@ class Login extends Form
         //str::dump($result);
         $args = new Args();
 
-$options = $this->getApp()->options;
+        $options = $this->getApp()->options;
         if ($options->usersenabled && $options->reguser) {
             $lang = Lang::admin('users');
             $form = new adminform($args);

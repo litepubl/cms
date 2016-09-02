@@ -27,7 +27,7 @@ function CatbreadInstall($self)
     $parser->addtags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
     $parser->unlock();
 
-AutoVars::i()->add('catbread', get_class($self));
+    AutoVars::i()->add('catbread', get_class($self));
     Base::clearcache();
 }
 
@@ -40,7 +40,7 @@ function CatbreadUninstall($self)
     $parser->unbind($self);
     $parser->removeTags('plugins/catbread/resource/theme.txt', 'plugins/catbread/resource/theme.ini');
     $parser->unlock();
-AutoVars::i()->delete('catbread');
+    AutoVars::i()->delete('catbread');
     Base::clearcache();
 }
 

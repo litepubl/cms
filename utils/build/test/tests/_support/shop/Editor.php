@@ -10,12 +10,9 @@
 
 namespace shop;
 
-class Editor extends \Page\Editor 
+class Editor extends CommonEditor
 {
     const URL = '/admin/shop/products/editor/';
-    public $price = '#text-price';
-    public $currency = '#combo-currency';
-    public $gtin = '#text-gtin';
 public $sale_disabled = '#checkbox-sale_disabled',
 public $sale_price = '#text-sale_price';
 public $availability = '#combo-availability';
@@ -24,17 +21,14 @@ public $quant = '#text-product_quant';
 public $mpn = '#text-mpn';
 public $sku = '#text-sku';
 
-    public function __construct(\AcceptanceTester $I, string $screenshotName = '')
-    {
-parent::__construct($I, $screenshotName);
-$this->url = static::URL;
-}
-
     public function fillProduct(float $price, int $cat)
     {
         $i = $this->tester;
         $i->fillField($this->price, $price);
-        $i->fillField($this->content, $content);
+}
+
+}
+
     }
 //$i->selectOption($this->cat, $cat);
 $i->executeJs("\$('[value=$cat]', '$this->cat').prop('select', true);");

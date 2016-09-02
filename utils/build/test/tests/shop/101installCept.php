@@ -17,3 +17,4 @@ $plugin->install('jslogger', 160);
 $plugin->install('base', 160);
 $plugin->uninstall('base');
 $plugin->install('base', 160);
+$plugin->install('real', 160);

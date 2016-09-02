@@ -161,8 +161,8 @@ class Plugins extends Items
             $classes->unlock();
 
             $this->added(['name' => $name]);
-$this->getApp()->log(sprintf('Plugin %s added', $name));
-$this->getApp()->cache->clear();
+            $this->getApp()->log(sprintf('Plugin %s added', $name));
+            $this->getApp()->cache->clear();
             return $name;
     }
 
@@ -212,8 +212,8 @@ $this->getApp()->cache->clear();
         }
 
         $this->deleted(['name' => $name]);
-$this->getApp()->log(sprintf('Plugin %s deleted', $name));
-$this->getApp()->cache->clear();
+        $this->getApp()->log(sprintf('Plugin %s deleted', $name));
+        $this->getApp()->cache->clear();
         return true;
     }
 

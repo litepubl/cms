@@ -8,7 +8,7 @@
  * @version   7.06
   */
 
-use shop\Editor;
+use shop\Simpler;
 use test\config;
 
 $i = new AcceptanceTester($scenario);
@@ -20,7 +20,7 @@ $data = $editor->load('simpler');
 $i->wantTo('Open new simpler editor');
 $editor->open();
 $editor->screenShot('new');
-$editor->upload('img1.jpg');
+$editor->uploadImage();
 $i->checkError();
 
 $i->wantTo('Fill title and content');
