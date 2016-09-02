@@ -154,16 +154,16 @@ class AutoVars extends \litepubl\core\Items
         } elseif (isset($this->defaults[$name])) {
             $result = $this->app->classes->getInstance($this->defaults[$name]);
         } else {
-        return false;
-}
+            return false;
+        }
 
-if ($result instanceof ViewInterface) {
-return $result;
-} elseif (isset($result->view)) {
-return $result->view;
-} else {
-return $result;
-}
+        if ($result instanceof ViewInterface) {
+                return $result;
+        } elseif (isset($result->view)) {
+                return $result->view;
+        } else {
+                return $result;
+        }
     }
 
     public function add(string $name, string $class)

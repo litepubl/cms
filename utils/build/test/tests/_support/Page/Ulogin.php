@@ -5,7 +5,7 @@
  * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.06
+ * @version   7.07
   */
 
 namespace Page;
@@ -16,6 +16,8 @@ class Ulogin extends Base
     public $mailruLogin = '#login';
     public $mailruPassword = '#password';
     public $mailruSubmit = 'Log in and allow';
+public $usersUrl = '/admin/users/';
+public $deleteButton = '#submitbutton-delete';
 
     public $yandexLogin = '#login';
     public $yandexPassword = '#passwd';
@@ -123,4 +125,14 @@ class Ulogin extends Base
         $i->savehtml('auth');
         $i->click($this->yandexAllow);
     }
+
+public function deleteUser()
+{
+        $this->open($this->usersUrl);
+        $i = $this->tester;
+        $i->wantTo('Delete last user');
+        $i->executeJs('$("[name^=\'user-\']").prop("checked", true)');
+        $i->click($this->deleteButton);
+        $i->checkError();
+}
 }

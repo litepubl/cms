@@ -20,5 +20,5 @@ echo file_get_contents('http://cms.cms/utils/build/libparse.php?dir=js', false, 
 flush();
 echo file_get_contents('http://cms.cms/utils/build/libparse.php?dir=plugins', false, $context);
 flush();
-//echo file_get_contents('http://cms.cms/utils/build/libparse.php?dir=geo', false, $context);
+echo file_get_contents('http://cms.cms/utils/build/libparse.php?dir=test', false, $context);
 flush();

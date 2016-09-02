@@ -52,16 +52,16 @@ class Announce extends \litepubl\core\Events
         $items = $r['items'];
         if (count($items)) {
             Posts::i()->loadItems($items);
-            $tml = $theme->templates['content.excerpts.' . ($schema->postannounce == 'excerpt' ? 'excerpt' : $schema->postannounce . '.excerpt')];
+
             $vars = new Vars();
             $vars->lang = Lang::i('default');
 
             foreach ($items as $id) {
                 $post = Post::i($id);
                 $view = $post->view;
-                $view->setTheme($theme);
                 $vars->post = $view;
-                $result.= $theme->parse($tml);
+                $view->setTheme($theme);
+                $result.= $view->getAnnounce($schema->postannounce);
 
                 // has $author.* tags in tml
                 if (isset($vars->author)) {
@@ -2083,7 +2083,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $this->theme->parse($this->theme->templates['content.post.bookmark']);
     }
 
-    public function getRsscomments()
+    public function getRssComments(): string
     {
         return $this->getApp()->site->url . "/comments/$this->id.xml";
     }
@@ -2172,32 +2172,32 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $r['content'];
     }
 
-    public function getDate()
+    public function getDate(): string
     {
         return Lang::date($this->posted, $this->theme->templates['content.post.date']);
     }
 
-    public function getExcerptDate()
+    public function getExcerptDate(): string
     {
         return Lang::date($this->posted, $this->theme->templates['content.excerpts.excerpt.date']);
     }
 
-    public function getDay()
+    public function getDay(): string
     {
         return date($this->posted, 'D');
     }
 
-    public function getMonth()
+    public function getMonth(): string
     {
         return Lang::date($this->posted, 'M');
     }
 
-    public function getYear()
+    public function getYear(): string
     {
         return date($this->posted, 'Y');
     }
 
-    public function getMoreLink()
+    public function getMoreLink(): string
     {
         if ($this->moretitle) {
             return $this->parsetml('content.excerpts.excerpt.morelink');
@@ -2231,7 +2231,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         $this->context = $context;
     }
 
-    public function getPage()
+    public function getPage(): int
     {
         return $this->context->request->page;
     }
@@ -2334,10 +2334,10 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $this->parsetml('content.post');
     }
 
-    public function getRssLink()
+    public function getRssLink(): string
     {
         if ($this->hascomm) {
-            return $this->parsetml('content.post.rsslink');
+            return $this->parseTml('content.post.rsslink');
         }
         return '';
     }
@@ -2352,7 +2352,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $this->post->excerpt;
     }
 
-    public function getPrevNext()
+    public function getPrevNext(): string
     {
         $prev = '';
         $next = '';
@@ -2380,7 +2380,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $result;
     }
 
-    public function getCommentsLink()
+    public function getCommentsLink(): string
     {
         $tml = sprintf('<a href="%s%s#comments">%%s</a>', $this->getApp()->site->url, $this->getlastcommenturl());
         if (($this->comstatus == 'closed') || !$this->getApp()->options->commentspool) {
@@ -2395,7 +2395,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return sprintf('<?php echo litepubl\comments\Pool::i()->getLink(%d, \'%s\'); ?>', $this->id, $tml);
     }
 
-    public function getCmtCount()
+    public function getCmtCount(): string
     {
         $l = Lang::i()->ini['comment'];
         switch ($this->commentscount) {
@@ -2410,7 +2410,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
     }
 
-    public function getTemplateComments()
+    public function getTemplateComments(): string
     {
         $result = '';
         $countpages = $this->countpages;
@@ -2429,10 +2429,16 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $result;
     }
 
-    public function getHascomm()
+    public function getHasComm(): bool
     {
         return ($this->comstatus != 'closed') && ((int)$this->commentscount > 0);
     }
+
+    public function getAnnounce(string $announceType): string
+    {
+            $tmlKey = 'content.excerpts.' . ($announceType == 'excerpt' ? 'excerpt' : $announceType . '.excerpt');
+return $this->parseTml($tmlKey);
+}
 
     public function getExcerptContent(): string
     {
@@ -2458,7 +2464,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
     }
 
-    protected function getTeaser()
+    protected function getTeaser(): string
     {
         $content = $this->filtered;
         $tag = '<!--more-->';

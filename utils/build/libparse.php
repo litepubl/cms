@@ -290,6 +290,8 @@ default:
     parsedir(__DIR__ . '/test/tests/api' . DIRECTORY_SEPARATOR);
     parsedir(__DIR__ . '/test/tests/_support/page' . DIRECTORY_SEPARATOR);
     parsejs(__DIR__ . '/test/tests/_support/page/js' . DIRECTORY_SEPARATOR);
+    parsedir(__DIR__ . '/test/tests/shop/');
+    parsedir(__DIR__ . '/test/tests/_support/shop/' );
 }
 
 echo "<pre>\n";
