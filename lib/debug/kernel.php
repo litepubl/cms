@@ -14,8 +14,6 @@ foreach ([
 'StorageInc.php',
 //'storagejson.php',
 'StorageMemcache.php',
-
-//old storages
 'PoolStorage.php',
 'BaseCache.php',
 'CacheFile.php',

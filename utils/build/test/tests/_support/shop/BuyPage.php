@@ -14,11 +14,6 @@ class BuyPage extends \Page\Base
 {
     public $url = '/admin/shop/';
 public $productLink = '.product-link';
+public $buyButton = 'button[value=buybutton]';
 
-public function check(string $name)
-{
-$this->tester->wantTo("Exists $name page");
-$this->tester->dontSeeElement($this->error);
-$this->screenshot($name);
-}
 }

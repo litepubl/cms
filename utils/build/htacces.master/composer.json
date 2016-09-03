@@ -37,8 +37,5 @@
             "litepubl\\plugins\\": "plugins\/",
             "litepubl\\shop\\": "shop\/"
         }
-    },
-    "config": {
-        "optimize-autoloader": true
     }
 }
