@@ -15,5 +15,6 @@ class BuyPage extends \Page\Base
     public $url = '/admin/shop/';
 public $productLink = '.product-link';
 public $buyButton = 'button[value=buybutton]';
+public $cashButton = 'button[value=cash]';
 
 }

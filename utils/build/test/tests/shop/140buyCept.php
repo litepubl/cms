@@ -21,32 +21,17 @@ $i->openPage('/');
 $i->wantTo('Open first product');
 $i->click($buypage->productLink);
 $i->waitForJs('return (\'litepubl\' in window) && (\'authdialog\' in window.litepubl);', 7);
-$buypage->screenshot('product);
+$buypage->screenshot('product');
 
-$i->wantTo('Open auth dialog');
-$i->click($buypage->buyButton);
-$ulogin->click();
-$ulogin->screenshot('dialog');
-$ulogin->auth();
-$ulogin->waitForcloseDialog();
-$i->reloadPage();
-$text = $data->comment . time();
-$i->fillField($comment->comment, $text);
-$ulogin->screenshot('comment');
-$i->click($comment->submit);
-$i->checkError();
-$i->wantTo('Check comment sent');
-$i->waitForText($text, 6);
-$ulogin->screenshot('comment');
-
-$i->wantTo('test ulogin without dialog box');
-$ulogin->logout();
+$i->wantTo('Got to buy page');
+$currentUrl = $i->grabFromCurrentUrl();
+$i->click($buypage->cashButton);
 sleep(2);
-codecept_debug($i->grabFromCurrentUrl());
-$ulogin->screenshot('login');
+if ($currentUrl == $i->grabFromCurrentUrl()) {
 $ulogin->click();
+$buypage->screenshot('dialog');
+$ulogin->auth();
 $i->waitForUrlChanged(10);
-codecept_debug($i->grabFromCurrentUrl());
-$ulogin->logout();
-$plugin->uninstall('ulogin');
-$ulogin->screenshot('uninstall');
+}
+
+$i->savehtml('buypage');

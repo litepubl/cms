@@ -166,7 +166,6 @@ class Post extends \litepubl\core\Item
         $childTable = $db->prefix . $table;
         $list = implode(',', $items);
         $count = count($items);
-        static::getappinstance()->getlogmanager()->trace($list);
         return $db->res2items($db->query("select $childTable.* from $childTable where id in ($list) limit $count"));
     }
 
