@@ -382,17 +382,17 @@
     },
     {
         "name": "litepubl/cms-composer-installer",
-        "version": "v1.00.0",
-        "version_normalized": "1.00.0.0",
+        "version": "1.01.0",
+        "version_normalized": "1.01.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/litepubl/cms-composer-installer.git",
-            "reference": "ccc1b94eb54f7558e04bbfd24f27bcc090037dac"
+            "reference": "3283fdb309cbfe32b754e35fe5cebd64c8761004"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/litepubl/cms-composer-installer/zipball/ccc1b94eb54f7558e04bbfd24f27bcc090037dac",
-            "reference": "ccc1b94eb54f7558e04bbfd24f27bcc090037dac",
+            "url": "https://api.github.com/repos/litepubl/cms-composer-installer/zipball/3283fdb309cbfe32b754e35fe5cebd64c8761004",
+            "reference": "3283fdb309cbfe32b754e35fe5cebd64c8761004",
             "shasum": ""
         },
         "require": {
@@ -400,7 +400,7 @@
             "composer/installers": "*",
             "php": ">=7.00.0"
         },
-        "time": "2016-08-27 14:23:41",
+        "time": "2016-09-03 08:11:15",
         "type": "composer-plugin",
         "extra": {
             "class": "litepubl\\Composer\\Plugin"
