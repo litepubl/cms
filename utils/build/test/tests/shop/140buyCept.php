@@ -34,4 +34,22 @@ $ulogin->auth();
 $i->waitForUrlChanged(10);
 }
 
-$i->savehtml('buypage');
+if ($buypage->exists($buypage->editAddrButton)) {
+$i->click($buypage->editAddrButton);
+$i->checkError();
+}
+
+if ($buypage->isAddrEdit()) {
+$buypage->fillAddress($data->addr);
+$buypage->submit();
+$i->checkError();
+}
+
+if ($buypage->exists($buypage->noteEditor)) {
+//$i->executeJs("\$('$buypage->noteEditor').val('$data->note');");
+$i->fillField($buypage->noteEditor, $data->note);
+}
+
+if ($buypage->exists($buypage->continueButton)) {
+$i->click($buypage->continueButton);
+}

@@ -147,4 +147,10 @@ class Base
         $this->js('dialog.js');
         $this->tester->waitForJs('return !litepubl.dialogOpened;', 4);
     }
+
+public function exists(string $selector): bool
+{
+$selector = str_replace("'", '"', $selector);
+return $this->tester->executeJs("return \$('$selector').length;") > 0;
+}
 }

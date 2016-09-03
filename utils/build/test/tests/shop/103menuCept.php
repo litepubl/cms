@@ -29,9 +29,11 @@ foreach ($list as $j => $url) {
     $i->wantTo("Test page $url");
     $i->amOnUrl($url);
     $i->checkError();
+$i->waitForElement('body', 6);
     $admin->screenShot(str_replace('/', '-', trim($url, '/')));
     $admin->submit();
     $i->checkError();
+$i->waitForElement('body', 6);
 }
 
 $admin->open('/admin/cabinet/');
@@ -41,7 +43,9 @@ foreach ($list as $j => $url) {
     $i->wantTo("Test page $url");
     $i->amOnUrl($url);
     $i->checkError();
+$i->waitForElement('body', 6);
     $admin->screenShot(str_replace('/', '-', trim($url, '/')));
     $admin->submit();
     $i->checkError();
+$i->waitForElement('body', 6);
 }

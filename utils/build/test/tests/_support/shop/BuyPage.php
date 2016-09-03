@@ -16,5 +16,25 @@ class BuyPage extends \Page\Base
 public $productLink = '.product-link';
 public $buyButton = 'button[value=buybutton]';
 public $cashButton = 'button[value=cash]';
+public $editAddrButton = 'button[name=editaddr]';
+public $noteEditor = 'textarea[name^=note]';
+public $continueButton = 'button[name=continue]';
+
+public function getStep(): string
+{
+return $this->tester->executeJs('return $("input[name=step]").val();');
+}
+
+public function isAddrEdit(): bool
+{
+return 'address' == $this->getStep();
+}
+
+public function fillAddress(\StdClass $data)
+{
+foreach (get_object_vars($data) as $k => $v) {
+$this->tester->executeJs("\$('[name=$k]').val('$v');");
+}
+}
 
 }

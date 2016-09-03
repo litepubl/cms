@@ -1,2 +1,14 @@
 {
+"note": "Some note for order",
+"addr": {
+            "name": "Jhon",
+            "phone": "123456789",
+            "company": "unknown",
+            "street": "Sadovaya",
+            "city": "Moscow",
+            "postcode": "333444",
+            "state": "Oblast",
+            "country": "Russia",
+            "countrychar": "ru"
+}
 }
