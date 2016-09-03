@@ -25,12 +25,17 @@
     },
     "require": {
         "php": ">=7.00.0",
-        "litepubl\/cms-composer-installer": "*"
+        "litepubl\/cms-composer-installer": "*",
+        "monolog/monolog": "^1.19",
+        "psr/cache": "^1.0",
+        "zendframework/zend-diactoros": "^1.3",
+        "psr/http-message": "^1.0"
     },
     "autoload": {
         "psr-4": {
             "litepubl\\": "lib\/",
-            "litepubl\\plugins\\": "plugins\/"
+            "litepubl\\plugins\\": "plugins\/",
+            "litepubl\\shop\\": "shop\/"
         }
     }
 }

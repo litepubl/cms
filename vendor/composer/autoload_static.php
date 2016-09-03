@@ -7,6 +7,13 @@ namespace Composer\Autoload;
 class ComposerStaticInit3438bb66839edf332105693786c3d5eb
 {
     public static $prefixLengthsPsr4 = array (
+        'l' => 
+        array (
+            'litepubl\\shop\\' => 14,
+            'litepubl\\plugins\\' => 17,
+            'litepubl\\Composer\\' => 18,
+            'litepubl\\' => 9,
+        ),
         'Z' => 
         array (
             'Zend\\Diactoros\\' => 15,
@@ -20,9 +27,29 @@ class ComposerStaticInit3438bb66839edf332105693786c3d5eb
         array (
             'Monolog\\' => 8,
         ),
+        'C' => 
+        array (
+            'Composer\\Installers\\' => 20,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'litepubl\\shop\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/shop',
+        ),
+        'litepubl\\plugins\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/plugins',
+        ),
+        'litepubl\\Composer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/litepubl/cms-composer-installer/Composer',
+        ),
+        'litepubl\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/lib',
+        ),
         'Zend\\Diactoros\\' => 
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-diactoros/src',
@@ -38,6 +65,10 @@ class ComposerStaticInit3438bb66839edf332105693786c3d5eb
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Composer\\Installers\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
         ),
     );
 
