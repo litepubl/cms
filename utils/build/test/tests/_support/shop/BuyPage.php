@@ -19,6 +19,7 @@ public $cashButton = 'button[value=cash]';
 public $editAddrButton = 'button[name=editaddr]';
 public $noteEditor = 'textarea[name^=note]';
 public $continueButton = 'button[name=continue]';
+public $detailsButton = 'button[type=submit]';
 
 public function getStep(): string
 {

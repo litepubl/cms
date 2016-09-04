@@ -357,19 +357,11 @@ class Table
 
     public function date($date): string
     {
-        if ($date == Lang::ZERODATE) {
-            return Lang::i()->noword;
-        } else {
-            return Lang::date(strtotime($date), 'd F Y');
-        }
+return Lang::i()->getDate($date);
     }
 
     public function dateTime($date): string
     {
-        if ($date == Lang::ZERODATE) {
-            return Lang::i()->noword;
-        } else {
-            return Lang::date(strtotime($date), 'd F Y H:i');
-        }
+return Lang::i()->getDateTime($date);
     }
 }

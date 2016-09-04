@@ -52,4 +52,13 @@ $i->fillField($buypage->noteEditor, $data->note);
 
 if ($buypage->exists($buypage->continueButton)) {
 $i->click($buypage->continueButton);
+$i->checkError();
 }
+
+if ($buypage->exists($buypage->cashButton)) {
+$i->click($buypage->cashButton);
+$i->checkError();
+}
+
+$i->click($buypage->detailsButton);
+$i->checkError();
