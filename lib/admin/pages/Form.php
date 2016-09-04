@@ -64,7 +64,7 @@ class Form extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     public function request(Context $context)
     {
         $context->response->cache = false;
-        Lang::usefile('admin');
+        Lang::useFile('admin');
         $this->formresult = '';
         if (isset($_POST) && count($_POST)) {
             $this->formresult = $this->processForm();

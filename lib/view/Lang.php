@@ -166,7 +166,7 @@ $self = static ::i();
 
     public function check(string $name)
     {
-        if ($name) {
+        if (!$name) {
             $name = 'default';
         }
 
