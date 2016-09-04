@@ -101,4 +101,14 @@ class UList
         $result = $this->get($props);
         return str_replace('$site.url', $this->getApp()->site->url, $result);
     }
+
+public function props2links(array $props): array
+{
+$result = [];
+foreach ($props as $url => $title) {
+$result[] = sprintf('<a href="%s">%s</a>', $url, $title);
+}
+
+return $result;
+}
 }
