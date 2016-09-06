@@ -15,7 +15,7 @@ $i = new AcceptanceTester($scenario);
 $i->wantTo('Test simpler product editor');
 $editor = new Simpler($i, '120simpler');
 $lang = config::getLang();
-$data = $editor->load('simpler');
+$data = $editor->load('shop/simpler');
 
 $i->wantTo('Open new simpler editor');
 $editor->open();

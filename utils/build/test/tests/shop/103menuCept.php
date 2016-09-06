@@ -15,7 +15,7 @@ $i->wantTo('Test shop admin panel');
 $admin = new Admin($i, '103menu');
 $admin->open('/admin/shop/');
 
-$list = $admin->getLinks('shopForms');
+$list = $admin->getLinks('shop/forms');
 foreach ($list as $url) {
     $i->wantTo("Test form $url");
     $i->openPage('/admin/' . $url);

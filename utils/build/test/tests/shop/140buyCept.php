@@ -16,7 +16,7 @@ $i->wantTo('Test purchase');
 $buypage = new BuyPage($i, '140buypage');
 $ulogin = new Ulogin($i, $buypage->screenshotName );
 $buypage->logout();
-$data = $buypage->load('buypage');
+$data = $buypage->load('shop/buypage');
 $i->openPage('/');
 $i->wantTo('Open first product');
 $i->click($buypage->productLink);
@@ -51,6 +51,10 @@ $i->fillField($buypage->noteEditor, $data->note);
 }
 
 if ($buypage->exists($buypage->continueButton)) {
+$i->click($buypage->continueButton);
+$i->checkError();
+$i->click($buypage->backButton);
+$i->checkError();
 $i->click($buypage->continueButton);
 $i->checkError();
 }
