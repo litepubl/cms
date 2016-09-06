@@ -94,7 +94,6 @@ class Base
         }
 
         $i->click($tab);
-
         codecept_debug(var_export($i->executeJs('return litepubl.tabs.flagLoaded'), true));
         codecept_debug(var_export($i->executeJs('return litepubl.tabs.ajax'), true));
         $i->waitForJS('return litepubl.tabs.flagLoaded', 3);

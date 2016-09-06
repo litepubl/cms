@@ -21,15 +21,5 @@ public $quant = '#text-product_quant';
 public $mpn = '#text-mpn';
 public $sku = '#text-sku';
 
-    public function fillProduct(float $price, int $cat)
-    {
-        $i = $this->tester;
-        $i->fillField($this->price, $price);
-}
 
-}
-
-    }
-//$i->selectOption($this->cat, $cat);
-$i->executeJs("\$('[value=$cat]', '$this->cat').prop('select', true);");
 }
