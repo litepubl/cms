@@ -155,7 +155,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     public function getTheme(): Theme
     {
         if (!$this->themeInstance) {
-            $this->themeInstance = $this->post ? Schema::getSchema($this)->theme : Theme::context();
+            $this->themeInstance = $this->post ? $this->schema->theme : Theme::context();
         }
 
         $this->themeInstance->setvar('post', $this);
@@ -396,6 +396,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             }
         }
     }
+
+public function getSchema(): Schema
+{
+return Schema::getSchema($this);
+}
 
     //to override schema in post, id schema not changed
     public function getFileList(): string

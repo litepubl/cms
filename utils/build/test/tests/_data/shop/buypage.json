@@ -1,14 +1,14 @@
 {
-"note": "Some note for order",
+"note": "Моё примечаниеЖ не забудьте",
 "addr": {
-            "name": "Jhon",
+            "name": "Вася Пупкин",
             "phone": "123456789",
-            "company": "unknown",
-            "street": "Sadovaya",
-            "city": "Moscow",
+            "company": "Рога и копыта",
+            "street": "Красная площадь, дом 1",
+            "city": "Москва",
             "postcode": "333444",
-            "state": "Oblast",
-            "country": "Russia",
+            "state": "Москва",
+            "country": "Россия",
             "countrychar": "ru"
 }
 }
