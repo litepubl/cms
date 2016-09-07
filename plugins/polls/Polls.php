@@ -76,8 +76,8 @@ class Polls extends \litepubl\core\Items
             return '';
         }
 
-        if (Config::$debug) {
-            $this->getdb(static ::votes)->delete('iduser = ' . $this->getApp()->options->user);
+        if (Config::$debug && ($iduser = $this->getApp()->options->user)) {
+            $this->getDb(static ::votes)->delete('iduser = ' . $iduser);
         }
 
         $item = $this->getItem($id);

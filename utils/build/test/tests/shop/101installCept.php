@@ -10,11 +10,16 @@
 
 use Page\Plugin;
 
-return;
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test install and uninstall shop plugin');
 $plugin = new Plugin($i, '101install');
 $plugin->install('jslogger', 160);
+
+if ($i->executeJs('return $("input[name=base]").prop("checked");')) {
+    codecept_debug('Skip shop install');
+    return;
+}
+
 $plugin->install('base', 160);
 $plugin->uninstall('base');
 $plugin->install('base', 160);
