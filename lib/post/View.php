@@ -260,11 +260,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
         $args = new Args();
         $list = [];
-
         foreach ($items as $id) {
-            $item = $tags->getitem($id);
+            if ($id && ($item = $tags->getItem($id))) {
             $args->add($item);
             $list[] = $theme->parseArg($tmlitem, $args);
+}
         }
 
         $args->items = ' ' . implode($theme->templates[$tmlpath . '.divider'], $list);

@@ -66,7 +66,7 @@ class Login extends Form
         }
 
         $options = static ::getAppInstance()->options;
-        $iduser = $options->emailexists($email);
+        $iduser = $options->emailExists($email);
         if (!$iduser) {
             if (static ::confirm_reg($email, $password)) {
                 return;
@@ -75,7 +75,7 @@ class Login extends Form
             return Lang::get('login', 'unknownemail');
         }
 
-        if ($options->authpassword($iduser, $password)) {
+        if ($options->authPassword($iduser, $password)) {
             return;
         }
 
@@ -113,16 +113,16 @@ class Login extends Form
         $email = trim($_POST['email']);
         $password = trim($_POST['password']);
 
-        if ($mesg = static ::autherror($email, $password)) {
-            $this->formresult = $this->admintheme->geterr($mesg);
+        if ($mesg = static ::authError($email, $password)) {
+            $this->formresult = $this->admintheme->getErr($mesg);
             return;
         }
 
         $expired = isset($_POST['remember']) ? time() + 31536000 : time() + 8 * 3600;
         $cookie = Str::md5Uniq();
         $app = $this->getApp();
-        $app->options->setcookies($cookie, $expired);
-        $app->options->setcookie('litepubl_regservice', 'email', $expired);
+        $app->options->setCookies($cookie, $expired);
+        $app->options->setCookie('litepubl_regservice', 'email', $expired);
 
         $url = !empty($_GET['backurl']) ? $_GET['backurl'] : (!empty($_GET['amp;backurl']) ? $_GET['amp;backurl'] : (isset($_COOKIE['backurl']) ? $_COOKIE['backurl'] : ''));
 

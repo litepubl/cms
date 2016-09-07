@@ -311,11 +311,11 @@ class Options extends Events
         setcookie($name, $value, $expired, $this->getApp()->site->subdir . '/', false, '', $this->securecookie);
     }
 
-    public function setcookies($cookie, $expired)
+    public function setCookies(string $cookie, int $expired)
     {
-        $this->setcookie('litepubl_user_id', $cookie ? $this->idUser : '', $expired);
-        $this->setcookie('litepubl_user', $cookie, $expired);
-        $this->setcookie('litepubl_user_flag', $cookie && ('admin' == $this->group) ? 'true' : '', $expired);
+        $this->setCookie('litepubl_user_id', $cookie ? $this->idUser : '', $expired);
+        $this->setCookie('litepubl_user', $cookie, $expired);
+        $this->setCookie('litepubl_user_flag', $cookie && ('admin' == $this->group) ? 'true' : '', $expired);
 
         if ($this->idUser == 1) {
             $this->saveCookie($cookie, $expired);
