@@ -16,7 +16,6 @@ $i->wantTo('Test product editor');
 $editor = new Editor($i, '121editor');
 $lang = config::getLang();
 $data = $editor->load('shop/editor');
-check
 
 $i->wantTo('Open new editor');
 $editor->open();
@@ -27,15 +26,19 @@ $i->checkError();
 $i->wantTo('Fill title and content');
 $editor->fillTitleContent($data->title, $data->content);
 $editor->setPrice(2000);
-
 $editor->screenShot('title');
 
-
-
 $i->wantTo('Select category');
-$i->click($data->catalog);
+$i->click($editor->catTab);
+usleep(300000);
 $i->checkOption($data->hits);
 $editor->screenShot('category');
+
+$i->wantTo('Test stock tab');
+$i->click($editor->stockTab);
+usleep(300000);
+$i->fillField($editor->quant, 999999);
+$editor->screenShot('stock');
 
 $editor->submit();
 $editor->screenShot('saved');
