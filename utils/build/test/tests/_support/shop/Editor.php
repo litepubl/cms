@@ -15,6 +15,10 @@ class Editor extends CommonEditor
     const URL = '/admin/shop/products/editor/';
 public $sale_disabled = '#checkbox-sale_disabled';
 public $sale_price = '#text-sale_price';
+public $saleFrom = '#text-sale_from';
+public $saleFromTime = '#text-sale_from-time';
+public $saleTo = '#text-sale_to';
+public $saleToTime	 = '#text-sale_to-time';
 public $availability = '#combo-availability';
 public $cond = '#combo-cond';
 public $quant = '#text-product_quant';
