@@ -50,7 +50,9 @@ class Config
     'login' => 'database_user',
     'password' => '***',
     //table names prefix
-    'prefix' => 'prefix_'
+    'prefix' => 'prefix_',
+//mysql engine: InnoDB, MyISAM
+'engine' => '',
     ];
     */
 

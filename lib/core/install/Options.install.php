@@ -31,6 +31,7 @@ function installOptions($email, $language)
             'password' => '',
         'crypt' => '',
             'prefix' => config::$db['prefix'],
+'engine' => '',
         ];
     } else {
         $usehost = isset($_REQUEST['usehost']) ? ($_REQUEST['usehost'] == '1') : false;

@@ -36,9 +36,11 @@ class DBManager
     public function createTable($name, $struct)
     {
         if (! $this->engine) {
-            $this->engine = 'MyISAM'; // InnoDB
+$config = $this->getConfig();
+            $this->engine = isset($config['engine']) && !empty($config['engine']) ? $config['engine'] : 'MyISAM'; // InnoDB
         }
-        $this->deletetable($name);
+
+        $this->deleteTable($name);
         return $this->exec(
             "create table $this->prefix$name
     ($struct)

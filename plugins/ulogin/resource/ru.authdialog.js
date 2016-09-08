@@ -5,7 +5,7 @@
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
  *  version   7.07
-  */
+ */
 
 (function(window) {
   //window.lang= window.lang || {};
@@ -18,7 +18,7 @@
 
     reg: 'Я первый раз на сайте и мне нужно зарегистрироваться',
     login: 'Я уже регистрировался и уменя есть пароль',
-    lostpass: 'Я уже регистрировался, но я забыл пароль и мне нужно его восстановить',
+    lostpass: 'Я уже регистрировался, но забыл пароль и мне нужно его восстановить',
     name: 'Ваше имя',
     password: 'Пароль',
     regbutton: 'Зарегистрироваться',

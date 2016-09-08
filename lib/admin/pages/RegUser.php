@@ -241,8 +241,8 @@ class RegUser extends Form
 
     public function hostExists(string $host): bool
     {
-        if ($records = dns_get_record($host, \DNS_ANY)) {
-            return count($records);
+        if ($records = @dns_get_record($host, \DNS_ANY)) {
+            return is_array($records) && count($records);
         }
 
         return false;
