@@ -5,7 +5,7 @@
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
  *  version   7.07
-  */
+ */
 
 (function($, window, document) {
   'use strict';
@@ -189,7 +189,9 @@
   });
 
   $.ready2(function() {
-    if ("modal" in $.fn) $.bsdialog = new $.BootstrapDialog();
+    if ("modal" in $.fn) {
+      $.bootstrapDialog = new $.BootstrapDialog();
+    }
   });
 
 })(jQuery, window, document);

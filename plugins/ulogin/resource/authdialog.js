@@ -140,7 +140,7 @@
       if (status == 'error') status = 'danger';
       this.statusline.html($.parsetml(this.tml_status, {
         status: status,
-        icon: $.bsdialog.geticon(status),
+        icon: $.bootstrapDialog.geticon(status),
         text: text
       }));
     },
