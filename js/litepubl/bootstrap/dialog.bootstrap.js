@@ -5,7 +5,7 @@
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
  *  version   7.07
-  */
+ */
 
 (function($, window, document) {
   'use strict';
@@ -108,18 +108,18 @@
 
     open: function(o) {
       if (this.dialog) {
-//one chanse to wait close
-var self = this;
-          setTimeout(function() {
-if (self.dialog) {
-alert('Dialog already opened');
-} else {
-self.open(o);
-}
-}, 300);
+        //one chanse to wait close
+        var self = this;
+        setTimeout(function() {
+          if (self.dialog) {
+            alert('Dialog already opened');
+          } else {
+            self.open(o);
+          }
+        }, 300);
 
-return;
-}
+        return;
+      }
 
       this.closetips();
 

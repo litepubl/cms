@@ -5,7 +5,7 @@
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
  *  version   7.07
-  */
+ */
 
 function fileDialogComplete(numFilesSelected, numFilesQueued) {
   $('#progressbar').progressbar({
