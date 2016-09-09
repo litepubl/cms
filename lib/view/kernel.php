@@ -572,6 +572,9 @@ class Lang
     use \litepubl\core\AppTrait;
 
     const ZERODATE = '0000-00-00 00:00:00';
+const DATEFORMAT = 'd F Y';
+const DATETIMEFORMAT = 'd F Y H:i';
+
     public static $self;
     public $loaded;
     public $ini;
@@ -596,7 +599,7 @@ class Lang
         return static ::getAppInstance()->classes->getInstance(get_called_class());
     }
 
-    public static function admin($section = '')
+    public static function admin(string $section = '')
     {
         $result = static ::i($section);
         $result->check('admin');
@@ -613,7 +616,7 @@ class Lang
         ];
     }
 
-    public static function get($section, $key)
+    public static function get(string $section, string $key): string
     {
         return static ::i()->ini[$section][$key];
     }
@@ -652,12 +655,12 @@ class Lang
         return strtr($this->__get($name), $args->data);
     }
 
-    public function addsearch()
+    public function addSearch()
     {
-        $this->joinsearch(func_get_args());
+        $this->joinSearch(func_get_args());
     }
 
-    public function joinsearch(array $a)
+    public function joinSearch(array $a)
     {
         foreach ($a as $sect) {
             $sect = trim(trim($sect), "\"',;:.");
@@ -667,7 +670,7 @@ class Lang
         }
     }
 
-    public function firstsearch()
+    public function firstSearch()
     {
         $a = array_reverse(func_get_args());
         foreach ($a as $sect) {
@@ -679,36 +682,57 @@ class Lang
         }
     }
 
-    public static function date($date, $format = '')
-    {
-        if (empty($format)) {
-            $format = static ::i()->getdateformat();
-        }
-        return static ::i()->translate(date($format, $date), 'datetime');
-    }
-
-    public function getDateformat()
-    {
-        $format = $this->getApp()->options->dateformat;
-        return $format != '' ? $format : $this->ini['datetime']['dateformat'];
-    }
-
-    public function translate($s, $section = 'default')
+    public function translate(string $s, string $section = 'default'): string
     {
         return strtr($s, $this->ini[$section]);
     }
 
-    public function check($name)
+    public static function date($date, $format = ''): string
     {
-        if ($name == '') {
-            $name = 'default';
+$self = static ::i();
+        if (empty($format)) {
+            $format = $self->getDateFormat();
         }
-        if (!in_array($name, $this->loaded)) {
-            $this->loadfile($name);
+
+        return $self->translate(date($format, $date), 'datetime');
+    }
+
+    public function getDateFormat(): string
+    {
+        $format = $this->getApp()->options->dateformat;
+        return $format ? $format : $this->ini['datetime']['dateformat'];
+    }
+
+    public function getDate($date): string
+    {
+        if ($date == static::ZERODATE) {
+            return $this->noword;
+        } else {
+            return $this->translate(date(static::DATEFORMAT, strtotime($date)), 'datetime');
         }
     }
 
-    public function loadfile($name)
+    public function getDateTime($date): string
+    {
+        if ($date == Lang::ZERODATE) {
+            return $this->noword;
+        } else {
+            return $this->translate(date(static::DATETIMEFORMAT, strtotime($date)), 'datetime');
+        }
+    }
+
+    public function check(string $name)
+    {
+        if (!$name) {
+            $name = 'default';
+        }
+
+        if (!in_array($name, $this->loaded)) {
+            $this->loadFile($name);
+        }
+    }
+
+    public function loadFile(string $name)
     {
         $this->loaded[] = $name;
         $filename = static ::getcachedir() . $name;
@@ -723,13 +747,13 @@ class Lang
         }
     }
 
-    public static function usefile($name)
+    public static function useFile(string $name)
     {
         static ::i()->check($name);
         return static ::$self;
     }
 
-    public static function getCacheDir()
+    public static function getCacheDir(): string
     {
         return static ::getAppInstance()->paths->data . 'languages' . DIRECTORY_SEPARATOR;
     }

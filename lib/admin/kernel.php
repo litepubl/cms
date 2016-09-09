@@ -1408,20 +1408,12 @@ class Table
 
     public function date($date): string
     {
-        if ($date == Lang::ZERODATE) {
-            return Lang::i()->noword;
-        } else {
-            return Lang::date(strtotime($date), 'd F Y');
-        }
+return Lang::i()->getDate($date);
     }
 
     public function dateTime($date): string
     {
-        if ($date == Lang::ZERODATE) {
-            return Lang::i()->noword;
-        } else {
-            return Lang::date(strtotime($date), 'd F Y H:i');
-        }
+return Lang::i()->getDateTime($date);
     }
 }
 
@@ -1598,5 +1590,15 @@ class UList
         $result = $this->get($props);
         return str_replace('$site.url', $this->getApp()->site->url, $result);
     }
+
+public function props2links(array $props): array
+{
+$result = [];
+foreach ($props as $url => $title) {
+$result[] = sprintf('<a href="%s">%s</a>', $url, $title);
+}
+
+return $result;
+}
 }
 

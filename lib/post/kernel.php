@@ -905,7 +905,6 @@ class Post extends \litepubl\core\Item
         $childTable = $db->prefix . $table;
         $list = implode(',', $items);
         $count = count($items);
-        static::getappinstance()->getlogmanager()->trace($list);
         return $db->res2items($db->query("select $childTable.* from $childTable where id in ($list) limit $count"));
     }
 
@@ -2054,7 +2053,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     public function getTheme(): Theme
     {
         if (!$this->themeInstance) {
-            $this->themeInstance = $this->post ? Schema::getSchema($this)->theme : Theme::context();
+            $this->themeInstance = $this->post ? $this->schema->theme : Theme::context();
         }
 
         $this->themeInstance->setvar('post', $this);
@@ -2159,11 +2158,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
         $args = new Args();
         $list = [];
-
         foreach ($items as $id) {
-            $item = $tags->getitem($id);
+            if ($id && ($item = $tags->getItem($id))) {
             $args->add($item);
             $list[] = $theme->parseArg($tmlitem, $args);
+}
         }
 
         $args->items = ' ' . implode($theme->templates[$tmlpath . '.divider'], $list);
@@ -2295,6 +2294,11 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             }
         }
     }
+
+public function getSchema(): Schema
+{
+return Schema::getSchema($this);
+}
 
     //to override schema in post, id schema not changed
     public function getFileList(): string

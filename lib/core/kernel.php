@@ -569,7 +569,8 @@ class App
 
     public function logException(\Throwable $e)
     {
-        $this->getLogManager()->logException($e);
+$itemRoute = isset($this->context) ? $this->context->itemRoute : [];
+        $this->getLogManager()->logException($e, $itemRoute);
     }
 
     public function showErrors()
@@ -1064,6 +1065,7 @@ class Context
     {
         $this->request = $request;
         $this->response = $response;
+$this->itemRoute = [];
     }
 
     public function __get($name)
@@ -3030,11 +3032,11 @@ class Options extends Events
         setcookie($name, $value, $expired, $this->getApp()->site->subdir . '/', false, '', $this->securecookie);
     }
 
-    public function setcookies($cookie, $expired)
+    public function setCookies(string $cookie, int $expired)
     {
-        $this->setcookie('litepubl_user_id', $cookie ? $this->idUser : '', $expired);
-        $this->setcookie('litepubl_user', $cookie, $expired);
-        $this->setcookie('litepubl_user_flag', $cookie && ('admin' == $this->group) ? 'true' : '', $expired);
+        $this->setCookie('litepubl_user_id', $cookie ? $this->idUser : '', $expired);
+        $this->setCookie('litepubl_user', $cookie, $expired);
+        $this->setCookie('litepubl_user_flag', $cookie && ('admin' == $this->group) ? 'true' : '', $expired);
 
         if ($this->idUser == 1) {
             $this->saveCookie($cookie, $expired);
@@ -8001,12 +8003,12 @@ class LogManager
         }
     }
 
-    public function logException(\Throwable $e)
+    public function logException(\Throwable $e, array $context = [])
     {
         $log = "Caught exception:\n" . $e->getMessage() . "\n";
         $log.= LogException::getLog($e);
         $log = str_replace(dirname(dirname(__DIR__)), '', $log);
-        $this->logger->alert($log);
+        $this->logger->alert($log, $context);
     }
 
     public function getTrace()
