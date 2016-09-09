@@ -230,7 +230,8 @@ class App
 
     public function logException(\Throwable $e)
     {
-        $this->getLogManager()->logException($e);
+$itemRoute = isset($this->context) ? $this->context->itemRoute : [];
+        $this->getLogManager()->logException($e, $itemRoute);
     }
 
     public function showErrors()

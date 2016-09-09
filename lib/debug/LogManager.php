@@ -53,12 +53,12 @@ class LogManager
         }
     }
 
-    public function logException(\Throwable $e)
+    public function logException(\Throwable $e, array $context = [])
     {
         $log = "Caught exception:\n" . $e->getMessage() . "\n";
         $log.= LogException::getLog($e);
         $log = str_replace(dirname(dirname(__DIR__)), '', $log);
-        $this->logger->alert($log);
+        $this->logger->alert($log, $context);
     }
 
     public function getTrace()
