@@ -325,7 +325,7 @@ class Plugins extends Items
         $dir = $this->getapp()->paths->plugins;
         $list = dir($dir);
         while($filename = $list->read()) {
-            if ($filename == '.' || $filename == '..') {
+            if ($filename == '.' || $filename == '..' || $filename == '.git') {
                 continue;
             }
 
@@ -362,7 +362,7 @@ class Plugins extends Items
                     $dir = $home . $path;
                     $list = dir($dir);
                     while ($filename = $list->read()) {
-                        if ($filename == '.' || $filename == '..') {
+                        if ($filename == '.' || $filename == '..' || $filename == '.git') {
                             continue;
                         }
 

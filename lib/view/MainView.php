@@ -123,7 +123,7 @@ class MainView extends \litepubl\core\Events
         $this->schema = Schema::getSchema($context->view);
         $theme = $this->schema->theme;
         $this->ltoptions['theme']['name'] = $theme->name;
-        $this->ltoptions['idurl'] = $context->itemRoute['id'];
+        $this->ltoptions['idurl'] = $context->itemRoute['id'] ?? 0;
 
         $app = $this->getApp();
         $app->classes->instances[get_class($theme) ] = $theme;
