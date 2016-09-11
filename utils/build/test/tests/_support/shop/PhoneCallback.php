@@ -17,4 +17,6 @@ public $name = '#text-contactname';
 public $phone = '#text-phone';
     public $skype = '#skype-link';
 public $ok = 'button[data-index="0"]';
+public $closeButton = 'button.close';
+public $compas = '.street-address';
 }

@@ -26,6 +26,7 @@ class Base
     public function __construct(\AcceptanceTester $I, string $screenshotName = '')
     {
         $this->tester = $I;
+        $I->maximizeWindow();
         if ($screenshotName) {
                 $this->screenshotName = $screenshotName;
         }

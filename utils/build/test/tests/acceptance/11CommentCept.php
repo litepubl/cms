@@ -11,7 +11,6 @@
 use Page\Comment;
 
 $i = new AcceptanceTester($scenario);
-$i->maximizeWindow();
 $comment = new Comment($i, '11comment');
 $comment->logout();
 $data = $comment->load('comment');

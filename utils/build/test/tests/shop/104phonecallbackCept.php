@@ -27,6 +27,7 @@ $widget->screenshot('success');
 $i->click($widget->ok);
 sleep(1);
 
-if ($widget->exists($widget->skype)) {
-$i->click($widget->skype);
-}
+$i->click($widget->compas);
+sleep(4);
+$widget->screenshot('compas');
+$i->click($widget->closeButton);

@@ -12,8 +12,7 @@ use Page\Contacts;
 use test\config;
 
 $i = new AcceptanceTester($scenario);
-$i->maximizeWindow();
-$contacts = new Contacts($i);
+$contacts = new Contacts($i, '10contacts');
 $data = config::load('contacts');
 
 $i->wantTo('Click contacts on home page');

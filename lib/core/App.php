@@ -124,6 +124,13 @@ class App
 
     public function process()
     {
+            $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']), new Response());
+$this->request($context);
+}
+
+    public function request(Context $context)
+{
+            $this->context = $context;
         if (Config::$debug) {
             error_reporting(-1);
             ini_set('display_errors', 1);
@@ -131,10 +138,7 @@ class App
             Header('Pragma: no-cache');
         }
 
-        try {
-            $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']), new Response());
-            $this->context = $context;
-
+try {
             $obEnabled = !Config::$debug && $this->options->ob_cache;
             if ($obEnabled) {
                 ob_start();
@@ -144,12 +148,13 @@ class App
                 call_user_func_array(Config::$beforeRequest, [$this]);
             }
 
-            if (!$this->controller->cached($context)) {
+            if ($this->controller->cached($context)) {
+                                $this->controller->request($context);
+                } else {
                 $this->router->request($context);
+
                 if ($context->response->isRedir()) {
                                 $context->response->send();
-                } else {
-                                $this->controller->request($context);
                 }
 
                 $this->router->afterRequest(['context' => $context]);
@@ -236,11 +241,8 @@ $itemRoute = isset($this->context) ? $this->context->itemRoute : [];
 
     public function showErrors()
     {
-            $r = $this->triggerCallback(
-                'onShowErrors', [
-                'show' => $this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag)
-                ]
-            );
+$r = ['show' => $this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag)];
+            $r = $this->triggerCallback('onShowErrors', $r);
         if ($r['show'] && ($log = $this->logManager->getHtml())) {
                     echo $log;
         }

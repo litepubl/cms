@@ -78,7 +78,6 @@ public $deleteButton = '#submitbutton-delete';
         $i = $this->tester;
         $i->wantTo('Switch to new window');
         $this->getwindows();
-        //$i->maximizeWindow();
 
         switch ($name) {
         case 'mailru':
