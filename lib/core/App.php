@@ -161,13 +161,22 @@ try {
             }
 
             $this->showErrors();
+$this->flush($context, $obEnabled);
+            $this->triggerCallback('onclose');
+        } catch (\Throwable $e) {
+            $this->logException($e);
+        }
+    }
 
+public function flush(Context $context, bool $obEnabled)
+{
             if ($obEnabled) {
                 if ($this->getCallbacksCount('onclose')) {
                     ignore_user_abort(true);
                     $context->response->closeConnection();
                     while (@ob_end_flush()) {
                     }
+
                     flush();
 
                     if (function_exists('fastcgi_finish_request')) {
@@ -181,12 +190,7 @@ try {
                     }
                 }
             }
-
-            $this->triggerCallback('onclose');
-        } catch (\Throwable $e) {
-            $this->logException($e);
-        }
-    }
+}
 
     public function run()
     {
