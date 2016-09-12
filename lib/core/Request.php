@@ -21,6 +21,7 @@ class Request
     public $page;
     public $url;
     public $uripath;
+protected $input;
 
     public function __construct($host, $url)
     {
@@ -58,8 +59,13 @@ class Request
 
     public function getInput()
     {
-        return file_get_contents('php://input');
+        return $this->input ? $this->input : file_get_contents('php://input');
     }
+
+public function setInput(string $s)
+{
+$this->input = $s;
+}
 
     public function getGet()
     {

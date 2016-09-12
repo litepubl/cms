@@ -88,7 +88,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
 
         if ($rpc) {
-            $params = isset($args['params']) ? $args['params'] : [];
+            $params = $args['params'] ?? [];
         } else {
             $params = $args;
         }

@@ -148,13 +148,13 @@ try {
                 call_user_func_array(Config::$beforeRequest, [$this]);
             }
 
-            if ($this->controller->cached($context)) {
-                                $this->controller->request($context);
-                } else {
+            if (!$this->controller->cached($context)) {
                 $this->router->request($context);
 
                 if ($context->response->isRedir()) {
                                 $context->response->send();
+                } else {
+                                $this->controller->request($context);
                 }
 
                 $this->router->afterRequest(['context' => $context]);
@@ -210,6 +210,18 @@ public function flush(Context $context, bool $obEnabled)
         $this->poolStorage->commit();
         $this->showErrors();
     }
+
+public function send(Response $response)
+{
+try {
+$response->send();
+            $this->triggerCallback('onclose');
+        } catch (\Throwable  $e) {
+            $this->logException($e);
+        }
+
+        $this->poolStorage->commit();
+}
 
     public function getLogManager(): LogManager
     {
