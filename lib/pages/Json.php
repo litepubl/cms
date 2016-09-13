@@ -14,7 +14,6 @@ use litepubl\Config;
 use litepubl\core\Arr;
 use litepubl\core\Context;
 use litepubl\core\Request;
-use litepubl\core\Response;
 use litepubl\core\Str;
 
 /**
@@ -142,7 +141,7 @@ $slaveCallback = $this->getMethod(                        $params['slave']['meth
 $response->setJson(Str::toJson($r['result']));
     }
 
-    public function jsonError(Response $response, $id, $code, $message)
+    public function getError($id, int $code, string $message): string
     {
         $result = [
             'jsonrpc' => '2.0',
@@ -156,7 +155,7 @@ $response->setJson(Str::toJson($r['result']));
             $result['id'] = $id;
         }
 
-        $response->setJson(Str::toJson($result));
+return Str::toJson($result);
     }
 
     public function addEvent(string $name, $callable, $method = null)
