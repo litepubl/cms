@@ -13,6 +13,7 @@ $this->vars[] = [
 '_GET' => $_GET,
 '_COOKIE' => $_COOKIE,
 '_SERVER' => $_SERVER,
+'_FILES' => $_FILES,
 '_GLOBALS' => $_GLOBALS,
 ];
 }
@@ -25,5 +26,6 @@ $_POST = $a['_POST'];
 $_GET = $a['_GET'];
 $_COOKIE = $a['_COOKIE'];
 $_SERVER = $a['_SERVER'];
+$_FILES = $A['_FILES'];
 }
 }

@@ -23,9 +23,11 @@ use litepubl\core\Str;
  * @property-write callable $beforeRequest
  * @property-write callable $beforeCall
  * @property-write callable $afterCall
+ * @property-write callable $onGetMethod
  * @method         array beforeRequest(array $params)
  * @method         array beforeCall(array $params)
  * @method         array afterCall(array $params)
+ * @method         array onGetMethod(array $params)
  */
 
 class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInterface
@@ -35,7 +37,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
     {
         parent::create();
         $this->basename = 'jsonserver';
-        $this->addevents('beforerequest', 'beforecall', 'aftercall');
+        $this->addevents('beforeRequest', 'beforeCall', 'afterCall', 'onGetMethod');
         $this->data['eventnames'] = & $this->eventnames;
         $this->map['eventnames'] = 'eventnames';
         $this->data['url'] = '/admin/jsonserver.php';
@@ -73,81 +75,71 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
     {
         $response = $context->response;
         $response->cache = false;
-
+try {
         $this->beforeRequest(['context' => $context]);
+$id = false;
         $args = $this->getArgs($context->request);
         if (!$args || !isset($args['method'])) {
-            return $this->jsonError($response, false, 403, 'Method not found in arguments');
+throw new \UnexpectedValueException('Method not found in arguments', 403);
         }
 
+$callback = $this->getMethod($args['method']);
         $rpc = isset($args['jsonrpc']) ? ($args['jsonrpc'] == '2.0') : false;
-        $id = $rpc && isset($args['id']) ? $args['id'] : false;
-
-        if (!isset($this->events[$args['method']])) {
-            return $this->jsonError($response, $id, 404, sprintf('Method "%s" not found', $args['method']));
-        }
-
         if ($rpc) {
+        $id = $args['id'] ?? false;
             $params = $args['params'] ?? [];
         } else {
             $params = $args;
         }
 
-        if (isset($params['litepubl_user'])) {
-            $_COOKIE['litepubl_user'] = $params['litepubl_user'];
-        }
-
-        if (isset($params['litepubl_user_id'])) {
-            $_COOKIE['litepubl_user_id'] = $params['litepubl_user_id'];
-        }
-
+$this->setCookie($params);
         $a = $this->beforeCall(['params' => $params]);
         $params = $a['params'];
-        try {
-            $result = $this->callMethod($args['method'], $params);
-        } catch (\Exception $e) {
-            if (Config::$debug) {
-                $this->getApp()->logException($e);
-            }
+            $result = call_user_func_array($callback, [$params]);
 
-            return $this->jsonError($response, $id, $e->getCode(), $e->getMessage());
-        }
-
-        $r = $this->afterCall(['result' => $result, 'args' => $args]);
-        $result = $r['result'];
-
-        $resp = [
-            'jsonrpc' => '2.0'
-        ];
-
-        if (is_array($result) && isset($result['error'])) {
-            $resp['error'] = $result['error'];
-        } else {
-            $resp['result'] = $result;
             if (isset($params['slave']) && is_array($params['slave'])) {
                 try {
-                    $slave_result = $this->callMethod(
-                        $params['slave']['method'], 
-                        $params['slave']['params']
-                    );
+$slaveCallback = $this->getMethod(                        $params['slave']['method']);
+                    $slaveResult = call_user_func_array($slaveCallback,                         [$params['slave']['params']]);
                 } catch (\Exception $e) {
-                    $slave_result = [
+                    $slaveResult  = [
                         'error' => [
                             'message' => $e->getMessage() ,
                             'code' => $e->getCode()
                         ]
                     ];
                 }
-
-                $resp['result']['slave'] = $slave_result;
             }
-        }
 
+} catch (\Throwable $e) {
+                    $result = [
+                        'error' => [
+                            'message' => $e->getMessage() ,
+                            'code' => $e->getCode(),
+                        ]
+                    ];
+
+            if (Config::$debug) {
+                $this->getApp()->logException($e);
+            }
+}
+
+        $jsonResult = ['jsonrpc' => '2.0'];
         if ($id) {
-            $resp['id'] = $id;
+            $jsonResult['id'] = $id;
         }
 
-        return $response->setJson(Str::toJson($resp));
+        if (is_array($result) && isset($result['error'])) {
+            $jsonResult['error'] = $result['error'];
+        } else {
+            $jsonResult['result'] = $result;
+            if (isset($params['slave']) && is_array($params['slave'])) {
+                $jsonResult['result']['slave'] = $slaveResult;
+}
+}
+
+        $r = $this->afterCall(['result' => $jsonResult, 'args' => $args]);
+$response->setJson(Str::toJson($r['result']));
     }
 
     public function jsonError(Response $response, $id, $code, $message)
@@ -177,7 +169,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         return parent::addEvent($name, $callable, $method);
     }
 
-    public function delete_event($name)
+    public function delete(string $name)
     {
         if (isset($this->events[$name])) {
             unset($this->events[$name]);
@@ -186,20 +178,36 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
     }
 
-    public function callMethod(string $method, array $params)
-    {
-        foreach ($this->data['events'][$method] as $item) {
+public function getMethod(string $name): callable
+{
+        if (isset($this->events[$args['method']])) {
+        foreach ($this->data['events'][$name] as $item) {
             if (class_exists($item[0])) {
-                $callback = [$this->getApp()->classes->getInstance($item[0]), $item[1]];
-                return call_user_func_array($callback, [$params]);
+return [$this->getApp()->classes->getInstance($item[0]), $item[1]];
             } else {
-                $mesg = sprintf('Class "%s" not found for method "%s"', $item[0], $method);
+                $mesg = sprintf('Class "%s" not found for method "%s"', $item[0], $name);
                 $this->getApp()->getLogger()->warning($mesg);
-                return ['error' => [
-                'message' => $mesg,
-                'code' => 500
-                ]];
+throw new \UnexpectedValueException($mesg);
             }
+}
+}
+
+$r = $this->onGetMethod(['name' => $name, 'result' => false]);
+if (is_callable($r['result'])) {
+return $r['result'];
+}
+
+throw new \UnexpectedValueException(sprintf('JSON-RPC %s method not found', $name));
+}
+
+public function setCookie(array $params)
+{
+        if (isset($params['litepubl_user'])) {
+            $_COOKIE['litepubl_user'] = $params['litepubl_user'];
         }
-    }
+
+        if (isset($params['litepubl_user_id'])) {
+            $_COOKIE['litepubl_user_id'] = $params['litepubl_user_id'];
+        }
+}
 }
