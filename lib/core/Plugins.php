@@ -12,6 +12,15 @@ namespace litepubl\core;
 
 use litepubl\view\Lang;
 
+/**
+ * Plugins manager
+ *
+ * @property-write callable $onUpdate
+ * @property-write callable $onSkip
+ * @method array onUpdate(array $params)
+ * @method array onSkip(array $params)
+ */
+
 class Plugins extends Items
 {
     public static $abouts = [];
@@ -24,6 +33,7 @@ class Plugins extends Items
         $this->dbversion = false;
         parent::create();
         $this->basename = 'plugins/index';
+$this->addEvents('onUpdate', 'onSkip');
         $this->deprecated = [];
         $this->addMap('paths', []);
     }
@@ -271,6 +281,8 @@ class Plugins extends Items
 
     public function update(array $list)
     {
+$r = $this->onUpdate(['items' => $list]);
+$list = $r['items'];
         $add = array_diff($list, array_keys($this->items));
         $add = array_intersect($add, array_keys($this->getDirNames()));
         $delete = array_diff(array_keys($this->items), $list);
@@ -405,5 +417,15 @@ class Plugins extends Items
 
         $this->error(sprintf('Plugin dir not found for %s', $name));
     }
+
+public function skipped(string $name): bool
+{
+if (in_array($name, $this->deprecated)) {
+return true;
+}
+
+$r = $this->onSkip(['name' => $name, 'result' => false]);
+return $r['result'];
+}
 
 }

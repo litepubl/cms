@@ -179,7 +179,7 @@ return Str::toJson($result);
 
 public function getMethod(string $name): callable
 {
-        if (isset($this->events[$args['method']])) {
+        if (isset($this->data['events'][$name])) {
         foreach ($this->data['events'][$name] as $item) {
             if (class_exists($item[0])) {
 return [$this->getApp()->classes->getInstance($item[0]), $item[1]];

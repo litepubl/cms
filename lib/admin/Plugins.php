@@ -84,7 +84,7 @@ class Plugins extends Menu
             $body = '';
             $args = $tb->args;
             foreach ($plugins->getDirNames() as $name => $dir) {
-                if (in_array($name, $plugins->deprecated)) {
+                if ($plugins->skipped($name)) {
                     continue;
                 }
 

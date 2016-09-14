@@ -8,7 +8,7 @@ class config
 {
     public static $home;
     public static $_data;
-    public static $screenshot = true;
+    public static $screenshot = false;
     private static $lang;
 
     public function init()
