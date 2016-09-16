@@ -18,13 +18,13 @@ class Ulogin extends Base
     public $mailruSubmit = 'Log in and allow';
 public $usersUrl = '/admin/users/';
 public $deleteButton = '#submitbutton-delete';
-
     public $yandexLogin = '#login';
     public $yandexPassword = '#passwd';
     public $yandexSubmit = 'button[type=submit]';
     public $yandexAllow = '.authrequest-request-allow button';
     public $yandexCancel = '.authrequest-request-deny button';
     private $winhandles = [];
+private static $logged = false;
 
     public function getwindows()
     {
@@ -95,7 +95,27 @@ public $deleteButton = '#submitbutton-delete';
         $i->wantTo('Switch to back window');
         $this->setWindow(0);
         codecept_debug($i->executeJS('return litepubl.authdialog.ulogin.status;'));
+static::$logged = true;
     }
+
+    public function login()
+    {
+        $i = $this->tester;
+        $login = Login::i($i);
+        $cur = $i->grabFromCurrentUrl();
+        codecept_debug($cur);
+        if (strpos($cur, $login->url) !== 0) {
+            $i->openPage($login->url);
+        }
+
+sleep(2);
+$this->click();
+if (!static::$logged) {
+$this->auth();
+}
+
+$i->waitForUrlChanged(10);
+}
 
     public function mailruAuth()
     {

@@ -17,6 +17,14 @@ class Support extends \Page\Base
     public $urlCats = '/admin/shop/tickets/cats/';
 public $catTitle = '#text-cattitle';
     public $cabinetUrl = '/admin/cabinet/tickets/';
+    public $addUrl = '/admin/cabinet/tickets/?action=add';
+public $title = '#text-title';
+public $cat = '#combo-cat';
+public $text = '#editor-raw';
+public $addButton = 'button[name="newticket"]';
+
+
+
 public $error = '.text-warning';
 
 }

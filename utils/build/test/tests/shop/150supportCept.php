@@ -9,11 +9,13 @@
   */
 
 use Page\Plugin;
+use Page\Ulogin;
 use shop\Support;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test install and uninstall support system in shop');
 $support = new Support($i, '150support');
+$ulogin = new Ulogin($i, '150support');
 $plugin = new Plugin($i, '150support');
 $plugin->install('support', 160);
 //$plugin->uninstall('support');
@@ -30,7 +32,13 @@ $i->wantTo('Delete new catalog');
 $url = $i->grabFromCurrentUrl();
 $i->openPage($url . '&action=delete&confirm=1');
 $i->openPage($support->urlOptions);
+$support->submit();
 
-
-$i->openPage($support->cabinetUrl);
+$i->wantTo('Check cabinet');
 $support->logout();
+$ulogin->login();
+$i->openPage($support->cabinetUrl);
+$i->openPage($support->addUrl);
+$i->fillField($support->text, 'Just test');
+$i->fillField($support->text, 'Some text for content');
+$i->click($support->addButton);
