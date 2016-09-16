@@ -572,8 +572,8 @@ class Lang
     use \litepubl\core\AppTrait;
 
     const ZERODATE = '0000-00-00 00:00:00';
-const DATEFORMAT = 'd F Y';
-const DATETIMEFORMAT = 'd F Y H:i';
+    const DATEFORMAT = 'd F Y';
+    const DATETIMEFORMAT = 'd F Y H:i';
 
     public static $self;
     public $loaded;
@@ -689,7 +689,7 @@ const DATETIMEFORMAT = 'd F Y H:i';
 
     public static function date($date, $format = ''): string
     {
-$self = static ::i();
+        $self = static ::i();
         if (empty($format)) {
             $format = $self->getDateFormat();
         }
@@ -881,7 +881,7 @@ class MainView extends \litepubl\core\Events
         $this->schema = Schema::getSchema($context->view);
         $theme = $this->schema->theme;
         $this->ltoptions['theme']['name'] = $theme->name;
-        $this->ltoptions['idurl'] = $context->itemRoute['id'];
+        $this->ltoptions['idurl'] = $context->itemRoute['id'] ?? 0;
 
         $app = $this->getApp();
         $app->classes->instances[get_class($theme) ] = $theme;

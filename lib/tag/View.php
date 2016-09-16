@@ -39,7 +39,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         parent::create();
         $this->addEvents('onbeforecontent', 'oncontent');
         $this->cachedIdPosts = [];
-$this->page = 0;
+        $this->page = 0;
     }
 
     public function setTags(Common $tags)

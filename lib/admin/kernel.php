@@ -1408,12 +1408,12 @@ class Table
 
     public function date($date): string
     {
-return Lang::i()->getDate($date);
+        return Lang::i()->getDate($date);
     }
 
     public function dateTime($date): string
     {
-return Lang::i()->getDateTime($date);
+        return Lang::i()->getDateTime($date);
     }
 }
 
@@ -1591,14 +1591,14 @@ class UList
         return str_replace('$site.url', $this->getApp()->site->url, $result);
     }
 
-public function props2links(array $props): array
-{
-$result = [];
-foreach ($props as $url => $title) {
-$result[] = sprintf('<a href="%s">%s</a>', $url, $title);
-}
+    public function props2links(array $props): array
+    {
+        $result = [];
+        foreach ($props as $url => $title) {
+            $result[] = sprintf('<a href="%s">%s</a>', $url, $title);
+        }
 
-return $result;
-}
+        return $result;
+    }
 }
 

@@ -62,7 +62,7 @@ function update702()
     $plugin->delete('default');
     $plugin->add('photoswipe');
 
-include_once ($plugin->getApp()->paths->plugins . 'photoswipeThumbnail/PhotoSwipeThumbnail.php');
+    include_once $plugin->getApp()->paths->plugins . 'photoswipeThumbnail/PhotoSwipeThumbnail.php';
     $thumb = PhotoSwipeThumbnail::i();
     $thumb->deleteJs();
     $thumb->addJs();

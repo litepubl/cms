@@ -463,6 +463,13 @@ class App
 
     public function process()
     {
+            $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']), new Response());
+        $this->request($context);
+    }
+
+    public function request(Context $context)
+    {
+            $this->context = $context;
         if (Config::$debug) {
             error_reporting(-1);
             ini_set('display_errors', 1);
@@ -471,9 +478,6 @@ class App
         }
 
         try {
-            $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']), new Response());
-            $this->context = $context;
-
             $obEnabled = !Config::$debug && $this->options->ob_cache;
             if ($obEnabled) {
                 ob_start();
@@ -485,6 +489,7 @@ class App
 
             if (!$this->controller->cached($context)) {
                 $this->router->request($context);
+
                 if ($context->response->isRedir()) {
                                 $context->response->send();
                 } else {
@@ -495,30 +500,34 @@ class App
             }
 
             $this->showErrors();
-
-            if ($obEnabled) {
-                if ($this->getCallbacksCount('onclose')) {
-                    ignore_user_abort(true);
-                    $context->response->closeConnection();
-                    while (@ob_end_flush()) {
-                    }
-                    flush();
-
-                    if (function_exists('fastcgi_finish_request')) {
-                        fastcgi_finish_request();
-                    }
-
-                    //prevent any output
-                    ob_start();
-                } else {
-                    while (@ob_end_flush()) {
-                    }
-                }
-            }
-
+                $this->flush($context, $obEnabled);
             $this->triggerCallback('onclose');
         } catch (\Throwable $e) {
             $this->logException($e);
+        }
+    }
+
+    public function flush(Context $context, bool $obEnabled)
+    {
+        if ($obEnabled) {
+            if ($this->getCallbacksCount('onclose')) {
+                ignore_user_abort(true);
+                $context->response->closeConnection();
+                while (@ob_end_flush()) {
+                }
+
+                flush();
+
+                if (function_exists('fastcgi_finish_request')) {
+                    fastcgi_finish_request();
+                }
+
+                //prevent any output
+                ob_start();
+            } else {
+                while (@ob_end_flush()) {
+                }
+            }
         }
     }
 
@@ -539,6 +548,18 @@ class App
 
         $this->poolStorage->commit();
         $this->showErrors();
+    }
+
+    public function send(Response $response)
+    {
+        try {
+            $response->send();
+            $this->triggerCallback('onclose');
+        } catch (\Throwable  $e) {
+            $this->logException($e);
+        }
+
+            $this->poolStorage->commit();
     }
 
     public function getLogManager(): LogManager
@@ -569,17 +590,14 @@ class App
 
     public function logException(\Throwable $e)
     {
-$itemRoute = isset($this->context) ? $this->context->itemRoute : [];
+        $itemRoute = isset($this->context) ? $this->context->itemRoute : [];
         $this->getLogManager()->logException($e, $itemRoute);
     }
 
     public function showErrors()
     {
-            $r = $this->triggerCallback(
-                'onShowErrors', [
-                'show' => $this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag)
-                ]
-            );
+        $r = ['show' => $this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag)];
+            $r = $this->triggerCallback('onShowErrors', $r);
         if ($r['show'] && ($log = $this->logManager->getHtml())) {
                     echo $log;
         }
@@ -712,6 +730,7 @@ class Arr
         ksort($a);
         return $index;
     }
+
 }
 
 //BaseCache.php
@@ -1065,7 +1084,7 @@ class Context
     {
         $this->request = $request;
         $this->response = $response;
-$this->itemRoute = [];
+        $this->itemRoute = [];
     }
 
     public function __get($name)
@@ -1774,7 +1793,7 @@ class DB
             $list[] = sprintf('%s = %s', $name, $this->quote($value));
         }
 
-        return implode(', ', $list);
+        return implode(',', $list);
     }
 
     public function updateAssoc(array $a, $index = 'id')
@@ -1836,7 +1855,7 @@ class DB
             }
         }
 
-        return sprintf('(%s) values (%s)', implode(', ', array_keys($a)), implode(', ', $vals));
+        return sprintf('(%s) values (%s)', implode(',', array_keys($a)), implode(',', $vals));
     }
 
     public function getCount($where = '')
@@ -1863,7 +1882,7 @@ class DB
 
     public function deleteItems(array $items)
     {
-        return $this->delete('id in (' . implode(', ', $items) . ')');
+        return $this->delete('id in (' . implode(',', $items) . ')');
     }
 
     public function idExists($id)
@@ -3416,6 +3435,7 @@ class Request
     public $page;
     public $url;
     public $uripath;
+    protected $input;
 
     public function __construct($host, $url)
     {
@@ -3453,7 +3473,12 @@ class Request
 
     public function getInput()
     {
-        return file_get_contents('php://input');
+        return $this->input ? $this->input : file_get_contents('php://input');
+    }
+
+    public function setInput(string $s)
+    {
+        $this->input = $s;
     }
 
     public function getGet()
@@ -3529,6 +3554,7 @@ namespace litepubl\core;
 class Response
 {
     use AppTrait;
+    use Callbacks;
 
     public $body;
     public $cacheFile;
@@ -3620,18 +3646,13 @@ class Response
             unset($this->headers['Last-Modified']);
         }
 
+            $this->triggerCallback('onheaders');
         foreach ($this->headers as $k => $v) {
             header(sprintf('%s: %s', $k, $v));
         }
 
         if (is_string($this->body)) {
             eval('?>' . $this->body);
-            /*
-            return;
-            $f = $this->getApp()->paths->cache . 'temp.php';
-            file_put_contents($f, $this->body);
-            require ($f);
-            */
         } elseif (is_callable($this->body)) {
             call_user_func_array($this->body, [$this]);
             //free resource in callable
@@ -3713,6 +3734,11 @@ class Response
     public function getReasonPhrase()
     {
         return $this->phrases[$this->status];
+    }
+
+    public function onHeaders(callable $callback)
+    {
+        $this->addCallback('onheaders', $callback);
     }
 }
 
@@ -5401,7 +5427,7 @@ class ItemsPosts extends Items
         $delete = array_diff($old, $items);
 
         if (count($delete)) {
-            $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(', ', $delete) . ')');
+            $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(',', $delete) . ')');
         }
         if (count($add)) {
             $vals = [];
@@ -5432,13 +5458,13 @@ class ItemsPosts extends Items
         return $db->getcount("$db->prefix$this->tablepost.status = 'published' and id in (select $this->postprop from $this->thistable where $this->itemprop = $ititem)");
     }
 
-    public function updatePosts(array $list, $propname)
+    public function updatePosts(array $idPosts, string $propName)
     {
         $db = $this->db;
-        foreach ($list as $idpost) {
-            $items = $this->getitems($idpost);
+        foreach ($idPosts as $idPost) {
+            $items = $this->getItems($idPost);
             $db->table = $this->tablepost;
-            $db->setvalue($idpost, $propname, implode(', ', $items));
+            $db->setValue($idPost, $propName, implode(',', $items));
         }
     }
 

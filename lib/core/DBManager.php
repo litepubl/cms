@@ -36,7 +36,7 @@ class DBManager
     public function createTable($name, $struct)
     {
         if (! $this->engine) {
-$config = $this->getConfig();
+            $config = $this->getConfig();
             $this->engine = isset($config['engine']) && !empty($config['engine']) ? $config['engine'] : 'MyISAM'; // InnoDB
         }
 

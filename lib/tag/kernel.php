@@ -654,13 +654,14 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     public $id;
     private $tags;
     private $cachedIdPosts;
-    private $context;
+    private $page;
 
     protected function create()
     {
         parent::create();
         $this->addEvents('onbeforecontent', 'oncontent');
         $this->cachedIdPosts = [];
+        $this->page = 0;
     }
 
     public function setTags(Common $tags)
@@ -729,7 +730,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             }
         }
 
-        $this->context = $context;
+            $this->page = $context->request->page - 1;
     }
 
     public function getTitle(): string
@@ -827,9 +828,8 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     {
         if ($s = $this->tags->contents->getcontent($this->id)) {
             $pages = explode('<!--nextpage-->', $s);
-            $page = $this->context->request->page - 1;
-            if (isset($pages[$page])) {
-                return $pages[$page];
+            if (isset($pages[$this->page])) {
+                return $pages[$this->page];
             }
         }
 
@@ -883,7 +883,7 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
 
         $schema = Schema::i($this->tags->getValue($id, 'idschema'));
         $perpage = $schema->perpage ? $schema->perpage : $this->getApp()->options->perpage;
-        $from = ($this->context->request->page - 1) * $perpage;
+        $from = $this->page * $perpage;
 
         $result = $this->tags->getIdPosts($id, $from, $perpage, $schema->invertorder);
         $this->cachedIdPosts[$id] = $result;

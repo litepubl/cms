@@ -13,7 +13,7 @@ namespace litepubl\core;
 class Response
 {
     use AppTrait;
-use Callbacks;
+    use Callbacks;
 
     public $body;
     public $cacheFile;

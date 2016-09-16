@@ -15,8 +15,8 @@ class Lang
     use \litepubl\core\AppTrait;
 
     const ZERODATE = '0000-00-00 00:00:00';
-const DATEFORMAT = 'd F Y';
-const DATETIMEFORMAT = 'd F Y H:i';
+    const DATEFORMAT = 'd F Y';
+    const DATETIMEFORMAT = 'd F Y H:i';
 
     public static $self;
     public $loaded;
@@ -132,7 +132,7 @@ const DATETIMEFORMAT = 'd F Y H:i';
 
     public static function date($date, $format = ''): string
     {
-$self = static ::i();
+        $self = static ::i();
         if (empty($format)) {
             $format = $self->getDateFormat();
         }

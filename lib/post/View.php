@@ -262,9 +262,9 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         $list = [];
         foreach ($items as $id) {
             if ($id && ($item = $tags->getItem($id))) {
-            $args->add($item);
-            $list[] = $theme->parseArg($tmlitem, $args);
-}
+                $args->add($item);
+                $list[] = $theme->parseArg($tmlitem, $args);
+            }
         }
 
         $args->items = ' ' . implode($theme->templates[$tmlpath . '.divider'], $list);
@@ -397,10 +397,10 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
     }
 
-public function getSchema(): Schema
-{
-return Schema::getSchema($this);
-}
+    public function getSchema(): Schema
+    {
+        return Schema::getSchema($this);
+    }
 
     //to override schema in post, id schema not changed
     public function getFileList(): string
@@ -543,8 +543,8 @@ return Schema::getSchema($this);
     public function getAnnounce(string $announceType): string
     {
             $tmlKey = 'content.excerpts.' . ($announceType == 'excerpt' ? 'excerpt' : $announceType . '.excerpt');
-return $this->parseTml($tmlKey);
-}
+        return $this->parseTml($tmlKey);
+    }
 
     public function getExcerptContent(): string
     {

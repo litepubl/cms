@@ -14,15 +14,15 @@ use litepubl\tag\Cats;
 
 function update707()
 {
-$cats = Cats::i();
-$db = $cats->getDb('posts');
-$idPosts = $db->res2id($db->query("select id from $db->posts where categories like '% %'"));
-//$cats->itemsposts->updatePosts($items, 'categories');
-        foreach ($idPosts as $idPost) {
-            $items = $cats->itemsposts->getItems($idPost);
-            $db->table = 'posts';
-            $db->setValue($idPost, 'categories', implode(',', $items));
-        }
+    $cats = Cats::i();
+    $db = $cats->getDb('posts');
+    $idPosts = $db->res2id($db->query("select id from $db->posts where categories like '% %'"));
+    //$cats->itemsposts->updatePosts($items, 'categories');
+    foreach ($idPosts as $idPost) {
+        $items = $cats->itemsposts->getItems($idPost);
+        $db->table = 'posts';
+        $db->setValue($idPost, 'categories', implode(',', $items));
+    }
 
 }
 

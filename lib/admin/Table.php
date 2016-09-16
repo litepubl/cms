@@ -357,11 +357,11 @@ class Table
 
     public function date($date): string
     {
-return Lang::i()->getDate($date);
+        return Lang::i()->getDate($date);
     }
 
     public function dateTime($date): string
     {
-return Lang::i()->getDateTime($date);
+        return Lang::i()->getDateTime($date);
     }
 }

@@ -125,11 +125,11 @@ class App
     public function process()
     {
             $context = new Context(new Request($_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']), new Response());
-$this->request($context);
-}
+        $this->request($context);
+    }
 
     public function request(Context $context)
-{
+    {
             $this->context = $context;
         if (Config::$debug) {
             error_reporting(-1);
@@ -138,7 +138,7 @@ $this->request($context);
             Header('Pragma: no-cache');
         }
 
-try {
+        try {
             $obEnabled = !Config::$debug && $this->options->ob_cache;
             if ($obEnabled) {
                 ob_start();
@@ -161,36 +161,36 @@ try {
             }
 
             $this->showErrors();
-$this->flush($context, $obEnabled);
+                $this->flush($context, $obEnabled);
             $this->triggerCallback('onclose');
         } catch (\Throwable $e) {
             $this->logException($e);
         }
     }
 
-public function flush(Context $context, bool $obEnabled)
-{
-            if ($obEnabled) {
-                if ($this->getCallbacksCount('onclose')) {
-                    ignore_user_abort(true);
-                    $context->response->closeConnection();
-                    while (@ob_end_flush()) {
-                    }
+    public function flush(Context $context, bool $obEnabled)
+    {
+        if ($obEnabled) {
+            if ($this->getCallbacksCount('onclose')) {
+                ignore_user_abort(true);
+                $context->response->closeConnection();
+                while (@ob_end_flush()) {
+                }
 
-                    flush();
+                flush();
 
-                    if (function_exists('fastcgi_finish_request')) {
-                        fastcgi_finish_request();
-                    }
+                if (function_exists('fastcgi_finish_request')) {
+                    fastcgi_finish_request();
+                }
 
-                    //prevent any output
-                    ob_start();
-                } else {
-                    while (@ob_end_flush()) {
-                    }
+                //prevent any output
+                ob_start();
+            } else {
+                while (@ob_end_flush()) {
                 }
             }
-}
+        }
+    }
 
     public function run()
     {
@@ -211,17 +211,17 @@ public function flush(Context $context, bool $obEnabled)
         $this->showErrors();
     }
 
-public function send(Response $response)
-{
-try {
-$response->send();
+    public function send(Response $response)
+    {
+        try {
+            $response->send();
             $this->triggerCallback('onclose');
         } catch (\Throwable  $e) {
             $this->logException($e);
         }
 
-        $this->poolStorage->commit();
-}
+            $this->poolStorage->commit();
+    }
 
     public function getLogManager(): LogManager
     {
@@ -251,13 +251,13 @@ $response->send();
 
     public function logException(\Throwable $e)
     {
-$itemRoute = isset($this->context) ? $this->context->itemRoute : [];
+        $itemRoute = isset($this->context) ? $this->context->itemRoute : [];
         $this->getLogManager()->logException($e, $itemRoute);
     }
 
     public function showErrors()
     {
-$r = ['show' => $this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag)];
+        $r = ['show' => $this->logManager && (Config::$debug || $this->options->echoexception || $this->options->adminFlag)];
             $r = $this->triggerCallback('onShowErrors', $r);
         if ($r['show'] && ($log = $this->logManager->getHtml())) {
                     echo $log;

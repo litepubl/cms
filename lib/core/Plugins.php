@@ -13,12 +13,14 @@ namespace litepubl\core;
 use litepubl\view\Lang;
 
 /**
+* 
  * Plugins manager
+ *
  *
  * @property-write callable $onUpdate
  * @property-write callable $onSkip
- * @method array onUpdate(array $params)
- * @method array onSkip(array $params)
+ * @method         array onUpdate(array $params)
+ * @method         array onSkip(array $params)
  */
 
 class Plugins extends Items
@@ -33,7 +35,7 @@ class Plugins extends Items
         $this->dbversion = false;
         parent::create();
         $this->basename = 'plugins/index';
-$this->addEvents('onUpdate', 'onSkip');
+        $this->addEvents('onUpdate', 'onSkip');
         $this->deprecated = [];
         $this->addMap('paths', []);
     }
@@ -281,8 +283,8 @@ $this->addEvents('onUpdate', 'onSkip');
 
     public function update(array $list)
     {
-$r = $this->onUpdate(['items' => $list]);
-$list = $r['items'];
+        $r = $this->onUpdate(['items' => $list]);
+        $list = $r['items'];
         $add = array_diff($list, array_keys($this->items));
         $add = array_intersect($add, array_keys($this->getDirNames()));
         $delete = array_diff(array_keys($this->items), $list);
@@ -418,14 +420,14 @@ $list = $r['items'];
         $this->error(sprintf('Plugin dir not found for %s', $name));
     }
 
-public function skipped(string $name): bool
-{
-if (in_array($name, $this->deprecated)) {
-return true;
-}
+    public function skipped(string $name): bool
+    {
+        if (in_array($name, $this->deprecated)) {
+            return true;
+        }
 
-$r = $this->onSkip(['name' => $name, 'result' => false]);
-return $r['result'];
-}
+        $r = $this->onSkip(['name' => $name, 'result' => false]);
+        return $r['result'];
+    }
 
 }

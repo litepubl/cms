@@ -51,8 +51,8 @@ class Config
     'password' => '***',
     //table names prefix
     'prefix' => 'prefix_',
-//mysql engine: InnoDB, MyISAM
-'engine' => '',
+    //mysql engine: InnoDB, MyISAM
+    'engine' => '',
     ];
     */
 
