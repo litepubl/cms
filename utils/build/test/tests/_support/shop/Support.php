@@ -15,6 +15,7 @@ class Support extends \Page\Base
     public $url = '/admin/shop/tickets/';
     public $urlOptions = '/admin/shop/tickets/options/';
     public $urlCats = '/admin/shop/tickets/cats/';
+public $catTitle = '#text-cattitle';
     public $cabinetUrl = '/admin/cabinet/tickets/';
 public $error = '.text-warning';
 

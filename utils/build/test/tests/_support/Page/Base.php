@@ -153,4 +153,15 @@ public function exists(string $selector): bool
 $selector = str_replace("'", '"', $selector);
 return $this->tester->executeJs("return \$('$selector').length;") > 0;
 }
+
+public function getIdFromUrl(): int
+{
+        $ur = $this->tester->grabFromCurrentUrl();
+if ($i = strpos($url, '?')) {
+parse_str(substr($url, $i + 1), $a);
+return (int) ($a['id'] ?? 0);
+}
+
+return 0;
+}
 }

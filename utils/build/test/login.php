@@ -15,7 +15,9 @@ $js = json_decode(file_get_contents(__DIR__ . '/tests/_data/admin.json'));
 </head>
 
 <body>
-<form action="/admin/login/?backurl=%2Fadmin%2Fshop%2Fproducts%2Feditor%2F" method="post" id="autoform">
+<form action="/admin/login/?backurl=<?php
+echo urlencode('/admin/shop/tickets/');
+?>" method="post" id="autoform">
 <input type="hidden" name="email" value="<?php echo $js->email; ?>">
 <input type="hidden" name="password" value="<?php echo $js->password; ?>">
 <input type="hidden" name="remember" value="remember">
