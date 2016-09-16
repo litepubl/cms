@@ -25,7 +25,7 @@
     },
     "require": {
         "php": ">=7.00.0",
-        "litepubl\/cms-composer-installer": ">=1.01",
+        "litepubl/cms-composer-installer": ">=1.01",
         "monolog/monolog": "^1.19",
         "psr/cache": "^1.0",
         "zendframework/zend-diactoros": "^1.3",
