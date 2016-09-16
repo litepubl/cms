@@ -188,7 +188,7 @@ $config = $this->getConfig();
             $values[$i] = Str::quote(trim($value, ' \'"'));
         }
         
-        return implode(', ', $values);
+        return implode(',', $values);
     }
 
     public function getVar($name)
@@ -305,7 +305,7 @@ $config = $this->getConfig();
                         $values[] = is_null($v) ? 'NULL' : $this->quote($v);
                     }
                     $sql .= $sql ? ',(' : '(';
-                    $sql .= implode(', ', $values);
+                    $sql .= implode(',', $values);
                     $sql .= ')';
                     
                     if (strlen($sql) > $this->max_allowed_packet) {

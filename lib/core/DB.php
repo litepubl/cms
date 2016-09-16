@@ -224,7 +224,7 @@ class DB
             $list[] = sprintf('%s = %s', $name, $this->quote($value));
         }
 
-        return implode(', ', $list);
+        return implode(',', $list);
     }
 
     public function updateAssoc(array $a, $index = 'id')
@@ -286,7 +286,7 @@ class DB
             }
         }
 
-        return sprintf('(%s) values (%s)', implode(', ', array_keys($a)), implode(', ', $vals));
+        return sprintf('(%s) values (%s)', implode(',', array_keys($a)), implode(',', $vals));
     }
 
     public function getCount($where = '')
@@ -313,7 +313,7 @@ class DB
 
     public function deleteItems(array $items)
     {
-        return $this->delete('id in (' . implode(', ', $items) . ')');
+        return $this->delete('id in (' . implode(',', $items) . ')');
     }
 
     public function idExists($id)

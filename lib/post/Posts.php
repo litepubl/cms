@@ -366,7 +366,7 @@ class Posts extends \litepubl\core\Items
             return [];
         }
 
-        $list = implode(', ', $items);
+        $list = implode(',', $items);
         $t = $this->thistable;
         return $this->db->idSelect("$t.status = 'published' and $t.id in ($list)");
     }

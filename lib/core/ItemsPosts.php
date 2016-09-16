@@ -75,7 +75,7 @@ class ItemsPosts extends Items
         $delete = array_diff($old, $items);
 
         if (count($delete)) {
-            $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(', ', $delete) . ')');
+            $db->delete("$this->postprop = $idpost and $this->itemprop in (" . implode(',', $delete) . ')');
         }
         if (count($add)) {
             $vals = [];
@@ -106,13 +106,13 @@ class ItemsPosts extends Items
         return $db->getcount("$db->prefix$this->tablepost.status = 'published' and id in (select $this->postprop from $this->thistable where $this->itemprop = $ititem)");
     }
 
-    public function updatePosts(array $list, $propname)
+    public function updatePosts(array $idPosts, string $propName)
     {
         $db = $this->db;
-        foreach ($list as $idpost) {
-            $items = $this->getitems($idpost);
+        foreach ($idPosts as $idPost) {
+            $items = $this->getItems($idPost);
             $db->table = $this->tablepost;
-            $db->setvalue($idpost, $propname, implode(', ', $items));
+            $db->setValue($idPost, $propName, implode(',', $items));
         }
     }
 
