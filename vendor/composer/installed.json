@@ -40,58 +40,6 @@
         ]
     },
     {
-        "name": "zendframework/zend-diactoros",
-        "version": "1.3.5",
-        "version_normalized": "1.3.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/zendframework/zend-diactoros.git",
-            "reference": "b1d59735b672865dbeb930805029c24f226e3e77"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/b1d59735b672865dbeb930805029c24f226e3e77",
-            "reference": "b1d59735b672865dbeb930805029c24f226e3e77",
-            "shasum": ""
-        },
-        "require": {
-            "php": "^5.4 || ^7.0",
-            "psr/http-message": "~1.0"
-        },
-        "provide": {
-            "psr/http-message-implementation": "~1.0.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": "~4.6",
-            "squizlabs/php_codesniffer": "^2.3.1"
-        },
-        "time": "2016-03-17 18:02:05",
-        "type": "library",
-        "extra": {
-            "branch-alias": {
-                "dev-master": "1.3-dev",
-                "dev-develop": "1.4-dev"
-            }
-        },
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Zend\\Diactoros\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-2-Clause"
-        ],
-        "description": "PSR HTTP Message implementations",
-        "homepage": "https://github.com/zendframework/zend-diactoros",
-        "keywords": [
-            "http",
-            "psr",
-            "psr-7"
-        ]
-    },
-    {
         "name": "monolog/monolog",
         "version": "1.21.0",
         "version_normalized": "1.21.0.0",
@@ -382,17 +330,17 @@
     },
     {
         "name": "litepubl/cms-composer-installer",
-        "version": "1.01.0",
-        "version_normalized": "1.01.0.0",
+        "version": "1.02.0",
+        "version_normalized": "1.02.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/litepubl/cms-composer-installer.git",
-            "reference": "3283fdb309cbfe32b754e35fe5cebd64c8761004"
+            "reference": "4a79aedc71b488e7f3d7e4fbeb23493a59ee317b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/litepubl/cms-composer-installer/zipball/3283fdb309cbfe32b754e35fe5cebd64c8761004",
-            "reference": "3283fdb309cbfe32b754e35fe5cebd64c8761004",
+            "url": "https://api.github.com/repos/litepubl/cms-composer-installer/zipball/4a79aedc71b488e7f3d7e4fbeb23493a59ee317b",
+            "reference": "4a79aedc71b488e7f3d7e4fbeb23493a59ee317b",
             "shasum": ""
         },
         "require": {
@@ -400,7 +348,7 @@
             "composer/installers": "*",
             "php": ">=7.00.0"
         },
-        "time": "2016-09-03 08:11:15",
+        "time": "2016-09-16 15:46:48",
         "type": "composer-plugin",
         "extra": {
             "class": "litepubl\\Composer\\Plugin"
@@ -425,6 +373,58 @@
         "keywords": [
             "litepubl",
             "litepublisher"
+        ]
+    },
+    {
+        "name": "zendframework/zend-diactoros",
+        "version": "1.3.6",
+        "version_normalized": "1.3.6.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/zendframework/zend-diactoros.git",
+            "reference": "a60da179c37f2c4e44ef734d0b92824a58943f7f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/a60da179c37f2c4e44ef734d0b92824a58943f7f",
+            "reference": "a60da179c37f2c4e44ef734d0b92824a58943f7f",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.4 || ^7.0",
+            "psr/http-message": "~1.0"
+        },
+        "provide": {
+            "psr/http-message-implementation": "~1.0.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^4.6 || ^5.5",
+            "squizlabs/php_codesniffer": "^2.3.1"
+        },
+        "time": "2016-09-07 17:57:29",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.3-dev",
+                "dev-develop": "1.4-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Zend\\Diactoros\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-2-Clause"
+        ],
+        "description": "PSR HTTP Message implementations",
+        "homepage": "https://github.com/zendframework/zend-diactoros",
+        "keywords": [
+            "http",
+            "psr",
+            "psr-7"
         ]
     }
 ]
