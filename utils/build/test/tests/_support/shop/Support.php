@@ -22,9 +22,6 @@ public $title = '#text-title';
 public $cat = '#combo-cat';
 public $text = '#editor-raw';
 public $addButton = 'button[name="newticket"]';
-
-
-
-public $error = '.text-warning';
-
+public $message = '#editor-message';
+public $send = 'button[name="sendmesg"]';
 }
