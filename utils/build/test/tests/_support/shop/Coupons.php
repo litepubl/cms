@@ -14,14 +14,12 @@ class Coupons extends \Page\Base
 {
     public $url = '/admin/shop/products/coupons/';
     public $urlOptions = '/admin/shop/tickets/options/';
-    public $urlCats = '/admin/shop/tickets/cats/';
 public $catTitle = '#text-cattitle';
     public $cabinetUrl = '/admin/cabinet/tickets/';
-    public $addUrl = '/admin/cabinet/tickets/?action=add';
+
+public $value = '#text-coupon';
 public $title = '#text-title';
-public $cat = '#combo-cat';
-public $text = '#editor-raw';
-public $addButton = 'button[name="newticket"]';
-public $message = '#editor-message';
-public $send = 'button[name="sendmesg"]';
+public $expired = '#text-expired';
+public $iddata = '#text-iddata';	
+
 }

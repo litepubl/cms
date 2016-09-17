@@ -24,35 +24,20 @@ $plugin->install('coupons', 160);
 
 $i->openPage($coupons->url);
 $i->wantTo('Create new ');
+$coupon = $i->grabValueFrom($coupons->value);
 $i->fillFild($coupons->title, $data->title);
-
-$i->openPage($coupons->urlCats);
-$i->fillField($coupons->catTitle, $data->cattitle);
-$coupons->screenshot('addcat');
-$coupons->submit();
-$coupons->screenshot('added');
-$i->click($data->cattitle);
-$i->checkError();
-$i->wantTo('Delete new catalog');
-$url = $i->grabFromCurrentUrl();
-$i->openPage($url . '&action=delete&confirm=1');
-$i->openPage($coupons->urlOptions);
-$coupons->submit();
-
-$i->wantTo('Check cabinet');
-$coupons->logout();
-$ulogin->login();
-$i->openPage($coupons->cabinetUrl);
-$i->openPage($coupons->addUrl);
-$i->fillField($coupons->title, $data->title);
-$i->fillField($coupons->text, $data->text);
+$i->fillField($coupons->expired, date('d.m.Y', strtotime('+1 month')));
 $coupons->screenshot('create');
-$i->click($coupons->addButton);
+$coupons->submit();
+$i->wantTo('Edit spec condition');
+$i->fillField($coupons->iddata, $data->iddata);
+$coupons->screenshot('iddata');
+$coupons->submit();
+
+$i->wantTo('Check table link');
+$i->click($coupon);
 $i->checkError();
 
-$i->wantTo('Add message to ticket');
-$i->fillField($coupons->message, $data->message);
-$coupons->screenshot('addmessage');
-$i->click($coupons->send);
-$i->checkError();
-$coupons->screenshot('messages');
+
+
+$coupons->logout();
