@@ -57,6 +57,11 @@ class Request
         return 'localhost';
     }
 
+public function isPostMethod(): bool
+{
+return 'POST' == $_SERVER['REQUEST_METHOD'];
+}
+
     public function getInput()
     {
         return $this->input ? $this->input : file_get_contents('php://input');

@@ -42,3 +42,4 @@ $i->openPage($support->addUrl);
 $i->fillField($support->text, 'Just test');
 $i->fillField($support->text, 'Some text for content');
 $i->click($support->addButton);
+$i->checkError();

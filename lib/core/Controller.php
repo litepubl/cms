@@ -80,7 +80,7 @@ class Controller
 
     public function cached(Context $context)
     {
-        if (!$this->cache) {
+        if (!$this->cache || $context->request->isPostMethod()) {
             return false;
         }
 
