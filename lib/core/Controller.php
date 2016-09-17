@@ -80,12 +80,18 @@ class Controller
 
     public function cached(Context $context)
     {
-        if (!$this->cache || $context->request->isPostMethod()) {
+        if (!$this->cache) {
             return false;
         }
 
         $filename = $this->getCacheFileName($context);
-        return $this->getApp()->cache->includePhp($filename);
+        $cache = $this->getApp()->cache;
+if ($context->request->isPostMethod()) {
+$cache->delete($filename);
+return false;
+} else {
+return $cache->includePhp($filename);
+}
     }
 
     public function getCacheFileName(Context $context)
