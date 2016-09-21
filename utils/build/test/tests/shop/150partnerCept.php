@@ -48,8 +48,10 @@ $partner->submit();
 $i->wantTo('Check promo page');
 $i->openPage($partner->promoUrl);
 $partner->screenshot('editpromo');
+if ($partner->exists($partner->demoText)) {
 $promo = $i->grabTextFrom($partner->demoText);
 $i->fillField($partner->promoEditor, $promo);
+}
 $partner->submit();
 $partner->screenshot('editpromo');
 
