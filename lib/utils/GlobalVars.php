@@ -12,11 +12,31 @@ namespace litepubl\utils;
 
 class GlobalVars
 {
-    private $vars = [];
+    private $items = [];
 
-    public function push()
+public function __construct()
+{
+$this->push($this->get());
+}
+
+public function __destruct()
+{
+$this->set($this->pop());
+}
+
+    public function push(array $item)
     {
-        $this->vars[] = [
+        $this->items[] = $item;
+}
+
+    public function pop()
+    {
+return array_pop($this->items);
+}
+
+public function get(): array
+{
+return [
         '_POST' => $_POST,
         '_GET' => $_GET,
         '_COOKIE' => $_COOKIE,
@@ -26,9 +46,8 @@ class GlobalVars
         ];
     }
 
-    public function pop()
+    public function set(array $a)
     {
-        $a = array_pop($this->vars);
         $_GLOBALS = $a['_GLOBALS'];
         $_POST = $a['_POST'];
         $_GET = $a['_GET'];

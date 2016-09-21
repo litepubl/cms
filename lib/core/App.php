@@ -251,8 +251,20 @@ class App
 
     public function logException(\Throwable $e)
     {
-        $itemRoute = isset($this->context) ? $this->context->itemRoute : [];
-        $this->getLogManager()->logException($e, $itemRoute);
+if (isset($this->context)) {
+$logContext = [
+'url' => $this->context->request->url,
+'status' => $this->context->response->status,
+ 'itemRoute' =>  $this->context->itemRoute,
+];
+} else {
+        $logContext  = [
+'url' => $_SERVER['REQUEST_URI'] ?? '',
+'args' => $_SERVER['argv'] ?? '',
+];
+}
+
+        $this->getLogManager()->logException($e, $logContext);
     }
 
     public function showErrors()
