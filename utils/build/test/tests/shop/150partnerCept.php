@@ -53,21 +53,12 @@ $i->fillField($partner->promoEditor, $promo);
 $partner->submit();
 $partner->screenshot('editpromo');
 
-return;
 $i->wantTo('Check cabinet');
 $partner->logout();
 $ulogin->login();
+$i->openPage($partner->regUrl);
 $i->openPage($partner->cabinetUrl);
-$i->openPage($partner->addUrl);
-$i->fillField($partner->title, $data->title);
-$i->fillField($partner->text, $data->text);
-$partner->screenshot('create');
-$i->click($partner->addButton);
-$i->checkError();
+$i->openPage($partner->cabinetUrl . $partner->payAccount);
+$partner->submit();
 
-$i->wantTo('Add message to ticket');
-$i->fillField($partner->message, $data->message);
-$partner->screenshot('addmessage');
-$i->click($partner->send);
-$i->checkError();
-$partner->screenshot('messages');
+$i->openPage($partner->promoCabinet);
