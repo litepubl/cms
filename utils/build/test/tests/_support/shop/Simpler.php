@@ -12,7 +12,7 @@ namespace shop;
 
 class Simpler extends CommonEditor
 {
-    const URL = '/admin/shop/products/simpler/';
+    public $url = '/admin/shop/products/simpler/';
     public $cat = '#combo-cat';
 
     public function fillProduct(float $price, int $cat)

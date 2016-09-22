@@ -4,5 +4,8 @@
 "catalog": "Каталог",
 "hits": "Хиты продаж",
 "stock": "Учет",
-"close": "Закрыть"
+"close": "Закрыть",
+"price": "2000",
+"sale_price": "500",
+"saleTo": "+1 day"
 }

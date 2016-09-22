@@ -10,8 +10,10 @@
 
 namespace shop;
 
-class YandexMarket extends \Page\Base
+class YandexMarket extends Editor
 {
-    public $url = '/admin/shop/options/yandex/';
-
+    public $urlOptions = '/admin/shop/options/yandex/';
+public $yandexTab = '#tab-yandex';
+public $bid = '#text-bid';
+public $cbid =  '#text-cbid';
 }

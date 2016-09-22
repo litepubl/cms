@@ -10,9 +10,13 @@
 
 namespace shop;
 
+use test\config;
 class Editor extends CommonEditor
 {
-    const URL = '/admin/shop/products/editor/';
+public $lang;
+public $data;
+
+    public $url = '/admin/shop/products/editor/';
 public $sale_disabled = '#checkbox-sale_disabled';
 public $sale_price = '#text-sale_price';
 public $saleFrom = '#text-sale_from';
@@ -29,5 +33,29 @@ public $priceTab = '#tab-price';
 public $catTab = '#tab-catalog';
 public $stockTab = '#tab-stock';
 public $propsTab = '#tab-props';
+
+    public function __construct(\AcceptanceTester $I, string $screenshotName = '')
+{
+parent::__construct($I, $screenshotName);
+$this->lang = config::getLang();
+$this->data = $this->load('shop/editor');
+}
+
+public function fill()
+{
+$i = $this->tester;
+$this->uploadImage();
+$i->checkError();
+
+$i->wantTo('Fill title and content');
+$this->fillTitleContent($this->data->title, $this->data->content);
+$this->setPrice($this->data->price);
+$i->fillField($this->sale_price, $this->data->sale_price);
+$i->fillField($this->saleFrom, date('d.m.Y'));
+$i->fillField($this->saleTo, date('d.m.Y', strtotime($this->data->saleTo)));
+
+$i->fillField($this->saleFromTime, '00:0000');
+$i->fillField($this->saleToTime, '00:0000');
+}
 
 }

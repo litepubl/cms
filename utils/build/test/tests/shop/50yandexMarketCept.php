@@ -14,13 +14,25 @@ use shop\YandexMarket;
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test install and uninstall yandex market plugin');
 $yamarket = new YandexMarket($i, '150yamarket');
-$data = $yamarket->load('shop/yamarket');
+//$data = $yamarket->load('shop/yamarket');
 
 $plugin = new Plugin($i, '150yamarket');
 $plugin->install('yandexmarket', 160);
 $plugin->uninstall('yandexmarket');
 $plugin->install('yandexmarket', 160);
 
-$i->openPage($yamarket->url);
+$i->openPage($yamarket->urlOptions);
 $yamarket->screenshot('options');
 $yamarket->submit();
+
+$i->wantTo('Test tab in product editor');
+$yamarket->open();
+$yamarket->fill();
+$i->click($yamarket->yandexTab);
+usleep(300000);
+$yamarket->screenshot('tab');
+$i->fillField($yamarket->bid, '20');
+$i->fillField($yamarket->cbid, '20');
+$yamarket->submit();
+
+//check xml document needed

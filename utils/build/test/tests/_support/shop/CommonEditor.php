@@ -20,13 +20,7 @@ class CommonEditor extends \Page\Editor
 protected $dirImages = 'D:\OpenServer/unfuddle/shop/doc/demo/flowers/';
 protected static $curImageIndex = 0;
 
-    public function __construct(\AcceptanceTester $I, string $screenshotName = '')
-    {
-parent::__construct($I, $screenshotName);
-$this->url = static::URL;
-}
-
-    public function setPrice(float $price, string $currency = '')
+   public function setPrice(float $price, string $currency = '')
     {
         $i = $this->tester;
         $i->fillField($this->price, $price);

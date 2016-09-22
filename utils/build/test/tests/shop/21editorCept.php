@@ -9,28 +9,14 @@
   */
 
 use shop\Editor;
-use test\config;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test product editor');
 $editor = new Editor($i, '121editor');
-$lang = config::getLang();
-$data = $editor->load('shop/editor');
-
 $i->wantTo('Open new editor');
 $editor->open();
 $editor->screenShot('new');
-$editor->uploadImage();
-$i->checkError();
-
-$i->wantTo('Fill title and content');
-$editor->fillTitleContent($data->title, $data->content);
-$editor->setPrice(2000);
-$i->fillField($editor->sale_price, 500);
-$i->fillField($editor->saleFrom, date('d.m.Y'));
-$i->fillField($editor->saleTo, date('d.m.Y', strtotime('+1 day')));
-$i->fillField($editor->saleFromTime, '00:0000');
-$i->fillField($editor->saleToTime, '00:0000');
+$editor->fill();
 $editor->screenShot('title');
 
 $i->wantTo('Select category');
