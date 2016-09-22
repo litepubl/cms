@@ -37,6 +37,11 @@ public function checkError()
 {
 $this->wantTo('Check errors');
 $text = htmlspecialchars_decode($this->getVisibleText());
+return $this->checkErrorInSource($text);
+}
+
+public function checkErrorInSource(string $text)
+{
 foreach (['exception', 'Warning:', 'Parse error', 'Fatal error', 'Notice: Undefined'] as $err) {
 if (strpos($text, $err) !== false) {
 return $this->assertTrue(false, $err);

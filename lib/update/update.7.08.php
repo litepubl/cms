@@ -8,13 +8,14 @@
  * @version   7.08
   */
 
-namespace shop;
+namespace litepubl\update;
 
-class YandexMarket extends Editor
+use litepubl\post\Meta;
+
+function update708()
 {
-    public $urlOptions = '/admin/shop/options/yandex/';
-public $yandexTab = '#tab-yandex';
-public $bid = '#text-bid';
-public $cbid =  '#text-cbid';
-public $feedUrl = '/yml.xml';
+$meta = Meta::i();
+if (!$meta->db->man->tableExists($meta->table)) {
+$meta->install();
+}
 }

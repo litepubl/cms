@@ -123,7 +123,7 @@ class Meta extends \litepubl\core\Item
         while ($row = $db->fetchassoc($res)) {
             $id = (int)$row['id'];
             if (!isset($instances[$id])) {
-                $instances[$id] = new self();
+                $instances[$id] = new static();
                 $instances[$id]->data['id'] = $id;
             }
 

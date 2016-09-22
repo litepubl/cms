@@ -35,4 +35,9 @@ $i->fillField($yamarket->bid, '20');
 $i->fillField($yamarket->cbid, '20');
 $yamarket->submit();
 
-//check xml document needed
+$i->wantTo('check xml document');
+$url = $i->getAbsoluteUrl();
+$a = parse_url($url);
+$feedUrl = $a['scheme'] . '://' . $a['host'] . $yamarket->feedUrl;
+$xml = file_get_contents($feedUrl);
+$i->checkErrorInSource($xml);
