@@ -124,7 +124,7 @@ class Classes extends Items
         return false;
     }
 
-    public function add($class, $filename, $deprecatedPath = false)
+    public function add(string $class, string $filename, $deprecatedPath = false)
     {
         if ($incfilename = $this->findPSR4($class)) {
             $this->include($incfilename);
