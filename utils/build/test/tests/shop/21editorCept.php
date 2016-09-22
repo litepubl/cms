@@ -20,9 +20,7 @@ $editor->fill();
 $editor->screenShot('title');
 
 $i->wantTo('Select category');
-$i->click($editor->catTab);
-usleep(300000);
-$i->checkOption($data->hits);
+$editor->selectCat();
 $editor->screenShot('category');
 
 $i->wantTo('Test stock tab');

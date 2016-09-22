@@ -25,7 +25,7 @@ $plugin->install('coupons', 160);
 $i->openPage($coupons->url);
 $i->wantTo('Create new ');
 $coupon = $i->grabValueFrom($coupons->value);
-$i->fillFild($coupons->title, $data->title);
+$i->fillField($coupons->title, $data->title);
 $i->fillField($coupons->expired, date('d.m.Y', strtotime('+1 month')));
 $coupons->screenshot('create');
 $coupons->submit();

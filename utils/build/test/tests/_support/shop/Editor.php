@@ -58,4 +58,12 @@ $i->fillField($this->saleFromTime, '00:0000');
 $i->fillField($this->saleToTime, '00:0000');
 }
 
+public function selectCat()
+{
+$i = $this->tester;
+$i->click($this->catTab);
+usleep(300000);
+$i->checkOption($this->data->hits);
+}
+
 }

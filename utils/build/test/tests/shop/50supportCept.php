@@ -54,3 +54,4 @@ $support->screenshot('addmessage');
 $i->click($support->send);
 $i->checkError();
 $support->screenshot('messages');
+$support->logout();

@@ -28,6 +28,8 @@ $yamarket->submit();
 $i->wantTo('Test tab in product editor');
 $yamarket->open();
 $yamarket->fill();
+$yamarket->selectCat();
+
 $i->click($yamarket->yandexTab);
 usleep(300000);
 $yamarket->screenshot('tab');
