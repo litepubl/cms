@@ -31,5 +31,5 @@ $editor->screenShot('stock');
 
 $editor->submit();
 $editor->screenShot('saved');
-$i->saveHtml('editor');
+//$i->saveHtml('editor');
 codecept_debug($i->grabFromCurrentUrl());

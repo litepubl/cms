@@ -83,6 +83,7 @@ public $title = '#text-title';
     {
         $i = $this->tester;
         $i->click($this->updateButton);
+sleep(1);
         $i->checkError();
     }
 

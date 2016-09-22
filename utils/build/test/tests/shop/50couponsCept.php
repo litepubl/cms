@@ -35,7 +35,7 @@ $coupons->screenshot('iddata');
 $coupons->submit();
 
 $i->wantTo('Check table link');
-$i->click($coupon);
+$i->click(['link' => $coupon]);
 $i->checkError();
 
 
