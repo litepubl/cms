@@ -11,11 +11,17 @@
 namespace litepubl\update;
 
 use litepubl\post\Meta;
+use litepubl\perms\Files;
 
 function update708()
 {
 $meta = Meta::i();
 if (!$meta->db->man->tableExists($meta->table)) {
 $meta->install();
+}
+
+$files = Files::i();
+if (!is_dir($files->getApp()->paths->files . 'private')) {
+$files->install();
 }
 }
