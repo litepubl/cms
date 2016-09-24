@@ -69,7 +69,7 @@ class UserOptions extends Items
         $this->setItem($item);
     }
 
-    public function setItem($item)
+    public function setItem(array $item)
     {
         $this->items[(int)$item['id']] = $item;
         $i = array_search($item['id'], $this->defitems);

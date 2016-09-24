@@ -150,7 +150,8 @@ class Menu extends \litepubl\pages\Menu
 
     public function getAdminurl(): string
     {
-        return $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';
+$site = $this->getApp()->site;
+        return $site->url . $this->url . $site->q . 'id';
     }
 
     public function getLang(string $name = ''): Lang
