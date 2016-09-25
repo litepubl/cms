@@ -14,10 +14,9 @@ git archive --output=temp.zip --prefix=release.cms/ head
 cd %dom%
 unzip ../unfuddle/shop/temp.zip
 del ..\unfuddle\shop\temp.zip
-
+echo shop= "../shop">release.cms\plugins\shop-plugins.ini
 cd %cur%
-pause
-exit
-php tests\updateftp\install.php
+curl -o tests/_data/admin.json  --connect-timeout  300  "http://release.cms/?mode=auto&name=Release&email=j@jj.jj&description=shoper&dbname=jusoft_test&dblogin=jusoft_test&dbpassword=test&dbversion=1&dbprefix=shop_&lang=ru&mode=remote&resulttype=json"
 del tests\_output\*.* /f /q
-vendor\bin\codecept.bat run updateftp --steps --html --debug>bresult.txt
+call vendor\bin\codecept.bat run shop/70hostingCept.php --steps --html --debug>bresult.txt
+echo ok finished
