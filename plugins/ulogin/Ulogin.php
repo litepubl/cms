@@ -41,6 +41,7 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         $this->addEvents('added', 'onadd', 'onphone');
         $this->table = 'ulogin';
         $this->data['url'] = '/admin/ulogin.php';
+        $this->data['remember'] = true;
         $this->data['nets'] = [];
     }
 
@@ -216,17 +217,13 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
             }
         }
 
-        $expired = time() + 31536000;
+        $expired = $this->remember ? time() + 31536000  : time() + 8 * 3600;
         $cookie = Str::md5Uniq();
         $options = $this->getApp()->options;
         $options->user = $id;
         $options->updateGroup();
         $options->setCookies($cookie, $expired);
-        if ($options->inGroup('admin')) {
-            setcookie('litepubl_user_flag', 'true', $expired, $this->getApp()->site->subdir . '/', false);
-        }
-
-        setcookie('litepubl_regservice', $info['network'], $expired, $this->getApp()->site->subdir . '/', false);
+        $options->setCookie('litepubl_regservice', $info['network'], $expired);
         $this->onAdd(
             [
             'id' => $id,

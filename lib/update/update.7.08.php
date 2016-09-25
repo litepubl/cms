@@ -12,16 +12,26 @@ namespace litepubl\update;
 
 use litepubl\post\Meta;
 use litepubl\perms\Files;
+use litepubl\plugins\ulogin\Ulogin;
 
 function update708()
 {
 $meta = Meta::i();
-if (!$meta->db->man->tableExists($meta->table)) {
+$man = $meta->db->man;
+if (!$man->tableExists($meta->table)) {
 $meta->install();
 }
 
 $files = Files::i();
 if (!is_dir($files->getApp()->paths->files . 'private')) {
 $files->install();
+}
+
+$ulogin = Ulogin::i();
+if ($man->tableExists($ulogin->table)) {
+if (!isset($ulogin->data['remember'])) {
+$ulogin->data['remember'] = true;
+$ulogin->save();
+}
 }
 }
