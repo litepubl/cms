@@ -39,12 +39,14 @@ class Installer
     public $language;
     public $mode;
     public $lite;
+public $plugins;
     public $resulttype;
     public $installed;
 
     public function __construct()
     {
         $this->app = litepubl::$app;
+$this->plugins = [];
     }
 
     public function DefineMode()
@@ -66,7 +68,7 @@ class Installer
         }
 
         if (!empty($_GET['lang'])) {
-            if ($this->langexists($_GET['lang'])) {
+            if ($this->langExists($_GET['lang'])) {
                 $this->language = $_GET['lang'];
             }
         }
@@ -77,6 +79,10 @@ class Installer
 
         if (!empty($_GET['lite'])) {
             $this->lite = $_GET['lite'] == 1;
+        }
+
+        if (!empty($_GET['plugins'])) {
+            $this->plugins = explode(',', $_GET['plugins']);
         }
 
         if (!empty($_GET['resulttype'])) {
@@ -243,6 +249,10 @@ class Installer
         $plugins->add('photoswipe');
         $plugins->add('photoswipeThumbnail');
         $plugins->add('bootstrap');
+
+foreach ($this->plugins as $name) {
+$plugins->add($name);
+}
         $plugins->unlock();
 
         $xmlrpc->unlock();
@@ -330,10 +340,6 @@ class Installer
             exit;
         }
 
-        if (!function_exists('mcrypt_encrypt')) {
-            echo 'LitePublisher requires "mcrypt_encrypt" functions';
-            exit;
-        }
     }
 
     public function CheckApache($rewrite)

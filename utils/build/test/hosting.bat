@@ -16,7 +16,8 @@ unzip ../unfuddle/shop/temp.zip
 del ..\unfuddle\shop\temp.zip
 echo shop= "../shop">release.cms\plugins\shop-plugins.ini
 cd %cur%
-curl -o tests/_data/admin.json  --connect-timeout  300  "http://release.cms/?mode=auto&name=Release&email=j@jj.jj&description=shoper&dbname=jusoft_test&dblogin=jusoft_test&dbpassword=test&dbversion=1&dbprefix=shop_&lang=ru&mode=remote&resulttype=json"
+curl -o tests/_data/shop/release.json  --connect-timeout  300  "http://release.cms/?mode=auto&name=Release&email=j@jj.jj&description=shoper&dbname=jusoft_test&dblogin=jusoft_test&dbpassword=test&dbversion=1&dbprefix=shop_&lang=ru&mode=remote&resulttype=json&plugins=base,shoppingcart,real,remote"
 del tests\_output\*.* /f /q
-call vendor\bin\codecept.bat run shop/70hostingCept.php --steps --html --debug>bresult.txt
+@rem call vendor\bin\codecept.bat run shop/70hostingCept.php --steps --html --debug>bresult.txt
 echo ok finished
+pause
