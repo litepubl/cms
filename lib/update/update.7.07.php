@@ -25,5 +25,3 @@ function update707()
     }
 
 }
-
-var_dump($items);
