@@ -5,7 +5,7 @@
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
  *  version   7.08
-  */
+ */
 
 (function(window, Logger) {
   'use strict';
@@ -18,6 +18,10 @@
   }
 
   window.onerror = function(mesg, url, line, col, error) {
+    if (!line && !url) {
+      return;
+    }
+
     mesg = mesg + "\nurl: " + url + "\non line " + line;
     if (col) {
       mesg = mesg + " symbol " + col;
