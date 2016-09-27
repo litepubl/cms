@@ -15,4 +15,3 @@ use test\config;
 
 config::init();
 Autoload::addNamespace('litepubl', config::$home . '/lib');
-//self::$config['modules']['config']['WebDriver']['url'] = $url;

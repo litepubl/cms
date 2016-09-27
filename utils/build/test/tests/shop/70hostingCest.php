@@ -1,23 +1,19 @@
 <?php
-/**
- * Lite Publisher CMS
- *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
- * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
- * @link      https://github.com/litepubl\cms
- * @version   7.08
-  */
+//codecept g: cest shop hosting
 
 use Page\Plugin;
 use Page\Ulogin;
 use shop\Hosting;
-return;
-$i = new AcceptanceTester($scenario);
+
+class HostingCest
+{
+    public function tryToTest(AcceptanceTester $i)
+    {
 $i->wantTo('Test install and uninstall hosting');
 $hosting = new Hosting($i, '170hosting');
 $data = $hosting->load('shop/hosting');
-$ulogin = new Ulogin($i, '150hosting');
-$plugin = new Plugin($i, '150hosting');
+$ulogin = new Ulogin($i, '170hosting');
+$plugin = new Plugin($i, '170hosting');
 $plugin->install('hosting', 160);
 $plugin->uninstall('hosting');
 $plugin->install('hosting', 160);
@@ -55,3 +51,5 @@ $i->click($hosting->send);
 $i->checkError();
 $hosting->screenshot('messages');
 $hosting->logout();
+}
+}

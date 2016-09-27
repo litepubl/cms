@@ -30,6 +30,8 @@ public $title = '#text-title';
         $I->maximizeWindow();
         if ($screenshotName) {
                 $this->screenshotName = $screenshotName;
+} else {
+                $this->screenshotName = $this->getNameFromTrace();
         }
     }
 
@@ -165,5 +167,18 @@ return (int) ($a['id'] ?? 0);
 }
 
 return 0;
+}
+
+protected function getNameFromTrace(int $index = 1): string
+{
+$trace = debug_backtrace();
+$filename = basename($trace[$index]['file']);
+
+//trick with big letter C (Cept.php or Cest.php);
+if ($i = strrpos($filename, 'C')) {
+return substr($filename, $i);
+}
+
+return '';
 }
 }
