@@ -8,7 +8,7 @@
  * @version   7.08
   */
 
-use Page\Plugin;
+use Page\;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test install and uninstall shopping cart');

@@ -16,10 +16,11 @@ class Base
 {
     public $loginUrl = '/admin/login/';
     public $logoutUrl = '/admin/logout/';
+public $pluginsUrl = '/admin/plugins/';
 public $title = '#text-title';
     public $updateButton = '#submitbutton-update';
     public $postlink= '.post-bookmark';
-    public $screenshotName = '00base';
+    public $screenshotName;
     protected $screenshotIndex = 1;
     protected $tester;
     protected $cacheFiles = [];
@@ -45,7 +46,6 @@ public $title = '#text-title';
         $i = $this->tester;
         $i->wantTo('log out');
         $i->openPage($this->logoutUrl);
-        return $this;
     }
 
     public function login()
@@ -58,7 +58,6 @@ public $title = '#text-title';
             $i->openPage($login->url);
         }
         $login->login();
-        return $this;
     }
 
     public function open(string $url = '')
@@ -102,12 +101,13 @@ sleep(1);
         codecept_debug(var_export($i->executeJs('return litepubl.tabs.flagLoaded'), true));
         codecept_debug(var_export($i->executeJs('return litepubl.tabs.ajax'), true));
         $i->waitForJS('return litepubl.tabs.flagLoaded', 3);
-        //$i->checkError();
     }
 
     public function screenshot(string $subname)
     {
-        $this->tester->screenshot(sprintf('%s.%02d%s', $this->screenshotName, $this->screenshotIndex++, $subname));
+if (config::$screenshot) {
+$this->tester->makeScreenshot(sprintf('%s%s.%02d%s', Config::$screenshotPrefix , $this->screenshotName, $this->screenshotIndex++, $subname));
+}
     }
 
     public function getFile(string $filename)
@@ -169,14 +169,51 @@ return (int) ($a['id'] ?? 0);
 return 0;
 }
 
-protected function getNameFromTrace(int $index = 1): string
+    public function installPlugin(string $name, int $timeout = 10)
+    {
+        $this->open($this->pluginsUrl);
+        $i = $this->tester;
+        $i->wantTo("Install plugin $name");
+        $i->waitForElement("input[name=$name]", 10);
+        $i->checkOption("input[name=$name]");
+        $i->click($this->updateButton);
+        $i->checkError();
+        $i->waitForElement("input[name=$name]", $timeout);
+        $i->seeCheckboxIsChecked("input[name=$name]");
+    }
+
+    public function uninstallPlugin(string $name)
+    {
+        $this->open($this->pluginsUrl);
+        $i = $this->tester;
+        $i->wantTo("Uninstall plugin $name");
+        $i->waitForElement("input[name=$name]", 10);
+        $i->UncheckOption("input[name=$name]");
+        $i->click($this->updateButton);
+        $i->checkError();
+        $i->waitForElement("input[name=$name]", 10);
+        $i->dontSeeCheckboxIsChecked("input[name=$name]");
+    }
+
+    public function reInstallPlugin(string $name, int $timeout = 10)
+{
+$this->installPlugin($name, $timeout);
+$this->uninstallPlugin($name);
+$this->installPlugin($name, $timeout);
+}
+
+protected function getNameFromTrace(): string
 {
 $trace = debug_backtrace();
-$filename = basename($trace[$index]['file']);
+foreach ($trace as $item) {
+if ($item['function'] == '__construct') {
+$filename = basename($item['file']);
 
 //trick with big letter C (Cept.php or Cest.php);
 if ($i = strrpos($filename, 'C')) {
-return substr($filename, $i);
+return substr($filename, 0, $i);
+}
+}
 }
 
 return '';

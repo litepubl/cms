@@ -8,7 +8,8 @@ class config
 {
     public static $home;
     public static $_data;
-    public static $screenshot = false;
+    public static $screenshotEnabled = false;
+public static $screenshotPrefix = '';
     private static $lang;
 
     public function init()

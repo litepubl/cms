@@ -8,16 +8,13 @@
  * @version   7.08
   */
 
-use Page\Plugin;
 use Page\Editor;
 use page\Posts;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test wikiwords plugin');
-$plugin = new Plugin($i, '20wikiwords');
-$plugin->install('wikiwords');
-
 $editor = new Editor($i, '20wikiwords');
+$editor->installPlugin('wikiwords');
 $editor->open();
 $i->wantTo('Create post with declared wiki word');
 $i->checkOption($editor->category);
@@ -61,4 +58,4 @@ $posts = new Posts($i);
 $posts->screenShotName = '20.wikiwords.05';
 $posts->delete($id1, $id2);
 
-$plugin->uninstall('wikiwords');
+$editor->uninstallPlugin('wikiwords');

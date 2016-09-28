@@ -1,7 +1,5 @@
 <?php
 
-use test\config;
-
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -63,13 +61,6 @@ $url = substr($url, 0, $i);
 }
 
 return $url;
-}
-
-public function screenShot(string $name)
-{
-if (config::$screenshot) {
-$this->makeScreenshot($name);
-}
 }
 
 public function appendJS(string $js)

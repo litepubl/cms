@@ -8,7 +8,6 @@
  * @version   7.08
   */
 
-use Page\Plugin;
 use Page\Ulogin;
 use shop\Partner;
 
@@ -17,10 +16,9 @@ $i->wantTo('Test install and uninstall support partner program in shop');
 $partner = new Partner($i, '150partner');
 $data = $partner->load('shop/partner');
 $ulogin = new Ulogin($i, '150partner');
-$plugin = new Plugin($i, '150partner');
-$plugin->install('partner', 160);
-$plugin->uninstall('partner');
-$plugin->install('partner', 160);
+$partner ->installPlugin('partner', 160);
+$partner ->uninstallPlugin('partner');
+$partner ->installPlugin('partner', 160);
 
 $i->openPage($partner->url);
 $i->openPage($partner->outUrl);

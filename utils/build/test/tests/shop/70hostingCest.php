@@ -1,6 +1,7 @@
 <?php
 //codecept g: cest shop hosting
 
+namespace litepubl\test\shop;
 use Page\Plugin;
 use Page\Ulogin;
 use shop\Hosting;

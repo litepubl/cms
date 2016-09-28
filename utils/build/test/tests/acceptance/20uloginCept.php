@@ -8,17 +8,15 @@
  * @version   7.08
   */
 
-use Page\Plugin;
 use Page\Ulogin;
 use page\Comment;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test ulogin plugin');
-$ulogin = new Ulogin($i, '20ulogin');
+$ulogin = new Ulogin($i);
 $comment = new Comment($i);
 $data = $comment->load('comment');
-$plugin = new Plugin($i);
-$plugin->install('ulogin');
+$ulogin->installPlugin('ulogin');
 $ulogin->screenshot('install');
 $plugin->logout();
 
@@ -53,6 +51,6 @@ $ulogin->click();
 $i->waitForUrlChanged(10);
 codecept_debug($i->grabFromCurrentUrl());
 $ulogin->logout();
-$plugin->uninstall('ulogin');
+$ulogin->uninstallPlugin('ulogin');
 $ulogin->screenshot('uninstall');
 $ulogin->deleteUser();

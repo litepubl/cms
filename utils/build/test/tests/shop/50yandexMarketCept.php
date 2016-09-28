@@ -8,19 +8,13 @@
  * @version   7.08
   */
 
-use Page\Plugin;
 use shop\YandexMarket;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test install and uninstall yandex market plugin');
 $yamarket = new YandexMarket($i, '150yamarket');
 //$data = $yamarket->load('shop/yamarket');
-
-$plugin = new Plugin($i, '150yamarket');
-$plugin->install('yandexmarket', 160);
-$plugin->uninstall('yandexmarket');
-$plugin->install('yandexmarket', 160);
-
+$yamarket ->reInstall('yandexmarket', 160);
 $i->openPage($yamarket->urlOptions);
 $yamarket->screenshot('options');
 $yamarket->submit();

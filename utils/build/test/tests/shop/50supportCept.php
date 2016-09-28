@@ -8,7 +8,6 @@
  * @version   7.08
   */
 
-use Page\Plugin;
 use Page\Ulogin;
 use shop\Support;
 
@@ -17,10 +16,7 @@ $i->wantTo('Test install and uninstall support system in shop');
 $support = new Support($i, '150support');
 $data = $support->load('shop/support');
 $ulogin = new Ulogin($i, '150support');
-$plugin = new Plugin($i, '150support');
-$plugin->install('support', 160);
-$plugin->uninstall('support');
-$plugin->install('support', 160);
+$support ->reInstallPlugin('support', 160);
 
 $i->openPage($support->url);
 $i->wantTo('Create new category');

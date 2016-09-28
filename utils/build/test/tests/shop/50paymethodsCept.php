@@ -8,11 +8,11 @@
  * @version   7.08
   */
 
-use Page\Plugin;
+use Page\Base;
 
 $i = new AcceptanceTester($scenario);
 $i->wantTo('Test install and uninstall yandex market plugin');
-$plugin = new Plugin($i, '150paymethods');
+$plugin = new Base($i, '150paymethods');
 foreach (['qiwi', 'robokassa', 'webmoney', 'yandexmoney'] as $name) {
 $plugin->install($name, 160);
 $plugin->uninstall($name);

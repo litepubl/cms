@@ -8,7 +8,6 @@
  * @version   7.08
   */
 
-use Page\Plugin;
 use Page\Ulogin;
 use shop\Coupons;
 
@@ -17,10 +16,9 @@ $i->wantTo('Test install and uninstall couponsin shop');
 $coupons = new Coupons($i, '150coupons');
 $data = $coupons->load('shop/coupons');
 $ulogin = new Ulogin($i, '150coupons');
-$plugin = new Plugin($i, '150coupons');
-$plugin->install('coupons', 160);
-$plugin->uninstall('coupons');
-$plugin->install('coupons', 160);
+$coupons ->installPlugin('coupons', 160);
+$coupons ->uninstallPlugin('coupons');
+$coupons ->installPlugin('coupons', 160);
 
 $i->openPage($coupons->url);
 $i->wantTo('Create new ');
