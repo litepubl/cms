@@ -25,10 +25,8 @@ public $title = '#text-title';
     protected $tester;
     protected $cacheFiles = [];
 
-    public function __construct(\AcceptanceTester $I, string $screenshotName = '')
+    public function __construct(string $screenshotName = '')
     {
-        $this->tester = $I;
-        $I->maximizeWindow();
         if ($screenshotName) {
                 $this->screenshotName = $screenshotName;
 } else {
@@ -36,19 +34,31 @@ public $title = '#text-title';
         }
     }
 
-    public function load($name)
+public function tryTest(\AcceptanceTester $I)
+{
+        $this->tester = $I;
+        $I->maximizeWindow();
+$this->test($I);
+$this->tester = null;
+}
+
+protected function test(\AcceptanceTester $I)
+{
+}
+
+    protected function load($name)
     {
         return config::load($name);
     }
 
-    public function logout()
+    protected function logout()
     {
         $i = $this->tester;
         $i->wantTo('log out');
         $i->openPage($this->logoutUrl);
     }
 
-    public function login()
+    protected function login()
     {
         $i = $this->tester;
         $login = Login::i($i);
@@ -60,7 +70,7 @@ public $title = '#text-title';
         $login->login();
     }
 
-    public function open(string $url = '')
+    protected function open(string $url = '')
     {
         $i = $this->tester;
         $i->wantTo('Open page');
@@ -80,7 +90,7 @@ public $title = '#text-title';
         }
     }
 
-    public function submit()
+    protected function submit()
     {
         $i = $this->tester;
         $i->click($this->updateButton);
@@ -88,7 +98,7 @@ sleep(1);
         $i->checkError();
     }
 
-    public function clickTab(string $tab)
+    protected function clickTab(string $tab)
     {
         $i = $this->tester;
         if ($i->executeJS('return "flagLoaded" in litepubl.tabs;')) {
@@ -103,14 +113,14 @@ sleep(1);
         $i->waitForJS('return litepubl.tabs.flagLoaded', 3);
     }
 
-    public function screenshot(string $subname)
+    protected function screenshot(string $subname)
     {
 if (config::$screenshot) {
 $this->tester->makeScreenshot(sprintf('%s%s.%02d%s', Config::$screenshotPrefix , $this->screenshotName, $this->screenshotIndex++, $subname));
 }
     }
 
-    public function getFile(string $filename)
+    protected function getFile(string $filename)
     {
         if (!isset($this->cacheFiles[$filename])) {
             //remove copright
@@ -125,12 +135,12 @@ $this->tester->makeScreenshot(sprintf('%s%s.%02d%s', Config::$screenshotPrefix ,
         return $this->cacheFiles[$filename];
     }
 
-    public function js(string $filename)
+    protected function js(string $filename)
     {
         return $this->tester->executeJs($this->getFile(__DIR__ . '/js/' . $filename));
     }
 
-    public function upload(string $filename)
+    protected function upload(string $filename)
     {
         $i = $this->tester;
         $selector   = $i->executeJs($this->getFile(__DIR__ . '/js/addTmpUpload.js'));
@@ -138,27 +148,27 @@ $this->tester->makeScreenshot(sprintf('%s%s.%02d%s', Config::$screenshotPrefix ,
         $i->checkError();
     }
 
-    public function waitForOpenDialog()
+    protected function waitForOpenDialog()
     {
         $this->tester->wantto('Wait open dialog');
         $this->js('dialog.js');
         $this->tester->waitForJs('return litepubl.dialogOpened;', 4);
     }
 
-    public function waitForCloseDialog()
+    protected function waitForCloseDialog()
     {
         $this->tester->wantto('Wait close dialog');
         $this->js('dialog.js');
         $this->tester->waitForJs('return !litepubl.dialogOpened;', 4);
     }
 
-public function exists(string $selector): bool
+protected function exists(string $selector): bool
 {
 $selector = str_replace("'", '"', $selector);
 return $this->tester->executeJs("return \$('$selector').length;") > 0;
 }
 
-public function getIdFromUrl(): int
+protected function getIdFromUrl(): int
 {
         $ur = $this->tester->grabFromCurrentUrl();
 if ($i = strpos($url, '?')) {
@@ -169,7 +179,7 @@ return (int) ($a['id'] ?? 0);
 return 0;
 }
 
-    public function installPlugin(string $name, int $timeout = 10)
+    protected function installPlugin(string $name, int $timeout = 10)
     {
         $this->open($this->pluginsUrl);
         $i = $this->tester;
@@ -182,7 +192,7 @@ return 0;
         $i->seeCheckboxIsChecked("input[name=$name]");
     }
 
-    public function uninstallPlugin(string $name)
+    protected function uninstallPlugin(string $name)
     {
         $this->open($this->pluginsUrl);
         $i = $this->tester;
@@ -195,7 +205,7 @@ return 0;
         $i->dontSeeCheckboxIsChecked("input[name=$name]");
     }
 
-    public function reInstallPlugin(string $name, int $timeout = 10)
+    protected function reInstallPlugin(string $name, int $timeout = 10)
 {
 $this->installPlugin($name, $timeout);
 $this->uninstallPlugin($name);

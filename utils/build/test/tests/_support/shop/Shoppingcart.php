@@ -8,9 +8,8 @@
  * @version   7.08
   */
 
-use Page\shop\Shoppingcart;
+namespace shop;
 
-$i = new AcceptanceTester($scenario);
-$i->wantTo('Test install and uninstall shopping cart');
-$plugin = new Shoppingcart($i, '150shoppingcart');
-$plugin->reInstall('shoppingcart', 160);
+class Shoppingcart extends \Page\Base
+{
+}

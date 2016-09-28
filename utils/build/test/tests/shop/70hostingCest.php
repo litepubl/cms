@@ -2,7 +2,7 @@
 //codecept g: cest shop hosting
 
 namespace litepubl\test\shop;
-use Page\Plugin;
+
 use Page\Ulogin;
 use shop\Hosting;
 
@@ -11,13 +11,9 @@ class HostingCest
     public function tryToTest(AcceptanceTester $i)
     {
 $i->wantTo('Test install and uninstall hosting');
-$hosting = new Hosting($i, '170hosting');
 $data = $hosting->load('shop/hosting');
 $ulogin = new Ulogin($i, '170hosting');
-$plugin = new Plugin($i, '170hosting');
-$plugin->install('hosting', 160);
-$plugin->uninstall('hosting');
-$plugin->install('hosting', 160);
+$this->reInstall('hosting', 160);
 
 $i->openPage($hosting->url);
 $i->wantTo('Create new category');
