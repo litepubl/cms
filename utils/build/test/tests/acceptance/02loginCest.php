@@ -1,19 +1,18 @@
 <?php
 namespace litepubl\test\acceptance;
 
-class LoginCest extends \Page\Login
+class LoginCest extends \Page\Base
 {
+protected $boardUrl = '/admin/';
     protected function test(\AcceptanceTester $i)
     {
 $i->wantTo('Test login and logout');
-$i->openPage($this->url);
+$i->openPage($this->loginUrl);
 $this->screenShot('form');
-
-$login->login();
-$i->seeCurrentUrlEquals('/admin/');
+$this->login();
+$i->seeCurrentUrlEquals($this->boardUrl);
 $this->screenShot('board');
-
-$login->logout();
-$i->seeCurrentUrlEquals($login->url);
+$this->logout();
+$i->seeCurrentUrlEquals($this->loginUrl);
 }
 }

@@ -14,14 +14,18 @@ use test\config;
 
 class Base
 {
-    public static $screenshotEnabled = false;
-public static $screenshotPrefix = '';
-    public $loginUrl = '/admin/login/';
-    public $logoutUrl = '/admin/logout/';
-public $pluginsUrl = '/admin/plugins/';
-public $title = '#text-title';
-    public $updateButton = '#submitbutton-update';
-    public $postlink= '.post-bookmark';
+    protected static $screenshotEnabled = false;
+protected static $screenshotPrefix = '';
+protected static $adminAccount;
+    protected $loginUrl = '/admin/login/';
+    protected $logoutUrl = '/admin/logout/';
+    protected $emailAccount = '#form-login [name=email]';
+    protected $passwordAccount = '#password-password';
+    protected $submitAccount = '#submitbutton-log_in';
+protected $pluginsUrl = '/admin/plugins/';
+protected $title = '#text-title';
+    protected $updateButton = '#submitbutton-update';
+    protected $postlink= '.post-bookmark';
     protected $screenshotName;
     protected $screenshotIndex = 1;
     protected $tester;
@@ -63,13 +67,32 @@ protected function test(\AcceptanceTester $I)
     protected function login()
     {
         $i = $this->tester;
-        $login = Login::i($i);
-        $cur = $i->grabFromCurrentUrl();
-        codecept_debug($cur);
-        if (strpos($cur, $login->url) !== 0) {
-            $i->openPage($login->url);
+        $currentUrl = $i->grabFromCurrentUrl();
+        codecept_debug($currentUrl);
+        if (strpos($currentUrl, $this->loginUrl) !== 0) {
+            $i->openPage($this->loginUrl);
         }
-        $login->login();
+$account = $this->getAdminAccount();
+        $this->authAccount($account->email, $account->password);
+    }
+
+protected function getAdminAccount()
+{
+        if (!static::$adminAccount) {
+            static::$adminAccount = $this->load('admin');
+        }
+
+return static::$adminAccount;
+}
+
+    protected function authAccount(string $email, string $password)
+    {
+        $i = $this->tester;
+        $i->wantTo('log in');
+        $i->fillField($this->emailAccount, $email);
+        $i->fillField($this->passwordAccount, $password);
+        $i->click($this->submitAccount);
+        $i->checkError();
     }
 
     protected function open(string $url = '')
