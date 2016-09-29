@@ -1,9 +1,8 @@
 <?php
 namespace litepubl\test\acceptance;
 
-use Page\Install;
-use Page\Installed;
 use test\config;
+use litepubl\utils\Filer;
 
 class InstallCest extends \Page\Base
 {
@@ -20,10 +19,12 @@ class InstallCest extends \Page\Base
     protected $dbpassword = '#text-dbpassword';
     protected $dbprefix = '#text-dbprefix';
     protected $submit = '#submitbutton-createblog';
+    protected $emailText = '#email';
+    protected $passwordText = '#password';
+    protected $loginLink = '#admin-login';
 
-    protected function test(AcceptanceTester $i)
+    protected function test(\AcceptanceTester $i)
     {
-$i->wantTo('Test install and uninstall shop plugin');
 if (config::exists('admin')) {
     codecept_debug('Install skiped');
     return;
@@ -32,30 +33,26 @@ if (config::exists('admin')) {
 $this->removeData();
 $i->wantTo('Open install form');
 $i->openPage($this->url);
-$this->screenShot(form');
+$this->screenShot('form');
 
-//$install->switchLanguages();
+//$this->switchLanguages();
 $i->wantTo('Fill install form');
 $data = $this->load('install');
 $i->fillField($this->email, $data->email);
 $i->fillField($this->name, $data->name);
-$i->fillField($install->description, $data->description);
+$i->fillField($this->description, $data->description);
 $i->fillField($this->dbname, $data->dbname);
 $i->fillField($this->dblogin, $data->dblogin);
 $i->fillField($this->dbpassword, $data->dbpassword);
 $i->fillField($this->dbprefix, $data->dbprefix);
-$i->screenshot('01.02filled');
-
+$this->screenshot('form');
 $i->click($this->submit);
 $i->checkError();
 $i->assertFileExists(config::$home . '/storage/data/storage.inc.php', 'CMS not installed: storage not found');
-
-$thised = new Installed($i);
-$thised->saveAccount();
-$this->screenShot(installed');
-
+$this->saveAccount();
+$this->screenShot('installed');
 $i->wantTo('Open login page');
-$i->click($thised->link);
+$i->click($this->loginLink);
 $i->checkError();
 }
 
@@ -87,6 +84,18 @@ $i->checkError();
         Filer::delete(config::$home . '/files/imgresize', true, false);
 
         $i->assertFileNotExists(config::$home . '/storage/data/index.htm', 'Data folder not empty');
-        return $this;
+    }
+
+    protected function saveAccount()
+    {
+        $i = $this->tester;
+        $i->wantTo('Save admin account');
+
+        $data = [
+        'email' => $i->grabTextFrom($this->emailText),
+        'password' => $i->grabTextFrom($this->passwordText),
+        ];
+
+        config::save('admin', $data);
     }
 }

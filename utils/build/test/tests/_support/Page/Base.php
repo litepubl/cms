@@ -115,7 +115,7 @@ sleep(1);
 
     protected function screenshot(string $subname)
     {
-if (config::$screenshot) {
+if (config::$screenshotEnabled) {
 $this->tester->makeScreenshot(sprintf('%s%s.%02d%s', Config::$screenshotPrefix , $this->screenshotName, $this->screenshotIndex++, $subname));
 }
     }

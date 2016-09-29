@@ -56,6 +56,10 @@ class Phantoman extends \Codeception\Platform\Extension
             $this->config['path'] .= '.exe';
         }
 
+        if (!file_exists(realpath($this->config['path']))) {
+            throw new ExtensionException($this, "File not found: {$this->config['path']}.");
+        }
+
         // Set default WebDriver port
         if (!isset($this->config['port'])) {
             $this->config['port'] = 4444;
@@ -213,6 +217,8 @@ class Phantoman extends \Codeception\Platform\Extension
             'localToRemoteUrlAccess' => '--local-to-remote-url-access',
             'outputEncoding' => '--output-encoding',
             'scriptEncoding' => '--script-encoding',
+            'webdriverLoglevel' => '--webdriver-loglevel',
+            'webdriverLogfile' => '--webdriver-logfile',
         );
 
         $params = array();
@@ -265,7 +271,8 @@ class Phantoman extends \Codeception\Platform\Extension
             }
 
             // If the current suites aren't in the desired array, return without starting PhantomJS
-            if (!in_array($e->getSuite()->getName(), $suites)) {
+            if (!in_array($e->getSuite()->getBaseName(), $suites)
+                && !in_array($e->getSuite()->getName(), $suites)) {
                 return;
             }
         }

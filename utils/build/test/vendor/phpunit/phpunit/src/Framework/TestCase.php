@@ -1533,6 +1533,29 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     }
 
     /**
+     * Returns a partial test double for the specified class.
+     *
+     * @param string $originalClassName
+     * @param array  $methods
+     *
+     * @return PHPUnit_Framework_MockObject_MockObject
+     *
+     * @throws PHPUnit_Framework_Exception
+     *
+     * @since Method available since Release 5.5.0
+     */
+    protected function createPartialMock($originalClassName, array $methods)
+    {
+        return $this->getMockBuilder($originalClassName)
+                    ->disableOriginalConstructor()
+                    ->disableOriginalClone()
+                    ->disableArgumentCloning()
+                    ->disallowMockingUnknownTypes()
+                    ->setMethods(empty($methods) ? null : $methods)
+                    ->getMock();
+    }
+
+    /**
      * Returns a mock object for the specified class.
      *
      * @param string     $originalClassName       Name of the class to mock.
@@ -2282,10 +2305,6 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
      */
     private function startOutputBuffering()
     {
-        while (!defined('PHPUNIT_TESTSUITE') && ob_get_level() > 0) {
-            ob_end_clean();
-        }
-
         ob_start();
 
         $this->outputBufferingActive = true;
@@ -2298,7 +2317,7 @@ abstract class PHPUnit_Framework_TestCase extends PHPUnit_Framework_Assert imple
     private function stopOutputBuffering()
     {
         if (ob_get_level() != $this->outputBufferingLevel) {
-            while (ob_get_level() > 0) {
+            while (ob_get_level() >= $this->outputBufferingLevel) {
                 ob_end_clean();
             }
 

@@ -26,7 +26,6 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->module->_initialize();
         $this->module->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
         $this->phpBrowser->_before(Stub::makeEmpty('\Codeception\Test\Cest'));
-
     }
 
     private function setStubResponse($response)
@@ -147,6 +146,21 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($request->getParameters());
     }
 
+    /**
+     * @issue https://github.com/Codeception/Codeception/issues/3516
+     */
+    public function testApplicationJsonHeaderCheckIsCaseInsensitive()
+    {
+        $this->module->haveHttpHeader('content-type', 'application/json');
+        $this->module->sendPOST('/', array('name' => 'john'));
+        /** @var $request \Symfony\Component\BrowserKit\Request  **/
+        $request = $this->module->client->getRequest();
+        $server = $request->getServer();
+        $this->assertEquals('application/json', $server['HTTP_CONTENT_TYPE']);
+        $this->assertJson($request->getContent());
+        $this->assertEmpty($request->getParameters());
+    }
+
     public function testGetApplicationJsonNotIncludesJsonAsContent()
     {
         $this->module->haveHttpHeader('Content-Type', 'application/json');
@@ -161,7 +175,8 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
      * @Issue https://github.com/Codeception/Codeception/issues/2075
      * Client is undefined for the second test
      */
-    public function testTwoTests() {
+    public function testTwoTests()
+    {
         $cest1 = Stub::makeEmpty('\Codeception\Test\Cest');
         $cest2 = Stub::makeEmpty('\Codeception\Test\Cest');
 
@@ -260,5 +275,11 @@ class PhpBrowserRestTest extends \PHPUnit_Framework_TestCase
     protected function shouldFail()
     {
         $this->setExpectedException('PHPUnit_Framework_AssertionFailedError');
+    }
+
+    public function testGrabFromCurrentUrl()
+    {
+        $this->module->sendGET('/rest/http-host/');
+        $this->assertEquals('/rest/http-host/', $this->phpBrowser->grabFromCurrentUrl());
     }
 }

@@ -119,7 +119,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
         array $server = [],
         $content = null
     ) {
-        $this->clientRequest($method, $uri, $parameters, $files, $server, $content, false);
+        $this->clientRequest($method, $uri, $parameters, $files, $server, $content, true);
         return $this->_getResponseContent();
     }
 
@@ -164,7 +164,8 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 $server[$header] = $val;
             }
         }
-
+        $server['REQUEST_TIME'] = time();
+        $server['REQUEST_TIME_FLOAT'] = microtime(true);
         if ($this instanceof Framework) {
             if (preg_match('#^(//|https?://(?!localhost))#', $uri)) {
                 $hostname = parse_url($uri, PHP_URL_HOST);
@@ -296,6 +297,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function haveHttpHeader($name, $value)
     {
+        $name = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $name)))));
         $this->headers[$name] = $value;
     }
 
@@ -318,6 +320,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
      */
     public function deleteHeader($name)
     {
+        $name = implode('-', array_map('ucfirst', explode('-', strtolower(str_replace('_', '-', $name)))));
         unset($this->headers[$name]);
     }
 
@@ -1469,7 +1472,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThat(
-            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
+            $this->getNormalizedResponseContent(),
             $constraint,
             $message
         );
@@ -1479,7 +1482,7 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
     {
         $constraint = new PageConstraint($needle, $this->_getCurrentUri());
         $this->assertThatItsNot(
-            html_entity_decode(strip_tags($this->_getResponseContent()), ENT_QUOTES),
+            $this->getNormalizedResponseContent(),
             $constraint,
             $message
         );
@@ -1716,5 +1719,19 @@ class InnerBrowser extends Module implements Web, PageSourceSaver, ElementLocato
                 ));
             }
         }
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNormalizedResponseContent()
+    {
+        $content = $this->_getResponseContent();
+        $content = strip_tags($content);
+        $content = html_entity_decode($content, ENT_QUOTES);
+        $content = str_replace("\n", ' ', $content);
+        $content = preg_replace('/\s{2,}/', ' ', $content);
+
+        return $content;
     }
 }

@@ -68,9 +68,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * * client - current Crawler instance
  *
  * ## Parts
- * 
+ *
  * * services - allows to use Symfony DIC only with WebDriver or PhpBrowser modules.
- * 
+ *
  * Usage example:
  *
  * ```yaml
@@ -135,7 +135,8 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
     {
         $cache = Configuration::projectDir() . $this->config['var_path'] . DIRECTORY_SEPARATOR . 'bootstrap.php.cache';
         if (!file_exists($cache)) {
-            throw new ModuleRequireException(__CLASS__,
+            throw new ModuleRequireException(
+                __CLASS__,
                 "Symfony bootstrap file not found in $cache\n \n" .
                 "Please specify path to bootstrap file using `var_path` config option\n \n" .
                 "If you are trying to load bootstrap from a Bundle provide path like:\n \n" .
@@ -200,6 +201,9 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
             }
             if ($this->_getContainer()->has('doctrine.orm.default_entity_manager')) {
                 $this->persistService('doctrine.orm.default_entity_manager', true);
+            }
+            if ($this->_getContainer()->has('doctrine.dbal.backend_connection')) {
+                $this->persistService('doctrine.dbal.backend_connection', true);
             }
         }
         return $this->permanentServices[$this->config['em_service']];
@@ -350,7 +354,6 @@ class Symfony extends Framework implements DoctrineProvider, PartedModule
         $intersection = array_intersect_assoc($expected, $match);
 
         $this->assertEquals($expected, $intersection);
-
     }
 
     /**
