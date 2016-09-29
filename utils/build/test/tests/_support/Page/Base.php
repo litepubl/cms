@@ -14,13 +14,15 @@ use test\config;
 
 class Base
 {
+    public static $screenshotEnabled = false;
+public static $screenshotPrefix = '';
     public $loginUrl = '/admin/login/';
     public $logoutUrl = '/admin/logout/';
 public $pluginsUrl = '/admin/plugins/';
 public $title = '#text-title';
     public $updateButton = '#submitbutton-update';
     public $postlink= '.post-bookmark';
-    public $screenshotName;
+    protected $screenshotName;
     protected $screenshotIndex = 1;
     protected $tester;
     protected $cacheFiles = [];
@@ -115,8 +117,8 @@ sleep(1);
 
     protected function screenshot(string $subname)
     {
-if (config::$screenshotEnabled) {
-$this->tester->makeScreenshot(sprintf('%s%s.%02d%s', Config::$screenshotPrefix , $this->screenshotName, $this->screenshotIndex++, $subname));
+if (static::$screenshotEnabled) {
+$this->tester->makeScreenshot(sprintf('%s%s.%02d%s', static::$screenshotPrefix , $this->screenshotName, $this->screenshotIndex++, $subname));
 }
     }
 
