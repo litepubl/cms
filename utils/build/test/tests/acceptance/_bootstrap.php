@@ -15,4 +15,4 @@ use test\config;
 
 config::init();
 Autoload::addNamespace('litepubl', config::$home . '/lib');
-Autoload::addNamespace('litepubl\test', dirname(__DIR__));
+Autoload::addNamespace('litepubl\tests', dirname(__DIR__));

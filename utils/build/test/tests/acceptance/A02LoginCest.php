@@ -1,5 +1,5 @@
 <?php
-namespace litepubl\test\acceptance;
+namespace litepubl\tests\acceptance;
 
 class LoginCest extends \Page\Base
 {

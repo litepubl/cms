@@ -1,5 +1,5 @@
 <?php
-namespace litepubl\test\acceptance;
+namespace litepubl\tests\acceptance;
 
 use litepubl\utils\Filer;
 use test\Utils;
