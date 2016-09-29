@@ -4,7 +4,7 @@ namespace litepubl\tests\acceptance;
 use test\config;
 use litepubl\utils\Filer;
 
-class InstallCest extends \Page\Base
+class A01InstallCest extends \Page\Base
 {
     protected $url = '/';
     protected $langForm = '#langform';

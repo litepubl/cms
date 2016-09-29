@@ -1,7 +1,7 @@
 <?php
 namespace litepubl\tests\acceptance;
 
-class A04RegUserCest extends a03PasswordCest
+class A04RegUserCest extends A03PasswordCest
 {
     protected $regUrl = '/admin/reguser/';
     protected $optionsUrl = '/admin/options/secure/';

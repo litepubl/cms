@@ -5,7 +5,7 @@ use litepubl\utils\Filer;
 use test\Utils;
 use test\config;
 
-class PasswordCest extends \Page\Base
+class A03PasswordCest extends \Page\Base
 {
     protected $url = '/admin/password/';
     protected $email = '#form-lostpass [name=email]';

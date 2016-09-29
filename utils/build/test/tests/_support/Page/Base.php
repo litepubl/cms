@@ -246,7 +246,7 @@ $filename = basename($item['file']);
 
 //trick with big letter C (Cept.php or Cest.php);
 if ($i = strrpos($filename, 'C')) {
-return substr($filename, 0, $i);
+return strtolower(substr($filename, 0, $i));
 }
 }
 }

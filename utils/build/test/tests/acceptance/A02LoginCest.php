@@ -1,7 +1,7 @@
 <?php
 namespace litepubl\tests\acceptance;
 
-class LoginCest extends \Page\Base
+class A02LoginCest extends \Page\Base
 {
 protected $boardUrl = '/admin/';
     protected function test(\AcceptanceTester $i)
