@@ -1,6 +1,8 @@
 <?php
 namespace litepubl\tests\acceptance;
 
+use test\Config;
+
 class A06EditorCest extends \Page\Editor
 {
 
@@ -41,3 +43,5 @@ $this->waitForcloseDialog();
 $this->screenShot('tosave');
 $this->submit();
 $this->screenShot('saved');
+}
+}
