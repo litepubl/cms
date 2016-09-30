@@ -4,9 +4,9 @@ namespace litepubl\tests\acceptance;
 
 class A11CommentCest extends \Page\Base
 {
-    protected $comment = '#comment';
-    protected $email = 'input[name=email]';
-    protected $submit = '#submit-button';
+    public $comment = '#comment';
+    public $email = 'input[name=email]';
+    public $submit = '#submit-button';
 
     protected function test(\AcceptanceTester $i)
     {

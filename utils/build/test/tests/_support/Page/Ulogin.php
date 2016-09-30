@@ -24,9 +24,9 @@ public $deleteButton = '#submitbutton-delete';
     public $yandexAllow = '.authrequest-request-allow button';
     public $yandexCancel = '.authrequest-request-deny button';
     private $winhandles = [];
-private static $logged = false;
+protected static $logged = false;
 
-    public function getwindows()
+    protected function getwindows()
     {
         $this->tester->executeInSelenium(
             function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) {
@@ -37,7 +37,7 @@ private static $logged = false;
         );
     }
 
-    public function setWindow(int $index)
+    protected function setWindow(int $index)
     {
         $this->tester->executeInSelenium(
             function (\Facebook\WebDriver\Remote\RemoteWebDriver $webdriver) use ($index) {
@@ -46,7 +46,7 @@ private static $logged = false;
         );
     }
 
-    public function click(string $name = 'mailru')
+    protected function click(string $name = 'mailru')
     {
         $i = $this->tester;
         $i->wantTo("click $name button");
@@ -61,7 +61,7 @@ private static $logged = false;
         $i->waitForJS('return (litepubl.authdialog.ulogin.status == \'open\' || litepubl.authdialog.ulogin.status == \'receive\');', 5);
     }
 
-    public function waitForcloseDialog()
+    protected function waitForcloseDialog()
     {
         $i = $this->tester;
         $i->wantTo('Close auth dialog');
@@ -73,7 +73,7 @@ private static $logged = false;
         codecept_debug(date('i:s'));
     }
 
-    public function auth(string $name = 'mailru')
+    protected function auth(string $name = 'mailru')
     {
         $i = $this->tester;
         $i->wantTo('Switch to new window');
@@ -98,14 +98,13 @@ private static $logged = false;
 static::$logged = true;
     }
 
-    public function login()
+    public function _login()
     {
         $i = $this->tester;
-        $login = Login::i($i);
         $cur = $i->grabFromCurrentUrl();
         codecept_debug($cur);
-        if (strpos($cur, $login->url) !== 0) {
-            $i->openPage($login->url);
+        if (strpos($cur, $this->loginUrl) !== 0) {
+            $i->openPage($this->loginUrl);
         }
 
 sleep(2);
@@ -117,7 +116,7 @@ $this->auth();
 $i->waitForUrlChanged(10);
 }
 
-    public function mailruAuth()
+    protected function mailruAuth()
     {
         $data = $this->load('mailru');
         $i = $this->tester;
@@ -130,7 +129,7 @@ $i->waitForUrlChanged(10);
         $i->executeJS($this->getFile(__DIR__ . '/js/mailruSubmit.js'));
     }
 
-    public function yandexAuth()
+    protected function yandexAuth()
     {
         $data = $this->load('yandex');
         $i = $this->tester;
@@ -145,7 +144,7 @@ $i->waitForUrlChanged(10);
         $i->click($this->yandexAllow);
     }
 
-public function deleteUser()
+protected function deleteUser()
 {
         $this->open($this->usersUrl);
         $i = $this->tester;

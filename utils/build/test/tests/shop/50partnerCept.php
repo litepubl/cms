@@ -55,7 +55,7 @@ $partner->screenshot('editpromo');
 
 $i->wantTo('Check cabinet');
 $partner->logout();
-$ulogin->login();
+$ulogin->_login();
 $i->openPage($partner->regUrl);
 $i->openPage($partner->cabinetUrl);
 $i->openPage($partner->cabinetUrl . $partner->payAccount);
