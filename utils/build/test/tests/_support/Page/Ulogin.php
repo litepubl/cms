@@ -46,6 +46,11 @@ protected static $logged = false;
         );
     }
 
+    public function _click(string $name = 'mailru')
+    {
+$this->click($name);
+}
+
     protected function click(string $name = 'mailru')
     {
         $i = $this->tester;
@@ -72,6 +77,11 @@ protected static $logged = false;
         $i->waitForJS('return litepubl.getuser().id;', 15);
         codecept_debug(date('i:s'));
     }
+
+    public function _auth(string $name = 'mailru')
+    {
+$this->auth($name);
+}
 
     protected function auth(string $name = 'mailru')
     {

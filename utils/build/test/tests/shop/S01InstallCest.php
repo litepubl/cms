@@ -1,14 +1,11 @@
 <?php
-namespace litepubl\test\shop;
+namespace litepubl\tests\shop;
 
-use Page\Ulogin;
-
-class InstallCest extends \Page\Base
+class S01InstallCest extends \Page\Base
 {
-    public function tryToTest(AcceptanceTester $i)
+    protected function test(\AcceptanceTester $i)
     {
 $i->wantTo('Test install and uninstall shop plugin');
-$this->setTester($i);
 $this->installPlugin('jslogger', 160);
 
 if ($i->executeJs('return $("input[name=base]").prop("checked");')) {

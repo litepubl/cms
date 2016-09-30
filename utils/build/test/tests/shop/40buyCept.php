@@ -28,9 +28,9 @@ $currentUrl = $i->grabFromCurrentUrl();
 $i->click($buypage->cashButton);
 sleep(2);
 if ($currentUrl == $i->grabFromCurrentUrl()) {
-$ulogin->click();
+$ulogin->_click();
 $buypage->screenshot('dialog');
-$ulogin->auth();
+$ulogin->_auth();
 $i->waitForUrlChanged(10);
 }
 
