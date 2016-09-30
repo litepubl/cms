@@ -40,6 +40,21 @@ protected $title = '#text-title';
         }
     }
 
+public function __set($name, $value)
+{
+$setter = 'set' . $name;
+if (method_exists($this, $setter)) {
+$this->$setter($value);
+}
+
+throw new \UnexpectedValueException("Unknown property $name");
+}
+
+protected function setTester(\AcceptanceTester $I)
+{
+        $this->tester = $I;
+}
+
 public function tryTest(\AcceptanceTester $I)
 {
         $this->tester = $I;

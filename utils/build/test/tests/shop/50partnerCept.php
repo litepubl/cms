@@ -16,9 +16,7 @@ $i->wantTo('Test install and uninstall support partner program in shop');
 $partner = new Partner($i, '150partner');
 $data = $partner->load('shop/partner');
 $ulogin = new Ulogin($i, '150partner');
-$partner ->installPlugin('partner', 160);
-$partner ->uninstallPlugin('partner');
-$partner ->installPlugin('partner', 160);
+$partner ->ReInstallPlugin('partner', 160);
 
 $i->openPage($partner->url);
 $i->openPage($partner->outUrl);
