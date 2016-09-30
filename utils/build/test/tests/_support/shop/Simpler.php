@@ -12,10 +12,10 @@ namespace shop;
 
 class Simpler extends CommonEditor
 {
-    public $url = '/admin/shop/products/simpler/';
-    public $cat = '#combo-cat';
+    protected $url = '/admin/shop/products/simpler/';
+    protected $cat = '#combo-cat';
 
-    public function fillProduct(float $price, int $cat)
+    protected function fillProduct(float $price, int $cat)
     {
         $i = $this->tester;
         $i->fillField($this->content, $content);
