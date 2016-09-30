@@ -14,12 +14,14 @@ class CacheFile extends BaseCache
 {
     protected $dir;
     protected $timeOffset;
+    private $opcacheEnabled;
 
     public function __construct(string $dir, int $lifetime, int $timeOffset)
     {
         $this->dir = $dir;
         $this->timeOffset = $timeOffset;
         $this->lifetime = $lifetime - $timeOffset;
+        $this->opcacheEnabled = ini_get('opcache.enable') && !ini_get('opcache.restrict_api');
     }
 
     public function getDir(): string
@@ -33,6 +35,10 @@ class CacheFile extends BaseCache
         $fn = $this->getdir() . $filename;
         file_put_contents($fn, $str);
         @chmod($fn, 0666);
+
+            if ($this->opcacheEnabled) {
+opcache_invalidate($fn);
+}
     }
 
     public function getString(string $filename): string
@@ -87,6 +93,10 @@ class CacheFile extends BaseCache
                     $this->clearDir($file . DIRECTORY_SEPARATOR);
                     unlink($file);
                 } else {
+            if ($this->opcacheEnabled) {
+opcache_invalidate($file);
+}
+
                     unlink($file);
                 }
             }

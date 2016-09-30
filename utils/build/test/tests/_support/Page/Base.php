@@ -36,7 +36,7 @@ protected $title = '#text-title';
         if ($screenshotName) {
                 $this->screenshotName = $screenshotName;
 } else {
-                $this->screenshotName = $this->getNameFromTrace();
+                $this->screenshotName = $this->getNameFromClassFile();
         }
     }
 
@@ -165,6 +165,11 @@ $this->tester->makeScreenshot(sprintf('%s%s.%02d%s', static::$screenshotPrefix ,
         return $this->tester->executeJs($this->getFile(__DIR__ . '/js/' . $filename));
     }
 
+    protected function getJs(string $filename)
+    {
+return $this->getFile(__DIR__ . '/js/' . $filename);
+    }
+
     protected function upload(string $filename)
     {
         $i = $this->tester;
@@ -237,18 +242,14 @@ $this->uninstallPlugin($name);
 $this->installPlugin($name, $timeout);
 }
 
-protected function getNameFromTrace(): string
+protected function getNameFromClassFile(): string
 {
-$trace = debug_backtrace();
-foreach ($trace as $item) {
-if ($item['function'] == '__construct') {
-$filename = basename($item['file']);
+        $reflector = new \ReflectionClass($this);
+        $filename = basename($reflector->getFileName());
 
 //trick with big letter C (Cept.php or Cest.php);
 if ($i = strrpos($filename, 'C')) {
 return strtolower(substr($filename, 0, $i));
-}
-}
 }
 
 return '';
