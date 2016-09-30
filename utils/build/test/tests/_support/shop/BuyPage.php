@@ -12,28 +12,28 @@ namespace shop;
 
 class BuyPage extends \Page\Base
 {
-    public $url = '/admin/shop/';
-public $productLink = '.product-link';
-public $buyButton = 'button[value=buybutton]';
-public $cashButton = 'button[value=cash]';
-public $editAddrButton = 'button[name=editaddr]';
-public $noteEditor = 'textarea[name^=note]';
-public $count = 'input[type=text][name^=count]';
-public $continueButton = 'button[name=continue]';
-public $backButton = 'button[name=back]';
-public $detailsButton = 'button[type=submit]';
+    protected $url = '/admin/shop/';
+protected $productLink = '.product-link';
+protected $buyButton = 'button[value=buybutton]';
+protected $cashButton = 'button[value=cash]';
+protected $editAddrButton = 'button[name=editaddr]';
+protected $noteEditor = 'textarea[name^=note]';
+protected $count = 'input[type=text][name^=count]';
+protected $continueButton = 'button[name=continue]';
+protected $backButton = 'button[name=back]';
+protected $detailsButton = 'button[type=submit]';
 
-public function getStep(): string
+protected function getStep(): string
 {
 return $this->tester->executeJs('return $("input[name=step]").val();');
 }
 
-public function isAddrEdit(): bool
+protected function isAddrEdit(): bool
 {
 return 'address' == $this->getStep();
 }
 
-public function fillAddress(\StdClass $data)
+protected function fillAddress(\StdClass $data)
 {
 foreach (get_object_vars($data) as $k => $v) {
 $this->tester->executeJs("\$('[name=$k]').val('$v');");

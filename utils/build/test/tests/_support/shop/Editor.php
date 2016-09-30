@@ -34,9 +34,9 @@ protected $catTab = '#tab-catalog';
 protected $stockTab = '#tab-stock';
 protected $propsTab = '#tab-props';
 
-    protected function __construct(\AcceptanceTester $I, string $screenshotName = '')
+    public function __construct(string $screenshotName = '')
 {
-parent::__construct($I, $screenshotName);
+parent::__construct($screenshotName);
 $this->lang = config::getLang();
 $this->data = $this->load('shop/editor');
 }
