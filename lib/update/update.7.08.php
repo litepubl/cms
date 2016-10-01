@@ -13,6 +13,7 @@ namespace litepubl\update;
 use litepubl\post\Meta;
 use litepubl\perms\Files;
 use litepubl\plugins\ulogin\Ulogin;
+use litepubl\view\Js;
 
 function update708()
 {
@@ -34,4 +35,12 @@ $ulogin->data['remember'] = true;
 $ulogin->save();
 }
 }
+
+$js = Js::i();
+$js->lock();
+    $section = 'media';
+$lang = $js->getApp()->options->language;
+        $js->deleteFile($section, "/lib/languages/$lang/mediaplayer.min.js");
+$js->add($section, "/js/mediaelement/lang/me-i18n-locale-$lang.min.js");
+$js->unlock();
 }

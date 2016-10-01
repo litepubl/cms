@@ -40,10 +40,9 @@
     player: function(elem, options) {
       return elem.mediaelementplayer($.extend(
         options ? options : {}, {
-          features: ['playpause', 'progress', 'current', 'duration', 'tracks', 'volume', 'fullscreen'],
+          //features: ['playpause', 'progress', 'current', 'duration', 'tracks', 'volume', 'fullscreen'],
           pluginPath: ltoptions.files + "/js/mediaelement/"
-        },
-        "mediaplayer" in lang ? lang.mediaplayer : {}
+        }
       ));
     },
 
