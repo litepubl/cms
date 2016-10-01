@@ -14,22 +14,23 @@ class A03PasswordCest extends \Page\Base
 
     protected function test(\AcceptanceTester $i)
     {
-$i->wantTo('Test restore password');
-$this->logout();
-$this->removeLogs();
+        $i->wantTo('Test restore password');
+        $this->logout();
+        $this->removeLogs();
 
-$i->wantTo('Open restore password page');
-$i->openPage($this->url);
-$this->screenShot('form');
-$admin = $this->getAdminAccount();
-$admin->password = $this->restore($admin->email);
-config::save('admin', $admin);
-$this->screenShot('restored');
+        $i->wantTo('Open restore password page');
+        $i->openPage($this->url);
+        $this->screenShot('form');
+        $admin = $this->getAdminAccount();
+        $admin->password = $this->restore($admin->email);
+        config::save('admin', $admin);
+        $this->screenShot('restored');
 
-$i->wantTo('Login with new password');
-$i->openPage($this->loginUrl);
-$this->authAccount($admin->email, $admin->password);
-}
+        $i->wantTo('Login with new password');
+        $i->openPage($this->loginUrl);
+        $this->authAccount($admin->email, $admin->password);
+
+    }
 
     protected function removeLogs()
     {

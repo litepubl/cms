@@ -22,24 +22,26 @@ class A09HomeCest extends \Page\Base
 
     protected function test(\AcceptanceTester $i)
     {
-$i->wantTo('Test home image');
-$this->open();
-$i->wantTo('Remove current image');
-$this->clickTab($this->imageTab);
-$i->fillField($this->image, '');
-$i->fillField($this->smallimage, '');
-$this->submit();
+        $i->wantTo('Test home image');
+        $this->open();
+        $i->wantTo('Remove current image');
+        $this->clickTab($this->imageTab);
+        $i->fillField($this->image, '');
+        $i->fillField($this->smallimage, '');
+        $this->submit();
 
-$i->wantTo('See empty home page');
-$i->openPage('/');
-$this->screenshot('noimage');
-$i->wantTo('Upload image');
-$this->open();
-$this->clickTab($this->imageTab);
-$this->uploadImage('img1.jpg');
+        $i->wantTo('See empty home page');
+        $i->openPage('/');
+        $this->screenshot('noimage');
+        $i->wantTo('Upload image');
+        $this->open();
+        $this->clickTab($this->imageTab);
+        $this->uploadImage('img1.jpg');
 
-$this->submit();
-$this->screenshot('uploaded');
-$i->openPage('/');
-$this->screenshot('image');
-}}
+        $this->submit();
+        $this->screenshot('uploaded');
+        $i->openPage('/');
+        $this->screenshot('image');
+
+    }
+}

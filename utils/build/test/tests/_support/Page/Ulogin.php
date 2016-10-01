@@ -16,15 +16,15 @@ class Ulogin extends Base
     public $mailruLogin = '#login';
     public $mailruPassword = '#password';
     public $mailruSubmit = 'Log in and allow';
-public $usersUrl = '/admin/users/';
-public $deleteButton = '#submitbutton-delete';
+    public $usersUrl = '/admin/users/';
+    public $deleteButton = '#submitbutton-delete';
     public $yandexLogin = '#login';
     public $yandexPassword = '#passwd';
     public $yandexSubmit = 'button[type=submit]';
     public $yandexAllow = '.authrequest-request-allow button';
     public $yandexCancel = '.authrequest-request-deny button';
     private $winhandles = [];
-protected static $logged = false;
+    protected static $logged = false;
 
     protected function getwindows()
     {
@@ -48,8 +48,8 @@ protected static $logged = false;
 
     public function _click(string $name = 'mailru')
     {
-$this->click($name);
-}
+        $this->click($name);
+    }
 
     protected function click(string $name = 'mailru')
     {
@@ -57,7 +57,7 @@ $this->click($name);
         $i->wantTo("click $name button");
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
         $i->waitForElement("[data-uloginbutton=$name]", 10);
-       $i->waitForJS('return litepubl.authdialog.ulogin.status != \'wait\';', 7);
+        $i->waitForJS('return litepubl.authdialog.ulogin.status != \'wait\';', 7);
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
         $i->wantTo('Click social network button');
         $i->executeJs("\$('[data-uloginbutton=$name]').click();");
@@ -80,8 +80,8 @@ $this->click($name);
 
     public function _auth(string $name = 'mailru')
     {
-$this->auth($name);
-}
+        $this->auth($name);
+    }
 
     protected function auth(string $name = 'mailru')
     {
@@ -105,7 +105,7 @@ $this->auth($name);
         $i->wantTo('Switch to back window');
         $this->setWindow(0);
         codecept_debug($i->executeJS('return litepubl.authdialog.ulogin.status;'));
-static::$logged = true;
+        static::$logged = true;
     }
 
     public function _login()
@@ -117,14 +117,14 @@ static::$logged = true;
             $i->openPage($this->loginUrl);
         }
 
-sleep(2);
-$this->click();
-if (!static::$logged) {
-$this->auth();
-}
+        sleep(2);
+        $this->click();
+        if (!static::$logged) {
+                $this->auth();
+        }
 
-$i->waitForUrlChanged(10);
-}
+        $i->waitForUrlChanged(10);
+    }
 
     protected function mailruAuth()
     {
@@ -154,13 +154,13 @@ $i->waitForUrlChanged(10);
         $i->click($this->yandexAllow);
     }
 
-protected function deleteUser()
-{
+    protected function deleteUser()
+    {
         $this->open($this->usersUrl);
         $i = $this->tester;
         $i->wantTo('Delete last user');
         $i->executeJs('$("[name^=\'user-\']").prop("checked", true)');
         $i->click($this->deleteButton);
         $i->checkError();
-}
+    }
 }

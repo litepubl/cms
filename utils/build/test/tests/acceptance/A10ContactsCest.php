@@ -9,18 +9,19 @@ class A10ContactsCest extends \Page\Base
 
     protected function test(\AcceptanceTester $i)
     {
-$data = $this->load('contacts');
-$i->wantTo('Click contacts on home page');
-$i->openPage('/');
-$i->click($data->title);
-$this->screenShot('contacts');
-$i->wantTo('Send form');
-$this->sendForm($data->email, $data->message);
-$i->wantTo('Send form with empty email');
-$this->sendForm('', $data->message);
-$i->wantTo('Send form without message');
-$this->sendForm($data->email, '');
-}
+        $data = $this->load('contacts');
+        $i->wantTo('Click contacts on home page');
+        $i->openPage('/');
+        $i->click($data->title);
+        $this->screenShot('contacts');
+        $i->wantTo('Send form');
+        $this->sendForm($data->email, $data->message);
+        $i->wantTo('Send form with empty email');
+        $this->sendForm('', $data->message);
+        $i->wantTo('Send form without message');
+        $this->sendForm($data->email, '');
+
+    }
 
     protected function sendForm($email, $message)
     {

@@ -25,36 +25,38 @@ class A01InstallCest extends \Page\Base
 
     protected function test(\AcceptanceTester $i)
     {
-if (config::exists('admin')) {
-    codecept_debug('Install skiped');
-    return;
-}
+        if (config::exists('admin')) {
+            codecept_debug('Install skiped');
+            return;
 
-$this->removeData();
-$i->wantTo('Open install form');
-$i->openPage($this->url);
-$this->screenShot('form');
+        }
 
-//$this->switchLanguages();
-$i->wantTo('Fill install form');
-$data = $this->load('install');
-$i->fillField($this->email, $data->email);
-$i->fillField($this->name, $data->name);
-$i->fillField($this->description, $data->description);
-$i->fillField($this->dbname, $data->dbname);
-$i->fillField($this->dblogin, $data->dblogin);
-$i->fillField($this->dbpassword, $data->dbpassword);
-$i->fillField($this->dbprefix, $data->dbprefix);
-$this->screenshot('form');
-$i->click($this->submit);
-$i->checkError();
-$i->assertFileExists(config::$home . '/storage/data/storage.inc.php', 'CMS not installed: storage not found');
-$this->saveAccount();
-$this->screenShot('installed');
-$i->wantTo('Open login page');
-$i->click($this->loginLink);
-$i->checkError();
-}
+        $this->removeData();
+        $i->wantTo('Open install form');
+        $i->openPage($this->url);
+        $this->screenShot('form');
+
+        //$this->switchLanguages();
+        $i->wantTo('Fill install form');
+        $data = $this->load('install');
+        $i->fillField($this->email, $data->email);
+        $i->fillField($this->name, $data->name);
+        $i->fillField($this->description, $data->description);
+        $i->fillField($this->dbname, $data->dbname);
+        $i->fillField($this->dblogin, $data->dblogin);
+        $i->fillField($this->dbpassword, $data->dbpassword);
+        $i->fillField($this->dbprefix, $data->dbprefix);
+        $this->screenshot('form');
+        $i->click($this->submit);
+        $i->checkError();
+        $i->assertFileExists(config::$home . '/storage/data/storage.inc.php', 'CMS not installed: storage not found');
+        $this->saveAccount();
+        $this->screenShot('installed');
+        $i->wantTo('Open login page');
+        $i->click($this->loginLink);
+        $i->checkError();
+
+    }
 
     protected function switchLanguages()
     {

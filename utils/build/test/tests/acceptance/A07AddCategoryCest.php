@@ -13,17 +13,18 @@ class A07AddCategoryCest extends \Page\Base
 
     protected function test(\AcceptanceTester $i)
     {
-$i->wantTo('Test category editor');
-$this->open();
-$this->screenShot('addcat');
+        $i->wantTo('Test category editor');
+        $this->open();
+        $this->screenShot('addcat');
 
-$i->fillField($this->title, $this->titleFixture);
-//$i->selectOption($this->parent, 
-$this->screenShot('title');
+        $i->fillField($this->title, $this->titleFixture);
+        //$i->selectOption($this->parent, 
+        $this->screenShot('title');
 
-//final submit
-$i->executeJs('$("form:last").submit();');
-$i->checkError();
-$this->screenShot('saved');
-}
+        //final submit
+        $i->executeJs('$("form:last").submit();');
+        $i->checkError();
+        $this->screenShot('saved');
+
+    }
 }

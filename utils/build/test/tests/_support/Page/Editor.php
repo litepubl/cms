@@ -40,7 +40,7 @@ class Editor extends Base
     {
         $i = $this->tester;
         $i->executeJs('$("form:last").submit();');
-sleep(4);
+        sleep(4);
         $i->checkError();
     }
 

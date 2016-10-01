@@ -22,6 +22,7 @@ class Table
     const LEFT = 'text-left';
     const RIGHT = 'text-right';
     const CENTER = 'text-center';
+const CHECKBOX = 'text-center col-checkbox';
 
     //current item in items
     public $item;
@@ -44,7 +45,7 @@ class Table
         return $self->buildItems($items, $struct);
     }
 
-    public function __construct()
+    public function __construct($admintheme = null)
     {
         $this->head = '';
         $this->body = '';
@@ -52,6 +53,7 @@ class Table
         $this->callbacks = [];
         $this->args = new Args();
         $this->data = [];
+$this->admintheme = $admintheme;
     }
 
     public function setStruct(array $struct)
@@ -130,7 +132,7 @@ class Table
             $body.= $this->parseitem($id, $item);
         }
 
-        return $this->getadmintheme()->gettable($this->head, $body, $this->footer);
+        return $this->getAdminTheme()->gettable($this->head, $body, $this->footer);
     }
 
     public function parseItem($id, $item)
@@ -217,7 +219,7 @@ class Table
 
         $body = '';
         $args = $this->args;
-        $admintheme = $this->getadmintheme();
+        $admintheme = $this->getAdminTheme();
 
         foreach ($props as $k => $v) {
             if (($k === false) || ($v === false)) {
@@ -315,7 +317,7 @@ class Table
         $admin = $this->getadmintheme();
 
         return [
-            'text-center col-checkbox',
+            static::CHECKBOX,
             $admin->templates['checkbox.invert'],
             str_replace('$name', $name, $admin->templates['checkbox.id'])
         ];
@@ -323,12 +325,10 @@ class Table
 
     public function nameCheck(): array
     {
-        $admin = Admin::i();
-
         return [
-            'text-center col-checkbox',
-            $admin->templates['checkbox.stub'],
-            $admin->templates['checkbox.name']
+            static::CHECKBOX,
+            $this->admintheme->templates['checkbox.stub'],
+            $this->admintheme->templates['checkbox.name']
         ];
     }
 

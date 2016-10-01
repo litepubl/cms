@@ -15,15 +15,15 @@ use test\config;
 class Base
 {
     protected static $screenshotEnabled = false;
-protected static $screenshotPrefix = '';
-protected static $adminAccount;
+    protected static $screenshotPrefix = '';
+    protected static $adminAccount;
     protected $loginUrl = '/admin/login/';
     protected $logoutUrl = '/admin/logout/';
     protected $emailAccount = '#form-login [name=email]';
     protected $passwordAccount = '#password-password';
     protected $submitAccount = '#submitbutton-log_in';
-protected $pluginsUrl = '/admin/plugins/';
-protected $title = '#text-title';
+    protected $pluginsUrl = '/admin/plugins/';
+    protected $title = '#text-title';
     protected $updateButton = '#submitbutton-update';
     protected $postlink= '.post-bookmark';
     protected $screenshotName;
@@ -35,37 +35,37 @@ protected $title = '#text-title';
     {
         if ($screenshotName) {
                 $this->screenshotName = $screenshotName;
-} else {
+        } else {
                 $this->screenshotName = $this->getNameFromClassFile();
         }
     }
 
-public function __set($name, $value)
-{
-$setter = 'set' . $name;
-if (method_exists($this, $setter)) {
-$this->$setter($value);
-}
+    public function __set($name, $value)
+    {
+        $setter = 'set' . $name;
+        if (method_exists($this, $setter)) {
+            $this->$setter($value);
+        }
 
-throw new \UnexpectedValueException("Unknown property $name");
-}
+        throw new \UnexpectedValueException("Unknown property $name");
+    }
 
-protected function setTester(\AcceptanceTester $I)
-{
+    protected function setTester(\AcceptanceTester $I)
+    {
         $this->tester = $I;
-}
+    }
 
-public function tryTest(\AcceptanceTester $I)
-{
+    public function tryTest(\AcceptanceTester $I)
+    {
         $this->tester = $I;
         $I->maximizeWindow();
-$this->test($I);
-$this->tester = null;
-}
+        $this->test($I);
+        $this->tester = null;
+    }
 
-protected function test(\AcceptanceTester $I)
-{
-}
+    protected function test(\AcceptanceTester $I)
+    {
+    }
 
     protected function load($name)
     {
@@ -87,18 +87,18 @@ protected function test(\AcceptanceTester $I)
         if (strpos($currentUrl, $this->loginUrl) !== 0) {
             $i->openPage($this->loginUrl);
         }
-$account = $this->getAdminAccount();
+        $account = $this->getAdminAccount();
         $this->authAccount($account->email, $account->password);
     }
 
-protected function getAdminAccount()
-{
+    protected function getAdminAccount()
+    {
         if (!static::$adminAccount) {
             static::$adminAccount = $this->load('admin');
         }
 
-return static::$adminAccount;
-}
+        return static::$adminAccount;
+    }
 
     protected function authAccount(string $email, string $password)
     {
@@ -134,7 +134,7 @@ return static::$adminAccount;
     {
         $i = $this->tester;
         $i->click($this->updateButton);
-sleep(1);
+        sleep(1);
         $i->checkError();
     }
 
@@ -155,9 +155,9 @@ sleep(1);
 
     protected function screenshot(string $subname)
     {
-if (static::$screenshotEnabled) {
-$this->tester->makeScreenshot(sprintf('%s%s.%02d%s', static::$screenshotPrefix , $this->screenshotName, $this->screenshotIndex++, $subname));
-}
+        if (static::$screenshotEnabled) {
+                $this->tester->makeScreenshot(sprintf('%s%s.%02d%s', static::$screenshotPrefix, $this->screenshotName, $this->screenshotIndex++, $subname));
+        }
     }
 
     protected function getFile(string $filename)
@@ -182,84 +182,85 @@ $this->tester->makeScreenshot(sprintf('%s%s.%02d%s', static::$screenshotPrefix ,
 
     protected function getJs(string $filename)
     {
-return $this->getFile(__DIR__ . '/js/' . $filename);
+        return $this->getFile(__DIR__ . '/js/' . $filename);
     }
 
-protected function selectCombo(string $name, string $value)
-{
-$this->tester->executeJs("\$('[name=$name]').val('$value');");}
+    protected function selectCombo(string $name, string $value)
+    {
+        $this->tester->executeJs("\$('[name=$name]').val('$value');");
+    }
 }
 
-    protected function upload(string $filename)
-    {
-        $i = $this->tester;
-        $selector   = $i->executeJs($this->getFile(__DIR__ . '/js/addTmpUpload.js'));
-        $i->attachFile($selector, $filename);
-        $i->checkError();
-    }
+protected function upload(string $filename)
+{
+    $i = $this->tester;
+    $selector   = $i->executeJs($this->getFile(__DIR__ . '/js/addTmpUpload.js'));
+    $i->attachFile($selector, $filename);
+    $i->checkError();
+}
 
-    protected function waitForOpenDialog()
-    {
-        $this->tester->wantto('Wait open dialog');
-        $this->js('dialog.js');
-        $this->tester->waitForJs('return litepubl.dialogOpened;', 4);
-    }
+protected function waitForOpenDialog()
+{
+    $this->tester->wantto('Wait open dialog');
+    $this->js('dialog.js');
+    $this->tester->waitForJs('return litepubl.dialogOpened;', 4);
+}
 
-    protected function waitForCloseDialog()
-    {
-        $this->tester->wantto('Wait close dialog');
-        $this->js('dialog.js');
-        $this->tester->waitForJs('return !litepubl.dialogOpened;', 4);
-    }
+protected function waitForCloseDialog()
+{
+    $this->tester->wantto('Wait close dialog');
+    $this->js('dialog.js');
+    $this->tester->waitForJs('return !litepubl.dialogOpened;', 4);
+}
 
 protected function exists(string $selector): bool
 {
-$selector = str_replace("'", '"', $selector);
-return $this->tester->executeJs("return \$('$selector').length;") > 0;
+    $selector = str_replace("'", '"', $selector);
+    return $this->tester->executeJs("return \$('$selector').length;") > 0;
 }
 
 protected function getIdFromUrl(): int
 {
         $ur = $this->tester->grabFromCurrentUrl();
-if ($i = strpos($url, '?')) {
-parse_str(substr($url, $i + 1), $a);
-return (int) ($a['id'] ?? 0);
-}
-
-return 0;
-}
-
-    protected function installPlugin(string $name, int $timeout = 10)
-    {
-        $this->open($this->pluginsUrl);
-        $i = $this->tester;
-        $i->wantTo("Install plugin $name");
-        $i->waitForElement("input[name=$name]", 10);
-        $i->checkOption("input[name=$name]");
-        $i->click($this->updateButton);
-        $i->checkError();
-        $i->waitForElement("input[name=$name]", $timeout);
-        $i->seeCheckboxIsChecked("input[name=$name]");
+    if ($i = strpos($url, '?')) {
+        parse_str(substr($url, $i + 1), $a);
+        return (int) ($a['id'] ?? 0);
     }
 
-    protected function uninstallPlugin(string $name)
-    {
-        $this->open($this->pluginsUrl);
-        $i = $this->tester;
-        $i->wantTo("Uninstall plugin $name");
-        $i->waitForElement("input[name=$name]", 10);
-        $i->UncheckOption("input[name=$name]");
-        $i->click($this->updateButton);
-        $i->checkError();
-        $i->waitForElement("input[name=$name]", 10);
-        $i->dontSeeCheckboxIsChecked("input[name=$name]");
-    }
+    return 0;
+}
 
-    protected function reInstallPlugin(string $name, int $timeout = 10)
+protected function installPlugin(string $name, int $timeout = 10)
 {
-$this->installPlugin($name, $timeout);
-$this->uninstallPlugin($name);
-$this->installPlugin($name, $timeout);
+    $this->open($this->pluginsUrl);
+    $i = $this->tester;
+    $i->wantTo("Install plugin $name");
+    $i->waitForElement("input[name=$name]", 10);
+    $i->checkOption("input[name=$name]");
+    $i->click($this->updateButton);
+    $i->checkError();
+    $i->waitForElement("input[name=$name]", $timeout);
+    $i->seeCheckboxIsChecked("input[name=$name]");
+}
+
+protected function uninstallPlugin(string $name)
+{
+    $this->open($this->pluginsUrl);
+    $i = $this->tester;
+    $i->wantTo("Uninstall plugin $name");
+    $i->waitForElement("input[name=$name]", 10);
+    $i->UncheckOption("input[name=$name]");
+    $i->click($this->updateButton);
+    $i->checkError();
+    $i->waitForElement("input[name=$name]", 10);
+    $i->dontSeeCheckboxIsChecked("input[name=$name]");
+}
+
+protected function reInstallPlugin(string $name, int $timeout = 10)
+{
+    $this->installPlugin($name, $timeout);
+    $this->uninstallPlugin($name);
+    $this->installPlugin($name, $timeout);
 }
 
 protected function getNameFromClassFile(): string
@@ -267,19 +268,19 @@ protected function getNameFromClassFile(): string
         $reflector = new \ReflectionClass($this);
         $filename = basename($reflector->getFileName());
 
-//trick with big letter C (Cept.php or Cest.php);
-if ($i = strrpos($filename, 'C')) {
-return strtolower(substr($filename, 0, $i));
-}
+    //trick with big letter C (Cept.php or Cest.php);
+    if ($i = strrpos($filename, 'C')) {
+        return strtolower(substr($filename, 0, $i));
+    }
 
-return '';
+    return '';
 }
 
 //factory method
 protected function getUlogin()
 {
-$ulogin = new Ulogin($this->screenshotName);
-$ulogin->tester = $this->tester;
-return $ulogin;
+    $ulogin = new Ulogin($this->screenshotName);
+    $ulogin->tester = $this->tester;
+    return $ulogin;
 }
 }
