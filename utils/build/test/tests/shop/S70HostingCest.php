@@ -8,11 +8,16 @@ class S70HostingCest extends \shop\Hosting
     {
 $i->wantTo('Test install and uninstall hosting');
 $this->reInstallPlugin('hosting', 160);
-$data = $this->load('shop/hosting');
-$ulogin = $this->getUlogin();
+$this->ulogin = $this->getUlogin();
 
-$i->openPage($this->url);
-$i->wantTo('Create new category');
+$server = $this->data->servers->preinstalled;
+$this->addServer($server->type);
+$this->setAccFile($server->accfile);$
+
+
+}
+
+
 $i->openPage($this->urlCats);
 $i->fillField($this->catTitle, $data->cattitle);
 $this->screenshot('addcat');
@@ -25,24 +30,3 @@ $url = $i->grabFromCurrentUrl();
 $i->openPage($url . '&action=delete&confirm=1');
 $i->openPage($this->urlOptions);
 $this->submit();
-
-$i->wantTo('Check cabinet');
-$this->logout();
-$ulogin->login();
-$i->openPage($this->cabinetUrl);
-$i->openPage($this->addUrl);
-$i->fillField($this->title, $data->title);
-$i->fillField($this->text, $data->text);
-$this->screenshot('create');
-$i->click($this->addButton);
-$i->checkError();
-
-$i->wantTo('Add message to ticket');
-$i->fillField($this->message, $data->message);
-$this->screenshot('addmessage');
-$i->click($this->send);
-$i->checkError();
-$this->screenshot('messages');
-$this->logout();
-}
-}

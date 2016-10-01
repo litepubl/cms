@@ -12,6 +12,8 @@ namespace shop;
 
 class Hosting extends \Page\Base
 {
+protected $data;
+protected $ulogin;
     protected $url = '/admin/shop/hosting/';
     protected $editUrl = '/admin/shop/hosting/edit/';
     protected $tariffsUrl = '/admin/shop/hosting/tariffs/';
@@ -35,10 +37,50 @@ protected $addButton = 'button[name="newticket"]';
 protected $message = '#editor-message';
 protected $send = 'button[name="sendmesg"]';
 
-protected function addServer()
+protected $accfile = '#text-accfile';
+
+public function tryTest(\AcceptanceTester $I)
+{
+$this->data = $this->load('shop/hosting');
+parent::tryTest($i);
+}
+
+protected function addServer(string $type)
 {
 $i = $this->tester;
-$this->open($this->serversUrl);
+$i->openPage($this->serversUrl);
+$this->selectCombo('server', $type);
+$this->submit();
+return  $this->getIdFromUrl();
+}
 
+protected function setAccFile(string $filename)
+{
+$this->tester->fillField($this->accfile, $filename);
+$this->submit();
+}
+
+protected function testCabinet()
+{
+
+$i->wantTo('Check cabinet');
+$this->logout();
+$ulogin->login();
+$i->openPage($this->cabinetUrl);
+$i->openPage($this->addUrl);
+$i->fillField($this->title, $data->title);
+$i->fillField($this->text, $data->text);
+$this->screenshot('create');
+$i->click($this->addButton);
+$i->checkError();
+
+$i->wantTo('Add message to ticket');
+$i->fillField($this->message, $data->message);
+$this->screenshot('addmessage');
+$i->click($this->send);
+$i->checkError();
+$this->screenshot('messages');
+$this->logout();
+}
 }
 }

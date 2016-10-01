@@ -185,6 +185,11 @@ $this->tester->makeScreenshot(sprintf('%s%s.%02d%s', static::$screenshotPrefix ,
 return $this->getFile(__DIR__ . '/js/' . $filename);
     }
 
+protected function selectCombo(string $name, string $value)
+{
+$this->tester->executeJs("\$('[name=$name]').val('$value');");}
+}
+
     protected function upload(string $filename)
     {
         $i = $this->tester;
