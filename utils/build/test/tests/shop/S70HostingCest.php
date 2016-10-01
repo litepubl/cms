@@ -2,14 +2,14 @@
 
 namespace litepubl\tests\shop;
 
-class S70HostingCest extends \Page\Base
+class S70HostingCest extends \shop\Hosting
 {
     protected function test(\AcceptanceTester $i)
     {
 $i->wantTo('Test install and uninstall hosting');
+$this->reInstallPlugin('hosting', 160);
 $data = $this->load('shop/hosting');
-$ulogin = new Ulogin($i, '170hosting');
-$this->reInstall('hosting', 160);
+$ulogin = $this->getUlogin();
 
 $i->openPage($this->url);
 $i->wantTo('Create new category');

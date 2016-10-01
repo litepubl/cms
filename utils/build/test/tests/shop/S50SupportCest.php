@@ -10,7 +10,6 @@ class S50SupportCest extends \Page\Base
 protected $catTitle = '#text-cattitle';
     protected $cabinetUrl = '/admin/cabinet/tickets/';
     protected $addUrl = '/admin/cabinet/tickets/?action=add';
-protected $title = '#text-title';
 protected $cat = '#combo-cat';
 protected $text = '#editor-raw';
 protected $addButton = 'button[name="newticket"]';

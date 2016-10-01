@@ -12,16 +12,33 @@ namespace shop;
 
 class Hosting extends \Page\Base
 {
-    public $url = '/admin/shop/tickets/';
-    public $urlOptions = '/admin/shop/tickets/options/';
-    public $urlCats = '/admin/shop/tickets/cats/';
-public $catTitle = '#text-cattitle';
-    public $cabinetUrl = '/admin/cabinet/tickets/';
-    public $addUrl = '/admin/cabinet/tickets/?action=add';
-public $title = '#text-title';
-public $cat = '#combo-cat';
-public $text = '#editor-raw';
-public $addButton = 'button[name="newticket"]';
-public $message = '#editor-message';
-public $send = 'button[name="sendmesg"]';
+    protected $url = '/admin/shop/hosting/';
+    protected $editUrl = '/admin/shop/hosting/edit/';
+    protected $tariffsUrl = '/admin/shop/hosting/tariffs/';
+    protected $plugins = '/admin/shop/hosting/plugins/';
+    protected $serversUrl = '/admin/shop/hosting/servers/';
+    protected $regdomainsUrl = '/admin/shop/hosting/regdomains/';
+    protected $optionsUrl = '/admin/shop/hosting/options/';
+    protected $runUrl = '/admin/shop/hosting/run/';
+    protected $updateUrl = '/admin/shop/hosting/update/';
+    protected $releaseUrl = '/admin/shop/hosting/release/';
+
+    protected $cabinetUrl = '/admin/cabinet/hosting/';
+    protected $buyUrl = '/admin/cabinet/hosting/buy/';
+    protected $cabinetPlugins = '/admin/cabinet/hosting/plugins/';
+    protected $domainUrl = '/admin/cabinet/hosting/domain/';
+    protected $createUrl = '/admin/cabinet/hosting/create/';
+
+protected $cat = '#combo-cat';
+protected $text = '#editor-raw';
+protected $addButton = 'button[name="newticket"]';
+protected $message = '#editor-message';
+protected $send = 'button[name="sendmesg"]';
+
+protected function addServer()
+{
+$i = $this->tester;
+$this->open($this->serversUrl);
+
+}
 }
