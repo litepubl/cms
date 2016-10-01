@@ -1,4 +1,5 @@
 <?php
+
 namespace litepubl\tests\shop;
 
 class S04PhoneCallbackCest extends \Page\Base

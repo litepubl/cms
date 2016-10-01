@@ -1,4 +1,5 @@
 <?php
+
 namespace litepubl\tests\shop;
 
 class S03MenuCest extends \litepubl\tests\acceptance\A05AdminCest

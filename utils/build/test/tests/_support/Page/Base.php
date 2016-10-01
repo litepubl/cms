@@ -269,4 +269,12 @@ return strtolower(substr($filename, 0, $i));
 
 return '';
 }
+
+//factory method
+protected function getUlogin()
+{
+$ulogin = new Ulogin($this->screenshotName);
+$ulogin->tester = $this->tester;
+return $ulogin;
+}
 }

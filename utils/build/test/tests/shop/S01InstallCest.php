@@ -1,4 +1,5 @@
 <?php
+
 namespace litepubl\tests\shop;
 
 class S01InstallCest extends \Page\Base
