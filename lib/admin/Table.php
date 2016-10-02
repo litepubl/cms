@@ -325,10 +325,11 @@ $this->admintheme = $admintheme;
 
     public function nameCheck(): array
     {
+$admin = $this->getAdminTheme();
         return [
             static::CHECKBOX,
-            $this->admintheme->templates['checkbox.stub'],
-            $this->admintheme->templates['checkbox.name']
+            $admin->templates['checkbox.stub'],
+            $admin->templates['checkbox.name']
         ];
     }
 

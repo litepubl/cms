@@ -4,6 +4,15 @@
 "type": "preinstalled",
 "accfile": "resource/accounts.test.ini"
 }
+},
+
+"release": {
+"domain": "release.cms",
+"login": "release",
+"password": "release",
+"dbname": "jusoft_test",
+"dbuser": "jusoft_test",
+"dbpassword": "test"
 }
 
 }

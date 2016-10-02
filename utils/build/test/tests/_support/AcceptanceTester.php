@@ -93,8 +93,6 @@ $current = $this->grabFromCurrentUrl();
 $this->waitForUrl(function($url) use ($current) {
 return $url != $current;
 }, $timeout);
-
-$current = $this->grabFromCurrentUrl();
 }
 
 }

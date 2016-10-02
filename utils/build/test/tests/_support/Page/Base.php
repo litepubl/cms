@@ -188,7 +188,6 @@ class Base
     protected function selectCombo(string $name, string $value)
     {
         $this->tester->executeJs("\$('[name=$name]').val('$value');");
-    }
 }
 
 protected function upload(string $filename)
@@ -221,7 +220,7 @@ protected function exists(string $selector): bool
 
 protected function getIdFromUrl(): int
 {
-        $ur = $this->tester->grabFromCurrentUrl();
+        $url = $this->tester->grabFromCurrentUrl();
     if ($i = strpos($url, '?')) {
         parse_str(substr($url, $i + 1), $a);
         return (int) ($a['id'] ?? 0);

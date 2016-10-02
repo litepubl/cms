@@ -37,12 +37,13 @@ protected $addButton = 'button[name="newticket"]';
 protected $message = '#editor-message';
 protected $send = 'button[name="sendmesg"]';
 
+protected $addServer = '[name="addserver"]';
 protected $accfile = '#text-accfile';
 
 public function tryTest(\AcceptanceTester $I)
 {
 $this->data = $this->load('shop/hosting');
-parent::tryTest($i);
+parent::tryTest($I);
 }
 
 protected function addServer(string $type)
@@ -50,13 +51,25 @@ protected function addServer(string $type)
 $i = $this->tester;
 $i->openPage($this->serversUrl);
 $this->selectCombo('server', $type);
-$this->submit();
+$i->click($this->addServer );
 return  $this->getIdFromUrl();
 }
 
 protected function setAccFile(string $filename)
 {
-$this->tester->fillField($this->accfile, $filename);
+$i = $this->tester;
+$i->fillField($this->accfile, $filename);
+$this->submit();
+}
+
+protected function editAccount($account)
+{
+$i = $this->tester;
+$props = get_object_vars($account);
+foreach ($props as $name => $value) {
+$i->fillField("[name=\"$name\"]", $value);
+}
+
 $this->submit();
 }
 
@@ -81,6 +94,5 @@ $i->click($this->send);
 $i->checkError();
 $this->screenshot('messages');
 $this->logout();
-}
 }
 }

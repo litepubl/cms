@@ -12,22 +12,10 @@ protected function test(\AcceptanceTester $i)
 
     $server = $this->data->servers->preinstalled;
     $this->addServer($server->type);
-    $this->setAccFile($server->accfile);$
+    $this->setAccFile($server->accfile);
 
-
-
+$this->addAccount();
+$release = $this->data->release;
+$this->editAccount($release);
 }
-
-
-$i->openPage($this->urlCats);
-$i->fillField($this->catTitle, $data->cattitle);
-$this->screenshot('addcat');
-$this->submit();
-$this->screenshot('added');
-$i->click($data->cattitle);
-$i->checkError();
-$i->wantTo('Delete new catalog');
-$url = $i->grabFromCurrentUrl();
-$i->openPage($url . '&action=delete&confirm=1');
-$i->openPage($this->urlOptions);
-$this->submit();
+}

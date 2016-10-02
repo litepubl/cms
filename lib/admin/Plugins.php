@@ -58,7 +58,7 @@ class Plugins extends Menu
         if (empty($_GET['plugin'])) {
             $result.= $admintheme->parse($admintheme->templates['help.plugins']);
 
-            $tb = new Table();
+            $tb = new Table($admintheme);
             $tb->setStruct(
                 [
                 $tb->nameCheck() ,
