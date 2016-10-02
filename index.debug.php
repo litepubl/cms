@@ -6,7 +6,10 @@ namespace litepubl;
            Header('Cache-Control: no-cache, must-revalidate');
             Header('Pragma: no-cache');
 
+if (!defined('litepubl\mode')) {
 define('litepubl\mode', 'config');
+}
+
 require (__DIR__ . '/index.php');
 Config::$debug = true;
 //Config::$classes['storage'] = 'litepubl\core\storageinc';

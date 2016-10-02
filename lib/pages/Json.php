@@ -191,7 +191,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             }
         }
 
-        $r = $this->onGetMethod(['name' => $name, 'result' => false]);
+        $r = $this->onGetMethod(['method' => $name, 'result' => false]);
         if (is_callable($r['result'])) {
             return $r['result'];
         }

@@ -133,6 +133,7 @@ trait EventsTrait
         $app = $this->getApp();
         $eventName = $event->getName();
 
+if (isset($this->data['events'][$eventName])) {
         foreach ($this->data['events'][$eventName] as $i => $item) {
             if ($event->isPropagationStopped()) {
                         break;
@@ -160,6 +161,7 @@ trait EventsTrait
                         $app->getLogger()->warning(sprintf('Event subscriber has been removed from %s:%s', get_class($this), $eventName), is_array($item) ? $item : []);
             }
         }
+}
 
     }
 
