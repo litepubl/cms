@@ -62,6 +62,12 @@ $i->fillField($this->accfile, $filename);
 $this->submit();
 }
 
+protected function addAccount()
+{
+$this->tester->openPage($this->editUrl);
+$this->submit();
+}
+
 protected function editAccount($account)
 {
 $i = $this->tester;
