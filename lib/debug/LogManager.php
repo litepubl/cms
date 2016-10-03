@@ -21,7 +21,8 @@ use litepubl\utils\Filer;
 class LogManager
 {
     use \litepubl\core\AppTrait;
-    const format = "%datetime%\n%channel%.%level_name%:\n%message%\n%context% %extra%\n\n";
+    const FORMAT = "%datetime%\n%channel%.%level_name%:\n%message%\n%context% %extra%\n\n";
+const DATEFORMAT = 'H:i:s d-m-Y';
     public $logger;
     public $runtime;
 
@@ -39,7 +40,7 @@ class LogManager
         }
 
         $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
-        $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
+        $handler->setFormatter(new LineFormatter(static ::FORMAT, static::DATEFORMAT, true, false));
         $logger->pushHandler($handler);
 
         $this->runtime = new RuntimeHandler(Logger::WARNING);

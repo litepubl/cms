@@ -22,9 +22,14 @@ protected $ulogin;
     protected $regdomainsUrl = '/admin/shop/hosting/regdomains/';
     protected $optionsUrl = '/admin/shop/hosting/options/';
     protected $runUrl = '/admin/shop/hosting/run/';
+protected $runFixture = 'return \litepubl\core\litepubl::$app->options->version;';
     protected $updateUrl = '/admin/shop/hosting/update/';
     protected $releaseUrl = '/admin/shop/hosting/release/';
+    protected $releaseOptionsUrl = '/admin/shop/hosting/release/?options=release';
+protected $idRelease = '[name="releasesite"]';
+protected $createRelease = '[name="createrelease"]';
 
+protected $runEditor = '[name="script"]';
     protected $cabinetUrl = '/admin/cabinet/hosting/';
     protected $buyUrl = '/admin/cabinet/hosting/buy/';
     protected $cabinetPlugins = '/admin/cabinet/hosting/plugins/';
@@ -62,10 +67,11 @@ $i->fillField($this->accfile, $filename);
 $this->submit();
 }
 
-protected function addAccount()
+protected function addAccount(): int
 {
 $this->tester->openPage($this->editUrl);
 $this->submit();
+return $this->getIdFromUrl();
 }
 
 protected function editAccount($account)
@@ -77,6 +83,33 @@ $i->fillField("[name=\"$name\"]", $value);
 }
 
 $this->submit();
+}
+
+protected function testRun(int $id)
+{
+$i = $this->tester;
+$i->openPage("$this->runUrl?id=$id");
+$i->fillField($this->runEditor, $this->runFixture);
+$this->submit(5);
+$i->seeElement('pre');
+}
+
+protected function setIdRelease(int $id)
+{
+$i = $this->tester;
+$i->openPage($this->releaseOptionsUrl );
+$i->fillField($this->idRelease, $id);
+$this->submit();
+}
+
+protected function createRelease()
+{
+$i = $this->tester;
+$i->openPage($this->releaseUrl);
+$i->click($this->createRelease);
+$i->waitForElement('body', 120);
+$i->checkError();
+$i->dontSee('Error');
 }
 
 protected function testCabinet()

@@ -14,8 +14,11 @@ protected function test(\AcceptanceTester $i)
     $this->addServer($server->type);
     $this->setAccFile($server->accfile);
 
-$this->addAccount();
+$id = $this->addAccount();
 $release = $this->data->release;
 $this->editAccount($release);
+$this->testRun($id);
+$this->setIdRelease($id);
+$this->createRelease();
 }
 }

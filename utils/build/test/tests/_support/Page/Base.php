@@ -130,11 +130,11 @@ class Base
         }
     }
 
-    protected function submit()
+    protected function submit(int $timeout = 1)
     {
         $i = $this->tester;
         $i->click($this->updateButton);
-        sleep(1);
+        sleep($timeout);
         $i->checkError();
     }
 
