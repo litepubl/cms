@@ -40,7 +40,7 @@ class S50SupportCest extends \Page\Base
 
         $i->wantTo('Check cabinet');
         $this->logout();
-        $ulogin->login();
+        $ulogin->_login();
         $i->openPage($this->cabinetUrl);
         $i->openPage($this->addUrl);
         $i->fillField($this->title, $data->title);

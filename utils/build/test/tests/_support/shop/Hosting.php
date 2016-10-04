@@ -30,6 +30,9 @@ protected $idRelease = '[name="releasesite"]';
 protected $createRelease = '[name="createrelease"]';
 protected $runEditor = '[name="script"]';
 protected $addRegDomain = '[name="addregdomain"]';
+
+protected $createShopButton = 'button[name="createshop"]';
+protected $shopName = '[name="shopname"]';
     protected $cabinetUrl = '/admin/cabinet/hosting/';
     protected $buyUrl = '/admin/cabinet/hosting/buy/';
     protected $cabinetPlugins = '/admin/cabinet/hosting/plugins/';
@@ -134,26 +137,16 @@ $this->setProps($this->data->newplugin);
 $this->submit();
 }
 
-protected function testCabinet()
+protected function createShop()
 {
-
-$i->wantTo('Check cabinet');
-$this->logout();
-$ulogin->login();
-$i->openPage($this->cabinetUrl);
-$i->openPage($this->addUrl);
-$i->fillField($this->title, $data->title);
-$i->fillField($this->text, $data->text);
-$this->screenshot('create');
-$i->click($this->addButton);
+$i = $this->tester;
+$i->wantTo('Check create shop');
+$i->click($this->createShopButton);
+$this->ulogin->_click();
+        $i->waitForUrlChanged(10);
 $i->checkError();
-
-$i->wantTo('Add message to ticket');
-$i->fillField($this->message, $data->message);
-$this->screenshot('addmessage');
-$i->click($this->send);
+$i->waitForElement($this->shopName, 10);
+$i->click($this->createShopButton);
 $i->checkError();
-$this->screenshot('messages');
-$this->logout();
 }
 }

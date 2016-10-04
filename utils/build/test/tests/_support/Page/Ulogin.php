@@ -49,6 +49,7 @@ class Ulogin extends Base
     public function _click(string $name = 'mailru')
     {
         $this->click($name);
+$this->auth($name);
     }
 
     protected function click(string $name = 'mailru')

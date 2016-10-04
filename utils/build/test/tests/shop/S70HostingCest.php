@@ -37,5 +37,9 @@ $this->submit();
 $i->wantTo('Check tarrifs');
 $this->addTariff();
 $this->createPlugin();
+
+$this->logout();
+$i->openPage('/');
+$this->createShop();
 }
 }
