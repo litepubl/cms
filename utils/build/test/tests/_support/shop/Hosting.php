@@ -117,7 +117,16 @@ protected function addTariff()
 $i = $this->tester;
 $i->wantTo('Add new tariff');
 $i->openPage($this->tariffsUrl);
+$props = get_object_vars($this->data->tariff);
+foreach ($props as $name => $value) {
+$i->fillField("[name=\"$name\"]", $value);
+}
+
+
 $this->submit();
+$i->click($this->data->tariff->title);
+$i->checkError();
+$i->seeElement('[name="title"]');
 }
 
 protected function testCabinet()

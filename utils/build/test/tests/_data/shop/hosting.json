@@ -13,6 +13,12 @@
 "dbname": "jusoft_test",
 "dblogin": "jusoft_test",
 "dbpassword": "test"
+},
+
+"tariff": {
+"title": "New tariff title",
+"price": 1200,
+"setupfee": 999
 }
 
 }
