@@ -19,6 +19,14 @@
 "title": "New tariff title",
 "price": 1200,
 "setupfee": 999
+},
+
+"newplugin": {
+        "pluginname": "newplugin",
+"price": 300,
+"url": "http://cms.cms/",
+"title": "Super plugin",
+"description": "Mega booper propil"
 }
 
 }

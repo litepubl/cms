@@ -74,17 +74,6 @@ $this->submit();
 return $this->getIdFromUrl();
 }
 
-protected function editAccount($account)
-{
-$i = $this->tester;
-$props = get_object_vars($account);
-foreach ($props as $name => $value) {
-$i->fillField("[name=\"$name\"]", $value);
-}
-
-$this->submit();
-}
-
 protected function testRun(int $id)
 {
 $i = $this->tester;
@@ -112,21 +101,37 @@ $i->checkError();
 $i->dontSee('Error');
 }
 
+protected function setProps(\StdClass $obj)
+{
+$i = $this->tester;
+$props = get_object_vars($obj);
+foreach ($props as $name => $value) {
+$i->fillField("input[name=\"$name\"]", $value);
+}
+}
+
 protected function addTariff()
 {
 $i = $this->tester;
 $i->wantTo('Add new tariff');
 $i->openPage($this->tariffsUrl);
-$props = get_object_vars($this->data->tariff);
-foreach ($props as $name => $value) {
-$i->fillField("[name=\"$name\"]", $value);
-}
-
-
+$this->setProps($this->data->tariff);
 $this->submit();
+
+$i->wantTo('Check created tariff');
 $i->click($this->data->tariff->title);
+sleep(1);
 $i->checkError();
 $i->seeElement('[name="title"]');
+}
+
+protected function createPlugin()
+{
+$i = $this->tester;
+$i->wantTo('Create plugin');
+$i->openPage($this->plugins);
+$this->setProps($this->data->newplugin);
+$this->submit();
 }
 
 protected function testCabinet()

@@ -15,12 +15,14 @@ protected function test(\AcceptanceTester $i)
     $this->setAccFile($server->accfile);
 
 $id = $this->addAccount();
-$release = $this->data->release;
-$this->editAccount($release);
+$this->setProps($this->data->release);
+$this->submit();
+
 $this->testRun($id);
 $this->setIdRelease($id);
 $this->createRelease();
 
+$i->wantTo('Test options page');
 $i->openPage($this->optionsUrl);
 $this->submit();
 
@@ -31,13 +33,9 @@ sleep(3);
 $i->checkError();
 $i->wantTo('Save reg domain options');
 $this->submit();
+
 $i->wantTo('Check tarrifs');
 $this->addTariff();
-
-
-	
-
-
-
+$this->createPlugin();
 }
 }
