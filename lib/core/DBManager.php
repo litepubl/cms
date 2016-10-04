@@ -37,7 +37,8 @@ class DBManager
     {
         if (! $this->engine) {
             $config = $this->getConfig();
-            $this->engine = isset($config['engine']) && !empty($config['engine']) ? $config['engine'] : 'MyISAM'; // InnoDB
+            $this->engine = isset($config['engine']) && !empty($config['engine']) ? $config['engine'] : 'InnoDB';
+ //'MyISAM';
         }
 
         $this->deleteTable($name);

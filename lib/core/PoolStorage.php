@@ -53,7 +53,7 @@ class PoolStorage
 
     public function remove(Data $obj)
     {
-        $base = $obj->getbasename();
+        $base = $obj->getBaseName();
         if (isset($this->data[$base])) {
             unset($this->data[$base]);
             $this->modified = true;

@@ -28,8 +28,8 @@ protected $runFixture = 'return \litepubl\core\litepubl::$app->options->version;
     protected $releaseOptionsUrl = '/admin/shop/hosting/release/?options=release';
 protected $idRelease = '[name="releasesite"]';
 protected $createRelease = '[name="createrelease"]';
-
 protected $runEditor = '[name="script"]';
+protected $addRegDomain = '[name="addregdomain"]';
     protected $cabinetUrl = '/admin/cabinet/hosting/';
     protected $buyUrl = '/admin/cabinet/hosting/buy/';
     protected $cabinetPlugins = '/admin/cabinet/hosting/plugins/';
@@ -110,6 +110,14 @@ $i->click($this->createRelease);
 $i->waitForElement('body', 120);
 $i->checkError();
 $i->dontSee('Error');
+}
+
+protected function addTariff()
+{
+$i = $this->tester;
+$i->wantTo('Add new tariff');
+$i->openPage($this->tariffsUrl);
+$this->submit();
 }
 
 protected function testCabinet()
