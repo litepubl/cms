@@ -31,6 +31,7 @@ protected $createRelease = '[name="createrelease"]';
 protected $runEditor = '[name="script"]';
 protected $addRegDomain = '[name="addregdomain"]';
 
+protected $openShop = 'button[name="openshop"]';
 protected $createShopButton = 'button[name="createshop"]';
 protected $shopName = '[name="shopname"]';
     protected $cabinetUrl = '/admin/cabinet/hosting/';
@@ -141,7 +142,7 @@ protected function createShop()
 {
 $i = $this->tester;
 $i->wantTo('Check create shop');
-$i->click($this->createShopButton);
+$i->click($this->openShop);
 $this->ulogin->_click();
         $i->waitForUrlChanged(10);
 $i->checkError();
