@@ -138,6 +138,33 @@ $this->setProps($this->data->newplugin);
 $this->submit();
 }
 
+private function getDeleteSiteUrl()
+{
+$i = $this->tester;
+$i->waitForElement('body');
+$i->waitForJs('return "jQuery" in window', 4);
+$link = $this->js('deletelink.js');
+if ($link) {
+$a = parse_url($link);
+parse_str($a['query'], $q);
+if (isset($q['id']) && ((int) $q['id'] > 1)) {
+return $a['path'] . '?' . $a['query'];
+}
+}
+
+return false;
+}
+
+protected function deleteAllSites()
+{
+$i = $this->tester;
+$i->wantTo('delete all sites exclude release site');
+$this->open($this->url);
+while ($url = $this->getDeleteSiteUrl()) {
+$i->openPage($url . '&confirm=1');
+}
+}
+
 protected function createShop()
 {
 $i = $this->tester;

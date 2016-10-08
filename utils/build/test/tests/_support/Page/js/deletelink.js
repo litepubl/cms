@@ -1,0 +1,1 @@
+return jQuery(".confirm-delete-link:first").attr("href");
