@@ -7,7 +7,7 @@
  *  version   7.08
  */
 
-(function($, window, document) {
+(function($, litepubl) {
   'use strict';
 
   $.BootstrapDialog = Class.extend({
@@ -207,4 +207,4 @@
     }
   });
 
-})(jQuery, window, document);
+})(jQuery, litepubl);

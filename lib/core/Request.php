@@ -82,6 +82,12 @@ return 'POST' == $_SERVER['REQUEST_METHOD'];
         return $_POST;
     }
 
+    public function hasPost(string $key = ''): bool
+{
+$post = $this->getPost();
+return is_array($post) && count($post) && (!$key || ($key && isset($post[$key])));
+}
+
     public function getArg(string $name, $default = false)
     {
         $get = $this->getGet();

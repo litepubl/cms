@@ -103,7 +103,6 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
 
         if (!($cookies = $this->auth($token))) {
             return $response->forbidden();
-            ;
         }
 
         if (!empty($_GET['backurl'])) {
@@ -126,7 +125,7 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
             }
         }
 
-        setcookie('backurl', '', 0, $this->getApp()->site->subdir, false);
+        $this->getApp()->options->setCookie('backurl', '', 0);
         return $response->redir($backurl);
     }
 

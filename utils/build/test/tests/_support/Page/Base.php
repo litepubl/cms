@@ -188,98 +188,98 @@ class Base
     protected function selectCombo(string $name, string $value)
     {
         $this->tester->executeJs("\$('[name=$name]').val('$value');");
-}
-
-protected function upload(string $filename)
-{
-    $i = $this->tester;
-    $selector   = $i->executeJs($this->getFile(__DIR__ . '/js/addTmpUpload.js'));
-    $i->attachFile($selector, $filename);
-    $i->checkError();
-}
-
-protected function waitForOpenDialog()
-{
-    $this->tester->wantto('Wait open dialog');
-    $this->js('dialog.js');
-    $this->tester->waitForJs('return litepubl.dialogOpened;', 4);
-}
-
-protected function waitForCloseDialog()
-{
-    $this->tester->wantto('Wait close dialog');
-    $this->js('dialog.js');
-    $this->tester->waitForJs('return !litepubl.dialogOpened;', 4);
-}
-
-protected function exists(string $selector): bool
-{
-    $selector = str_replace("'", '"', $selector);
-    return $this->tester->executeJs("return \$('$selector').length;") > 0;
-}
-
-protected function getIdFromUrl(): int
-{
-        $url = $this->tester->grabFromCurrentUrl();
-    if ($i = strpos($url, '?')) {
-        parse_str(substr($url, $i + 1), $a);
-        return (int) ($a['id'] ?? 0);
     }
 
-    return 0;
-}
+    protected function upload(string $filename)
+    {
+        $i = $this->tester;
+        $selector   = $i->executeJs($this->getFile(__DIR__ . '/js/addTmpUpload.js'));
+        $i->attachFile($selector, $filename);
+        $i->checkError();
+    }
 
-protected function installPlugin(string $name, int $timeout = 10)
-{
-    $this->open($this->pluginsUrl);
-    $i = $this->tester;
-    $i->wantTo("Install plugin $name");
-    $i->waitForElement("input[name=$name]", 10);
-    $i->checkOption("input[name=$name]");
-    $i->click($this->updateButton);
-    $i->checkError();
-    $i->waitForElement("input[name=$name]", $timeout);
-    $i->seeCheckboxIsChecked("input[name=$name]");
-}
+    protected function waitForOpenDialog()
+    {
+        $this->tester->wantto('Wait open dialog');
+        $this->js('dialog.js');
+        $this->tester->waitForJs('return litepubl.dialogOpened;', 4);
+    }
 
-protected function uninstallPlugin(string $name)
-{
-    $this->open($this->pluginsUrl);
-    $i = $this->tester;
-    $i->wantTo("Uninstall plugin $name");
-    $i->waitForElement("input[name=$name]", 10);
-    $i->UncheckOption("input[name=$name]");
-    $i->click($this->updateButton);
-    $i->checkError();
-    $i->waitForElement("input[name=$name]", 10);
-    $i->dontSeeCheckboxIsChecked("input[name=$name]");
-}
+    protected function waitForCloseDialog()
+    {
+        $this->tester->wantto('Wait close dialog');
+        $this->js('dialog.js');
+        $this->tester->waitForJs('return !litepubl.dialogOpened;', 4);
+    }
 
-protected function reInstallPlugin(string $name, int $timeout = 10)
-{
-    $this->installPlugin($name, $timeout);
-    $this->uninstallPlugin($name);
-    $this->installPlugin($name, $timeout);
-}
+    protected function exists(string $selector): bool
+    {
+        $selector = str_replace("'", '"', $selector);
+        return $this->tester->executeJs("return \$('$selector').length;") > 0;
+    }
 
-protected function getNameFromClassFile(): string
-{
+    protected function getIdFromUrl(): int
+    {
+        $url = $this->tester->grabFromCurrentUrl();
+        if ($i = strpos($url, '?')) {
+            parse_str(substr($url, $i + 1), $a);
+            return (int) ($a['id'] ?? 0);
+        }
+
+        return 0;
+    }
+
+    protected function installPlugin(string $name, int $timeout = 10)
+    {
+        $this->open($this->pluginsUrl);
+        $i = $this->tester;
+        $i->wantTo("Install plugin $name");
+        $i->waitForElement("input[name=$name]", 10);
+        $i->checkOption("input[name=$name]");
+        $i->click($this->updateButton);
+        $i->checkError();
+        $i->waitForElement("input[name=$name]", $timeout);
+        $i->seeCheckboxIsChecked("input[name=$name]");
+    }
+
+    protected function uninstallPlugin(string $name)
+    {
+        $this->open($this->pluginsUrl);
+        $i = $this->tester;
+        $i->wantTo("Uninstall plugin $name");
+        $i->waitForElement("input[name=$name]", 10);
+        $i->UncheckOption("input[name=$name]");
+        $i->click($this->updateButton);
+        $i->checkError();
+        $i->waitForElement("input[name=$name]", 10);
+        $i->dontSeeCheckboxIsChecked("input[name=$name]");
+    }
+
+    protected function reInstallPlugin(string $name, int $timeout = 10)
+    {
+        $this->installPlugin($name, $timeout);
+        $this->uninstallPlugin($name);
+        $this->installPlugin($name, $timeout);
+    }
+
+    protected function getNameFromClassFile(): string
+    {
         $reflector = new \ReflectionClass($this);
         $filename = basename($reflector->getFileName());
 
-    //trick with big letter C (Cept.php or Cest.php);
-    if ($i = strrpos($filename, 'C')) {
-        return strtolower(substr($filename, 0, $i));
+        //trick with big letter C (Cept.php or Cest.php);
+        if ($i = strrpos($filename, 'C')) {
+            return strtolower(substr($filename, 0, $i));
+        }
+
+        return '';
     }
 
-    return '';
-}
-
-//factory method
-protected function getUlogin()
-{
-    $ulogin = new Ulogin($this->screenshotName);
-    $ulogin->tester = $this->tester;
-    return $ulogin;
-}
+    //factory method
+    protected function getUlogin()
+    {
+        $ulogin = new Ulogin($this->screenshotName);
+        $ulogin->tester = $this->tester;
+        return $ulogin;
+    }
 }
