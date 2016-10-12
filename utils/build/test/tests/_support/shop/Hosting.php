@@ -39,13 +39,8 @@ protected $shopName = '[name="shopname"]';
     protected $cabinetPlugins = '/admin/cabinet/hosting/plugins/';
     protected $domainUrl = '/admin/cabinet/hosting/domain/';
     protected $createUrl = '/admin/cabinet/hosting/create/';
-
-protected $cat = '#combo-cat';
-protected $text = '#editor-raw';
-protected $addButton = 'button[name="newticket"]';
-protected $message = '#editor-message';
-protected $send = 'button[name="sendmesg"]';
-
+protected $calcPrice = 'button[name="calcPrice"]';
+protected $buyButton = 'button[name="paymethod"]';
 protected $addServer = '[name="addserver"]';
 protected $accfile = '#text-accfile';
 
@@ -136,6 +131,9 @@ $i->wantTo('Create plugin');
 $i->openPage($this->plugins);
 $this->setProps($this->data->newplugin);
 $this->submit();
+
+$i->wantTo('Delete new plugin');
+$i->openPage($this->plugins . ?id=' . $this->data->newplugin);->pluginname . '&action=delete&confirm=1'););
 }
 
 private function getDeleteSiteUrl()
@@ -175,6 +173,24 @@ $this->ulogin->_click();
 $i->checkError();
 $i->waitForElement($this->shopName, 10);
 $i->click($this->createShopButton);
+$i->checkError();
+}
+
+protected function testCabinet()
+{
+$i = $this->tester;
+$i->openPage($this->domainUrl);
+
+$i->wantTo('Test plugins');
+$i->openPage($this->cabinetPlugins);
+        $i->checkOption("input[name=cbrf]");
+$this->submit();
+
+$i->wantTo('Buy');
+$i->openPage($this->buyUrl );
+$i->click($this->calcPrice);
+$i->checkError();
+$i->click($this->buyButton );
 $i->checkError();
 }
 }
