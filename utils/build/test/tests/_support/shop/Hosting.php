@@ -39,8 +39,8 @@ protected $shopName = '[name="shopname"]';
     protected $cabinetPlugins = '/admin/cabinet/hosting/plugins/';
     protected $domainUrl = '/admin/cabinet/hosting/domain/';
     protected $createUrl = '/admin/cabinet/hosting/create/';
-protected $calcPrice = 'button[name="calcPrice"]';
-protected $buyButton = 'button[name="paymethod"]';
+protected $calcPrice = '[name="calcPrice"]';
+protected $buyButton = '[name="paymethod"]';
 protected $addServer = '[name="addserver"]';
 protected $accfile = '#text-accfile';
 
@@ -133,7 +133,7 @@ $this->setProps($this->data->newplugin);
 $this->submit();
 
 $i->wantTo('Delete new plugin');
-$i->openPage($this->plugins . ?id=' . $this->data->newplugin);->pluginname . '&action=delete&confirm=1'););
+$i->openPage($this->plugins . '?id=' . $this->data->newplugin->pluginname . '&action=delete&confirm=1');
 }
 
 private function getDeleteSiteUrl()
