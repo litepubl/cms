@@ -39,7 +39,7 @@ protected $shopName = '[name="shopname"]';
     protected $cabinetPlugins = '/admin/cabinet/hosting/plugins/';
     protected $domainUrl = '/admin/cabinet/hosting/domain/';
     protected $createUrl = '/admin/cabinet/hosting/create/';
-protected $calcPrice = '[name="calcPrice"]';
+protected $calcPrice = '[name="calcprice"]';
 protected $buyButton = '[name="paymethod"]';
 protected $addServer = '[name="addserver"]';
 protected $accfile = '#text-accfile';

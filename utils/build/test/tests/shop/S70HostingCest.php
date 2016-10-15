@@ -4,7 +4,7 @@ namespace litepubl\tests\shop;
 
 class S70HostingCest extends \shop\Hosting
 {
-    protected $fullTest = false;
+    protected $fullTest = true;
 
     protected function test(\AcceptanceTester $i)
     {

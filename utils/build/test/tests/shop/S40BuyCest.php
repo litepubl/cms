@@ -2,15 +2,13 @@
 
 namespace litepubl\tests\shop;
 
-use Page\Ulogin;
-
-class S01InstallCest extends \shop\BuyPage
+class S40BuyCest extends \shop\BuyPage
 {
     protected function test(\AcceptanceTester $i)
     {
         $i->wantTo('Test purchase');
-        $ulogin = new Ulogin($i, $this->screenshotName);
         $this->logout();
+        $ulogin = $this->getUlogin();
         $data = $this->load('shop/buypage');
         $i->openPage('/');
         $i->wantTo('Open first product');
