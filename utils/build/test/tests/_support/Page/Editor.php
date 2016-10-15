@@ -36,7 +36,7 @@ class Editor extends Base
         }
     }
 
-    protected function submit()
+    protected function submit(int $timeout = 1)
     {
         $i = $this->tester;
         $i->executeJs('$("form:last").submit();');

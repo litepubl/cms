@@ -18,10 +18,11 @@ class A05AdminCest extends \Page\Base
         return $result;
     }
 
-    protected function submit()
+    protected function submitForm()
     {
         $i = $this->tester;
         $i->executeJs('$(function(){$("form:last").submit();});');
+sleep(1);
     }
 
     protected function getLinks(string $name): array
@@ -47,8 +48,8 @@ class A05AdminCest extends \Page\Base
         foreach ($list as $url) {
             $i->wantTo("Test form $url");
             $i->openPage('/admin/' . $url);
-            $this->submit();
-
+            $this->submitForm();
+$i->checkError();
         }
 
         $list = $this->getMenu();
@@ -59,7 +60,7 @@ class A05AdminCest extends \Page\Base
             $i->checkError();
             $i->waitForElement('body', 10);
             $this->screenShot(str_replace('/', '-', trim($url, '/')));
-            $this->submit();
+            $this->submitForm();
             $i->checkError();
             $i->waitForElement('body', 10);
 

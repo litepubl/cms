@@ -22,8 +22,6 @@ class S40BuyCest extends \shop\BuyPage
         sleep(2);
         if ($currentUrl == $i->grabFromCurrentUrl()) {
             $ulogin->_click();
-            $this->screenshot('dialog');
-            $ulogin->_auth();
             $i->waitForUrlChanged(10);
 
         }

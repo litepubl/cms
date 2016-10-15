@@ -49,7 +49,9 @@ class Ulogin extends Base
     public function _click(string $name = 'mailru')
     {
         $this->click($name);
+        if (!static::$logged) {
         $this->auth($name);
+}
     }
 
     protected function click(string $name = 'mailru')
@@ -71,12 +73,14 @@ class Ulogin extends Base
     {
         $i = $this->tester;
         $i->wantTo('Close auth dialog');
-        codecept_debug(date('i:s'));
-        $i->waitForJS('return !litepubl.authdialog.dialog;', 5);
-        codecept_debug(date('i:s'));
+$m = microtime(true);
+        $i->waitForJS('return !litepubl.authdialog.dialog;', 7);
+codecept_debug(round(microtime(true) - $m, 2));
+
         $i->wantTo('Check user logged');
+$m = microtime(true);
         $i->waitForJS('return litepubl.getuser().id;', 15);
-        codecept_debug(date('i:s'));
+codecept_debug(round(microtime(true) - $m, 2));
     }
 
     public function _auth(string $name = 'mailru')
@@ -107,6 +111,7 @@ class Ulogin extends Base
         $this->setWindow(0);
         codecept_debug($i->executeJS('return litepubl.authdialog.ulogin.status;'));
         static::$logged = true;
+        codecept_debug('Ulogin logged');
     }
 
     public function _login()
@@ -120,6 +125,7 @@ class Ulogin extends Base
 
         sleep(2);
         $this->click();
+
         if (!static::$logged) {
                 $this->auth();
         }

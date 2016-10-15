@@ -14,7 +14,7 @@ class A20UloginCest extends \Page\Ulogin
     protected function test(\AcceptanceTester $i)
     {
         $i->wantTo('Test ulogin plugin');
-        $this->installPlugin('ulogin');
+        //$this->reInstallPlugin('ulogin');
         $this->screenshot('install');
         $this->logout();
 
@@ -27,16 +27,25 @@ class A20UloginCest extends \Page\Ulogin
         $i->waitForJs('return (\'litepubl\' in window) && (\'authdialog\' in window.litepubl);', 7);
         $i->wantTo('Open auth dialog');
         $this->screenshot('post');
+        $url = $i->grabFromCurrentUrl();
         $i->click($data->login);
         $this->click();
+if (!static::$logged) {
         $this->screenshot('dialog');
         $this->auth();
+}
+
         $this->waitForcloseDialog();
-        $i->reloadPage();
+sleep(6);
+$i->seeCurrentUrlEquals($url);
+        codecept_debug($i->grabFromCurrentUrl());
+        //$i->reloadPage();
+
         $text = $data->comment . time();
         $i->fillField($comment->comment, $text);
         $this->screenshot('comment');
         $i->click($comment->submit);
+sleep(5);
         $i->checkError();
         $i->wantTo('Check comment sent');
         $i->waitForText($text, 6);

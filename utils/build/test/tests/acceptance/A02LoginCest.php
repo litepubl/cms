@@ -14,6 +14,5 @@ class A02LoginCest extends \Page\Base
         $this->screenShot('board');
         $this->logout();
         $i->seeCurrentUrlEquals($this->loginUrl);
-
     }
 }

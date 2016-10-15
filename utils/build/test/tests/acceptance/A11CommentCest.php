@@ -36,6 +36,7 @@ class A11CommentCest extends \Page\Base
 
         $i->wantTo('Send comment as admin');
         $i->click($data->login);
+sllep(2);
         $i->seeInCurrentUrl(urlencode($posturl));
         $this->login();
 
