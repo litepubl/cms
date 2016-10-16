@@ -67,6 +67,11 @@ class Base
     {
     }
 
+protected function logUrl()
+{
+codecept_debug($this->tester->grabFromCurrentUrl());
+}
+
     protected function load($name)
     {
         return config::load($name);

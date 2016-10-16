@@ -24,14 +24,17 @@ class A11CommentCest extends \Page\Base
         $i->waitForText($data->human, 3);
         $this->screenShot('confirm');
         $i->click($data->human);
+sleep(3);
         $i->checkError();
 
         $i->wantTo('Send empty comment');
         $this->send('');
+$i->checkError();
         $i->see($data->error);
         $this->screenShot('emptyerror');
 
         $i->wantTo('Close error dialog');
+$this->logUrl();
         $i->click('Ok');
 
         $i->wantTo('Send comment as admin');

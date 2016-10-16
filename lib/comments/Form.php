@@ -62,7 +62,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
         $temp = $this->newProps();
         $temp->context = $context;
-        $response->body = $this->doRequest($context->request->getPost());
+        $response->body .= $this->doRequest($context->request->getPost());
     }
 
     public function doRequest(array $args)
@@ -74,15 +74,14 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         return $this->processForm($args, false);
     }
 
-    public function getShortpost($id)
+    public function getShortPost(int $id)
     {
-        $id = (int)$id;
         if ($id == 0) {
             return false;
         }
 
         $db = $this->getApp()->db;
-        return $db->selectassoc("select id, idurl, idperm, status, comstatus, commentscount from $db->posts where id = $id");
+        return $db->selectAssoc("select id, idurl, idperm, status, comstatus, commentscount from $db->posts where id = $id");
     }
 
     public function invalidate(array $shortpost)
@@ -140,7 +139,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         }
         if ($app->options->ingroups($cm->idgroups)) {
             if (!$confirmed && $cm->confirmlogged) {
-                return $this->request_confirm($values, $shortpost);
+                return $this->requestConfirm($values, $shortpost);
             }
 
             $iduser = $app->options->user;
@@ -151,7 +150,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
 
             case 'guest':
                 if (!$confirmed && $cm->confirmguest) {
-                    return $this->request_confirm($values, $shortpost);
+                    return $this->requestConfirm($values, $shortpost);
                 }
 
                 $iduser = $cm->idguest;
@@ -172,7 +171,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
                 }
 
                 if (!$confirmed && $cm->confirmcomuser) {
-                    return $this->request_confirm($values, $shortpost);
+                    return $this->requestConfirm($values, $shortpost);
                 }
 
                 if ($err = $this->processcomuser($values)) {
@@ -265,7 +264,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         return $this->processForm($values, true);
     }
 
-    public function request_confirm(array $values, array $shortpost)
+    public function requestConfirm(array $values, array $shortpost)
     {
         $values['date'] = time();
         $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
@@ -279,24 +278,17 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         session_write_close();
 
         if ((int)$shortpost['idperm']) {
-            $header = $this->getpermheader($shortpost);
-            return $header . $this->confirm($confirmid);
+$this->getPermHeader($shortpost);
         }
 
         return $this->confirm($confirmid);
     }
 
-    public function getPermheader(array $shortpost)
+    protected function getPermheader(array $shortpost)
     {
-        $router = $this->getApp()->router;
-        $url = $router->url;
-        $saveitem = $router->item;
-        $router->item = $router->getitem($shortpost['idurl']);
-        $router->url = $router->itemrequested['url'];
         $post = Post::i((int)$shortpost['id']);
         $perm = Perm::i($post->idperm);
-        // not restore values because perm will be used this values
-        return $perm->getheader($post);
+        $perm->setResponse($this->context->response, $post);
     }
 
     private function getConfirmform($confirmid)
