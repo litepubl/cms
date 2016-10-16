@@ -14,7 +14,7 @@ class A20UloginCest extends \Page\Ulogin
     protected function test(\AcceptanceTester $i)
     {
         $i->wantTo('Test ulogin plugin');
-        //$this->reInstallPlugin('ulogin');
+$this->install();
         $this->screenshot('install');
         $this->logout();
 
@@ -36,11 +36,9 @@ if (!static::$logged) {
 }
 
         $this->waitForcloseDialog();
-sleep(6);
 $i->seeCurrentUrlEquals($url);
-        codecept_debug($i->grabFromCurrentUrl());
-        //$i->reloadPage();
-
+        $i->reloadPage();
+sleep(4);
         $text = $data->comment . time();
         $i->fillField($comment->comment, $text);
         $this->screenshot('comment');
@@ -60,9 +58,9 @@ sleep(5);
         $i->waitForUrlChanged(10);
         codecept_debug($i->grabFromCurrentUrl());
         $this->logout();
+
         $this->uninstallPlugin('ulogin');
         $this->screenshot('uninstall');
         $this->deleteUser();
-
     }
 }

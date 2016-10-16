@@ -23,8 +23,21 @@ class Ulogin extends Base
     public $yandexSubmit = 'button[type=submit]';
     public $yandexAllow = '.authrequest-request-allow button';
     public $yandexCancel = '.authrequest-request-deny button';
+    protected $groupsUrl= '/admin/users/options/';
+    protected $cmtCheckbox= 'input[name=idgroup-5]';
     private $winhandles = [];
     protected static $logged = false;
+
+protected function install()
+{
+       $this->installPlugin('ulogin');
+$i = $this->tester;
+        $i->wantTo('Add commentator to default group');
+        $i->openPage($this->groupsUrl);
+        $i->checkOption($this->cmtCheckbox);
+        $i->click($this->updateButton);
+        $i->checkError();
+}
 
     protected function getwindows()
     {
