@@ -179,7 +179,7 @@ codecept_debug(round(microtime(true) - $m, 2));
         $this->open($this->usersUrl);
         $i = $this->tester;
         $i->wantTo('Delete last user');
-        $i->executeJs('$("[name^=\'user-\']").prop("checked", true)');
+$this->js('lastuser.js');
         $i->click($this->deleteButton);
         $i->checkError();
     }

@@ -65,7 +65,7 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         $response->body .= $this->doRequest($context->request->getPost());
     }
 
-    public function doRequest(array $args): string
+    public function doRequest(array $args)
     {
         if (isset($args['confirmid'])) {
             return $this->confirmRecevied($args['confirmid']);
@@ -116,7 +116,7 @@ protected function checkEmpty(array $values): string
 return '';
 }
 
-    public function processForm(array $values, $confirmed): string
+    public function processForm(array $values, $confirmed)
     {
 if ($error = $this->checkEmpty($values)) {
 return $error;
@@ -271,7 +271,7 @@ return $this->context->response->forbidden();
         return $this->processForm($values, true);
     }
 
-    public function requestConfirm(array $values, array $shortpost)
+    protected function requestConfirm(array $values, array $shortpost)
     {
         $values['date'] = time();
         $values['ip'] = preg_replace('/[^0-9., ]/', '', $_SERVER['REMOTE_ADDR']);
@@ -304,7 +304,6 @@ protected function hasPerm(array $shortpost): bool
             $post = Post::i((int)$shortpost['id']);
             $perm = Perm::i($post->idperm);
 return $perm->hasperm($post);
-            }
         }
 
 return true;
