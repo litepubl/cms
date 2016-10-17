@@ -19,6 +19,12 @@ namespace litepubl\core;
 
 class Users extends Items
 {
+//statuses
+const STATUS = 'status';
+const APPROVED = 'approved';
+const HOLD = 'hold';
+const COMUSER = 'comuser';
+
     public $grouptable;
 
     protected function create()
@@ -134,9 +140,9 @@ class Users extends Items
         $this->setvalue($id, 'password', $this->getApp()->options->hash($item['email'] . $password));
     }
 
-    public function approve($id)
+    public function approve(int $id)
     {
-        $this->setValue($id, 'status', 'approved');
+        $this->setValue($id, static::STATUS, static::APPROVED);
         $pages = $this->pages;
         if ($pages->createpage) {
             $pages->addPage($id);
@@ -153,7 +159,7 @@ class Users extends Items
         if ($id && $password) {
             $item = $this->getItem($id);
             if ($item['password'] == $this->getApp()->options->hash($item['email'] . $password)) {
-                if ($item['status'] == 'wait') {
+                if ($item[static::STATUS] == static::COMUSER) {
                     $this->approve($id);
                 }
 
