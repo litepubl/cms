@@ -7,6 +7,13 @@ class S03MenuCest extends \litepubl\tests\acceptance\A05AdminCest
     protected $url = '/admin/shop/';
     protected $cabinetUrl = '/admin/cabinet/';
 
+    protected function submitForm()
+    {
+        $i = $this->tester;
+        $i->executeJs('$(function(){$("form:last").submit();});');
+sleep(1);
+    }
+
     protected function test(\AcceptanceTester $i)
     {
         $i->wantTo('Test shop admin panel');
@@ -17,7 +24,6 @@ class S03MenuCest extends \litepubl\tests\acceptance\A05AdminCest
             $i->wantTo("Test form $url");
             $i->openPage('/admin/' . $url);
             $this->submit();
-
         }
 
         $this->open();
@@ -27,12 +33,9 @@ class S03MenuCest extends \litepubl\tests\acceptance\A05AdminCest
             $i->wantTo("Test page $url");
             $i->amOnUrl($url);
             $i->checkError();
-            $i->waitForElement('body', 6);
             $this->screenShot(str_replace('/', '-', trim($url, '/')));
-            $this->submit();
+            $this->submitForm();
             $i->checkError();
-            $i->waitForElement('body', 6);
-
         }
 
         $this->open($this->cabinetUrl);
@@ -42,15 +45,10 @@ class S03MenuCest extends \litepubl\tests\acceptance\A05AdminCest
             $i->wantTo("Test page $url");
             $i->amOnUrl($url);
             $i->checkError();
-            $i->waitForElement('body', 6);
             $this->screenShot(str_replace('/', '-', trim($url, '/')));
-            $this->submit();
+            $this->submitForm();
             $i->checkError();
-            $i->waitForElement('body', 6);
-
         }
-
-
 
     }
 }
