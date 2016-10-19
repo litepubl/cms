@@ -69,7 +69,7 @@ class Ticket extends \litepubl\post\Post
         $this->filtered = $result;
     }
 
-    public function getSchemaLink()
+    public function getSchemaLink(): string
     {
         return 'ticket';
     }

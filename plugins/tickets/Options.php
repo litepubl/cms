@@ -16,7 +16,7 @@ use litepubl\view\Lang;
 class Options extends \litepubl\admin\Menu
 {
 
-    public function getContent()
+    public function getContent(): string
     {
         $lang = Lang::admin('tickets');
         $args = new Args();
