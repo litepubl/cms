@@ -11,7 +11,7 @@ class S03MenuCest extends \litepubl\tests\acceptance\A05AdminCest
     {
         $i = $this->tester;
         $i->executeJs('$(function(){$("form:last").submit();});');
-sleep(1);
+        sleep(1);
     }
 
     protected function test(\AcceptanceTester $i)

@@ -14,7 +14,7 @@ class A20UloginCest extends \Page\Ulogin
     protected function test(\AcceptanceTester $i)
     {
         $i->wantTo('Test ulogin plugin');
-$this->install();
+        $this->install();
         $this->screenshot('install');
         $this->logout();
 
@@ -30,20 +30,20 @@ $this->install();
         $url = $i->grabFromCurrentUrl();
         $i->click($data->login);
         $this->click();
-if (!static::$logged) {
-        $this->screenshot('dialog');
-        $this->auth();
-}
+        if (!static::$logged) {
+                $this->screenshot('dialog');
+                $this->auth();
+        }
 
         $this->waitForcloseDialog();
-$i->seeCurrentUrlEquals($url);
+        $i->seeCurrentUrlEquals($url);
         $i->reloadPage();
-sleep(4);
+        sleep(4);
         $text = $data->comment . time();
         $i->fillField($comment->comment, $text);
         $this->screenshot('comment');
         $i->click($comment->submit);
-sleep(5);
+        sleep(5);
         $i->checkError();
         $i->wantTo('Check comment sent');
         $i->waitForText($text, 6);

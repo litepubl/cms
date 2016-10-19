@@ -28,16 +28,16 @@ class Ulogin extends Base
     private $winhandles = [];
     protected static $logged = false;
 
-protected function install()
-{
-       $this->installPlugin('ulogin');
-$i = $this->tester;
+    protected function install()
+    {
+           $this->installPlugin('ulogin');
+        $i = $this->tester;
         $i->wantTo('Add commentator to default group');
         $i->openPage($this->groupsUrl);
         $i->checkOption($this->cmtCheckbox);
         $i->click($this->updateButton);
         $i->checkError();
-}
+    }
 
     protected function getwindows()
     {
@@ -63,8 +63,8 @@ $i = $this->tester;
     {
         $this->click($name);
         if (!static::$logged) {
-        $this->auth($name);
-}
+            $this->auth($name);
+        }
     }
 
     protected function click(string $name = 'mailru')
@@ -86,14 +86,14 @@ $i = $this->tester;
     {
         $i = $this->tester;
         $i->wantTo('Close auth dialog');
-$m = microtime(true);
+        $m = microtime(true);
         $i->waitForJS('return !litepubl.authdialog.dialog;', 7);
-codecept_debug(round(microtime(true) - $m, 2));
+        codecept_debug(round(microtime(true) - $m, 2));
 
         $i->wantTo('Check user logged');
-$m = microtime(true);
+        $m = microtime(true);
         $i->waitForJS('return litepubl.getuser().id;', 15);
-codecept_debug(round(microtime(true) - $m, 2));
+        codecept_debug(round(microtime(true) - $m, 2));
     }
 
     public function _auth(string $name = 'mailru')
@@ -179,7 +179,7 @@ codecept_debug(round(microtime(true) - $m, 2));
         $this->open($this->usersUrl);
         $i = $this->tester;
         $i->wantTo('Delete last user');
-$this->js('lastuser.js');
+        $this->js('lastuser.js');
         $i->click($this->deleteButton);
         $i->checkError();
     }

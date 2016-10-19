@@ -47,6 +47,6 @@ class S70HostingCest extends \shop\Hosting
         $this->logout();
         $i->openPage('/');
         $this->createShop();
-$this->testCabinet();
+        $this->testCabinet();
     }
 }

@@ -25,7 +25,7 @@ class S40BuyCest extends \shop\BuyPage
             $i->waitForUrlChanged(10);
         }
 
-$i->waitForElement('body', 10);
+        $i->waitForElement('body', 10);
         if ($this->exists($this->editAddrButton)) {
             $i->click($this->editAddrButton);
             $i->checkError();

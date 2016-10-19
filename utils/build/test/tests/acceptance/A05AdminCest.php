@@ -22,7 +22,7 @@ class A05AdminCest extends \Page\Base
     {
         $i = $this->tester;
         $i->executeJs('$(function(){$("form:last").submit();});');
-sleep(1);
+        sleep(1);
     }
 
     protected function getLinks(string $name): array
@@ -49,7 +49,7 @@ sleep(1);
             $i->wantTo("Test form $url");
             $i->openPage('/admin/' . $url);
             $this->submitForm();
-$i->checkError();
+            $i->checkError();
         }
 
         $list = $this->getMenu();
