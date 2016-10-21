@@ -9,3 +9,4 @@ for %%f in (%home%\js\mediaelement\lang\*.*) do if exist lang\%%~nxf copy /Y lan
 cd %home%\js\mediaelement\lang
 del *.min.js
 for %%f in (*.js) do java -jar D:\OpenServer\domains\cms.cms\utils\build\closure\compiler.jar --js=%%~nxf --js_output_file=%%~nf.min%%~xf
+pause
