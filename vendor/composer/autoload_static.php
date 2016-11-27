@@ -20,6 +20,7 @@ class ComposerStaticInit3438bb66839edf332105693786c3d5eb
         ),
         'P' => 
         array (
+            'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Cache\\' => 10,
         ),
@@ -54,6 +55,10 @@ class ComposerStaticInit3438bb66839edf332105693786c3d5eb
         array (
             0 => __DIR__ . '/..' . '/zendframework/zend-diactoros/src',
         ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
         'Psr\\Http\\Message\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
@@ -72,22 +77,11 @@ class ComposerStaticInit3438bb66839edf332105693786c3d5eb
         ),
     );
 
-    public static $prefixesPsr0 = array (
-        'P' => 
-        array (
-            'Psr\\Log\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/psr/log',
-            ),
-        ),
-    );
-
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit3438bb66839edf332105693786c3d5eb::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit3438bb66839edf332105693786c3d5eb::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit3438bb66839edf332105693786c3d5eb::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }
