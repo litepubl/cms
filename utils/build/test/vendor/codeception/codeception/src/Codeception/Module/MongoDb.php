@@ -27,6 +27,8 @@ use Codeception\TestInterface;
  * Connection is done by MongoDb driver, which is stored in Codeception\Lib\Driver namespace.
  * Check out the driver if you get problems loading dumps and cleaning databases.
  *
+ * HINT: This module can be used with [Mongofill](https://github.com/mongofill/mongofill) library which is Mongo client written in PHP without extension.
+ *
  * ## Status
  *
  * * Maintainer: **judgedim**, **davert**
@@ -140,7 +142,7 @@ class MongoDb extends CodeceptionModule implements RequiresPackage
                 $this->isDumpFileEmpty = true;
                 $dumpDir = dir($this->dumpFile);
                 while (false !== ($entry = $dumpDir->read())) {
-                    if ($entity !== '..' && $entity !== '.') {
+                    if ($entry !== '..' && $entry !== '.') {
                         $this->isDumpFileEmpty = false;
                         break;
                     }

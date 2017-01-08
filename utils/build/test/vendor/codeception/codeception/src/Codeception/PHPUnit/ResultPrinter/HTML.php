@@ -6,6 +6,8 @@ use Codeception\Step;
 use Codeception\Step\Meta;
 use Codeception\Test\Descriptor;
 use Codeception\Test\Interfaces\ScenarioDriven;
+use Codeception\TestInterface;
+use Codeception\Util\PathResolver;
 
 class HTML extends CodeceptionResultPrinter
 {
@@ -122,26 +124,47 @@ class HTML extends CodeceptionResultPrinter
             $this->templatePath . 'scenario.html'
         );
 
-        $failure = '';
+        $failures = '';
         $name = Descriptor::getTestSignature($test);
         if (isset($this->failures[$name])) {
             $failTemplate = new \Text_Template(
                 $this->templatePath . 'fail.html'
             );
-            $failTemplate->setVar(['fail' => nl2br($this->failures[$name])]);
-            $failure = $failTemplate->render();
+            foreach ($this->failures[$name] as $failure) {
+                $failTemplate->setVar(['fail' => nl2br($failure)]);
+                $failures .= $failTemplate->render() . PHP_EOL;
+            }
+        }
+
+        $png = '';
+        $html = '';
+        if ($test instanceof TestInterface) {
+            $reports = $test->getMetadata()->getReports();
+            if (isset($reports['png'])) {
+                $localPath = PathResolver::getRelativeDir($reports['png'], codecept_data_dir());
+                $png = "<tr><td class='error'><div class='screenshot'><img src='$localPath' alt='failure screenshot'></div></td></tr>";
+            }
+            if (isset($reports['html'])) {
+                $localPath = PathResolver::getRelativeDir($reports['html'], codecept_data_dir());
+                $html = "<tr><td class='error'>See <a href='$localPath' target='_blank'>HTML snapshot</a> of a failed page</td></tr>";
+            }
+
         }
 
         $toggle = $stepsBuffer ? '<span class="toggle">+</span>' : '';
 
+        $testString = preg_replace('~^([\s\w\\\]+):\s~', '<span class="quiet">$1 &raquo;</span> ', ucfirst(Descriptor::getTestAsString($test)));
+
         $scenarioTemplate->setVar(
             [
                 'id'             => ++$this->id,
-                'name'           => ucfirst(Descriptor::getTestAsString($test)),
+                'name'           => $testString,
                 'scenarioStatus' => $scenarioStatus,
                 'steps'          => $stepsBuffer,
                 'toggle'         => $toggle,
-                'failure'        => $failure,
+                'failure'        => $failures,
+                'png'            => $png,
+                'html'            => $html,
                 'time'           => round($time, 2)
             ]
         );
@@ -214,7 +237,7 @@ class HTML extends CodeceptionResultPrinter
      */
     public function addError(\PHPUnit_Framework_Test $test, \Exception $e, $time)
     {
-        $this->failures[Descriptor::getTestSignature($test)] = $this->cleanMessage($e);
+        $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addError($test, $e, $time);
     }
 
@@ -227,7 +250,7 @@ class HTML extends CodeceptionResultPrinter
      */
     public function addFailure(\PHPUnit_Framework_Test $test, \PHPUnit_Framework_AssertionFailedError $e, $time)
     {
-        $this->failures[Descriptor::getTestSignature($test)] = $this->cleanMessage($e);
+        $this->failures[Descriptor::getTestSignature($test)][] = $this->cleanMessage($e);
         parent::addFailure($test, $e, $time);
     }
 

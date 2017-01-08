@@ -189,6 +189,13 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->assertEquals('val', $form['text']);
     }
 
+    public function testClickByLinkTitle()
+    {
+        $this->module->amOnPage('/');
+        $this->module->click("Link Title");
+        $this->module->seeInCurrentUrl('/info');
+    }
+
     public function testClickOnContext()
     {
         $this->module->amOnPage('/');
@@ -1526,5 +1533,68 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
 
         $this->module->selectOption('age', ['text' => '21']);
         $this->module->seeOptionIsSelected('age', '21');
+    }
+
+    public function testClickButtonInLink()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click('More Info');
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickButtonInLinkAndSpan()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click('Span Info');
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickButtonInLinkUsingCssLocator()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click(['css' => 'input[value="More Info"]']);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickButtonInLinkAndSpanUsingCssLocator()
+    {
+        $this->module->amOnPage('/form/button_in_link');
+        $this->module->click(['css' => 'input[value="Span Info"]']);
+        $this->module->seeCurrentUrlEquals('/info');
+    }
+
+    public function testClickHashLink()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Link');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
+    }
+
+    public function testClickHashButton()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Button');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
+    }
+
+    public function testSubmitHashForm()
+    {
+        $this->module->amOnPage('/form/anchor');
+        $this->module->click('Hash Form');
+        $this->module->seeCurrentUrlEquals('/form/anchor');
+    }
+
+    public function testClickingRelativeLinkHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Link');
+        $this->module->seeCurrentUrlEquals('/form/example7');
+    }
+
+    public function testSubmittingRelativeFormHonoursBaseHref()
+    {
+        $this->module->amOnPage('/basehref');
+        $this->module->click('Relative Form');
+        $this->module->seeCurrentUrlEquals('/form/example5');
     }
 }

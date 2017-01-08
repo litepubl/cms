@@ -245,8 +245,10 @@ class WebDriver extends CodeceptionModule implements
 {
     protected $requiredFields = ['browser', 'url'];
     protected $config = [
+        'protocol'           => 'http',
         'host'               => '127.0.0.1',
         'port'               => '4444',
+        'path'               => '/wd/hub',
         'restart'            => false,
         'wait'               => 0,
         'clear_cookies'      => true,
@@ -285,7 +287,7 @@ class WebDriver extends CodeceptionModule implements
 
     public function _initialize()
     {
-        $this->wd_host = sprintf('http://%s:%s/wd/hub', $this->config['host'], $this->config['port']);
+        $this->wd_host = sprintf('%s://%s:%s%s', $this->config['protocol'], $this->config['host'], $this->config['port'], $this->config['path']);
         $this->capabilities = $this->config['capabilities'];
         $this->capabilities[WebDriverCapabilityType::BROWSER_NAME] = $this->config['browser'];
         if ($proxy = $this->getProxy()) {
@@ -294,23 +296,6 @@ class WebDriver extends CodeceptionModule implements
         $this->connectionTimeoutInMs = $this->config['connection_timeout'] * 1000;
         $this->requestTimeoutInMs = $this->config['request_timeout'] * 1000;
         $this->loadFirefoxProfile();
-        try {
-            $this->webDriver = RemoteWebDriver::create(
-                $this->wd_host,
-                $this->capabilities,
-                $this->connectionTimeoutInMs,
-                $this->requestTimeoutInMs,
-                $this->httpProxy,
-                $this->httpProxyPort
-            );
-            $this->sessions[] = $this->_backupSession();
-        } catch (WebDriverCurlException $e) {
-            throw new ConnectionException(
-                $e->getMessage() . "\n \nPlease make sure that Selenium Server or PhantomJS is running."
-            );
-        }
-        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
-        $this->initialWindowSize();
     }
 
     public function _conflicts()
@@ -321,7 +306,7 @@ class WebDriver extends CodeceptionModule implements
     public function _before(TestInterface $test)
     {
         if (!isset($this->webDriver)) {
-            $this->_initialize();
+            $this->_initializeSession();
         }
         $test->getMetadata()->setCurrent([
             'browser' => $this->config['browser'],
@@ -374,8 +359,10 @@ class WebDriver extends CodeceptionModule implements
         $this->debugWebDriverLogs();
         $filename = preg_replace('~\W~', '.', Descriptor::getTestSignature($test));
         $outputDir = codecept_output_dir();
-        $this->_saveScreenshot($outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
-        $this->_savePageSource($outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
+        $this->_saveScreenshot($report = $outputDir . mb_strcut($filename, 0, 245, 'utf-8') . '.fail.png');
+        $test->getMetadata()->addReport('png', $report);
+        $this->_savePageSource($report = $outputDir . mb_strcut($filename, 0, 244, 'utf-8') . '.fail.html');
+        $test->getMetadata()->addReport('html', $report);
         $this->debug("Screenshot and page source were saved into '$outputDir' dir");
     }
 
@@ -384,6 +371,10 @@ class WebDriver extends CodeceptionModule implements
      */
     public function debugWebDriverLogs()
     {
+        if (!isset($this->webDriver)) {
+            $this->debug('WebDriver::debugWebDriverLogs method has been called when webDriver is not set');
+            return;
+        }
         try {
             // Dump out latest Selenium logs
             $logs = $this->webDriver->manage()->getAvailableLogTypes();
@@ -398,10 +389,8 @@ class WebDriver extends CodeceptionModule implements
                 }
                 $this->debugSection("Selenium {$logType} Logs", "\n" . $this->formatLogEntries($logEntries));
             }
-        } catch (UnknownServerException $e) {
-            // This only happens with the IE driver, which doesn't support retrieving logs yet:
-            // https://github.com/SeleniumHQ/selenium/issues/468
-            $this->debug("Unable to retrieve Selenium logs");
+        } catch (\Exception $e) {
+            $this->debug('Unable to retrieve Selenium logs : ' . $e->getMessage());
         }
     }
 
@@ -439,7 +428,7 @@ class WebDriver extends CodeceptionModule implements
             $this->_loadSession($session);
             try {
                 $this->webDriver->quit();
-            } catch (UnknownServerException $e) {
+            } catch (\Exception $e) {
                 // Session already closed so nothing to do
             }
             unset($this->webDriver);
@@ -504,18 +493,21 @@ class WebDriver extends CodeceptionModule implements
     {
         $url = $this->webDriver->getCurrentURL();
         if ($url == 'about:blank') {
-            throw new ModuleException($this, "Current url is blank, no page was opened");
+            throw new ModuleException($this, 'Current url is blank, no page was opened');
         }
         return Uri::retrieveUri($url);
     }
 
     public function _saveScreenshot($filename)
     {
-        if ($this->webDriver !== null) {
+        if (!isset($this->webDriver)) {
+            $this->debug('WebDriver::_saveScreenshot method has been called when webDriver is not set');
+            return;
+        }
+        try {
             $this->webDriver->takeScreenshot($filename);
-        } else {
-            codecept_debug('WebDriver::_saveScreenshot method has been called when webDriver is not set');
-            codecept_debug(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
+        } catch (\Exception $e) {
+            $this->debug('Unable to retrieve screenshot from Selenium : ' . $e->getMessage());
         }
     }
 
@@ -530,7 +522,15 @@ class WebDriver extends CodeceptionModule implements
      */
     public function _savePageSource($filename)
     {
-        file_put_contents($filename, $this->webDriver->getPageSource());
+        if (!isset($this->webDriver)) {
+            $this->debug('WebDriver::_savePageSource method has been called when webDriver is not set');
+            return;
+        }
+        try {
+            file_put_contents($filename, $this->webDriver->getPageSource());
+        } catch (\Exception $e) {
+            $this->debug('Unable to retrieve source page from Selenium : ' . $e->getMessage());
+        }
     }
 
     /**
@@ -785,7 +785,7 @@ class WebDriver extends CodeceptionModule implements
 
         // wide
         $xpath = Locator::combine(
-            ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or .//img[contains(./@alt, $locator)])]",
+            ".//a[./@href][((contains(normalize-space(string(.)), $locator)) or contains(./@title, $locator) or .//img[contains(./@alt, $locator)])]",
             ".//input[./@type = 'submit' or ./@type = 'image' or ./@type = 'button'][contains(./@value, $locator)]",
             ".//input[./@type = 'image'][contains(./@alt, $locator)]",
             ".//button[contains(normalize-space(string(.)), $locator)]",
@@ -1129,9 +1129,21 @@ class WebDriver extends CodeceptionModule implements
 
     public function _initializeSession()
     {
-        $this->webDriver = RemoteWebDriver::create($this->wd_host, $this->capabilities);
-        $this->sessions[] = $this->_backupSession();
-        $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+        try {
+            $this->webDriver = RemoteWebDriver::create(
+                $this->wd_host,
+                $this->capabilities,
+                $this->connectionTimeoutInMs,
+                $this->requestTimeoutInMs,
+                $this->httpProxy,
+                $this->httpProxyPort
+            );
+            $this->sessions[] = $this->_backupSession();
+            $this->webDriver->manage()->timeouts()->implicitlyWait($this->config['wait']);
+            $this->initialWindowSize();
+        } catch (WebDriverCurlException $e) {
+            throw new ConnectionException("Can't connect to Webdriver at {$this->wd_host}. Please make sure that Selenium Server or PhantomJS is running.");
+        }
     }
 
     public function _loadSession($session)
@@ -1742,6 +1754,24 @@ class WebDriver extends CodeceptionModule implements
      *     ]
      * ]);
      * ```
+     *
+     * The `$button` parameter can be either a string, an array or an instance
+     * of Facebook\WebDriver\WebDriverBy. When it is a string, the
+     * button will be found by its "name" attribute. If $button is an
+     * array then it will be treated as a strict selector and a WebDriverBy
+     * will be used verbatim.
+     *
+     * For example, given the following HTML:
+     *
+     * ``` html
+     * <input type="submit" name="submitButton" value="Submit" />
+     * ```
+     *
+     * `$button` could be any one of the following:
+     *   - 'submitButton'
+     *   - ['name' => 'submitButton']
+     *   - WebDriverBy::name('submitButton')
+     *
      * @param $selector
      * @param $params
      * @param $button
@@ -1806,7 +1836,16 @@ class WebDriver extends CodeceptionModule implements
 
         $submitted = false;
         if (!empty($button)) {
-            $els = $form->findElements(WebDriverBy::name($button));
+            if (is_array($button)) {
+                $buttonSelector = $this->getStrictLocator($button);
+            } elseif ($button instanceof WebDriverBy) {
+                $buttonSelector = $button;
+            } else {
+                $buttonSelector = WebDriverBy::name($button);
+            }
+
+            $els = $form->findElements($buttonSelector);
+
             if (!empty($els)) {
                 $el = reset($els);
                 $el->click();
@@ -1913,7 +1952,9 @@ class WebDriver extends CodeceptionModule implements
 
     /**
      * Waits up to $timeout seconds for the given string to appear on the page.
-     * Can also be passed a selector to search in.
+     *
+     * Can also be passed a selector to search in, be as specific as possible when using selectors.
+     * waitForText() will only watch the first instance of the matching selector / text provided.
      * If the given text doesn't appear, a timeout exception is thrown.
      *
      * ``` php

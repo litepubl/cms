@@ -236,9 +236,7 @@ class Generic_Sniffs_WhiteSpace_ScopeIndentSniff implements PHP_CodeSniffer_Snif
                 && $tokens[$checkToken]['code'] === T_CLOSE_PARENTHESIS
                 && isset($tokens[$checkToken]['parenthesis_opener']) === true)
                 || ($tokens[$i]['code'] === T_CLOSE_PARENTHESIS
-                && isset($tokens[$i]['parenthesis_opener']) === true
-                && isset($tokens[$i]['parenthesis_owner']) === true
-                && $tokens[$tokens[$i]['parenthesis_owner']]['code'] === T_ARRAY)
+                && isset($tokens[$i]['parenthesis_opener']) === true)
             ) {
                 if ($checkToken !== null) {
                     $parenCloser = $checkToken;
@@ -296,7 +294,10 @@ class Generic_Sniffs_WhiteSpace_ScopeIndentSniff implements PHP_CodeSniffer_Snif
 
                     $exact = false;
 
-                    if ($condition > 0 && $lastOpenTag > $condition) {
+                    $lastOpenTagConditions = array_keys($tokens[$lastOpenTag]['conditions']);
+                    $lastOpenTagCondition  = array_pop($lastOpenTagConditions);
+
+                    if ($condition > 0 && $lastOpenTagCondition === $condition) {
                         if ($this->_debug === true) {
                             echo "\t* open tag is inside condition; using open tag *".PHP_EOL;
                         }
