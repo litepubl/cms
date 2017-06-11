@@ -37,7 +37,7 @@ $this->wantTo('Check errors');
 $m = microtime(true);
 $this->waitForElement('body', 5);
 //codecept_debug(round(microtime(true) - $m, 2));
-$text = htmlspecialchars_decode($this->getVisibleText());
+$text = htmlspecialchars_decode($this->grabTextFrom('body'));
 return $this->checkErrorInSource($text);
 }
 

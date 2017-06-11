@@ -75,7 +75,7 @@ function JsInstall($self)
 
     $section = 'media';
     $self->add($section, '/js/mediaelement/mediaelement-and-player.min.js');
-        $self->add($section, "/js/mediaelement/lang/me-i18n-locale-$language.min.js");
+        $self->add($section, "/js/mediaelement/lang/$language.min.js");
 
     $section = 'admin';
     Js_bootstrap_admin($self, true);
