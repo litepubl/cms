@@ -33,8 +33,8 @@
         return this.script.done(callback);
       }
 
-      $.load_css(ltoptions.files + "/js/mediaelement/css/mediaelementplayer.min.css");
-      this.script = $.load_script(ltoptions.files + "/js/mediaelement/videoplayer.min.js", callback);
+      $.load_css(ltoptions.files + "/js/mediaelement/mediaelementplayer.min.css");
+      this.script = $.load_script(ltoptions.files + "/files/js/media." + ltoptions.jsmerger + ".js", callback);
     },
 
     player: function(elem, options) {

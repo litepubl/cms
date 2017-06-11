@@ -30,8 +30,8 @@
 
 .clear-after:after,
 .files-block:after,
-.filelist-1+ div:after,
-.filelist-2+ div:after {
+.filelist-1+div:after,
+.filelist-2+div:after {
     clear: both;
     content: '.';
     display: block;

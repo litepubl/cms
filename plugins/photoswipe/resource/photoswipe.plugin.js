@@ -268,7 +268,7 @@
           id: 'photoswipe-twitter',
           label: '<span class="fa fa-twitter"></span> Tweet',
           url: 'https://twitter.com/share?lang=' + ltoptions.lang + '&url=[url]&text=[text]'
-            //'https://twitter.com/intent/tweet?url=[url]&text=[title]'
+          //'https://twitter.com/intent/tweet?url=[url]&text=[title]'
         },
 
         {
@@ -290,7 +290,7 @@
           id: 'photoswipe-odnoklassniki',
           label: '<span class="odnoklassniki-icon"></span> ' + lng.ok,
           url: 'http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl=[url]&st.comments=[text]'
-            //'http://connect.ok.ru/dk?st.cmd=WidgetSharePreview&service=odnoklassniki&st.shareUrl=[url]'
+          //'http://connect.ok.ru/dk?st.cmd=WidgetSharePreview&service=odnoklassniki&st.shareUrl=[url]'
         });
       }
 

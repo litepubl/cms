@@ -6,7 +6,7 @@ bootstrap\popover
 bootstrap\tab
 bootstrap\tooltip
 bootstrap\transition
-mediaelement\lang\ru.js
+mediaelement\lang\ru
 plugins\class-extend
 plugins\filereader
 plugins\jquery.cookie
