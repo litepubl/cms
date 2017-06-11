@@ -41,7 +41,9 @@ $js->lock();
     $section = 'media';
 $lang = $js->getApp()->options->language;
         $js->deleteFile($section, "/lib/languages/$lang/mediaplayer.min.js");
-$js->add($section, "/js/mediaelement/lang/me-i18n-locale-$lang.min.js");
+if ($lang != 'en') {
+$js->add($section, "/js/mediaelement/lang/$lang.min.js");
+}
 $js->unlock();
 
 include_once (__DIR__ . '/update.7.07.php');
