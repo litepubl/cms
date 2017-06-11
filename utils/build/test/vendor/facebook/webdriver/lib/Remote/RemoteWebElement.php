@@ -55,8 +55,7 @@ class RemoteWebElement implements WebDriverElement, WebDriverLocatable
     }
 
     /**
-     * If this element is a TEXTAREA or text INPUT element, this will clear the
-     * value.
+     * If this element is a TEXTAREA or text INPUT element, this will clear the value.
      *
      * @return RemoteWebElement The current instance.
      */
@@ -86,8 +85,7 @@ class RemoteWebElement implements WebDriverElement, WebDriverLocatable
     }
 
     /**
-     * Find the first WebDriverElement within this element using the given
-     * mechanism.
+     * Find the first WebDriverElement within this element using the given mechanism.
      *
      * @param WebDriverBy $by
      * @return RemoteWebElement NoSuchElementException is thrown in
@@ -246,17 +244,17 @@ class RemoteWebElement implements WebDriverElement, WebDriverLocatable
     }
 
     /**
-     * Get the tag name of this element.
+     * Get the (lowercase) tag name of this element.
      *
      * @return string The tag name.
      */
     public function getTagName()
     {
-        // Force tag name to be lowercase as expected by protocol for Opera driver
+        // Force tag name to be lowercase as expected by JsonWire protocol for Opera driver
         // until this issue is not resolved :
         // https://github.com/operasoftware/operadriver/issues/102
         // Remove it when fixed to be consistent with the protocol.
-        return strtolower($this->executor->execute(
+        return mb_strtolower($this->executor->execute(
             DriverCommand::GET_ELEMENT_TAG_NAME,
             [':id' => $this->id]
         ));
@@ -345,49 +343,13 @@ class RemoteWebElement implements WebDriverElement, WebDriverLocatable
     }
 
     /**
-     * Upload a local file to the server
-     *
-     * @param string $local_file
-     *
-     * @throws WebDriverException
-     * @return string The remote path of the file.
-     */
-    private function upload($local_file)
-    {
-        if (!is_file($local_file)) {
-            throw new WebDriverException('You may only upload files: ' . $local_file);
-        }
-
-        // Create a temporary file in the system temp directory.
-        $temp_zip = tempnam(sys_get_temp_dir(), 'WebDriverZip');
-        $zip = new ZipArchive();
-        if ($zip->open($temp_zip, ZipArchive::CREATE) !== true) {
-            return false;
-        }
-        $info = pathinfo($local_file);
-        $file_name = $info['basename'];
-        $zip->addFile($local_file, $file_name);
-        $zip->close();
-        $params = [
-            'file' => base64_encode(file_get_contents($temp_zip)),
-        ];
-        $remote_path = $this->executor->execute(
-            DriverCommand::UPLOAD_FILE,
-            $params
-        );
-        unlink($temp_zip);
-
-        return $remote_path;
-    }
-
-    /**
      * Set the fileDetector in order to let the RemoteWebElement to know that
      * you are going to upload a file.
      *
      * Basically, if you want WebDriver trying to send a file, set the fileDetector
      * to be LocalFileDetector. Otherwise, keep it UselessFileDetector.
      *
-     *   eg. $element->setFileDetector(new LocalFileDetector);
+     *   eg. `$element->setFileDetector(new LocalFileDetector);`
      *
      * @param FileDetector $detector
      * @return RemoteWebElement
@@ -403,8 +365,7 @@ class RemoteWebElement implements WebDriverElement, WebDriverLocatable
     }
 
     /**
-     * If this current element is a form, or an element within a form, then this
-     * will be submitted to the remote server.
+     * If this current element is a form, or an element within a form, then this will be submitted to the remote server.
      *
      * @return RemoteWebElement The current instance.
      */
@@ -452,5 +413,41 @@ class RemoteWebElement implements WebDriverElement, WebDriverLocatable
     protected function newElement($id)
     {
         return new static($this->executor, $id);
+    }
+
+    /**
+     * Upload a local file to the server
+     *
+     * @param string $local_file
+     *
+     * @throws WebDriverException
+     * @return string The remote path of the file.
+     */
+    protected function upload($local_file)
+    {
+        if (!is_file($local_file)) {
+            throw new WebDriverException('You may only upload files: ' . $local_file);
+        }
+
+        // Create a temporary file in the system temp directory.
+        $temp_zip = tempnam(sys_get_temp_dir(), 'WebDriverZip');
+        $zip = new ZipArchive();
+        if ($zip->open($temp_zip, ZipArchive::CREATE) !== true) {
+            return false;
+        }
+        $info = pathinfo($local_file);
+        $file_name = $info['basename'];
+        $zip->addFile($local_file, $file_name);
+        $zip->close();
+        $params = [
+            'file' => base64_encode(file_get_contents($temp_zip)),
+        ];
+        $remote_path = $this->executor->execute(
+            DriverCommand::UPLOAD_FILE,
+            $params
+        );
+        unlink($temp_zip);
+
+        return $remote_path;
     }
 }

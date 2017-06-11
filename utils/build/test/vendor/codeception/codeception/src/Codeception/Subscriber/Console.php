@@ -360,7 +360,7 @@ class Console implements EventSubscriberInterface
         $this->printExceptionTrace($fail);
     }
 
-    protected function printException($e, $cause = null)
+    public function printException($e, $cause = null)
     {
         if ($e instanceof \PHPUnit_Framework_SkippedTestError or $e instanceof \PHPUnit_Framework_IncompleteTestError) {
             if ($e->getMessage()) {
@@ -404,12 +404,15 @@ class Console implements EventSubscriberInterface
         $message->writeln();
     }
 
-    protected function printScenarioFail(ScenarioDriven $failedTest, $fail)
+    public function printScenarioFail(ScenarioDriven $failedTest, $fail)
     {
         if ($this->conditionalFails) {
             $failedStep = (string) array_shift($this->conditionalFails);
         } else {
-            $failedStep = (string) $this->failedStep;
+            $failedStep = (string) $failedTest->getScenario()->getMetaStep();
+            if ($failedStep === '') {
+                $failedStep = (string)$this->failedStep;
+            }
         }
 
         $this->printException($fail, $failedStep);
@@ -520,7 +523,7 @@ class Console implements EventSubscriberInterface
         $this->output->writeln("");
     }
 
-    protected function detectWidth()
+    public function detectWidth()
     {
         $this->width = 60;
         if (!$this->isWin()
@@ -528,12 +531,19 @@ class Console implements EventSubscriberInterface
             && (getenv('TERM'))
             && (getenv('TERM') != 'unknown')
         ) {
-            $this->width = (int) (`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
+            // try to get terminal width from ENV variable (bash), see also https://github.com/Codeception/Codeception/issues/3788
+            if (getenv('COLUMNS')) {
+                $this->width = getenv('COLUMNS');
+            } else {
+                $this->width = (int) (`command -v tput >> /dev/null 2>&1 && tput cols`) - 2;
+            }
         } elseif ($this->isWin() && (php_sapi_name() === "cli")) {
             exec('mode con', $output);
-            preg_match('/^ +.* +(\d+)$/', $output[4], $matches);
-            if (!empty($matches[1])) {
-                $this->width = (int) $matches[1];
+            if (isset($output[4])) {
+                preg_match('/^ +.* +(\d+)$/', $output[4], $matches);
+                if (!empty($matches[1])) {
+                    $this->width = (int) $matches[1];
+                }
             }
         }
         return $this->width;
@@ -553,7 +563,7 @@ class Console implements EventSubscriberInterface
         $prefix = ($this->output->isInteractive() and !$this->isDetailed($test) and $inProgress) ? '- ' : '';
 
         $testString = Descriptor::getTestAsString($test);
-        $testString = preg_replace('~^([\s\w\\\]+):\s~', "<focus>$1{$this->chars['of']}</focus> ", $testString);
+        $testString = preg_replace('~^([^:]+):\s~', "<focus>$1{$this->chars['of']}</focus> ", $testString);
 
         $this
             ->message($testString)

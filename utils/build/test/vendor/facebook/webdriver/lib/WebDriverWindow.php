@@ -17,15 +17,19 @@ namespace Facebook\WebDriver;
 
 use Facebook\WebDriver\Exception\IndexOutOfBoundsException;
 use Facebook\WebDriver\Remote\DriverCommand;
+use Facebook\WebDriver\Remote\ExecuteMethod;
 
 /**
  * An abstraction allowing the driver to manipulate the browser's window
  */
 class WebDriverWindow
 {
+    /**
+     * @var ExecuteMethod
+     */
     protected $executor;
 
-    public function __construct($executor)
+    public function __construct(ExecuteMethod $executor)
     {
         $this->executor = $executor;
     }
@@ -34,7 +38,7 @@ class WebDriverWindow
      * Get the position of the current window, relative to the upper left corner
      * of the screen.
      *
-     * @return array The current window position.
+     * @return WebDriverPoint The current window position.
      */
     public function getPosition()
     {
@@ -53,7 +57,7 @@ class WebDriverWindow
      * Get the size of the current window. This will return the outer window
      * dimension, not just the view port.
      *
-     * @return array The current window size.
+     * @return WebDriverDimension The current window size.
      */
     public function getSize()
     {
@@ -141,7 +145,7 @@ class WebDriverWindow
      */
     public function setScreenOrientation($orientation)
     {
-        $orientation = strtoupper($orientation);
+        $orientation = mb_strtoupper($orientation);
         if (!in_array($orientation, ['PORTRAIT', 'LANDSCAPE'])) {
             throw new IndexOutOfBoundsException(
                 'Orientation must be either PORTRAIT, or LANDSCAPE'

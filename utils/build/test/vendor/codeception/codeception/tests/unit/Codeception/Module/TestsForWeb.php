@@ -20,7 +20,6 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/');
         $this->module->see('Welcome to test app!');
 
-        $this->module->_cleanup();
         $this->module->amOnPage('/info');
         $this->module->see('Information');
     }
@@ -166,6 +165,22 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->dontSeeLink('Next', 'http://codeception.com/');
     }
 
+    public function testSeeLinkMatchesRelativeLink()
+    {
+        $this->module->amOnPage('/info');
+        $this->module->seeLink('Sign in!', '/login');
+    }
+
+    public function testDontSeeLinkMatchesRelativeLink()
+    {
+        $this->setExpectedException(
+            'PHPUnit_Framework_AssertionFailedError',
+            "Link containing text 'Sign in!' and URL '/login' was found in page /info"
+        );
+        $this->module->amOnPage('/info');
+        $this->module->dontSeeLink('Sign in!', '/login');
+    }
+
     public function testClick()
     {
         $this->module->amOnPage('/');
@@ -211,6 +226,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
     {
         $this->module->amOnPage('/form/checkbox');
         $this->module->checkOption('#checkin');
+        $this->module->click('Submit');
+        $form = data::get('form');
+        $this->assertEquals('agree', $form['terms']);
+    }
+
+    public function testCheckboxByName()
+    {
+        $this->module->amOnPage('/form/checkbox');
+        $this->module->checkOption('terms');
         $this->module->click('Submit');
         $form = data::get('form');
         $this->assertEquals('agree', $form['terms']);
@@ -682,6 +706,23 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/form/select');
         $result = $this->module->grabValueFrom('#age');
         $this->assertEquals('oldfag', $result);
+    }
+
+    /**
+     * @see https://github.com/Codeception/Codeception/issues/3866
+     */
+    public function testGrabValueFromWithFillField()
+    {
+        $this->module->amOnPage('/form/bug3866');
+        $this->module->fillField('empty', 'new value');
+        $result = $this->module->grabValueFrom('#empty');
+        $this->assertEquals('new value', $result);
+        $this->module->fillField('empty_textarea', 'new value');
+        $result = $this->module->grabValueFrom('#empty_textarea');
+        $this->assertEquals('new value', $result);
+        $this->module->fillField('//textarea[@name="textarea[name][]"]', 'new value');
+        $result = $this->module->grabValueFrom('#textarea_with_square_bracket');
+        $this->assertEquals('new value', $result);
     }
 
     public function testGrabAttributeFrom()
@@ -1596,5 +1637,15 @@ abstract class TestsForWeb extends \Codeception\TestCase\Test
         $this->module->amOnPage('/basehref');
         $this->module->click('Relative Form');
         $this->module->seeCurrentUrlEquals('/form/example5');
+    }
+
+    public function testAttachFileThrowsCorrectMessageWhenFileDoesNotExist()
+    {
+        $filename = 'does-not-exist.jpg';
+        $expectedMessage = 'File does not exist: ' . codecept_data_dir($filename);
+        $this->setExpectedException('InvalidArgumentException', $expectedMessage);
+
+        $this->module->amOnPage('/form/file');
+        $this->module->attachFile('Avatar', $filename);
     }
 }

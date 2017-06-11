@@ -16,6 +16,7 @@
 namespace Facebook\WebDriver\Remote;
 
 use BadMethodCallException;
+use Facebook\WebDriver\Exception\WebDriverCurlException;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Facebook\WebDriver\WebDriverCommandExecutor;
 use InvalidArgumentException;
@@ -26,8 +27,7 @@ use InvalidArgumentException;
 class HttpCommandExecutor implements WebDriverCommandExecutor
 {
     /**
-     * @see
-     *   http://code.google.com/p/selenium/wiki/JsonWireProtocol#Command_Reference
+     * @see https://github.com/SeleniumHQ/selenium/wiki/JsonWireProtocol#command-reference
      */
     protected static $commands = [
         DriverCommand::ACCEPT_ALERT => ['method' => 'POST', 'url' => '/session/:sessionId/accept_alert'],
@@ -153,7 +153,7 @@ class HttpCommandExecutor implements WebDriverCommandExecutor
 
         if (!empty($http_proxy)) {
             curl_setopt($this->curl, CURLOPT_PROXY, $http_proxy);
-            if (!empty($http_proxy_port)) {
+            if ($http_proxy_port !== null) {
                 curl_setopt($this->curl, CURLOPT_PROXYPORT, $http_proxy_port);
             }
         }
@@ -224,7 +224,7 @@ class HttpCommandExecutor implements WebDriverCommandExecutor
      * @param WebDriverCommand $command
      *
      * @throws WebDriverException
-     * @return mixed
+     * @return WebDriverResponse
      */
     public function execute(WebDriverCommand $command)
     {
@@ -282,7 +282,8 @@ class HttpCommandExecutor implements WebDriverCommandExecutor
             if ($params && is_array($params)) {
                 $msg .= sprintf(' with params: %s', json_encode($params));
             }
-            WebDriverException::throwException(-1, $msg . "\n\n" . $error, []);
+
+            throw new WebDriverCurlException($msg . "\n\n" . $error);
         }
 
         $results = json_decode($raw_results, true);
@@ -315,7 +316,9 @@ class HttpCommandExecutor implements WebDriverCommandExecutor
         }
 
         $status = isset($results['status']) ? $results['status'] : 0;
-        WebDriverException::throwException($status, $message, $results);
+        if ($status != 0) {
+            WebDriverException::throwException($status, $message, $results);
+        }
 
         $response = new WebDriverResponse($sessionId);
 

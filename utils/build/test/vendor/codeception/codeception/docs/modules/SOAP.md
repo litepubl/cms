@@ -46,7 +46,7 @@ Checks XML response doesn't contain XPath locator
 
 ``` php
 <?php
-$I->dontSeeSoapResponseContainsXPath('//root/user[ * `id=1]');` 
+$I->dontSeeSoapResponseContainsXPath('//root/user[@id=1]');
 ?>
 ```
 
@@ -123,7 +123,7 @@ Will produce header:
 
 ### seeResponseCodeIs
  
- * `deprecated`  use seeSoapResponseCodeIs instead
+@deprecated use seeSoapResponseCodeIs instead
 
 
 ### seeSoapResponseCodeIs
@@ -161,7 +161,7 @@ Checks XML response with XPath locator
 
 ``` php
 <?php
-$I->seeSoapResponseContainsXPath('//root/user[ * `id=1]');` 
+$I->seeSoapResponseContainsXPath('//root/user[@id=1]');
 ?>
 ```
 
@@ -233,4 +233,4 @@ $I->sendSoapRequest('UpdateUser', \Codeception\Utils\Soap::request()->user
  * `param` $request
  * `param` $body
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/SOAP.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/SOAP.php">Help us to improve documentation. Edit module reference</a></div>

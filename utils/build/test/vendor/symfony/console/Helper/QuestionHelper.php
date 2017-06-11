@@ -39,7 +39,7 @@ class QuestionHelper extends Helper
      * @param OutputInterface $output   An OutputInterface instance
      * @param Question        $question The question to ask
      *
-     * @return string The user answer
+     * @return mixed The user answer
      *
      * @throws RuntimeException If there is no data to read in the input stream
      */
@@ -114,6 +114,14 @@ class QuestionHelper extends Helper
     public function getName()
     {
         return 'question';
+    }
+
+    /**
+     * Prevents usage of stty.
+     */
+    public static function disableStty()
+    {
+        self::$stty = false;
     }
 
     /**
@@ -397,7 +405,7 @@ class QuestionHelper extends Helper
      * @param OutputInterface $output      An Output instance
      * @param Question        $question    A Question instance
      *
-     * @return string The validated response
+     * @return mixed The validated response
      *
      * @throws \Exception In case the max number of attempts has been reached and no valid response has been given
      */

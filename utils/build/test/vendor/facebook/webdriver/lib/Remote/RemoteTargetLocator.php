@@ -25,7 +25,13 @@ use Facebook\WebDriver\WebDriverTargetLocator;
  */
 class RemoteTargetLocator implements WebDriverTargetLocator
 {
+    /**
+     * @var ExecuteMethod
+     */
     protected $executor;
+    /**
+     * @var WebDriver
+     */
     protected $driver;
 
     public function __construct($executor, $driver)
@@ -73,7 +79,7 @@ class RemoteTargetLocator implements WebDriverTargetLocator
      * Switch the focus to another window by its handle.
      *
      * @param string $handle The handle of the window to be focused on.
-     * @return WebDriver Tge driver focused on the given window.
+     * @return WebDriver The driver focused on the given window.
      * @see WebDriver::getWindowHandles
      */
     public function window($handle)
@@ -103,7 +109,7 @@ class RemoteTargetLocator implements WebDriverTargetLocator
      */
     public function activeElement()
     {
-        $response = $this->driver->execute(DriverCommand::GET_ACTIVE_ELEMENT);
+        $response = $this->driver->execute(DriverCommand::GET_ACTIVE_ELEMENT, []);
         $method = new RemoteExecuteMethod($this->driver);
 
         return new RemoteWebElement($method, $response['ELEMENT']);

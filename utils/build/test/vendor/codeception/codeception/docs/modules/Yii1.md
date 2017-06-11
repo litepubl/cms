@@ -32,7 +32,7 @@ return array(
 You can use this module by setting params in your `functional.suite.yml`:
 
 ```yaml
-class_name: FunctionalTester
+actor: FunctionalTester
 modules:
     enabled:
         - Yii1:
@@ -156,7 +156,7 @@ public function seeResponseContains($text)
 ```
 
  * `return` string
- * `throws`  ModuleException
+@throws ModuleException
 
 
 ### _loadPage
@@ -211,8 +211,8 @@ To load arbitrary page for interaction, use `_loadPage` method.
  * `param array` $server
  * `param null` $content
  * `return` mixed|Crawler
- * `throws`  ExternalUrlException
- * `see`  `_loadPage`
+@throws ExternalUrlException
+@see `_loadPage`
 
 
 ### _savePageSource
@@ -257,7 +257,7 @@ Attaches a file relative to the Codeception data directory to the given file upl
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[ * `type="file"]',`  'prices.xls');
+$I->attachFile('input[@type="file"]', 'prices.xls');
 ?>
 ```
 
@@ -299,7 +299,7 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[ * `type=submit]');` 
+$I->click('//form/*[@type=submit]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
@@ -456,7 +456,7 @@ $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
+$I->dontSeeInField('//form/*[@name=search]','Search');
 $I->dontSeeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -580,8 +580,8 @@ Fills a text field or textarea with the given string.
 
 ``` php
 <?php
-$I->fillField("//input[ * `type='text']",`  "Hello World!");
-$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
+$I->fillField("//input[@type='text']", "Hello World!");
+$I->fillField(['name' => 'email'], 'jon@mail.com');
 ?>
 ```
 
@@ -663,6 +663,15 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `param` $cssOrXpath
  * `param` $attribute
  * `return` string[]
+
+
+### grabPageSource
+ 
+Grabs current page source code.
+
+@throws ModuleException if no page was opened.
+
+ * `return` string Current page source code.
 
 
 ### grabTextFrom
@@ -766,7 +775,7 @@ Checks that the specified checkbox is checked.
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-$I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]');` 
+$I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 ?>
 ```
 
@@ -836,7 +845,7 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
 
  * `param` $selector
  * `param array` $attributes
- * `return` 
+@return
 
 
 ### seeInCurrentUrl
@@ -866,7 +875,7 @@ $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
-$I->seeInField('//form/*[ * `name=search]','Search');` 
+$I->seeInField('//form/*[@name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -928,9 +937,9 @@ $form = [
      'checkbox1' => true,
      // ...
 ];
-$I->submitForm('//form[ * `id=my-form]',`  $form, 'submitButton');
+$I->submitForm('//form[@id=my-form]', $form, 'submitButton');
 // $I->amOnPage('/path/to/form-page') may be needed
-$I->seeInFormFields('//form[ * `id=my-form]',`  $form);
+$I->seeInFormFields('//form[@id=my-form]', $form);
 ?>
 ```
 
@@ -1040,7 +1049,7 @@ Selects an option in a select tag or in radio button group.
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
-$I->selectOption('//form/select[ * `name=account]',`  'Monthly');
+$I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
 ```
 
@@ -1338,4 +1347,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Yii1.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Yii1.php">Help us to improve documentation. Edit module reference</a></div>

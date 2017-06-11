@@ -42,7 +42,7 @@ class GenerateSuite extends Command
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->addStyles($output);
-        $suite = lcfirst($input->getArgument('suite'));
+        $suite = $input->getArgument('suite');
         $actor = $input->getArgument('actor');
 
         if ($this->containsInvalidCharacters($suite)) {
@@ -50,36 +50,37 @@ class GenerateSuite extends Command
             return;
         }
 
-        $config = \Codeception\Configuration::config($input->getOption('config'));
+        $config = $this->getGlobalConfig();
         if (!$actor) {
-            $actor = ucfirst($suite) . $config['actor'];
+            $actor = ucfirst($suite) . $config['actor_suffix'];
         }
-        $config['class_name'] = $actor;
 
         $dir = Configuration::testsDir();
         if (file_exists($dir . $suite . '.suite.yml')) {
             throw new \Exception("Suite configuration file '$suite.suite.yml' already exists.");
         }
 
-        $this->buildPath($dir . $suite . DIRECTORY_SEPARATOR, $config['settings']['bootstrap']);
+        $this->createDirectoryFor($dir . $suite);
 
-        // generate bootstrap
-        $this->save(
-            $dir . $suite . DIRECTORY_SEPARATOR . $config['settings']['bootstrap'],
-            "<?php\n// Here you can initialize variables that will be available to your tests\n",
-            true
-        );
-        $actorName = $this->removeSuffix($actor, $config['actor']);
-        $config['class_name'] = $actorName . $config['actor'];
+        if ($config['settings']['bootstrap']) {
+            // generate bootstrap file
+            $this->createFile(
+                $dir . $suite . DIRECTORY_SEPARATOR . $config['settings']['bootstrap'],
+                "<?php\n",
+                true
+            );
+        }
 
-        $file = $this->buildPath(
+        $helperName = ucfirst($suite);
+
+        $file = $this->createDirectoryFor(
             Configuration::supportDir() . "Helper",
-            "$actorName.php"
-        ) . "$actorName.php";
+            "$helperName.php"
+        ) . "$helperName.php";
 
-        $gen = new Helper($actorName, $config['namespace']);
+        $gen = new Helper($helperName, $config['namespace']);
         // generate helper
-        $this->save(
+        $this->createFile(
             $file,
             $gen->produce()
         );
@@ -87,16 +88,16 @@ class GenerateSuite extends Command
         $output->writeln("Helper <info>" . $gen->getHelperName() . "</info> was created in $file");
 
         $yamlSuiteConfigTemplate = <<<EOF
-class_name: {{actor}}
+actor: {{actor}}
 modules:
     enabled:
         - {{helper}}
 EOF;
 
-        $this->save(
+        $this->createFile(
             $dir . $suite . '.suite.yml',
             $yamlSuiteConfig = (new Template($yamlSuiteConfigTemplate))
-                ->place('actor', $config['class_name'])
+                ->place('actor', $actor)
                 ->place('helper', $gen->getHelperName())
                 ->produce()
         );
@@ -106,15 +107,15 @@ EOF;
 
         $content = $actorGenerator->produce();
 
-        $file = $this->buildPath(
+        $file = $this->createDirectoryFor(
             Configuration::supportDir(),
-            $config['class_name']
-        ) . $this->getClassName($config['class_name']);
+            $actor
+        ) . $this->getShortClassName($actor);
         $file .=  '.php';
 
-        $this->save($file, $content);
+        $this->createFile($file, $content);
 
-        $output->writeln("Actor <info>" . $config['class_name'] . "</info> was created in $file");
+        $output->writeln("Actor <info>" . $actor . "</info> was created in $file");
 
         $output->writeln("Suite config <info>$suite.suite.yml</info> was created.");
         $output->writeln(' ');

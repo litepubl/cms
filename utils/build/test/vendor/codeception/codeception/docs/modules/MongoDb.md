@@ -93,8 +93,8 @@ Inserts data into collection
 
 ``` php
 <?php
-$I->haveInCollection('users', array('name' => 'John', 'email' => 'john * `coltrane.com'));` 
-$user_id = $I->haveInCollection('users', array('email' => 'john * `coltrane.com'));` 
+$I->haveInCollection('users', array('name' => 'John', 'email' => 'john@coltrane.com'));
+$user_id = $I->haveInCollection('users', array('email' => 'john@coltrane.com'));
 ```
 
  * `param` $collection
@@ -168,4 +168,4 @@ $I->useDatabase('db_1');
 
  * `param` $dbName
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/MongoDb.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/MongoDb.php">Help us to improve documentation. Edit module reference</a></div>

@@ -153,7 +153,7 @@ class File extends Renderer
                 $linesExecutedPercentAsString = Util::percent(
                     $item['executedLines'],
                     $item['executableLines'],
-                    false
+                    true
                 );
             } else {
                 $numClasses                   = 'n/a';
@@ -543,7 +543,7 @@ class File extends Renderer
         }
 
         if ($fileEndsWithNewLine) {
-            unset($result[count($result)-1]);
+            unset($result[count($result) - 1]);
         }
 
         return $result;

@@ -16,22 +16,25 @@
 namespace Facebook\WebDriver;
 
 use Facebook\WebDriver\Remote\DriverCommand;
+use Facebook\WebDriver\Remote\ExecuteMethod;
 
 /**
  * Managing timeout behavior for WebDriver instances.
  */
 class WebDriverTimeouts
 {
+    /**
+     * @var ExecuteMethod
+     */
     protected $executor;
 
-    public function __construct($executor)
+    public function __construct(ExecuteMethod $executor)
     {
         $this->executor = $executor;
     }
 
     /**
-     * Specify the amount of time the driver should wait when searching for an
-     * element if it is not immediately present.
+     * Specify the amount of time the driver should wait when searching for an element if it is not immediately present.
      *
      * @param int $seconds Wait time in second.
      * @return WebDriverTimeouts The current instance.
@@ -47,8 +50,7 @@ class WebDriverTimeouts
     }
 
     /**
-     * Set the amount of time to wait for an asynchronous script to finish
-     * execution before throwing an error.
+     * Set the amount of time to wait for an asynchronous script to finish execution before throwing an error.
      *
      * @param int $seconds Wait time in second.
      * @return WebDriverTimeouts The current instance.
@@ -64,8 +66,7 @@ class WebDriverTimeouts
     }
 
     /**
-     * Set the amount of time to wait for a page load to complete before throwing
-     * an error.
+     * Set the amount of time to wait for a page load to complete before throwing an error.
      *
      * @param int $seconds Wait time in second.
      * @return WebDriverTimeouts The current instance.
