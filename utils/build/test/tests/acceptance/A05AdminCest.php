@@ -12,6 +12,7 @@ class A05AdminCest extends \Page\Base
         $i = $this->tester;
         $i->wantTo('Get menu links');
 
+        $i->waitForJS('return !! $;', 5);
         $result = $this->js('adminLinks.js');
         //delete logout link
         array_pop($result);
@@ -21,8 +22,10 @@ class A05AdminCest extends \Page\Base
     protected function submitForm()
     {
         $i = $this->tester;
+        //$i->waitForJS('return !! $;', 5);
+$i->waitForJS('return (typeof $ !== "undefined");', 5);
         $i->executeJs('$(function(){$("form:last").submit();});');
-        sleep(1);
+        usleep(300000);
     }
 
     protected function getLinks(string $name): array

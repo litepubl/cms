@@ -12,7 +12,7 @@ namespace litepubl\admin\options;
 
 use litepubl\admin\Link;
 use litepubl\core\Str;
-use litepubl\pages\Redirector as Redir;
+use litepubl\pages\Redirector;
 use litepubl\view\Args;
 use litepubl\view\Lang;
 
@@ -21,7 +21,7 @@ class Redir extends \litepubl\admin\Menu
 
     public function getContent(): string
     {
-        $redir = Redir::i();
+        $redir = Redirector::i();
         $lang = $this->lang;
         $args = new Args();
         $from = $this->getparam('from', '');

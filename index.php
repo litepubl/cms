@@ -16,7 +16,7 @@ class Config
     public static $debug = false;
 
     // include joined php files kernel.php; $debug = true disables kernel
-    public static $useKernel = true;
+    public static $useKernel = false;
 
     // enable logging
     public static $logLevel = false;
