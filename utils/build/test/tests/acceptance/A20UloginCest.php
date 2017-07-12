@@ -5,15 +5,18 @@ namespace litepubl\tests\acceptance;
 class A20UloginCest extends \Page\Ulogin
 {
     private $comment;
+    private $regUser;
 
-    public function _inject(A11CommentCest  $comment)
+    public function _inject(A11CommentCest  $comment, A04RegUserCest $regUser)
     {
         $this->comment = $comment;
+        $this->regUser = $regUser;
     }
 
     protected function test(\AcceptanceTester $i)
     {
         $i->wantTo('Test ulogin plugin');
+        $this->regUser->_enableUsers($i);
         $this->install();
         $this->screenshot('install');
         $this->logout();

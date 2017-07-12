@@ -54,6 +54,5 @@ class A20WikiWordsCest extends \Page\Editor
         $this->deletePosts($id1, $id2);
 
         $this->uninstallPlugin('wikiwords');
-
     }
 }

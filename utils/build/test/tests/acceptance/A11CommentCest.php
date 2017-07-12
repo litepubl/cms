@@ -21,7 +21,7 @@ class A11CommentCest extends \Page\Base
         $i->wantTo('Send anonimouse comment');
         $this->send($data->comment . time());
         $i->wantTo('Confirm comment');
-        $i->waitForText($data->human, 3);
+        $i->waitForText($data->human, 7);
         $this->screenShot('confirm');
         $i->click($data->human);
         sleep(3);
@@ -49,7 +49,6 @@ class A11CommentCest extends \Page\Base
         $this->send($data->comment2 . time());
         $i->wantTo('Check comment sent');
         $i->see($data->comment2);
-
     }
 
     protected function send(string $comment)

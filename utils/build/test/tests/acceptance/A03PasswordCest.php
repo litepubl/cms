@@ -29,7 +29,6 @@ class A03PasswordCest extends \Page\Base
         $i->wantTo('Login with new password');
         $i->openPage($this->loginUrl);
         $this->authAccount($admin->email, $admin->password);
-
     }
 
     protected function removeLogs()

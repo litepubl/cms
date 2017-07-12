@@ -31,12 +31,6 @@ class Ulogin extends Base
     protected function install()
     {
            $this->installPlugin('ulogin');
-        $i = $this->tester;
-        $i->wantTo('Add commentator to default group');
-        $i->openPage($this->groupsUrl);
-        $i->checkOption($this->cmtCheckbox);
-        $i->click($this->updateButton);
-        $i->checkError();
     }
 
     protected function getwindows()
@@ -79,7 +73,7 @@ class Ulogin extends Base
         $i->executeJs("\$('[data-uloginbutton=$name]').click();");
         codecept_debug($i->executeJs('return litepubl.authdialog.ulogin.status'));
         $i->wantTo('Wait to open window');
-        $i->waitForJS('return (litepubl.authdialog.ulogin.status == \'open\' || litepubl.authdialog.ulogin.status == \'receive\');', 5);
+        $i->waitForJS('return (litepubl.authdialog.ulogin.status == \'open\' || litepubl.authdialog.ulogin.status == \'receive\');', 12);
     }
 
     protected function waitForcloseDialog()
@@ -87,7 +81,7 @@ class Ulogin extends Base
         $i = $this->tester;
         $i->wantTo('Close auth dialog');
         $m = microtime(true);
-        $i->waitForJS('return !litepubl.authdialog.dialog;', 7);
+        $i->waitForJS('return !litepubl.authdialog.dialog;', 12);
         codecept_debug(round(microtime(true) - $m, 2));
 
         $i->wantTo('Check user logged');
@@ -108,16 +102,16 @@ class Ulogin extends Base
         $this->getwindows();
 
         switch ($name) {
-        case 'mailru':
-            $this->mailruAuth();
-            break;
+            case 'mailru':
+                $this->mailruAuth();
+                break;
 
-        case 'yandex':
-            $this->yandexAuth();
-            break;
+            case 'yandex':
+                $this->yandexAuth();
+                break;
 
-        default:
-            throw new \RuntimeException('Unknown net');
+            default:
+                throw new \RuntimeException('Unknown net');
         }
 
         $i->wantTo('Switch to back window');

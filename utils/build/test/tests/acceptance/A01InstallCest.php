@@ -28,7 +28,6 @@ class A01InstallCest extends \Page\Base
         if (config::exists('admin')) {
             codecept_debug('Install skiped');
             return;
-
         }
 
         $this->removeData();
@@ -55,7 +54,6 @@ class A01InstallCest extends \Page\Base
         $i->wantTo('Open login page');
         $i->click($this->loginLink);
         $i->checkError();
-
     }
 
     protected function switchLanguages()

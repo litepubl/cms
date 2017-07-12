@@ -20,7 +20,6 @@ class A10ContactsCest extends \Page\Base
         $this->sendForm('', $data->message);
         $i->wantTo('Send form without message');
         $this->sendForm($data->email, '');
-
     }
 
     protected function sendForm($email, $message)

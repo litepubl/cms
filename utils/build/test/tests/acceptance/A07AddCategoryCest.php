@@ -18,13 +18,12 @@ class A07AddCategoryCest extends \Page\Base
         $this->screenShot('addcat');
 
         $i->fillField($this->title, $this->titleFixture);
-        //$i->selectOption($this->parent, 
+        //$i->selectOption($this->parent,
         $this->screenShot('title');
 
         //final submit
         $i->executeJs('$("form:last").submit();');
         $i->checkError();
         $this->screenShot('saved');
-
     }
 }

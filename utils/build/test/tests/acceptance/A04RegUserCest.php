@@ -14,8 +14,9 @@ class A04RegUserCest extends A03PasswordCest
     protected $name = '[name=name]';
     protected $regButton = '#submitbutton-signup';
 
-    protected function test(\AcceptanceTester $i)
+    public function _enableUsers(\AcceptanceTester $i)
     {
+        $this->tester = $i;
         $i->wantTo('Enable user registration');
         $this->open($this->optionsUrl);
         $i->checkOption($this->enabled);
@@ -30,9 +31,14 @@ class A04RegUserCest extends A03PasswordCest
         $this->screenshot('groups');
         $i->click($this->updateButton);
         $i->checkError();
+    }
 
+    protected function test(\AcceptanceTester $i)
+    {
+        $this->_enableUsers($i);
 
-        $i->wantTo('Register new user');$this->logout();
+        $i->wantTo('Register new user');
+        $this->logout();
         $this->open($this->regUrl);
         $user = $this->load('reguser');
         $user->email = time() . $user->email;
@@ -60,6 +66,5 @@ class A04RegUserCest extends A03PasswordCest
         $i->openPage($this->loginUrl);
         $this->authAccount($user->email, $user->password);
         $this->logout();
-
     }
 }

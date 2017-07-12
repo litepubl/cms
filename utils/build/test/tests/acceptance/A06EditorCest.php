@@ -43,6 +43,5 @@ class A06EditorCest extends \Page\Editor
         $this->screenShot('tosave');
         $this->submit();
         $this->screenShot('saved');
-
     }
 }

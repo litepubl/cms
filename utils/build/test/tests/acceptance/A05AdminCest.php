@@ -23,7 +23,7 @@ class A05AdminCest extends \Page\Base
     {
         $i = $this->tester;
         //$i->waitForJS('return !! $;', 5);
-$i->waitForJS('return (typeof $ !== "undefined");', 5);
+        $i->waitForJS('return (typeof $ !== "undefined");', 5);
         $i->executeJs('$(function(){$("form:last").submit();});');
         usleep(300000);
     }
@@ -44,7 +44,6 @@ $i->waitForJS('return (typeof $ !== "undefined");', 5);
         foreach ($list as $url) {
             $i->wantTo("Test page $url");
             $i->openPage('/admin/' . $url);
-
         }
 
         $list = $this->getLinks('adminForms');
@@ -66,8 +65,6 @@ $i->waitForJS('return (typeof $ !== "undefined");', 5);
             $this->submitForm();
             $i->checkError();
             $i->waitForElement('body', 10);
-
         }
-
     }
 }

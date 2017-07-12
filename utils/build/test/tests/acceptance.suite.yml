@@ -17,3 +17,6 @@ modules:
             capabilities:
                         webStorageEnabled: true
 
+groups:
+  # requiring a group file
+    admin: groups.txt

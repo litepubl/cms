@@ -17,7 +17,7 @@ class A09HomeCest extends \Page\Base
             codecept_debug(var_export($r, true));
         }
 
-        $this->tester->waitForJs($this->getJs('home.wait.js'), 7);
+        $this->tester->waitForJs($this->getJs('home.wait.js'), 12);
     }
 
     protected function test(\AcceptanceTester $i)
@@ -42,6 +42,5 @@ class A09HomeCest extends \Page\Base
         $this->screenshot('uploaded');
         $i->openPage('/');
         $this->screenshot('image');
-
     }
 }
