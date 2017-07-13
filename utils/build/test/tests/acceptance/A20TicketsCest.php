@@ -54,7 +54,7 @@ class A20TicketsCest extends \Page\Editor
         $i->wantTo('Test user ticket');
         $ulogin = $this->getUlogin();
         $ulogin->_click();
-        $i->waitForUrlChanged(10);
+        $i->waitForUrlChanged(15);
         $id = $this->add();
         $this->logout();
         $i->wantTo('Delete new ticket');

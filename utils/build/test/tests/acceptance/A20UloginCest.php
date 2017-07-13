@@ -58,7 +58,7 @@ class A20UloginCest extends \Page\Ulogin
         codecept_debug($i->grabFromCurrentUrl());
         $this->screenshot('login');
         $this->click();
-        $i->waitForUrlChanged(10);
+        $i->waitForUrlChanged(15);
         codecept_debug($i->grabFromCurrentUrl());
         $this->logout();
 
