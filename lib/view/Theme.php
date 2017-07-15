@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -228,7 +228,8 @@ class Theme extends Base
     public function getButton($title)
     {
         return strtr(
-            $this->templates['content.admin.button'], [
+            $this->templates['content.admin.button'],
+            [
             '$lang.$name' => $title,
             'name="$name"' => '',
             'id="submitbutton-$name"' => ''
@@ -239,7 +240,8 @@ class Theme extends Base
     public function getSubmit($title)
     {
         return strtr(
-            $this->templates['content.admin.submit'], [
+            $this->templates['content.admin.submit'],
+            [
             '$lang.$name' => $title,
             'name="$name"' => '',
             'id="submitbutton-$name"' => ''
@@ -250,7 +252,8 @@ class Theme extends Base
     public function getInput(string $type, string $name, string $value, string $title): string
     {
         return strtr(
-            $this->templates['content.admin.' . $type], [
+            $this->templates['content.admin.' . $type],
+            [
             '$lang.$name' => $title,
             '$name' => $name,
             '$value' => $value
@@ -261,7 +264,8 @@ class Theme extends Base
     public function getRadio(string $name, string $value, string $title, bool $checked): string
     {
         return strtr(
-            $this->templates['content.admin.radioitem'], [
+            $this->templates['content.admin.radioitem'],
+            [
             '$lang.$name' => $title,
             '$name' => $name,
             '$value' => $title,

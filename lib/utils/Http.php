@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -26,7 +26,8 @@ class Http
         }
 
         if (!isset($parsed['scheme']) || !in_array(
-            $parsed['scheme'], [
+            $parsed['scheme'],
+            [
             'http',
             'https'
             ]
@@ -112,7 +113,8 @@ class Http
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         if (in_array(
-            $code, [
+            $code,
+            [
             '200',
             '201'
             ]

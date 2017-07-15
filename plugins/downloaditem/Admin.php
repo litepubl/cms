@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -34,19 +34,19 @@ class Admin extends \litepubl\admin\Menu
         $where = $this->getApp()->options->group == 'downloaditem' ? ' and author = ' . $this->getApp()->options->user : '';
 
         switch ($this->name) {
-        case 'addurl':
-            $args->formtitle = $lang->addurl;
-            $args->url = $this->getparam('url', '');
-            return $admintheme->form('[text=url]', $args);
+            case 'addurl':
+                $args->formtitle = $lang->addurl;
+                $args->url = $this->getparam('url', '');
+                return $admintheme->form('[text=url]', $args);
 
-        case 'theme':
-            $where.= " and type = 'theme' ";
-            break;
+            case 'theme':
+                $where.= " and type = 'theme' ";
+                break;
 
 
-        case 'plugin':
-            $where.= " and type = 'plugin' ";
-            break;
+            case 'plugin':
+                $where.= " and type = 'plugin' ";
+                break;
         }
 
         $count = $downloaditems->getchildscount($where);

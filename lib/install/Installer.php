@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -39,14 +39,14 @@ class Installer
     public $language;
     public $mode;
     public $lite;
-public $plugins;
+    public $plugins;
     public $resulttype;
     public $installed;
 
     public function __construct()
     {
         $this->app = litepubl::$app;
-$this->plugins = [];
+        $this->plugins = [];
     }
 
     public function DefineMode()
@@ -120,30 +120,30 @@ $this->plugins = [];
         ];
 
         switch ($this->resulttype) {
-        case 'json':
-            $s = json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-            header('Content-Type: text/javascript; charset=utf-8');
-            break;
+            case 'json':
+                $s = json_encode($result, JSON_NUMERIC_CHECK | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                header('Content-Type: text/javascript; charset=utf-8');
+                break;
 
 
-        case 'serialized':
-            $s = serialize($result);
-            header('Content-Type: text/plain; charset=utf-8');
-            break;
+            case 'serialized':
+                $s = serialize($result);
+                header('Content-Type: text/plain; charset=utf-8');
+                break;
 
 
-        case 'xmlrpc':
-            include $this->app->paths->lib . 'xmlrpc/IXR.php';
-            $r = new \litepubl\xmlrpc\IXR_Value($result);
-            $s = '<?xml version="1.0" encoding="utf-8" ?>
+            case 'xmlrpc':
+                include $this->app->paths->lib . 'xmlrpc/IXR.php';
+                $r = new \litepubl\xmlrpc\IXR_Value($result);
+                $s = '<?xml version="1.0" encoding="utf-8" ?>
       <methodResponse><params><param><value>' . $r->getXml() . '</value></param></params></methodResponse>';
 
-            header('Content-Type: text/xml; charset=utf-8');
-            break;
+                header('Content-Type: text/xml; charset=utf-8');
+                break;
 
 
-        default:
-            die('Unknown remote method');
+            default:
+                die('Unknown remote method');
         }
 
         header('Connection: close');
@@ -250,9 +250,9 @@ $this->plugins = [];
         $plugins->add('photoswipeThumbnail');
         $plugins->add('bootstrap');
 
-foreach ($this->plugins as $name) {
-$plugins->add($name);
-}
+        foreach ($this->plugins as $name) {
+                $plugins->add($name);
+        }
         $plugins->unlock();
 
         $xmlrpc->unlock();
@@ -300,7 +300,6 @@ $plugins->add($name);
         //$this->CheckFolder($this->app->paths->languages);
         //$this->CheckFolder($this->app->paths->plugins);
         //$this->CheckFolder($this->app->paths->themes);
-        
     }
 
     public function CheckFolder($folder)
@@ -325,7 +324,6 @@ $plugins->add($name);
         }
         @chmod($tmp, 0666);
         //@unlink($tmp);
-        
     }
 
     public function CheckSystem()
@@ -339,7 +337,6 @@ $plugins->add($name);
             echo 'LitePublisher requires "domDocument" class and domxml extension';
             exit;
         }
-
     }
 
     public function CheckApache($rewrite)
@@ -380,7 +377,9 @@ $plugins->add($name);
                 [
                 '.',
                 '-'
-                ], '', $domain
+                ],
+                '',
+                $domain
             )
         ) . '_';
 

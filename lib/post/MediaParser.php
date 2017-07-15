@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -270,7 +270,8 @@ class MediaParser extends \litepubl\core\Events
 
         $item = $this->getInfo($file['tempfilename']);
         $item = array_merge(
-            $item, [
+            $item,
+            [
             'filename' => $this->movetofolder($file['filename'], $file['tempfilename'], $this->getmediafolder($item['media']), isset($file['overwrite']) ? $file['overwrite'] : false) ,
             'title' => isset($file['title']) ? $file['title'] : $file['filename'],
             'description' => isset($file['description']) ? $file['description'] : '',
@@ -527,7 +528,6 @@ class MediaParser extends \litepubl\core\Events
         }
 
         return $result;
-
     }
 
     public static function readimage($srcfilename)
@@ -545,14 +545,14 @@ class MediaParser extends \litepubl\core\Events
         }
 
         switch ($info[2]) {
-        case 1:
-            return @imagecreatefromgif($srcfilename);
+            case 1:
+                return @imagecreatefromgif($srcfilename);
 
-        case 2:
-            return @imagecreatefromjpeg($srcfilename);
+            case 2:
+                return @imagecreatefromjpeg($srcfilename);
 
-        case 3:
-            return @imagecreatefrompng($srcfilename);
+            case 3:
+                return @imagecreatefrompng($srcfilename);
                 /*
                 4 IMAGETYPE_SWF
                 5 IMAGETYPE_PSD
@@ -566,11 +566,11 @@ class MediaParser extends \litepubl\core\Events
                 13 IMAGETYPE_SWC
                 14 IMAGETYPE_IFF
                 */
-        case 15:
-            return @imagecreatefromwbmp($srcfilename);
+            case 15:
+                return @imagecreatefromwbmp($srcfilename);
 
-        case 16:
-            return @imagecreatefromxbm($srcfilename);
+            case 16:
+                return @imagecreatefromxbm($srcfilename);
         }
         return false;
     }
@@ -618,30 +618,30 @@ class MediaParser extends \litepubl\core\Events
         }
 
         switch ($mode) {
-        case 'fixed':
-            $ratio = $x / $y;
-            //clip source size
-            if ($sourcex / $sourcey > $ratio) {
-                $sourcex = (int)round($sourcey * $ratio);
-            } else {
-                $sourcey = (int)round($sourcex / $ratio);
-            }
-            break;
+            case 'fixed':
+                $ratio = $x / $y;
+                //clip source size
+                if ($sourcex / $sourcey > $ratio) {
+                    $sourcex = (int)round($sourcey * $ratio);
+                } else {
+                    $sourcey = (int)round($sourcex / $ratio);
+                }
+                break;
 
 
-        case 'max':
-        case 'min':
-            $ratio = $sourcex / $sourcey;
-            if ($mode == 'max' ? $x / $y > $ratio : $x / $y <= $ratio) {
-                $x = (int)round($y * $ratio);
-            } else {
-                $y = (int)round($x / $ratio);
-            }
-            break;
+            case 'max':
+            case 'min':
+                $ratio = $sourcex / $sourcey;
+                if ($mode == 'max' ? $x / $y > $ratio : $x / $y <= $ratio) {
+                    $x = (int)round($y * $ratio);
+                } else {
+                    $y = (int)round($x / $ratio);
+                }
+                break;
 
 
-        default:
-            throw new \Exception("Unknow thumbnail options $mode");
+            default:
+                throw new \Exception("Unknow thumbnail options $mode");
         }
 
         $dest = imagecreatetruecolor($x, $y);

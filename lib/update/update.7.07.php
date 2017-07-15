@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -11,13 +11,13 @@
 namespace litepubl\update;
 
 use litepubl\tag\Cats;
-use litepubl\tag\Tags;
 use litepubl\tag\Common;
+use litepubl\tag\Tags;
 
 function update707()
 {
-updateCats(Cats::i());
-updateCats(Tags::i());
+    updateCats(Cats::i());
+    updateCats(Tags::i());
 }
 
 function updateCats(Common $cats)
@@ -28,6 +28,6 @@ function updateCats(Common $cats)
     foreach ($idPosts as $idPost) {
         $items = $cats->itemsposts->getItems($idPost);
         $db->table = 'posts';
-        $db->setValue($idPost, $cats->postpropname , implode(',', $items));
+        $db->setValue($idPost, $cats->postpropname, implode(',', $items));
     }
 }

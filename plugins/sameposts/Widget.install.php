@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -17,7 +17,8 @@ function WidgetInstall($self)
 {
     $manager = DBManager::i();
     $manager->createTable(
-        $self->table, 'id int UNSIGNED NOT NULL default 0,
+        $self->table,
+        'id int UNSIGNED NOT NULL default 0,
     items text NOT NULL,
     PRIMARY KEY(id) '
     );

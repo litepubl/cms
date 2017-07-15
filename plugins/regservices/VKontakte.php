@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -44,7 +44,8 @@ class VKontakte extends Service
 
         $code = $_REQUEST['code'];
         $resp = Http::post(
-            'https://oauth.vk.com/access_token', [
+            'https://oauth.vk.com/access_token',
+            [
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
@@ -58,12 +59,14 @@ class VKontakte extends Service
                 $js = json_decode($r);
                 $info = $js->response[0];
                 return $this->addUser(
-                    $context, [
+                    $context,
+                    [
                     'service' => $this->name,
                     'uid' => $info->uid,
                     'name' => $info->first_name . ' ' . $info->last_name,
                     'website' => 'http://vk.com/id' . $info->uid
-                    ], $info
+                    ],
+                    $info
                 );
             }
         }

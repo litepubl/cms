@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -80,46 +80,46 @@ class TagAjax extends Ajax
         }
 
         switch ($_GET['get']) {
-        case 'view':
-            if ($id > 0) {
-                foreach ([
+            case 'view':
+                if ($id > 0) {
+                    foreach ([
                     'includechilds',
                     'includeparents'
-                ] as $prop) {
-                    $item[$prop] = ((int)$item[$prop]) > 0;
+                    ] as $prop) {
+                        $item[$prop] = ((int)$item[$prop]) > 0;
+                    }
                 }
-            }
 
-            $args = new Args();
-            $args->add($item);
-            $result = GetSchema::combo($item['idschema']);
-            $result.= $admin->parseArg('[checkbox=includechilds] [checkbox=includeparents]', $args);
-            $result.= GetPerm::combo($item['idperm']);
-            break;
-
-
-        case 'seo':
-            $args = new Args();
-            if ($id == 0) {
-                $args->url = '';
-                $args->keywords = '';
-                $args->description = '';
-                $args->head = '';
-            } else {
-                $args->add($tags->contents->getitem($id));
-                $args->url = $tags->items[$id]['url'];
-            }
-            $result = $admin->parseArg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
-            break;
-
-
-        case 'text':
-            return $this->getText($id == 0 ? '' : $tags->contents->getContent($id));
+                $args = new Args();
+                $args->add($item);
+                $result = GetSchema::combo($item['idschema']);
+                $result.= $admin->parseArg('[checkbox=includechilds] [checkbox=includeparents]', $args);
+                $result.= GetPerm::combo($item['idperm']);
                 break;
 
 
-        default:
-            $result = var_export($_GET, true);
+            case 'seo':
+                $args = new Args();
+                if ($id == 0) {
+                    $args->url = '';
+                    $args->keywords = '';
+                    $args->description = '';
+                    $args->head = '';
+                } else {
+                    $args->add($tags->contents->getitem($id));
+                    $args->url = $tags->items[$id]['url'];
+                }
+                    $result = $admin->parseArg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
+                break;
+
+
+            case 'text':
+                return $this->getText($id == 0 ? '' : $tags->contents->getContent($id));
+                break;
+
+
+            default:
+                $result = var_export($_GET, true);
         }
         return $result;
     }

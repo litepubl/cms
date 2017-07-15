@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -30,7 +30,7 @@ class AuthorRights extends \litepubl\core\Events
     public $message = '';
     public $result = true;
 
-    public static function __callStatic( string $name , array $args)
+    public static function __callStatic(string $name, array $args)
     {
         return static::i()->can($name, count($args) ? $args[0] : null);
     }
@@ -60,7 +60,8 @@ class AuthorRights extends \litepubl\core\Events
 
         if ($name != 'oncan') {
             $r = $this->callEvent(
-                'oncan', [
+                'oncan',
+                [
                 'result' => true,
                 'message' => '',
                 'action' => $name,
@@ -70,7 +71,8 @@ class AuthorRights extends \litepubl\core\Events
 
             if ($r['result']) {
                 $r = $this->callEvent(
-                    $name, [
+                    $name,
+                    [
                     'result' => true,
                     'message' => '',
                     'arg' => $arg,
@@ -79,7 +81,8 @@ class AuthorRights extends \litepubl\core\Events
             }
         } else {
             $r = $this->callEvent(
-                $name, [
+                $name,
+                [
                 'result' => true,
                 'message' => '',
                 'arg' => $arg,

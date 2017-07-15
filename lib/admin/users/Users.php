@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -34,63 +34,65 @@ class Users extends \litepubl\admin\Menu
 
         $id = $this->idget();
         switch ($this->action) {
-        case 'edit':
-            if (!$users->itemExists($id)) {
-                $result.= $this->notfound();
-            } else {
-                $statuses = [];
-                foreach ([
-                'approved',
-                'hold',
-                'comuser'
-                ] as $name) {
-                    $statuses[$name] = $lang->$name;
-                }
+            case 'edit':
+                if (!$users->itemExists($id)) {
+                    $result.= $this->notfound();
+                } else {
+                    $statuses = [];
+                    foreach ([
+                    'approved',
+                    'hold',
+                    'comuser'
+                    ] as $name) {
+                        $statuses[$name] = $lang->$name;
+                    }
 
-                $item = $users->getitem($id);
-                $args->add($item);
-                $args->registered = UserPages::i()->getvalue($id, 'registered');
-                $args->formtitle = $item['name'];
-                $args->status = $this->theme->comboItems($statuses, $item['status']);
+                    $item = $users->getitem($id);
+                    $args->add($item);
+                    $args->registered = UserPages::i()->getvalue($id, 'registered');
+                    $args->formtitle = $item['name'];
+                    $args->status = $this->theme->comboItems($statuses, $item['status']);
 
-                $tabs = $this->newTabs();
-                $tabs->add($lang->login, '[text=email] [password=password]');
-                $tabs->add(
-                    $lang->groups, '
+                    $tabs = $this->newTabs();
+                    $tabs->add($lang->login, '[text=email] [password=password]');
+                    $tabs->add(
+                        $lang->groups,
+                        '
 [combo=status]
 ' . GetPerm::groups($item['idgroups'])
-                );
+                    );
 
-                $tabs->add(
-                    'Cookie', '
+                    $tabs->add(
+                        'Cookie',
+                        '
 [text=cookie]
  [text=expired]
  [text=registered]
  [text=trust]
 '
-                );
+                    );
 
-                $args->password = '';
+                    $args->password = '';
+                    $result.= $admin->form($tabs->get(), $args);
+                }
+                break;
+
+
+            case 'delete':
+                $result.= $this->confirmDeleteItem($users);
+                break;
+
+
+            default:
+                $args->formtitle = $lang->newuser;
+                $args->email = '';
+                $args->action = 'add';
+
+                $tabs = $this->newTabs();
+                $tabs->add($lang->login, '[text=email] [password=password] [text=name] [hidden=action]');
+                $tabs->add($lang->groups, GetPerm::groups([]));
+
                 $result.= $admin->form($tabs->get(), $args);
-            }
-            break;
-
-
-        case 'delete':
-            $result.= $this->confirmDeleteItem($users);
-            break;
-
-
-        default:
-            $args->formtitle = $lang->newuser;
-            $args->email = '';
-            $args->action = 'add';
-
-            $tabs = $this->newTabs();
-            $tabs->add($lang->login, '[text=email] [password=password] [text=name] [hidden=action]');
-            $tabs->add($lang->groups, GetPerm::groups([]));
-
-            $result.= $admin->form($tabs->get(), $args);
         }
 
         $args->search = '';
@@ -113,7 +115,8 @@ class Users extends \litepubl\admin\Menu
             $args->search = $search;
             $search = $this->getApp()->db->escape($search);
             $search = strtr(
-                $search, [
+                $search,
+                [
                 '%' => '\%',
                 '_' => '\_'
                 ]
@@ -191,31 +194,31 @@ class Users extends \litepubl\admin\Menu
         }
 
         switch ($this->action) {
-        case 'add':
-            $_POST['idgroups'] = $this->admintheme->check2array('idgroup-');
-            if ($id = $users->add($_POST)) {
-                $this->getApp()->context->response->redir("$this->adminurl=$id&action=edit");
-            } else {
-                return $this->admintheme->geterr($this->lang->invalidregdata);
-            }
-            break;
+            case 'add':
+                $_POST['idgroups'] = $this->admintheme->check2array('idgroup-');
+                if ($id = $users->add($_POST)) {
+                    $this->getApp()->context->response->redir("$this->adminurl=$id&action=edit");
+                } else {
+                    return $this->admintheme->geterr($this->lang->invalidregdata);
+                }
+                break;
 
 
-        case 'edit':
-            $id = $this->idget();
-            if (!$users->itemExists($id)) {
-                return;
-            }
+            case 'edit':
+                $id = $this->idget();
+                if (!$users->itemExists($id)) {
+                    return;
+                }
 
-            $_POST['idgroups'] = $this->admintheme->check2array('idgroup-');
-            if (!$users->edit($id, $_POST)) {
-                return $this->notfound;
-            }
+                $_POST['idgroups'] = $this->admintheme->check2array('idgroup-');
+                if (!$users->edit($id, $_POST)) {
+                    return $this->notfound;
+                }
 
-            if ($id == 1) {
-                $this->getApp()->site->author = $_POST['name'];
-            }
-            break;
+                if ($id == 1) {
+                    $this->getApp()->site->author = $_POST['name'];
+                }
+                break;
         }
     }
 }

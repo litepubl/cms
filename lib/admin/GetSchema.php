@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -40,7 +40,8 @@ class GetSchema
         $lang->addsearch('views');
         $theme = Theme::i();
         return strtr(
-            $theme->templates['content.admin.combo'], [
+            $theme->templates['content.admin.combo'],
+            [
             '$lang.$name' => $lang->schema,
             '$name' => $name,
             '$value' => static ::items($idschema)

@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -43,18 +43,18 @@ class Livejournal extends Common
         }
 
         switch ($auth_method) {
-        case 'challenge':
-            if (Config::$debug) {
-                return ($this->_challenge == $auth_challenge);
-            }
+            case 'challenge':
+                if (Config::$debug) {
+                    return ($this->_challenge == $auth_challenge);
+                }
 
-            return ($this->_challenge == $auth_challenge) && ($auth_response == md5($this->challenge . $options->password));
+                return ($this->_challenge == $auth_challenge) && ($auth_response == md5($this->challenge . $options->password));
 
-        case 'clear':
-            return $this->password == md5($options->hash($options->email . $password));
+            case 'clear':
+                return $this->password == md5($options->hash($options->email . $password));
 
-        case 'cookie':
-            return false;
+            case 'cookie':
+                return false;
         }
 
         return false;

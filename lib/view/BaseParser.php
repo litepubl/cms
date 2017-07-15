@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -136,7 +136,8 @@ class BaseParser extends \litepubl\core\Events
     public function callback_replace_php(array $m)
     {
         return strtr(
-            $m[0], [
+            $m[0],
+            [
             '$' => '&#36;',
             '?' => '&#63;',
             '(' => '&#40;',
@@ -152,7 +153,8 @@ class BaseParser extends \litepubl\core\Events
     public function callback_restore_php($m)
     {
         return strtr(
-            $m[0], [
+            $m[0],
+            [
             '&#36;' => '$',
             '&#63;' => '?',
             '&#40;' => '(',
@@ -182,7 +184,9 @@ class BaseParser extends \litepubl\core\Events
             "\r\n",
             "\r",
             "\n\n"
-            ], "\n", $s
+            ],
+            "\n",
+            $s
         );
 
         //strip coments
@@ -312,10 +316,12 @@ class BaseParser extends \litepubl\core\Events
             $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
         } else {
             $s = preg_replace_callback(
-                '/\<\?(.*?)\?\>/ims', [
+                '/\<\?(.*?)\?\>/ims',
+                [
                 $this,
                 'callback_replace_php'
-                ], $s
+                ],
+                $s
             );
         }
 
@@ -341,7 +347,6 @@ class BaseParser extends \litepubl\core\Events
                 }
             }
         }
-
     }
 
     public function setTag($parent, $s)
@@ -367,10 +372,12 @@ class BaseParser extends \litepubl\core\Events
             $s = preg_replace('/\<\?.*?\?\>/ims', '', $s);
         } else {
             $s = preg_replace_callback(
-                '/\<\?(.*?)\?\>/ims', [
+                '/\<\?(.*?)\?\>/ims',
+                [
                 $this,
                 'callback_replace_php'
-                ], $s
+                ],
+                $s
             );
         }
 
@@ -403,10 +410,12 @@ class BaseParser extends \litepubl\core\Events
         $s = trim($s);
         if (!$this->removephp) {
             $s = preg_replace_callback(
-                '/\<\&\#63;.*?\&\#63;\>/ims', [
+                '/\<\&\#63;.*?\&\#63;\>/ims',
+                [
                 $this,
                 'callback_restore_php'
-                ], $s
+                ],
+                $s
             );
         }
 
@@ -488,7 +497,9 @@ class BaseParser extends \litepubl\core\Events
             "\n",
             "\t",
             "\x00"
-            ], ' ', $s
+            ],
+            ' ',
+            $s
         );
         $s = preg_replace('/[ ]{2,}/ms', ' ', $s);
         return str_replace('> <', '><', $s);

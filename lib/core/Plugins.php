@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -13,7 +13,7 @@ namespace litepubl\core;
 use litepubl\view\Lang;
 
 /**
-* 
+*
  * Plugins manager
  *
  *
@@ -258,12 +258,12 @@ class Plugins extends Items
         $result = $to;
 
         $from     = explode('/', str_replace('\\', '/', $this->getApp()->paths->home));
-        foreach($from as $i => $dir) {
-            if($dir === $to[$i]) {
+        foreach ($from as $i => $dir) {
+            if ($dir === $to[$i]) {
                 array_shift($result);
             } else {
                 $count = count($from) - $i;
-                if($count > 1) {
+                if ($count > 1) {
                     $padLength = (count($result) + $i - 1) * -1;
                     $result = array_pad($result, $padLength, '..');
                     break;
@@ -338,7 +338,7 @@ class Plugins extends Items
         $paths = [];
         $dir = $this->getapp()->paths->plugins;
         $list = dir($dir);
-        while($filename = $list->read()) {
+        while ($filename = $list->read()) {
             if ($filename == '.' || $filename == '..' || $filename == '.git') {
                 continue;
             }
@@ -429,5 +429,4 @@ class Plugins extends Items
         $r = $this->onSkip(['name' => $name, 'result' => false]);
         return $r['result'];
     }
-
 }

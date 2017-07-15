@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -54,7 +54,8 @@ class MailRu extends Service
 
         $code = $_REQUEST['code'];
         $resp = Http::post(
-            'https://connect.mail.ru/oauth/token', [
+            'https://connect.mail.ru/oauth/token',
+            [
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
@@ -81,12 +82,14 @@ class MailRu extends Service
                 $js = json_decode($r);
                 $info = $js[0];
                 return $this->addUser(
-                    $context, [
+                    $context,
+                    [
                     'uid' => $info->uid,
                     'email' => isset($info->email) ? $info->email : '',
                     'name' => $info->nick,
                     'website' => isset($info->link) ? $info->link : ''
-                    ], $info
+                    ],
+                    $info
                 );
             }
         }

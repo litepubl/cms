@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -129,15 +129,15 @@ class Items extends Events
         return $this->error(sprintf('Item %d not found in class %s', $id, get_class($this)));
     }
 
-public function setItem(array $item)
-{
-$id = $item[$this->idprop];
-$this->items[$id] = $item;
+    public function setItem(array $item)
+    {
+        $id = $item[$this->idprop];
+        $this->items[$id] = $item;
 
-if ($this->dbversion) {
+        if ($this->dbversion) {
             $this->db->updateAssoc($item, $this->idprop);
-}
-}
+        }
+    }
 
     public function getValue($id, $name)
     {

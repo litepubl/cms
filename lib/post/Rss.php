@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -72,83 +72,83 @@ class Rss extends \litepubl\core\Events implements \litepubl\core\ResponsiveInte
         $this->domrss = new DomRss();
         $arg = $context->itemRoute['arg'];
         switch ($arg) {
-        case 'posts':
-            $this->getrecentposts();
-            if ($this->feedburner) {
-                $response->body.= "<?php
+            case 'posts':
+                $this->getrecentposts();
+                if ($this->feedburner) {
+                    $response->body.= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
 header('HTTP/1.1 307 Temporary Redirect', true, 307);
 header('Location: $this->feedburner');
 return;
       }
       ?>";
-            }
-            break;
+                }
+                break;
 
 
-        case 'comments':
-            $this->GetRecentComments();
-            if ($this->feedburnercomments) {
-                $response->body.= "<?php
+            case 'comments':
+                $this->GetRecentComments();
+                if ($this->feedburnercomments) {
+                    $response->body.= "<?php
       if (!preg_match('/feedburner|feedvalidator/i', \$_SERVER['HTTP_USER_AGENT'])) {
 header('HTTP/1.1 307 Temporary Redirect', true, 307);
 header('Location: $this->feedburnercomments');
       }
       ?>";
-            }
-            break;
+                }
+                break;
 
 
-        case 'categories':
-        case 'tags':
-            if (!preg_match('/\/(\d*?)\.xml$/', $context->request->url, $match)) {
-                $response->status = 404;
-                return;
-            }
+            case 'categories':
+            case 'tags':
+                if (!preg_match('/\/(\d*?)\.xml$/', $context->request->url, $match)) {
+                    $response->status = 404;
+                    return;
+                }
 
-            $id = (int)$match[1];
-            $tags = $arg == 'categories' ? Cats::i() : Tags::i();
-            if (!$tags->itemExists($id)) {
-                $response->status = 404;
-                return;
-            }
+                $id = (int)$match[1];
+                $tags = $arg == 'categories' ? Cats::i() : Tags::i();
+                if (!$tags->itemExists($id)) {
+                    $response->status = 404;
+                    return;
+                }
 
-            //$tags->view->id = $id;
-            if (isset($tags->idperm) && ($idperm = $tags->idperm)) {
-                $perm = Perm::i($idperm);
-                $perm->setResponse($response, $tags);
-            }
+                //$tags->view->id = $id;
+                if (isset($tags->idperm) && ($idperm = $tags->idperm)) {
+                    $perm = Perm::i($idperm);
+                    $perm->setResponse($response, $tags);
+                }
 
-            $this->domrss->CreateRoot($this->getApp()->site->url . $context->request->url, $tags->getValue($id, 'title'));
-            $this->getTagRss($tags, $id);
-            break;
+                $this->domrss->CreateRoot($this->getApp()->site->url . $context->request->url, $tags->getValue($id, 'title'));
+                $this->getTagRss($tags, $id);
+                break;
 
 
-        default:
-            if (!preg_match('/\/(\d*?)\.xml$/', $context->request->url, $match)) {
-                $response->status = 404;
-                return;
-            }
+            default:
+                if (!preg_match('/\/(\d*?)\.xml$/', $context->request->url, $match)) {
+                    $response->status = 404;
+                    return;
+                }
 
-            $idpost = (int)$match[1];
-            $posts = Posts::i();
-            if (!$posts->itemExists($idpost)) {
-                $response->status = 404;
-                return;
-            }
+                $idpost = (int)$match[1];
+                $posts = Posts::i();
+                if (!$posts->itemExists($idpost)) {
+                    $response->status = 404;
+                    return;
+                }
 
-            $post = Post::i($idpost);
-            if ($post->status != 'published') {
-                $response->status = 404;
-                return;
-            }
+                $post = Post::i($idpost);
+                if ($post->status != 'published') {
+                    $response->status = 404;
+                    return;
+                }
 
-            if (isset($post->idperm) && ($post->idperm > 0)) {
-                $perm = Perm::i($post->idperm);
-                $perm->setResponse($response, $post);
-            }
+                if (isset($post->idperm) && ($post->idperm > 0)) {
+                    $perm = Perm::i($post->idperm);
+                    $perm->setResponse($response, $post);
+                }
 
-            $this->GetRSSPostComments($idpost);
+                $this->GetRSSPostComments($idpost);
         }
 
         $response->setXml();

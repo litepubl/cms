@@ -19,7 +19,7 @@ foreach ([
 'CacheFile.php',
 'CacheMemcache.php',
 'Event.php',
-'EventsTrait.php',   
+'EventsTrait.php',
 'Events.php',
 'Items.php',
 'PoolStorageTrait.php',

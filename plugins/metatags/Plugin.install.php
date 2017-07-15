@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -23,7 +23,8 @@ function PluginInstall($self)
 
     $t = MainView::i();
     $t->heads = strtr(
-        $t->heads, [
+        $t->heads,
+        [
         '$template.keywords' => '$metatags.keywords',
         '$template.description' => '$metatags.description',
         ]
@@ -38,7 +39,8 @@ function PluginUninstall($self)
 {
     $t = MainView::i();
     $t->heads = strtr(
-        $t->heads, [
+        $t->heads,
+        [
         '$metatags.keywords' => '$template.keywords',
         '$metatags.description' => '$template.description'
         ]

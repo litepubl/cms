@@ -218,15 +218,15 @@ class Cache extends \litepubl\core\Items
     public function remove(int $id, string $cacheType)
     {
         switch ($cacheType) {
-        case 'cache':
-            $this->delete($id);
-            break;
+            case 'cache':
+                $this->delete($id);
+                break;
 
 
-        case 'include':
-            $filename = $this->getIncludeFilename($id);
-            $this->getApp()->cache->delete($filename);
-            break;
+            case 'include':
+                $filename = $this->getIncludeFilename($id);
+                $this->getApp()->cache->delete($filename);
+                break;
         }
     }
 
@@ -385,7 +385,8 @@ class Contextual extends Widget
     private function isValue(string $name): bool
     {
         return in_array(
-            $name, [
+            $name,
+            [
             'ajax',
             'order',
             'sidebar'
@@ -760,10 +761,12 @@ class Order extends Widget
         }
 
         Arr::insert(
-            $items, [
+            $items,
+            [
             'id' => $this->id,
             'ajax' => $this->ajax
-            ], $order
+            ],
+            $order
         );
     }
 }
@@ -1461,57 +1464,57 @@ class Widgets extends \litepubl\core\Items
             }
 
             switch ($ajax) {
-            case 'disabled':
-                switch ($item['cache']) {
-                case 'cache':
-                    $content = $cache->getWidget($id, $sidebar);
+                case 'disabled':
+                    switch ($item['cache']) {
+                        case 'cache':
+                            $content = $cache->getWidget($id, $sidebar);
+                            break;
+
+
+                        case 'nocache':
+                            $widget = $this->getWidget($id);
+                            $content = $widget->getWidget($id, $sidebar);
+                            break;
+
+
+                        case 'include':
+                            $content = $view->getInclude($id, $sidebar, $item);
+                            break;
+
+
+                        case 'code':
+                            $content = $view->getCode($id, $sidebar);
+                            break;
+
+                        default:
+                            throw new \UnexpectedValueException('Unknown cache type ' . $item['cache']);
+                    }
                     break;
 
-
-                case 'nocache':
-                    $widget = $this->getWidget($id);
-                    $content = $widget->getWidget($id, $sidebar);
-                    break;
-
-
-                case 'include':
-                    $content = $view->getInclude($id, $sidebar, $item);
-                    break;
-
-
-                case 'code':
-                    $content = $view->getCode($id, $sidebar);
-                    break;
-
-                default:
-                    throw new \UnexpectedValueException('Unknown cache type ' . $item['cache']);
-                }
-                break;
-
-            case 'inline':
-                switch ($item['cache']) {
-                case 'cache':
-                    $widgetBody = $cache->getContent($id, $sidebar);
+                case 'inline':
+                    switch ($item['cache']) {
+                        case 'cache':
+                            $widgetBody = $cache->getContent($id, $sidebar);
                             $content = $view->getInline($id, $sidebar, $item, $widgetBody);
-                    break;
+                            break;
 
-                case 'nocache':
-                    $widget = $this->getWidget($id);
-                    $widgetBody = $widget->getcontent($id, $sidebar);
+                        case 'nocache':
+                            $widget = $this->getWidget($id);
+                            $widgetBody = $widget->getcontent($id, $sidebar);
                             $content = $view->getInline($id, $sidebar, $item, $widgetBody);
-                    break;
+                            break;
 
-                default:
+                        default:
                             $content = $view->getAjax($id, $sidebar, $item);
-                }
-                break;
+                    }
+                    break;
 
-            case 'ajax':
-                $content = $view->getAjax($id, $sidebar, $item);
-                break;
+                case 'ajax':
+                    $content = $view->getAjax($id, $sidebar, $item);
+                    break;
 
-            default:
-                throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
+                default:
+                    throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
             }
 
             $r = $this->onwidget(['id' => $id, 'content' => $content]);
@@ -1539,28 +1542,28 @@ class Widgets extends \litepubl\core\Items
         }
 
         switch ($this->items[$id]['cache']) {
-        case 'cache':
-            $cache = Cache::i();
-            $result = $cache->getcontent($id, $sidebar);
-            break;
+            case 'cache':
+                $cache = Cache::i();
+                $result = $cache->getcontent($id, $sidebar);
+                break;
 
 
-        case 'include':
-            $filename = Widget::getCacheFilename($id, $sidebar);
-            $result = $this->getApp()->cache->getString($filename);
-            if (!$result) {
-                $widget = $this->getWidget($id);
-                $result = $widget->getContent($id, $sidebar);
-                $this->getApp()->cache->setString($filename, $result);
-            }
-            break;
+            case 'include':
+                $filename = Widget::getCacheFilename($id, $sidebar);
+                $result = $this->getApp()->cache->getString($filename);
+                if (!$result) {
+                    $widget = $this->getWidget($id);
+                    $result = $widget->getContent($id, $sidebar);
+                    $this->getApp()->cache->setString($filename, $result);
+                }
+                break;
 
 
-        case 'nocache':
-        case 'code':
-            $widget = $this->getwidget($id);
-            $result = $widget->getcontent($id, $sidebar);
-            break;
+            case 'nocache':
+            case 'code':
+                $widget = $this->getwidget($id);
+                $result = $widget->getcontent($id, $sidebar);
+                break;
         }
 
         return $result;
@@ -1757,10 +1760,13 @@ class CommonTags extends Widget
             'item' => $view->getItem($this->template, $sidebar) ,
             'subcount' => $view->getTml($sidebar, $this->template, 'subcount') ,
             'subitems' => $this->showsubitems ? $view->getTml($sidebar, $this->template, 'subitems') : ''
-            ], 0, $this->sortname, $this->maxcount, $this->showcount
+            ],
+            0,
+            $this->sortname,
+            $this->maxcount,
+            $this->showcount
         );
 
         return str_replace('$parent', 0, $view->getContent($items, $this->template, $sidebar));
     }
 }
-

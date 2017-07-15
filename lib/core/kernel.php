@@ -114,7 +114,6 @@ class Event
     {
         return $this->stopped;
     }
-
 }
 
 //EventsTrait.php
@@ -243,34 +242,35 @@ trait EventsTrait
         $app = $this->getApp();
         $eventName = $event->getName();
 
-        foreach ($this->data['events'][$eventName] as $i => $item) {
-            if ($event->isPropagationStopped()) {
+        if (isset($this->data['events'][$eventName])) {
+            foreach ($this->data['events'][$eventName] as $i => $item) {
+                if ($event->isPropagationStopped()) {
                         break;
-            }
+                }
 
-            if (class_exists($item[0])) {
-                try {
-                    $callback = [$app->classes->getInstance($item[0]), $item[1]];
-                    call_user_func_array($callback, [$event]);
-                    if ($event->once) {
+                if (class_exists($item[0])) {
+                    try {
+                        $callback = [$app->classes->getInstance($item[0]), $item[1]];
+                        call_user_func_array($callback, [$event]);
+                        if ($event->once) {
                                         $event->once = false;
                                         unset($this->data['events'][$eventName][$i]);
                                         $this->save();
+                        }
+                    } catch (\Throwable $e) {
+                        $app->logException($e);
                     }
-                } catch (\Throwable $e) {
-                    $app->logException($e);
-                }
-            } else {
+                } else {
                         unset($this->data['events'][$eventName][$i]);
-                if (!count($this->data['events'][$eventName])) {
-                    unset($this->data['events'][$eventName]);
-                }
+                    if (!count($this->data['events'][$eventName])) {
+                        unset($this->data['events'][$eventName]);
+                    }
 
                         $this->save();
                         $app->getLogger()->warning(sprintf('Event subscriber has been removed from %s:%s', get_class($this), $eventName), is_array($item) ? $item : []);
+                }
             }
         }
-
     }
 
     public function addEvent(string $name, $callable, $method = null)
@@ -343,7 +343,6 @@ trait EventsTrait
         $this->reIndexEvents();
         $this->save();
     }
-
 }
 
 //App.php
@@ -590,8 +589,20 @@ class App
 
     public function logException(\Throwable $e)
     {
-        $itemRoute = isset($this->context) ? $this->context->itemRoute : [];
-        $this->getLogManager()->logException($e, $itemRoute);
+        if (isset($this->context)) {
+                $logContext = [
+                'url' => $this->context->request->url,
+                'status' => $this->context->response->status,
+                 'itemRoute' =>  $this->context->itemRoute,
+                ];
+        } else {
+                $logContext  = [
+                'url' => $_SERVER['REQUEST_URI'] ?? '',
+                'args' => $_SERVER['argv'] ?? '',
+                ];
+        }
+
+        $this->getLogManager()->logException($e, $logContext);
     }
 
     public function showErrors()
@@ -687,7 +698,10 @@ class Arr
     public static function insert(array & $a, $item, $index)
     {
         array_splice(
-            $a, $index, 0, [
+            $a,
+            $index,
+            0,
+            [
             $item
             ]
         );
@@ -703,7 +717,10 @@ class Arr
         $item = $a[$oldindex];
         array_splice($a, $oldindex, 1);
         array_splice(
-            $a, $newindex, 0, [
+            $a,
+            $newindex,
+            0,
+            [
             $item
             ]
         );
@@ -730,7 +747,6 @@ class Arr
         ksort($a);
         return $index;
     }
-
 }
 
 //BaseCache.php
@@ -819,12 +835,14 @@ class CacheFile extends BaseCache
 {
     protected $dir;
     protected $timeOffset;
+    private $opcacheEnabled;
 
     public function __construct(string $dir, int $lifetime, int $timeOffset)
     {
         $this->dir = $dir;
         $this->timeOffset = $timeOffset;
         $this->lifetime = $lifetime - $timeOffset;
+        $this->opcacheEnabled = ini_get('opcache.enable') && !ini_get('opcache.restrict_api');
     }
 
     public function getDir(): string
@@ -838,6 +856,10 @@ class CacheFile extends BaseCache
         $fn = $this->getdir() . $filename;
         file_put_contents($fn, $str);
         @chmod($fn, 0666);
+
+        if ($this->opcacheEnabled) {
+            opcache_invalidate($fn);
+        }
     }
 
     public function getString(string $filename): string
@@ -892,6 +914,10 @@ class CacheFile extends BaseCache
                     $this->clearDir($file . DIRECTORY_SEPARATOR);
                     unlink($file);
                 } else {
+                    if ($this->opcacheEnabled) {
+                        opcache_invalidate($file);
+                    }
+
                     unlink($file);
                 }
             }
@@ -1187,7 +1213,13 @@ class Controller
         }
 
         $filename = $this->getCacheFileName($context);
-        return $this->getApp()->cache->includePhp($filename);
+        $cache = $this->getApp()->cache;
+        if ($context->request->isPostMethod()) {
+                $cache->delete($filename);
+                return false;
+        } else {
+                return $cache->includePhp($filename);
+        }
     }
 
     public function getCacheFileName(Context $context)
@@ -1198,12 +1230,12 @@ class Controller
             return md5($context->request->url) . $ext;
         } else {
             switch ($context->itemRoute['type']) {
-            case 'usernormal':
-            case 'userget':
-                return sprintf('%s-%d%s', md5($context->request->url), $this->getApp()->options->user, $ext);
+                case 'usernormal':
+                case 'userget':
+                    return sprintf('%s-%d%s', md5($context->request->url), $this->getApp()->options->user, $ext);
 
-            default:
-                return md5($context->request->url) . $ext;
+                default:
+                    return md5($context->request->url) . $ext;
             }
         }
     }
@@ -1238,29 +1270,29 @@ class Controller
 
         $cache = $this->getApp()->cache;
         switch ($response->status) {
-        case 404:
-            $errorPages = new ErrorPages();
-            $content = $errorPages->notfound();
-            if ($this->cache && $response->cache) {
-                $cache->savePhp($this->getCacheFileName($context), $content);
-            }
-            break;
+            case 404:
+                $errorPages = new ErrorPages();
+                $content = $errorPages->notfound();
+                if ($this->cache && $response->cache) {
+                    $cache->savePhp($this->getCacheFileName($context), $content);
+                }
+                break;
 
 
-        case 403:
-            $errorPages = new ErrorPages();
-            $content = $errorPages->forbidden();
-            if ($this->cache && $response->cache) {
-                $cache->savePhp($this->getCacheFileName($context), $content);
-            }
-            break;
+            case 403:
+                $errorPages = new ErrorPages();
+                $content = $errorPages->forbidden();
+                if ($this->cache && $response->cache) {
+                    $cache->savePhp($this->getCacheFileName($context), $content);
+                }
+                break;
 
 
-        default:
-            $response->send();
-            if ($this->cache && $response->cache) {
-                $cache->savePhp($this->getCacheFileName($context), $response->getString());
-            }
+            default:
+                $response->send();
+                if ($this->cache && $response->cache) {
+                    $cache->savePhp($this->getCacheFileName($context), $response->getString());
+                }
         }
     }
 }
@@ -1297,7 +1329,6 @@ class Crypt
     {
         return openssl_pbkdf2($password, $solt, static::LENGTH, 2, 'MD5');
     }
-
 }
 
 //Data.php
@@ -1552,7 +1583,6 @@ class Data
     public function getDbversion()
     {
         return false;
-
     }
 
     public function getDb($table = '')
@@ -2173,7 +2203,6 @@ class Events extends Data
         parent::free();
         unset($this->getApp()->classes->instances[get_class($this) ]);
     }
-
 }
 
 //Item.php
@@ -2422,6 +2451,16 @@ class Items extends Events
         return $this->error(sprintf('Item %d not found in class %s', $id, get_class($this)));
     }
 
+    public function setItem(array $item)
+    {
+        $id = $item[$this->idprop];
+        $this->items[$id] = $item;
+
+        if ($this->dbversion) {
+            $this->db->updateAssoc($item, $this->idprop);
+        }
+    }
+
     public function getValue($id, $name)
     {
         if ($this->dbversion && !isset($this->items[$id])) {
@@ -2455,10 +2494,10 @@ class Items extends Events
         return false;
     }
 
-    public function indexof($name, $value)
+    public function indexOf($name, $value)
     {
         if ($this->dbversion) {
-            return $this->db->findprop($this->idprop, "$name = " . Str::quote($value));
+            return $this->db->findProp($this->idprop, "$name = " . Str::quote($value));
         }
 
         foreach ($this->items as $id => $item) {
@@ -2760,7 +2799,7 @@ use litepubl\Config;
  * @property       string $password
  * @property       string $solt
  * @property       bool $authenabled
- * @property       bool $usersenabled 
+ * @property       bool $usersenabled
  * @property       bool $reguser
  * @property       bool $xxxcheck
  * @property       string $cookiehash
@@ -2834,7 +2873,7 @@ class Options extends Events
     {
         try {
                 parent::__set($name, $value);
-        } catch(PropException $e) {
+        } catch (PropException $e) {
                 $this->data[$name] = $value;
         }
 
@@ -3222,7 +3261,8 @@ class Pool extends Data
     {
         if (isset($this->ongetitem)) {
             return call_user_func_array(
-                $this->ongetitem, [
+                $this->ongetitem,
+                [
                 $id
                 ]
             );
@@ -3339,7 +3379,7 @@ class PoolStorage
 
     public function remove(Data $obj)
     {
-        $base = $obj->getbasename();
+        $base = $obj->getBaseName();
         if (isset($this->data[$base])) {
             unset($this->data[$base]);
             $this->modified = true;
@@ -3471,6 +3511,11 @@ class Request
         return 'localhost';
     }
 
+    public function isPostMethod(): bool
+    {
+        return 'POST' == $_SERVER['REQUEST_METHOD'];
+    }
+
     public function getInput()
     {
         return $this->input ? $this->input : file_get_contents('php://input');
@@ -3489,6 +3534,12 @@ class Request
     public function getPost()
     {
         return $_POST;
+    }
+
+    public function hasPost(string $key = ''): bool
+    {
+        $post = $this->getPost();
+        return is_array($post) && count($post) && (!$key || ($key && isset($post[$key])));
     }
 
     public function getArg(string $name, $default = false)
@@ -3793,7 +3844,8 @@ class Site extends Events
         parent::create();
         $this->basename = 'site';
         $this->addmap(
-            'mapoptions', [
+            'mapoptions',
+            [
             'version' => 'version',
             'language' => 'language',
             ]
@@ -3827,7 +3879,7 @@ class Site extends Events
 
         try {
                 parent::setProp($name, $value);
-        } catch(PropException $e) {
+        } catch (PropException $e) {
             $this->data[$name] = $value;
         }
 
@@ -4390,7 +4442,7 @@ class Classes extends Items
         return false;
     }
 
-    public function add($class, $filename, $deprecatedPath = false)
+    public function add(string $class, string $filename, $deprecatedPath = false)
     {
         if ($incfilename = $this->findPSR4($class)) {
             $this->include($incfilename);
@@ -4892,25 +4944,25 @@ class Router extends Items
     {
         foreach ($this->prefilter as $item) {
             switch ($item['type']) {
-            case 'begin':
-                if (Str::begin($url, $item['url'])) {
-                    return $item;
-                }
-                break;
+                case 'begin':
+                    if (Str::begin($url, $item['url'])) {
+                        return $item;
+                    }
+                    break;
 
 
-            case 'end':
-                if (Str::end($url, $item['url'])) {
-                    return $item;
-                }
-                break;
+                case 'end':
+                    if (Str::end($url, $item['url'])) {
+                        return $item;
+                    }
+                    break;
 
 
-            case 'regexp':
-                if (preg_match($item['url'], $url)) {
-                    return $item;
-                }
-                break;
+                case 'regexp':
+                    if (preg_match($item['url'], $url)) {
+                        return $item;
+                    }
+                    break;
             }
         }
 
@@ -4939,7 +4991,8 @@ class Router extends Items
         }
 
         if (!in_array(
-            $type, [
+            $type,
+            [
             'normal',
             'get',
             'usernormal',
@@ -4967,7 +5020,8 @@ class Router extends Items
         $this->items[$item['id']] = $item;
 
         if (in_array(
-            $type, [
+            $type,
+            [
             'begin',
             'end',
             'regexp'
@@ -5118,7 +5172,7 @@ class Cron extends Events implements ResponsiveInterface
     {
         if (($result = $this->path) && is_dir($result)) {
                 return $result;
-            }
+        }
 
         return $this->getApp()->paths->data;
     }
@@ -5276,7 +5330,7 @@ class Cron extends Events implements ResponsiveInterface
         return $id;
     }
 
-    public function addWeekly(string $class,string $func, $arg): int
+    public function addWeekly(string $class, string $func, $arg): int
     {
         $id = $this->db->add([
             'date' => date('Y-m-d 03:15:00', time()) ,
@@ -5477,7 +5531,6 @@ class ItemsPosts extends Items
     {
         $this->deleteItem($event->id);
     }
-
 }
 
 //Users.php
@@ -5492,6 +5545,12 @@ namespace litepubl\core;
 
 class Users extends Items
 {
+//statuses
+    const STATUS = 'status';
+    const APPROVED = 'approved';
+    const HOLD = 'hold';
+    const COMUSER = 'comuser';
+
     public $grouptable;
 
     protected function create()
@@ -5607,9 +5666,9 @@ class Users extends Items
         $this->setvalue($id, 'password', $this->getApp()->options->hash($item['email'] . $password));
     }
 
-    public function approve($id)
+    public function approve(int $id)
     {
-        $this->setValue($id, 'status', 'approved');
+        $this->setValue($id, static::STATUS, static::APPROVED);
         $pages = $this->pages;
         if ($pages->createpage) {
             $pages->addPage($id);
@@ -5626,7 +5685,7 @@ class Users extends Items
         if ($id && $password) {
             $item = $this->getItem($id);
             if ($item['password'] == $this->getApp()->options->hash($item['email'] . $password)) {
-                if ($item['status'] == 'wait') {
+                if ($item[static::STATUS] == static::COMUSER) {
                     $this->approve($id);
                 }
 
@@ -6263,7 +6322,8 @@ class Logger implements LoggerInterface
             static::$timezone = new \DateTimeZone(date_default_timezone_get() ?: 'UTC');
         }
 
-        if ($this->microsecondTimestamps) {
+        // php7.1+ always has microseconds enabled, so we do not need this hack
+        if ($this->microsecondTimestamps && PHP_VERSION_ID < 70100) {
             $ts = \DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), static::$timezone);
         } else {
             $ts = new \DateTime(null, static::$timezone);
@@ -6654,14 +6714,14 @@ class Logger implements LoggerInterface
 namespace Psr\Log;
 
 /**
- * Describes a logger instance
+ * Describes a logger instance.
  *
  * The message MUST be a string or object implementing __toString().
  *
  * The message MAY contain placeholders in the form: {foo} where foo
  * will be replaced by the context data in key "foo".
  *
- * The context array can contain arbitrary data, the only assumption that
+ * The context array can contain arbitrary data. The only assumption that
  * can be made by implementors is that if an Exception instance is given
  * to produce a stack trace, it MUST be in a key named "exception".
  *
@@ -6674,8 +6734,9 @@ interface LoggerInterface
      * System is unusable.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
+     *
+     * @return void
      */
     public function emergency($message, array $context = array());
 
@@ -6686,8 +6747,9 @@ interface LoggerInterface
      * trigger the SMS alerts and wake you up.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
+     *
+     * @return void
      */
     public function alert($message, array $context = array());
 
@@ -6697,8 +6759,9 @@ interface LoggerInterface
      * Example: Application component unavailable, unexpected exception.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
+     *
+     * @return void
      */
     public function critical($message, array $context = array());
 
@@ -6707,8 +6770,9 @@ interface LoggerInterface
      * be logged and monitored.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
+     *
+     * @return void
      */
     public function error($message, array $context = array());
 
@@ -6719,8 +6783,9 @@ interface LoggerInterface
      * that are not necessarily wrong.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
+     *
+     * @return void
      */
     public function warning($message, array $context = array());
 
@@ -6728,8 +6793,9 @@ interface LoggerInterface
      * Normal but significant events.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
+     *
+     * @return void
      */
     public function notice($message, array $context = array());
 
@@ -6739,8 +6805,9 @@ interface LoggerInterface
      * Example: User logs in, SQL logs.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
+     *
+     * @return void
      */
     public function info($message, array $context = array());
 
@@ -6748,18 +6815,20 @@ interface LoggerInterface
      * Detailed debug information.
      *
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
+     *
+     * @return void
      */
     public function debug($message, array $context = array());
 
     /**
      * Logs with an arbitrary level.
      *
-     * @param mixed $level
+     * @param mixed  $level
      * @param string $message
-     * @param array $context
-     * @return null
+     * @param array  $context
+     *
+     * @return void
      */
     public function log($level, $message, array $context = array());
 }
@@ -6768,18 +6837,18 @@ interface LoggerInterface
 namespace Psr\Log;
 
 /**
- * Describes log levels
+ * Describes log levels.
  */
 class LogLevel
 {
     const EMERGENCY = 'emergency';
-    const ALERT = 'alert';
-    const CRITICAL = 'critical';
-    const ERROR = 'error';
-    const WARNING = 'warning';
-    const NOTICE = 'notice';
-    const INFO = 'info';
-    const DEBUG = 'debug';
+    const ALERT     = 'alert';
+    const CRITICAL  = 'critical';
+    const ERROR     = 'error';
+    const WARNING   = 'warning';
+    const NOTICE    = 'notice';
+    const INFO      = 'info';
+    const DEBUG     = 'debug';
 }
 
 //vendor/psr/log/Psr/Log/InvalidArgumentException.php
@@ -6848,6 +6917,9 @@ class ErrorHandler
      */
     public static function register(LoggerInterface $logger, $errorLevelMap = array(), $exceptionLevel = null, $fatalLevel = null)
     {
+        //Forces the autoloader to run for LogLevel. Fixes an autoload issue at compile-time on PHP5.3. See https://github.com/Seldaek/monolog/pull/929
+        class_exists('\\Psr\\Log\\LogLevel', true);
+
         $handler = new static($logger);
         if ($errorLevelMap !== false) {
             $handler->registerErrorHandler($errorLevelMap);
@@ -7130,11 +7202,21 @@ class StreamHandler extends AbstractProcessingHandler
             flock($this->stream, LOCK_EX);
         }
 
-        fwrite($this->stream, (string) $record['formatted']);
+        $this->streamWrite($this->stream, $record);
 
         if ($this->useLocking) {
             flock($this->stream, LOCK_UN);
         }
+    }
+
+    /**
+     * Write to stream
+     * @param resource $stream
+     * @param array $record
+     */
+    protected function streamWrite($stream, array $record)
+    {
+        fwrite($stream, (string) $record['formatted']);
     }
 
     private function customErrorHandler($code, $msg)
@@ -7410,13 +7492,13 @@ class NormalizerFormatter implements FormatterInterface
             return $data;
         }
 
-        if (is_array($data) || $data instanceof \Traversable) {
+        if (is_array($data)) {
             $normalized = array();
 
             $count = 1;
             foreach ($data as $key => $value) {
                 if ($count++ >= 1000) {
-                    $normalized['...'] = 'Over 1000 items, aborting normalization';
+                    $normalized['...'] = 'Over 1000 items ('.count($data).' total), aborting normalization';
                     break;
                 }
                 $normalized[$key] = $this->normalize($value);
@@ -7624,7 +7706,9 @@ class NormalizerFormatter implements FormatterInterface
         if (is_string($data) && !preg_match('//u', $data)) {
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
-                function ($m) { return utf8_encode($m[0]); },
+                function ($m) {
+                    return utf8_encode($m[0]);
+                },
                 $data
             );
             $data = str_replace(
@@ -7713,6 +7797,7 @@ class LineFormatter extends NormalizerFormatter
             }
         }
 
+
         foreach ($vars['context'] as $var => $val) {
             if (false !== strpos($output, '%context.'.$var.'%')) {
                 $output = str_replace('%context.'.$var.'%', $this->stringify($val), $output);
@@ -7736,6 +7821,11 @@ class LineFormatter extends NormalizerFormatter
             if (false !== strpos($output, '%'.$var.'%')) {
                 $output = str_replace('%'.$var.'%', $this->stringify($val), $output);
             }
+        }
+
+        // remove leftover %extra.xxx% and %context.xxx% if any
+        if (false !== strpos($output, '%')) {
+            $output = preg_replace('/%(?:extra|context)\..+?%/', '', $output);
         }
 
         return $output;
@@ -7772,7 +7862,7 @@ class LineFormatter extends NormalizerFormatter
 
         $str = '[object] ('.get_class($e).'(code: '.$e->getCode().'): '.$e->getMessage().' at '.$e->getFile().':'.$e->getLine().$previousText.')';
         if ($this->includeStacktraces) {
-            $str .= "\n[stacktrace]\n".$e->getTraceAsString();
+            $str .= "\n[stacktrace]\n".$e->getTraceAsString()."\n";
         }
 
         return $str;
@@ -7798,6 +7888,10 @@ class LineFormatter extends NormalizerFormatter
     protected function replaceNewlines($str)
     {
         if ($this->allowInlineLineBreaks) {
+            if (0 === strpos($str, '{')) {
+                return str_replace(array('\r', '\n'), array("\r", "\n"), $str);
+            }
+
             return $str;
         }
 
@@ -7997,7 +8091,8 @@ use litepubl\utils\Filer;
 class LogManager
 {
     use \litepubl\core\AppTrait;
-    const format = "%datetime%\n%channel%.%level_name%:\n%message%\n%context% %extra%\n\n";
+    const FORMAT = "%datetime%\n%channel%.%level_name%:\n%message%\n%context% %extra%\n\n";
+    const DATEFORMAT = 'H:i:s d-m-Y';
     public $logger;
     public $runtime;
 
@@ -8015,7 +8110,7 @@ class LogManager
         }
 
         $handler = new StreamHandler($app->paths->data . 'logs/logs.log', Logger::DEBUG, true, 0666);
-        $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
+        $handler->setFormatter(new LineFormatter(static ::FORMAT, static::DATEFORMAT, true, false));
         $logger->pushHandler($handler);
 
         $this->runtime = new RuntimeHandler(Logger::WARNING);
@@ -8210,35 +8305,35 @@ class LogException
     public static function dump(&$v)
     {
         switch (gettype($v)) {
-        case 'string':
-            if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
-                $v = substr($v, 0, $i);
-            }
+            case 'string':
+                if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
+                    $v = substr($v, 0, $i);
+                }
 
-            return sprintf('\'%s\'', $v);
+                return sprintf('\'%s\'', $v);
 
-        case 'object':
-            return get_class($v);
+            case 'object':
+                return get_class($v);
 
-        case 'boolean':
-            return $v ? 'true' : 'false';
+            case 'boolean':
+                return $v ? 'true' : 'false';
 
-        case 'integer':
-        case 'double':
-        case 'float':
-            return $v;
+            case 'integer':
+            case 'double':
+            case 'float':
+                return $v;
 
-        case 'array':
-            $result = '';
-            foreach ($v as $k => $item) {
-                $s = static ::dump($item);
-                $result.= "$k = $s;\n";
-            }
+            case 'array':
+                $result = '';
+                foreach ($v as $k => $item) {
+                    $s = static ::dump($item);
+                    $result.= "$k = $s;\n";
+                }
 
-            return "[\n$result]\n";
+                return "[\n$result]\n";
 
-        default:
-            return gettype($v);
+            default:
+                return gettype($v);
         }
     }
 }
@@ -8270,4 +8365,3 @@ class litepubl
 }
 
 litepubl::init();
-

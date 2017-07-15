@@ -100,7 +100,7 @@ $language_data = array (
         9 => array(
             // jQuery Events Functions
             'on', 'off',
-'ready', 'bind', 'one', 'trigger', 'triggerHandler', 'unbind', 'live',
+    'ready', 'bind', 'one', 'trigger', 'triggerHandler', 'unbind', 'live',
             'die', 'hover', 'blur', 'change', 'click', 'dblclick', 'error',
             'focus', 'keydown', 'keypress', 'keyup', 'mousedown', 'mouseenter',
             'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'resize',
@@ -121,7 +121,7 @@ $language_data = array (
             ),
         12 => array(
             // jQuery Utility Functions
- 'proxy',
+    'proxy',
             'support', 'browser', 'version', 'boxModal', 'extend', 'grep', 'makeArray',
             'map', 'inArray', 'merge', 'unique', 'isArray', 'isFunction', 'trim',
             'param',
@@ -236,5 +236,3 @@ $language_data = array (
         1 => true
         )
 );
-
-?>

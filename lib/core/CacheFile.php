@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -36,9 +36,9 @@ class CacheFile extends BaseCache
         file_put_contents($fn, $str);
         @chmod($fn, 0666);
 
-            if ($this->opcacheEnabled) {
-opcache_invalidate($fn);
-}
+        if ($this->opcacheEnabled) {
+            opcache_invalidate($fn);
+        }
     }
 
     public function getString(string $filename): string
@@ -93,9 +93,9 @@ opcache_invalidate($fn);
                     $this->clearDir($file . DIRECTORY_SEPARATOR);
                     unlink($file);
                 } else {
-            if ($this->opcacheEnabled) {
-opcache_invalidate($file);
-}
+                    if ($this->opcacheEnabled) {
+                        opcache_invalidate($file);
+                    }
 
                     unlink($file);
                 }

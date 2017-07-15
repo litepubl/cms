@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -30,35 +30,35 @@ class MetaWeblog extends Common
         if (isset($struct["mt_allow_comments"])) {
             if (!is_numeric($struct["mt_allow_comments"])) {
                 switch ($struct["mt_allow_comments"]) {
-                case "closed":
-                    $post->comstatus = 'closed';
-                    break;
+                    case "closed":
+                        $post->comstatus = 'closed';
+                        break;
 
 
-                case "open":
-                    $post->comstatus = 'guest';
-                    break;
+                    case "open":
+                        $post->comstatus = 'guest';
+                        break;
 
 
-                default:
-                    $post->comstatus = $this->getApp()->options->comstatus;
-                    break;
+                    default:
+                        $post->comstatus = $this->getApp()->options->comstatus;
+                        break;
                 }
             } else {
                 switch ((int)$struct["mt_allow_comments"]) {
-                case 0:
-                    $post->comstatus = 'closed';
-                    break;
+                    case 0:
+                        $post->comstatus = 'closed';
+                        break;
 
 
-                case 1:
-                    $post->comstatus = 'guest';
-                    break;
+                    case 1:
+                        $post->comstatus = 'guest';
+                        break;
 
 
-                default:
-                    $post->comstatus = $this->getApp()->options->comstatus;
-                    break;
+                    default:
+                        $post->comstatus = $this->getApp()->options->comstatus;
+                        break;
                 }
             }
         } else {
@@ -68,35 +68,35 @@ class MetaWeblog extends Common
         if (isset($struct["mt_allow_pings"])) {
             if (!is_numeric($struct["mt_allow_pings"])) {
                 switch ($struct['mt_allow_pings']) {
-                case "closed":
-                    $post->pingenabled = false;
-                    break;
+                    case "closed":
+                        $post->pingenabled = false;
+                        break;
 
 
-                case "open":
-                    $post->pingenabled = true;
-                    break;
+                    case "open":
+                        $post->pingenabled = true;
+                        break;
 
 
-                default:
-                    $post->pingenabled = $this->getApp()->options->pingenabled;
-                    break;
+                    default:
+                        $post->pingenabled = $this->getApp()->options->pingenabled;
+                        break;
                 }
             } else {
                 switch ((int)$struct["mt_allow_pings"]) {
-                case 0:
-                    $post->pingenabled = false;
-                    break;
+                    case 0:
+                        $post->pingenabled = false;
+                        break;
 
 
-                case 1:
-                    $post->pingenabled = true;
-                    break;
+                    case 1:
+                        $post->pingenabled = true;
+                        break;
 
 
-                default:
-                    $post->pingenabled = $this->getApp()->options->pingenabled;
-                    break;
+                    default:
+                        $post->pingenabled = $this->getApp()->options->pingenabled;
+                        break;
                 }
             }
         } else {
@@ -282,15 +282,15 @@ class MetaWeblog extends Common
         $post = Post::i(0);
 
         switch ($publish) {
-        case 1:
-        case 'true':
-        case 'publish':
-            $post->status = 'published';
-            break;
+            case 1:
+            case 'true':
+            case 'publish':
+                $post->status = 'published';
+                break;
 
 
-        default:
-            $post->status = 'draft';
+            default:
+                $post->status = 'draft';
         }
 
         $this->setpost($struct, $post);
@@ -314,15 +314,15 @@ class MetaWeblog extends Common
 
         $post = Post::i($postid);
         switch ($publish) {
-        case 1:
-        case 'true':
-        case 'publish':
-            $post->status = 'published';
-            break;
+            case 1:
+            case 'true':
+            case 'publish':
+                $post->status = 'published';
+                break;
 
 
-        default:
-            $post->status = 'draft';
+            default:
+                $post->status = 'draft';
         }
 
         $this->setpost($struct, $post);

@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -16,7 +16,7 @@ use litepubl\view\Js;
 class enscroll extends \litepubl\core\Plugin
 {
 
-    public function install() 
+    public function install()
     {
         $plugindir = basename(dirname(__file__));
         $js = Js::i();
@@ -31,7 +31,7 @@ class enscroll extends \litepubl\core\Plugin
         $css->unlock();
     }
 
-    public function uninstall() 
+    public function uninstall()
     {
         $plugindir = basename(dirname(__file__));
         $js = Js::i();
@@ -45,5 +45,4 @@ class enscroll extends \litepubl\core\Plugin
         $css->deletefile('default', "plugins/$plugindir/resource/enscroll.min.css");
         $css->unlock();
     }
-
 }

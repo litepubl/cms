@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -72,7 +72,8 @@ class Pages extends \litepubl\admin\Menu
         $args->subscribe = $opt['subscribe'] == 'enabled';
         $args->authorpost_subscribe = $opt['authorpost_subscribe'] == 'enabled';
         $tabs->add(
-            $lang->options, '
+            $lang->options,
+            '
     [checkbox=subscribe]
     [checkbox=authorpost_subscribe]
     '
@@ -105,7 +106,8 @@ class Pages extends \litepubl\admin\Menu
         $pages->edit($id, $item);
 
         UserItems::i()->edit(
-            $id, [
+            $id,
+            [
             'name' => $name,
             'website' => Filter::clean_website($website) ,
             ]

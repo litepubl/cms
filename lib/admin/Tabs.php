@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -39,7 +39,8 @@ class Tabs
     public function get()
     {
         return strtr(
-            $this->getadmintheme()->templates['tabs'], [
+            $this->getadmintheme()->templates['tabs'],
+            [
             '$id' => $this->id ? $this->id : 'tabs-' . static ::$index++,
             '$tab' => implode("\n", $this->tabs) ,
             '$panel' => implode("\n", $this->panels) ,
@@ -67,7 +68,8 @@ class Tabs
     public function getTab($id, $url, $title)
     {
         return strtr(
-            $this->getadmintheme()->templates['tabs.tab'], [
+            $this->getadmintheme()->templates['tabs.tab'],
+            [
             '$id' => $id,
             '$title' => $title,
             '$url' => $url,
@@ -78,7 +80,8 @@ class Tabs
     public function getPanel($id, $content)
     {
         return strtr(
-            $this->getadmintheme()->templates['tabs.panel'], [
+            $this->getadmintheme()->templates['tabs.panel'],
+            [
             '$id' => $id,
             '$content' => $content,
             ]

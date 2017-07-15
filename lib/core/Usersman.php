@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -71,20 +71,20 @@ class Usersman extends Data
             }
 
             switch ($k) {
-            case 'password':
-                if ($values['password'] != '') {
-                    $item['password'] = $this->getApp()->options->hash($values['email'] . $values['password']);
-                }
-                break;
+                case 'password':
+                    if ($values['password'] != '') {
+                        $item['password'] = $this->getApp()->options->hash($values['email'] . $values['password']);
+                    }
+                    break;
 
 
-            case 'idgroups':
-                $item['idgroups'] = $this->cleanGroups($values['idgroups']);
-                break;
+                case 'idgroups':
+                    $item['idgroups'] = $this->cleanGroups($values['idgroups']);
+                    break;
 
 
-            default:
-                $item[$k] = trim($values[$k]);
+                default:
+                    $item[$k] = trim($values[$k]);
             }
         }
 

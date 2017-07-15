@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -78,7 +78,8 @@ class Editor extends \litepubl\admin\Menu
             [
             'draft' => $lang->draft,
             'published' => $lang->published
-            ], $status
+            ],
+            $status
         );
 
         if (($this->name == 'editfake') || (($id > 0) && ($menuitem instanceof FakeMenu))) {
@@ -92,13 +93,15 @@ class Editor extends \litepubl\admin\Menu
         [combo=order]
         [combo=status]
         [hidden=type]
-        [hidden=id]', $args
+        [hidden=id]',
+                $args
             );
         }
 
         $tabs = $this->newTabs();
         $tabs->add(
-            $lang->title, '
+            $lang->title,
+            '
       [text=title]
       [combo=parent]
       [combo=order]

@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -61,13 +61,15 @@ class Facebook extends Service
             if ($r = Http::get('https://graph.facebook.com/me?access_token=' . $params['access_token'])) {
                 $info = json_decode($r);
                 return $this->addUser(
-                    $context, [
+                    $context,
+                    [
                     'service' => $this->name,
                     'uid' => isset($info->id) ? $info->id : '',
                     'email' => isset($info->email) ? $info->email : '',
                     'name' => $info->name,
                     'website' => isset($info->link) ? $info->link : ''
-                    ], $info
+                    ],
+                    $info
                 );
             }
         }

@@ -107,9 +107,9 @@ class SAPE_base
     var $_user_agent = '';
 
     function SAPE_base($options = null)
-{
-$this->__construct($options);
-}
+    {
+        $this->__construct($options);
+    }
 
     function __construct($options = null)
     {
@@ -257,8 +257,7 @@ $this->__construct($options);
         @ini_set('allow_url_fopen', 1);
         @ini_set('default_socket_timeout', $this->_socket_timeout);
         @ini_set('user_agent', $user_agent);
-        if (
-            $this->_fetch_remote_type == 'file_get_contents'
+        if ($this->_fetch_remote_type == 'file_get_contents'
             ||
             (
                 $this->_fetch_remote_type == ''
@@ -286,8 +285,7 @@ $this->__construct($options);
                     return $data;
                 }
             }
-        } elseif (
-            $this->_fetch_remote_type == 'curl'
+        } elseif ($this->_fetch_remote_type == 'curl'
             ||
             (
                 $this->_fetch_remote_type == ''
@@ -297,7 +295,6 @@ $this->__construct($options);
         ) {
             $this->_fetch_remote_type = 'curl';
             if ($ch = @curl_init()) {
-
                 @curl_setopt($ch, CURLOPT_URL, 'http://' . $host . $path);
                 @curl_setopt($ch, CURLOPT_HEADER, false);
                 @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -488,8 +485,7 @@ $this->__construct($options);
         @clearstatcache();
 
         $data = $this->_read($this->_db_file);
-        if (
-            $this->_force_update_db
+        if ($this->_force_update_db
             || (
                 !$this->_is_our_bot
                 &&
@@ -639,9 +635,9 @@ class SAPE_client extends SAPE_base
     var $_block_uri_idna = array();
 
     function SAPE_client($options = null)
-{
-$this->__construct($options);
-}
+    {
+        $this->__construct($options);
+    }
 
     function __construct($options = null)
     {
@@ -666,8 +662,7 @@ $this->__construct($options);
         }
 
         // если запрошена определенная кодировка, и известна кодировка кеша, и они разные, конвертируем в заданную
-        if (
-            strlen($this->_charset) > 0
+        if (strlen($this->_charset) > 0
             &&
             strlen($this->_sape_charset) > 0
             &&
@@ -682,11 +677,9 @@ $this->__construct($options);
         }
 
         if ($this->_is_our_bot) {
-
             $html = '<sape_noindex>' . $html . '</sape_noindex>';
 
             if (isset($options['is_block_links']) && true == $options['is_block_links']) {
-
                 if (!isset($options['nof_links_requested'])) {
                     $options['nof_links_requested'] = 0;
                 }
@@ -823,7 +816,6 @@ $this->__construct($options);
         }
 
         if (is_numeric($n) && $n >= $total_page_links) {
-
             $n_requested = $n;
 
             if (isset($this->_block_ins_itemconditional)) {
@@ -851,7 +843,6 @@ $this->__construct($options);
 
         //Если нет ссылок и нет вставных блоков, то ничего не выводим
         if (empty($links) && $need_show_obligatory_block == false && $nof_conditional == 0) {
-
             $return_links_options = array(
                 'is_block_links'      => true,
                 'nof_links_requested' => $n_requested,
@@ -895,7 +886,6 @@ $this->__construct($options);
 
         $nof_items_total = count($links);
         foreach ($links as $link) {
-
             // Обычная красивая ссылка
             $is_found = preg_match('#<a href="(https?://([^"/]+)[^"]*)"[^>]*>[\s]*([^<]+)</a>#i', $link, $link_item);
             // Картиночкая красивая ссылка
@@ -1052,7 +1042,6 @@ $this->__construct($options);
         //-------
 
         if (is_array($this->_links_page)) {
-
             $total_page_links = count($this->_links_page);
 
             if (!is_numeric($n) || $n > $total_page_links) {
@@ -1178,7 +1167,6 @@ $this->__construct($options);
         );
 
         foreach ($check_blocks as $block_name) {
-
             $var_name  = '__sape_block_ins_' . $block_name . '__';
             $prop_name = '_block_ins_' . $block_name;
 
@@ -1203,9 +1191,9 @@ class SAPE_context extends SAPE_base
     var $_debug_actions = array();
 
     function SAPE_context($options = null)
-{
-$this->__construct($options);
-}
+    {
+        $this->__construct($options);
+    }
 
     function __construct($options = null)
     {
@@ -1275,7 +1263,6 @@ $this->__construct($options);
         $this->_debug_action_append($text, 'argument for replace_in_text_segment');
 
         if (count($this->_words_page) > 0) {
-
             $source_sentences = array();
 
             //Создаем массив исходных текстов для замены
@@ -1326,7 +1313,6 @@ $this->__construct($options);
             //пустая переменная для записи
 
             if (count($source_sentences) > 0) {
-
                 $content   = '';
                 $open_tags = array(); //Открытые забаненые тэги
                 $close_tag = ''; //Название текущего закрывающего тэга
@@ -1455,7 +1441,6 @@ $this->__construct($options);
             && isset($this->_page_obligatory_output)
             && !empty($this->_page_obligatory_output)
         ) {
-
             $split_content = preg_split('/(?smi)(<\/?body[^>]*>)/', $buffer, -1, PREG_SPLIT_DELIM_CAPTURE);
             if (count($split_content) == 5) {
                 $buffer = $split_content[0] . $split_content[1] . $split_content[2]
@@ -1579,9 +1564,9 @@ class SAPE_articles extends SAPE_base
     var $_user_agent = 'SAPE_Articles_Client PHP';
 
     function SAPE_articles($options = null)
-{
-$this->__construct($options);
-}
+    {
+        $this->__construct($options);
+    }
 
     function __construct($options = null)
     {
@@ -1656,7 +1641,6 @@ $this->__construct($options);
         }
 
         if (isset($this->_data['index']['announcements'][$this->_request_uri])) {
-
             $total_page_links = count($this->_data['index']['announcements'][$this->_request_uri]);
 
             if (!is_numeric($n) || $n > $total_page_links) {
@@ -1725,7 +1709,7 @@ $this->__construct($options);
         }
 
         //Обновим если устарела
-        if (!isset($this->_data['article']['date_updated']) OR $this->_data['article']['date_updated'] < $article_meta['date_updated']) {
+        if (!isset($this->_data['article']['date_updated']) or $this->_data['article']['date_updated'] < $article_meta['date_updated']) {
             unlink($this->_get_db_file());
             $this->load_data();
         }

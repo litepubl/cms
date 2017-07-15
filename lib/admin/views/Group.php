@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -57,35 +57,35 @@ class Group extends \litepubl\admin\Menu
     public function processForm()
     {
         switch ($_POST['action']) {
-        case 'posts':
-            $posts = Posts::i();
-            $idschema = (int)$_POST['postview'];
-            $posts->db->update("idschema = '$idschema'", 'id > 0');
-            break;
+            case 'posts':
+                $posts = Posts::i();
+                $idschema = (int)$_POST['postview'];
+                $posts->db->update("idschema = '$idschema'", 'id > 0');
+                break;
 
 
-        case 'menus':
-            $idschema = (int)$_POST['menuview'];
-            $menus = StdMenus::i();
-            foreach ($menus->items as $id => $item) {
-                $menu = StdMenu::i($id);
-                $menu->idschema = $idschema;
-                $menu->save();
-            }
-            break;
+            case 'menus':
+                $idschema = (int)$_POST['menuview'];
+                $menus = StdMenus::i();
+                foreach ($menus->items as $id => $item) {
+                    $menu = StdMenu::i($id);
+                    $menu->idschema = $idschema;
+                    $menu->save();
+                }
+                break;
 
 
-        case 'themes':
-            $themename = $_POST['themeschema'];
-            $schemes = SchemaItems::i();
-            $schemes->lock();
-            foreach ($schemes->items as $id => $item) {
-                $schema = Schema::i($id);
-                $schema->themename = $themename;
-                $schema->save();
-            }
-            $schemes->unlock();
-            break;
+            case 'themes':
+                $themename = $_POST['themeschema'];
+                $schemes = SchemaItems::i();
+                $schemes->lock();
+                foreach ($schemes->items as $id => $item) {
+                    $schema = Schema::i($id);
+                    $schema->themename = $themename;
+                    $schema->save();
+                }
+                $schemes->unlock();
+                break;
         }
     }
 }

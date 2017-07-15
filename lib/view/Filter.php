@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -142,7 +142,8 @@ class Filter extends \litepubl\core\Events
         }
         $description = static ::gettitle($description);
         $description = strtr(
-            $description, [
+            $description,
+            [
             "\r" => ' ',
             "\n" => ' ',
             '  ' => ' ',
@@ -257,16 +258,21 @@ class Filter extends \litepubl\core\Events
     public function replacecode($s)
     {
         $s = preg_replace_callback(
-            '/<code>(.*?)<\/code>/ims', [$this, 'callback_replace_code'], $s
+            '/<code>(.*?)<\/code>/ims',
+            [$this, 'callback_replace_code'],
+            $s
         );
         if ($this->phpcode) {
             $s = preg_replace_callback(
-                '/\<\?(.*?)\?\>/ims', [$this, 'callback_replace_php'], $s
+                '/\<\?(.*?)\?\>/ims',
+                [$this, 'callback_replace_php'],
+                $s
             );
         } else {
             $s = preg_replace_callback(
                 '/\<\?(.*?)\?\>/ims',
-                [$this, 'callback_fix_php'], $s
+                [$this, 'callback_fix_php'],
+                $s
             );
         }
         return $s;
@@ -275,7 +281,8 @@ class Filter extends \litepubl\core\Events
     public static function replace_code($s)
     {
         $s = strtr(
-            htmlspecialchars($s), [
+            htmlspecialchars($s),
+            [
             '"' => '&quot;',
             "'" => '&#39;',
             '$' => '&#36;',
@@ -327,7 +334,8 @@ class Filter extends \litepubl\core\Events
     public static function quote($s)
     {
         return strtr(
-            $s, [
+            $s,
+            [
             '"' => '&quot;',
             "'" => '&#039;',
             '\\' => '&#092;',
@@ -341,7 +349,8 @@ class Filter extends \litepubl\core\Events
     public static function escape($s)
     {
         return strtr(
-            trim(strip_tags($s)), [
+            trim(strip_tags($s)),
+            [
             '"' => '&quot;',
             "'" => '&#039;',
             '\\' => '&#092;',
@@ -357,7 +366,8 @@ class Filter extends \litepubl\core\Events
     public static function unescape($s)
     {
         return strtr(
-            $s, [
+            $s,
+            [
             '&quot;' => '"',
             '&#039;' => "'",
             '&#092;' => '\\',
@@ -437,7 +447,9 @@ class Filter extends \litepubl\core\Events
             [
             "\r\n",
             "\r"
-            ], "\n", $str
+            ],
+            "\n",
+            $str
         );
 
         //remove br
@@ -447,7 +459,9 @@ class Filter extends \litepubl\core\Events
             "<br />\N",
             "<br>\n",
             "<br/>\n"
-            ], "\n", $str
+            ],
+            "\n",
+            $str
         );
         $str = str_replace(
             [
@@ -455,7 +469,9 @@ class Filter extends \litepubl\core\Events
             '<br />',
             '<br>',
             '<br/>'
-            ], "\n", $str
+            ],
+            "\n",
+            $str
         );
 
         // Trim whitespace on each line
@@ -529,24 +545,30 @@ class Filter extends \litepubl\core\Events
     {
         $s = ' ' . $s;
         $s = preg_replace_callback(
-            '#(?<=[\s>])(\()?([\w]+?://(?:[\w\\x80-\\xff\#$%&~/=?@\[\](+-]|[.,;:](?![\s<]|(\))?([\s]|$))|(?(1)\)(?![\s<.,;:]|$)|\)))+)#is', [
+            '#(?<=[\s>])(\()?([\w]+?://(?:[\w\\x80-\\xff\#$%&~/=?@\[\](+-]|[.,;:](?![\s<]|(\))?([\s]|$))|(?(1)\)(?![\s<.,;:]|$)|\)))+)#is',
+            [
             __class__,
             '_make_url_clickable_cb'
-            ], $s
+            ],
+            $s
         );
 
         $s = preg_replace_callback(
-            '#([\s>])((www|ftp)\.[\w\\x80-\\xff\#$%&~/.\-;:=,?@\[\]+]+)#is', [
+            '#([\s>])((www|ftp)\.[\w\\x80-\\xff\#$%&~/.\-;:=,?@\[\]+]+)#is',
+            [
             __class__,
             '_make_web_ftp_clickable_cb'
-            ], $s
+            ],
+            $s
         );
 
         $s = preg_replace_callback(
-            '#([\s>])([.0-9a-z_+-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,})#i', [
+            '#([\s>])([.0-9a-z_+-]+)@(([0-9a-z-]+\.)+[0-9a-z]{2,})#i',
+            [
             __class__,
             '_make_email_clickable_cb'
-            ], $s
+            ],
+            $s
         );
 
         $s = preg_replace("#(<a( [^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i", "$1$3</a>", $s);
@@ -574,7 +596,8 @@ class Filter extends \litepubl\core\Events
         }
 
         if (in_array(
-            substr($dest, -1), [
+            substr($dest, -1),
+            [
             '.',
             ',',
             ';',

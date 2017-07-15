@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -134,28 +134,28 @@ class Base extends \litepubl\core\Events
     protected function getVar($name)
     {
         switch ($name) {
-        case 'site':
-            return $this->getApp()->site;
+            case 'site':
+                return $this->getApp()->site;
 
-        case 'lang':
-            return Lang::i();
+            case 'lang':
+                return Lang::i();
 
-        case 'post':
-            if ($context = $this->getApp()->context) {
-                if (isset($context->view) and $context->view instanceof PostView) {
-                    return $context->view;
-                } elseif (isset($context->model) && $context->model instanceof Post) {
-                    return $context->model->getView();
+            case 'post':
+                if ($context = $this->getApp()->context) {
+                    if (isset($context->view) and $context->view instanceof PostView) {
+                        return $context->view;
+                    } elseif (isset($context->model) && $context->model instanceof Post) {
+                        return $context->model->getView();
+                    }
                 }
-            }
-            break;
+                break;
 
 
-        case 'author':
-            return static ::get_author();
+            case 'author':
+                return static ::get_author();
 
-        case 'metapost':
-            return isset(static ::$vars['post']) ? static ::$vars['post']->meta : new emptyclass();
+            case 'metapost':
+                return isset(static ::$vars['post']) ? static ::$vars['post']->meta : new emptyclass();
         } //switch
         $var = AutoVars::i()->get($name);
         if (!is_object($var)) {
@@ -264,7 +264,8 @@ class Base extends \litepubl\core\Events
     public static function quote($s)
     {
         return strtr(
-            $s, [
+            $s,
+            [
             '"' => '&quot;',
             "'" => '&#039;',
             '\\' => '&#092;',

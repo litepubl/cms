@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -71,32 +71,32 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             $result = $this->$get();
         } else {
             switch ($name) {
-            case 'catlinks':
-                $result = $this->get_taglinks('categories', false);
-                break;
+                case 'catlinks':
+                    $result = $this->get_taglinks('categories', false);
+                    break;
 
 
-            case 'taglinks':
-                $result = $this->get_taglinks('tags', false);
-                break;
+                case 'taglinks':
+                    $result = $this->get_taglinks('tags', false);
+                    break;
 
 
-            case 'excerptcatlinks':
-                $result = $this->get_taglinks('categories', true);
-                break;
+                case 'excerptcatlinks':
+                    $result = $this->get_taglinks('categories', true);
+                    break;
 
 
-            case 'excerpttaglinks':
-                $result = $this->get_taglinks('tags', true);
-                break;
+                case 'excerpttaglinks':
+                    $result = $this->get_taglinks('tags', true);
+                    break;
 
 
-            default:
-                if (isset($this->post->$name)) {
-                    $result = $this->post->$name;
-                } else {
-                    $result = parent::__get($name);
-                }
+                default:
+                    if (isset($this->post->$name)) {
+                        $result = $this->post->$name;
+                    } else {
+                        $result = parent::__get($name);
+                    }
             }
         }
 
@@ -477,7 +477,8 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
 
         $result = strtr(
-            $theme->parse($theme->templates['content.post.prevnext']), [
+            $theme->parse($theme->templates['content.post.prevnext']),
+            [
             '$prev' => $prev,
             '$next' => $next
             ]
@@ -505,14 +506,14 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     {
         $l = Lang::i()->ini['comment'];
         switch ($this->commentscount) {
-        case 0:
-            return $l[0];
+            case 0:
+                return $l[0];
 
-        case 1:
-            return $l[1];
+            case 1:
+                return $l[1];
 
-        default:
-            return sprintf($l[2], $this->commentscount);
+            default:
+                return sprintf($l[2], $this->commentscount);
         }
     }
 

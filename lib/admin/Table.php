@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -22,7 +22,7 @@ class Table
     const LEFT = 'text-left';
     const RIGHT = 'text-right';
     const CENTER = 'text-center';
-const CHECKBOX = 'text-center col-checkbox';
+    const CHECKBOX = 'text-center col-checkbox';
 
     //current item in items
     public $item;
@@ -53,7 +53,7 @@ const CHECKBOX = 'text-center col-checkbox';
         $this->callbacks = [];
         $this->args = new Args();
         $this->data = [];
-$this->admintheme = $admintheme;
+        $this->admintheme = $admintheme;
     }
 
     public function setStruct(array $struct)
@@ -174,10 +174,12 @@ $this->admintheme = $admintheme;
     public function setOwner(Items $owner)
     {
         $this->addCallback(
-            '$tempcallback' . count($this->callbacks), [
+            '$tempcallback' . count($this->callbacks),
+            [
             $this,
             'itemsCallback'
-            ], $owner
+            ],
+            $owner
         );
     }
 
@@ -193,10 +195,12 @@ $this->admintheme = $admintheme;
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setStruct($struct);
         $this->addCallback(
-            '$tempcallback' . count($this->callbacks), [
+            '$tempcallback' . count($this->callbacks),
+            [
             $this,
             'posts_callback'
-            ], false
+            ],
+            false
         );
     }
 
@@ -278,18 +282,18 @@ $this->admintheme = $admintheme;
             }
 
             switch ($type) {
-            case 'combo':
-                $input = '<select name="$name" id="$name-input">$value</select>';
-                break;
+                case 'combo':
+                    $input = '<select name="$name" id="$name-input">$value</select>';
+                    break;
 
 
-            case 'text':
-                $input = '<input type="text" name="$name" id="$name-input" value="$value" />';
-                break;
+                case 'text':
+                    $input = '<input type="text" name="$name" id="$name-input" value="$value" />';
+                    break;
 
 
-            default:
-                $this->error('Unknown input type ' . $type);
+                default:
+                    $this->error('Unknown input type ' . $type);
             }
 
             $args->name = $name;
@@ -325,7 +329,7 @@ $this->admintheme = $admintheme;
 
     public function nameCheck(): array
     {
-$admin = $this->getAdminTheme();
+        $admin = $this->getAdminTheme();
         return [
             static::CHECKBOX,
             $admin->templates['checkbox.stub'],

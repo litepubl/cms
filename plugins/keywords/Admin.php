@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -39,7 +39,8 @@ class Admin extends \litepubl\admin\widget\Widget
             return $admin->form(
                 '
 [editor=content]
-', $args
+',
+                $args
             );
         }
 
@@ -64,7 +65,8 @@ class Admin extends \litepubl\admin\widget\Widget
       [checkbox=notify]
       [editor=blackwords]
       [hidden=optionsform]
-', $args
+',
+                $args
             );
         }
 
@@ -79,7 +81,8 @@ class Admin extends \litepubl\admin\widget\Widget
         $form->body = $admin->getCount($from, $from + count($filelist), $count);
 
         $tml =strtr(
-            $admin->templates['checkbox.name'], [
+            $admin->templates['checkbox.name'],
+            [
             '$name' => '$filename',
             '$checked'=> '',
             ]

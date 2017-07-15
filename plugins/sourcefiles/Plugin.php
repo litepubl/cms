@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -83,7 +83,6 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
 
             return $response->notfound();
         }
-
     }
 
     public function getIdschema(): int
@@ -165,28 +164,28 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
         }
         */
         switch ($ext) {
-        case 'tml':
-            $lang = 'html5';
-            break;
+            case 'tml':
+                $lang = 'html5';
+                break;
 
 
-        case 'less':
-            $lang = 'css';
-            break;
+            case 'less':
+                $lang = 'css';
+                break;
 
 
-        case 'js':
-            $lang = 'jquery';
-            break;
+            case 'js':
+                $lang = 'jquery';
+                break;
 
 
-        case 'json':
-            $lang = 'javascript';
-            break;
+            case 'json':
+                $lang = 'javascript';
+                break;
 
 
-        default:
-            $lang = $this->geshi->get_language_name_from_extension($ext);
+            default:
+                $lang = $this->geshi->get_language_name_from_extension($ext);
         }
 
         $this->geshi->set_language($lang);
@@ -290,7 +289,8 @@ class Plugin extends \litepubl\core\Plugin implements \litepubl\view\ViewInterfa
             }
 
             $this->saveitem(
-                $this->getfilename($dir), [
+                $this->getfilename($dir),
+                [
                 'type' => 'dir',
                 'filename' => $dir == '.' ? $root : $dir,
                 'content' => sprintf($tml_list, $list) ,

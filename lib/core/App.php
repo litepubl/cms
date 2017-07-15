@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -251,18 +251,18 @@ class App
 
     public function logException(\Throwable $e)
     {
-if (isset($this->context)) {
-$logContext = [
-'url' => $this->context->request->url,
-'status' => $this->context->response->status,
- 'itemRoute' =>  $this->context->itemRoute,
-];
-} else {
-        $logContext  = [
-'url' => $_SERVER['REQUEST_URI'] ?? '',
-'args' => $_SERVER['argv'] ?? '',
-];
-}
+        if (isset($this->context)) {
+                $logContext = [
+                'url' => $this->context->request->url,
+                'status' => $this->context->response->status,
+                 'itemRoute' =>  $this->context->itemRoute,
+                ];
+        } else {
+                $logContext  = [
+                'url' => $_SERVER['REQUEST_URI'] ?? '',
+                'args' => $_SERVER['argv'] ?? '',
+                ];
+        }
 
         $this->getLogManager()->logException($e, $logContext);
     }

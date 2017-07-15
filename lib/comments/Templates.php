@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -75,36 +75,36 @@ class Templates extends \litepubl\core\Events
         $result.= '<?php } else { ?>';
 
         switch ($view->comstatus) {
-        case 'reg':
-            $args->mesg = $this->getmesg('reqlogin', $this->getApp()->options->reguser ? 'regaccount' : false);
-            $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
-            break;
+            case 'reg':
+                $args->mesg = $this->getmesg('reqlogin', $this->getApp()->options->reguser ? 'regaccount' : false);
+                $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
+                break;
 
 
-        case 'guest':
-            $args->mesg = $this->getmesg('guest', $this->getApp()->options->reguser ? 'regaccount' : false);
-            $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
-            $result.= $this->getJS(($view->idperm == 0) && $cm->confirmguest, 'guest');
-            break;
+            case 'guest':
+                $args->mesg = $this->getmesg('guest', $this->getApp()->options->reguser ? 'regaccount' : false);
+                $result.= $theme->parseArg($theme->templates['content.post.templatecomments.regform'], $args);
+                $result.= $this->getJS(($view->idperm == 0) && $cm->confirmguest, 'guest');
+                break;
 
 
-        case 'comuser':
-            $args->mesg = $this->getmesg('comuser', $this->getApp()->options->reguser ? 'regaccount' : false);
+            case 'comuser':
+                $args->mesg = $this->getmesg('comuser', $this->getApp()->options->reguser ? 'regaccount' : false);
 
-            foreach ([
-            'name',
-            'email',
-            'url'
-            ] as $field) {
-                $args->$field = "<?php echo (isset(\$_COOKIE['comuser_$field']) ? \$_COOKIE['comuser_$field'] : ''); ?>";
-            }
+                foreach ([
+                'name',
+                'email',
+                'url'
+                ] as $field) {
+                        $args->$field = "<?php echo (isset(\$_COOKIE['comuser_$field']) ? \$_COOKIE['comuser_$field'] : ''); ?>";
+                }
 
-            $args->subscribe = false;
-            $args->content = '';
+                $args->subscribe = false;
+                $args->content = '';
 
-            $result.= $theme->parseArg($theme->templates['content.post.templatecomments.form'], $args);
-            $result.= $this->getJS(($view->idperm == 0) && $cm->confirmcomuser, 'comuser');
-            break;
+                $result.= $theme->parseArg($theme->templates['content.post.templatecomments.form'], $args);
+                $result.= $this->getJS(($view->idperm == 0) && $cm->confirmcomuser, 'comuser');
+                break;
         }
 
         $result.= '<?php } ?>';

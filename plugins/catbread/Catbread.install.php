@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -58,43 +58,43 @@ function CatbreadThemeparsed(Catbread $self, Base $theme)
             $replace = '$post.catlinks';
 
             switch ($self->similarpos) {
-            case 'top':
-                $v = $tag2 . $v;
-                break;
+                case 'top':
+                    $v = $tag2 . $v;
+                    break;
 
 
-            case 'before':
-                $replace = $tag2 . $replace;
-                break;
+                case 'before':
+                    $replace = $tag2 . $replace;
+                    break;
 
 
-            default:
-                ////ignore
+                default:
+                    ////ignore
             }
 
             switch ($self->breadpos) {
-            case 'top':
-                $v = $tag1 . $v;
-                break;
+                case 'top':
+                    $v = $tag1 . $v;
+                    break;
 
 
-            case 'before':
-                $replace = $tag1 . $replace;
-                break;
+                case 'before':
+                    $replace = $tag1 . $replace;
+                    break;
 
 
-            case 'after':
-                $replace.= $tag1;
-                break;
+                case 'after':
+                    $replace.= $tag1;
+                    break;
 
 
-            case 'replace':
-                $replace = $tag1;
-                break;
+                case 'replace':
+                    $replace = $tag1;
+                    break;
 
 
-            default:
-                ////ignore
+                default:
+                    ////ignore
             }
 
             if ($self->similarpos == 'after') {

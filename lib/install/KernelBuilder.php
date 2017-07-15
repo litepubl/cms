@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -56,9 +56,9 @@ class KernelBuilder
             }
 
             if (!in_array($filename, $rules['ignore'])
-&& !in_array($filename, $rules['before'])
- && !in_array($filename, $rules['after'])
-) {
+            && !in_array($filename, $rules['before'])
+            && !in_array($filename, $rules['after'])
+            ) {
                 $result.= "//$filename\n";
                 $result.= static ::getFile($dir . $filename);
             }
@@ -92,10 +92,10 @@ class KernelBuilder
         $a = explode("\n", $s);
 
         $result = [
-'before' => [],
- 'after' => [],
-'ignore' => [],
-];
+        'before' => [],
+        'after' => [],
+        'ignore' => [],
+        ];
 
         foreach ($a as $filename) {
             if (($filename = trim($filename)) && ($filename[0] != '#') && ($filename[0] != ';')) {

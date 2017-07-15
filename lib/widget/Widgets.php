@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -331,57 +331,57 @@ class Widgets extends \litepubl\core\Items
             }
 
             switch ($ajax) {
-            case 'disabled':
-                switch ($item['cache']) {
-                case 'cache':
-                    $content = $cache->getWidget($id, $sidebar);
+                case 'disabled':
+                    switch ($item['cache']) {
+                        case 'cache':
+                            $content = $cache->getWidget($id, $sidebar);
+                            break;
+
+
+                        case 'nocache':
+                            $widget = $this->getWidget($id);
+                            $content = $widget->getWidget($id, $sidebar);
+                            break;
+
+
+                        case 'include':
+                            $content = $view->getInclude($id, $sidebar, $item);
+                            break;
+
+
+                        case 'code':
+                            $content = $view->getCode($id, $sidebar);
+                            break;
+
+                        default:
+                            throw new \UnexpectedValueException('Unknown cache type ' . $item['cache']);
+                    }
                     break;
 
-
-                case 'nocache':
-                    $widget = $this->getWidget($id);
-                    $content = $widget->getWidget($id, $sidebar);
-                    break;
-
-
-                case 'include':
-                    $content = $view->getInclude($id, $sidebar, $item);
-                    break;
-
-
-                case 'code':
-                    $content = $view->getCode($id, $sidebar);
-                    break;
-
-                default:
-                    throw new \UnexpectedValueException('Unknown cache type ' . $item['cache']);
-                }
-                break;
-
-            case 'inline':
-                switch ($item['cache']) {
-                case 'cache':
-                    $widgetBody = $cache->getContent($id, $sidebar);
+                case 'inline':
+                    switch ($item['cache']) {
+                        case 'cache':
+                            $widgetBody = $cache->getContent($id, $sidebar);
                             $content = $view->getInline($id, $sidebar, $item, $widgetBody);
-                    break;
+                            break;
 
-                case 'nocache':
-                    $widget = $this->getWidget($id);
-                    $widgetBody = $widget->getcontent($id, $sidebar);
+                        case 'nocache':
+                            $widget = $this->getWidget($id);
+                            $widgetBody = $widget->getcontent($id, $sidebar);
                             $content = $view->getInline($id, $sidebar, $item, $widgetBody);
-                    break;
+                            break;
 
-                default:
+                        default:
                             $content = $view->getAjax($id, $sidebar, $item);
-                }
-                break;
+                    }
+                    break;
 
-            case 'ajax':
-                $content = $view->getAjax($id, $sidebar, $item);
-                break;
+                case 'ajax':
+                    $content = $view->getAjax($id, $sidebar, $item);
+                    break;
 
-            default:
-                throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
+                default:
+                    throw new \UnexpectedValueException('Unknown ajax type ' . $ajax);
             }
 
             $r = $this->onwidget(['id' => $id, 'content' => $content]);
@@ -409,28 +409,28 @@ class Widgets extends \litepubl\core\Items
         }
 
         switch ($this->items[$id]['cache']) {
-        case 'cache':
-            $cache = Cache::i();
-            $result = $cache->getcontent($id, $sidebar);
-            break;
+            case 'cache':
+                $cache = Cache::i();
+                $result = $cache->getcontent($id, $sidebar);
+                break;
 
 
-        case 'include':
-            $filename = Widget::getCacheFilename($id, $sidebar);
-            $result = $this->getApp()->cache->getString($filename);
-            if (!$result) {
-                $widget = $this->getWidget($id);
-                $result = $widget->getContent($id, $sidebar);
-                $this->getApp()->cache->setString($filename, $result);
-            }
-            break;
+            case 'include':
+                $filename = Widget::getCacheFilename($id, $sidebar);
+                $result = $this->getApp()->cache->getString($filename);
+                if (!$result) {
+                    $widget = $this->getWidget($id);
+                    $result = $widget->getContent($id, $sidebar);
+                    $this->getApp()->cache->setString($filename, $result);
+                }
+                break;
 
 
-        case 'nocache':
-        case 'code':
-            $widget = $this->getwidget($id);
-            $result = $widget->getcontent($id, $sidebar);
-            break;
+            case 'nocache':
+            case 'code':
+                $widget = $this->getwidget($id);
+                $result = $widget->getcontent($id, $sidebar);
+                break;
         }
 
         return $result;

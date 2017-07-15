@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -137,7 +137,8 @@ class Comments extends \litepubl\core\Items
     public function setStatus($id, $status)
     {
         if (!in_array(
-            $status, [
+            $status,
+            [
             'approved',
             'hold',
             'spam'
@@ -286,7 +287,8 @@ class Comments extends \litepubl\core\Items
         $lang = Lang::i('comment');
 
         $tml = strtr(
-            $theme->templates['content.post.templatecomments.comments.comment'], [
+            $theme->templates['content.post.templatecomments.comments.comment'],
+            [
             '$quotebuttons' => $view->comstatus != 'closed' ? $theme->templates['content.post.templatecomments.comments.comment.quotebuttons'] : ''
             ]
         );

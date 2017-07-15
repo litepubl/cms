@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -106,32 +106,32 @@ class Backuper extends \litepubl\core\Events
         }
 
         switch ($this->filertype) {
-        case 'ftp':
-            $result = new Ftp();
-            break;
+            case 'ftp':
+                $result = new Ftp();
+                break;
 
 
-        case 'ssh2':
-            $result = new Ssh2();
-            break;
+            case 'ssh2':
+                $result = new Ssh2();
+                break;
 
 
-        case 'socket':
-            $result = new FtpSocket();
-            break;
+            case 'socket':
+                $result = new FtpSocket();
+                break;
 
 
-        case 'file':
-            $result = Local::i();
-            break;
+            case 'file':
+                $result = Local::i();
+                break;
 
 
-        default:
-            $this->filertype = 'file';
-            $result = Local::i();
-            $result->chmod_file = 0666;
-            $result->chmod_dir = 0777;
-            break;
+            default:
+                $this->filertype = 'file';
+                $result = Local::i();
+                $result->chmod_file = 0666;
+                $result->chmod_dir = 0777;
+                break;
         }
 
         $this->__filer = $result;
@@ -165,24 +165,24 @@ class Backuper extends \litepubl\core\Events
         }
 
         switch ($this->archtype) {
-        case 'tar':
-            $this->tar = $this->newTar();
-            break;
+            case 'tar':
+                $this->tar = $this->newTar();
+                break;
 
 
-        case 'zip':
-        case 'unzip':
-            $this->zip = new \ZipArchive();
-            $filename = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
-            if ($this->zip->open($filename, \ZipArchive::CREATE) === false) {
+            case 'zip':
+            case 'unzip':
+                $this->zip = new \ZipArchive();
+                $filename = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
+                if ($this->zip->open($filename, \ZipArchive::CREATE) === false) {
                         $this->eror("Error create zip archive $filename");
-            }
-            break;
+                }
+                break;
 
 
-        default:
-            $this->unknown_archive();
-            return false;
+            default:
+                $this->unknown_archive();
+                return false;
         }
 
         return true;
@@ -191,21 +191,21 @@ class Backuper extends \litepubl\core\Events
     public function saveArchive(): string
     {
         switch ($this->archtype) {
-        case 'tar':
-            $result = $this->tar->savetostring(true);
-            $this->tar = false;
-            return $result;
+            case 'tar':
+                $result = $this->tar->savetostring(true);
+                $this->tar = false;
+                return $result;
 
-        case 'zip':
-            $filename = $this->zip->filename;
-            $this->zip->close();
-            $this->zip = false;
-            $result = file_get_contents($filename);
-            @unlink($filename);
-            return $result;
+            case 'zip':
+                $filename = $this->zip->filename;
+                $this->zip->close();
+                $this->zip = false;
+                $result = file_get_contents($filename);
+                @unlink($filename);
+                return $result;
 
-        default:
-            $this->unknown_archive();
+            default:
+                $this->unknown_archive();
         }
 
         return '';
@@ -214,28 +214,28 @@ class Backuper extends \litepubl\core\Events
     private function addfile($filename, $content, $perm)
     {
         switch ($this->archtype) {
-        case 'tar':
-            return $this->tar->addstring($content, $filename, $perm);
+            case 'tar':
+                return $this->tar->addstring($content, $filename, $perm);
 
-        case 'zip':
-            return $this->zip->addFromString($filename, $content);
+            case 'zip':
+                return $this->zip->addFromString($filename, $content);
 
-        default:
-            $this->unknown_archive();
+            default:
+                $this->unknown_archive();
         }
     }
 
     private function adddir($dir, $perm)
     {
         switch ($this->archtype) {
-        case 'tar':
-            return $this->tar->adddir($dir, $perm);
+            case 'tar':
+                return $this->tar->adddir($dir, $perm);
 
-        case 'zip':
-            return $this->zip->addEmptyDir($dir);
+            case 'zip':
+                return $this->zip->addEmptyDir($dir);
 
-        default:
-            $this->unknown_archive();
+            default:
+                $this->unknown_archive();
         }
     }
 
@@ -557,12 +557,12 @@ class Backuper extends \litepubl\core\Events
     public function uploadarch($filename, $archtype)
     {
         switch ($archtype) {
-        case 'tar':
-            return $this->uploadtar($filename);
+            case 'tar':
+                return $this->uploadtar($filename);
 
-        case 'zip':
-        case 'unzip':
-            return $this->uploadzip($filename);
+            case 'zip':
+            case 'unzip':
+                return $this->uploadzip($filename);
         }
     }
 
@@ -575,95 +575,95 @@ class Backuper extends \litepubl\core\Events
         $this->createArchive();
 
         switch ($archtype) {
-        case 'tar':
-            $this->tar->loadFromString(is_object($content) ? $content->file : $content);
-            if (!is_array($this->tar->files)) {
-                $this->tar = false;
-                return $this->errorarch();
-            }
+            case 'tar':
+                $this->tar->loadFromString(is_object($content) ? $content->file : $content);
+                if (!is_array($this->tar->files)) {
+                    $this->tar = false;
+                    return $this->errorarch();
+                }
 
-            if (is_object($content)) {
+                if (is_object($content)) {
                         $content->file = null;
-            }
-
-            $content = null;
-            $path_checked = false;
-            $path_root = false;
-
-            foreach ($this->tar->files as $i => $item) {
-                if (!($i % 50)) {
-                      $this->ping();
                 }
 
-                if (!$path_checked) {
-                    $path_checked = true;
-                    $path_root = $this->get_path_root($item['name']);
-                }
+                $content = null;
+                $path_checked = false;
+                $path_root = false;
 
-                $name = $path_root ? ltrim(substr(ltrim($item['name'], '/'), strlen($path_root)), '/') : $item['name'];
-                if (!$this->uploadFile($name, $item['file'], $item['mode'])) {
-                    return $this->errorwrite($name);
-                }
-            }
-
-            $this->onuploaded([]);
-            $this->tar = false;
-            break;
-
-
-        case 'unzip':
-        case 'zip':
-            $mode = $this->filer->chmod_file;
-            $tempfile = $this->getTempName();
-            file_put_contents($tempfile, is_object($content) ? $content->file : $content);
-            @chmod($tempfile, 0666);
-
-            if ($this->zip->open($tempfile) !== true) {
-                unlink($tempfile);
-                $this->zip = false;
-                return $this->errorarch();
-            }
-
-            if (is_object($content)) {
-                        $content->file = null;
-            }
-
-            $content = null;
-
-            $path_checked = false;
-            $path_root = false;
-
-            for ($i = 0; $i < $this->zip->numFiles; $i++) {
-                if (!($i % 50)) {
-                      $this->ping();
-                }
-
-                if ($s = $this->zip->getFromIndex($i)) {
-                    $filename = $this->zip->getNameIndex($i);
+                foreach ($this->tar->files as $i => $item) {
+                    if (!($i % 50)) {
+                          $this->ping();
+                    }
 
                     if (!$path_checked) {
                         $path_checked = true;
-                        $path_root = $this->get_path_root($filename);
+                        $path_root = $this->get_path_root($item['name']);
                     }
 
-                    $filename = $path_root ? ltrim(substr(ltrim($filename, '/'), strlen($path_root)), '/') : $filename;
-                    if (!$this->uploadfile($filename, $s, $mode)) {
-                        $this->zip->close();
-                        unlink($tempfile);
-                        return $this->errorwrite($item->Path . $item->Name);
+                    $name = $path_root ? ltrim(substr(ltrim($item['name'], '/'), strlen($path_root)), '/') : $item['name'];
+                    if (!$this->uploadFile($name, $item['file'], $item['mode'])) {
+                        return $this->errorwrite($name);
                     }
                 }
-            }
 
-            $this->onuploaded([]);
-            $this->zip->close();
-            $this->zip = false;
-            unlink($tempfile);
-            break;
+                $this->onuploaded([]);
+                $this->tar = false;
+                break;
 
 
-        default:
-            $this->unknown_archive();
+            case 'unzip':
+            case 'zip':
+                $mode = $this->filer->chmod_file;
+                $tempfile = $this->getTempName();
+                file_put_contents($tempfile, is_object($content) ? $content->file : $content);
+                @chmod($tempfile, 0666);
+
+                if ($this->zip->open($tempfile) !== true) {
+                    unlink($tempfile);
+                    $this->zip = false;
+                    return $this->errorarch();
+                }
+
+                if (is_object($content)) {
+                        $content->file = null;
+                }
+
+                $content = null;
+
+                $path_checked = false;
+                $path_root = false;
+
+                for ($i = 0; $i < $this->zip->numFiles; $i++) {
+                    if (!($i % 50)) {
+                          $this->ping();
+                    }
+
+                    if ($s = $this->zip->getFromIndex($i)) {
+                        $filename = $this->zip->getNameIndex($i);
+
+                        if (!$path_checked) {
+                            $path_checked = true;
+                            $path_root = $this->get_path_root($filename);
+                        }
+
+                        $filename = $path_root ? ltrim(substr(ltrim($filename, '/'), strlen($path_root)), '/') : $filename;
+                        if (!$this->uploadfile($filename, $s, $mode)) {
+                            $this->zip->close();
+                            unlink($tempfile);
+                            return $this->errorwrite($item->Path . $item->Name);
+                        }
+                    }
+                }
+
+                $this->onuploaded([]);
+                $this->zip->close();
+                $this->zip = false;
+                unlink($tempfile);
+                break;
+
+
+            default:
+                $this->unknown_archive();
         }
 
         $this->existingfolders = false;
@@ -776,45 +776,45 @@ class Backuper extends \litepubl\core\Events
     {
         $result = [];
         switch ($archtype) {
-        case 'tar':
-            $tar = $this->newTar();
-            $tar->loadfromstring($content);
-            if (!is_array($tar->files)) {
-                unset($tar);
-                return $this->errorarch();
-            }
-
-            foreach ($tar->files as $item) {
-                $result[$item['name']] = $item['file'];
-            }
-            unset($tar);
-            break;
-
-
-        case 'unzip':
-        case 'zip':
-            $filename = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
-            file_put_contents($filename, $content);
-            @chmod($filename, 0666);
-            $content = '';
-
-            $zip = new \ZipArchive();
-            if ($zip->open($filename) === true) {
-                for ($i = 0; $i < $zip->numFiles; $i++) {
-                    if ($s = $zip->getFromIndex($i)) {
-                        $result[$zip->getNameIndex($i) ] = $s;
-                    }
+            case 'tar':
+                $tar = $this->newTar();
+                $tar->loadfromstring($content);
+                if (!is_array($tar->files)) {
+                    unset($tar);
+                    return $this->errorarch();
                 }
 
-                $zip->close();
-            }
+                foreach ($tar->files as $item) {
+                    $result[$item['name']] = $item['file'];
+                }
+                unset($tar);
+                break;
 
-            @unlink($filename);
-            break;
+
+            case 'unzip':
+            case 'zip':
+                $filename = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
+                file_put_contents($filename, $content);
+                @chmod($filename, 0666);
+                $content = '';
+
+                $zip = new \ZipArchive();
+                if ($zip->open($filename) === true) {
+                    for ($i = 0; $i < $zip->numFiles; $i++) {
+                        if ($s = $zip->getFromIndex($i)) {
+                            $result[$zip->getNameIndex($i) ] = $s;
+                        }
+                    }
+
+                    $zip->close();
+                }
+
+                @unlink($filename);
+                break;
 
 
-        default:
-            $this->unknown_archive();
+            default:
+                $this->unknown_archive();
         }
 
         return $result;

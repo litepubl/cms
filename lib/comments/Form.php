@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -102,8 +102,8 @@ class Form extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         return '';
     }
 
-protected function checkEmpty(array $values): string
-{
+    protected function checkEmpty(array $values): string
+    {
         $lang = Lang::i('comment');
         if (!trim($values['content'])) {
             return $this->getErrorContent($lang->emptycontent);
@@ -113,14 +113,14 @@ protected function checkEmpty(array $values): string
             return $this->getErrorContent($lang->spamdetected);
         }
 
-return '';
-}
+        return '';
+    }
 
     public function processForm(array $values, $confirmed)
     {
-if ($error = $this->checkEmpty($values)) {
-return $error;
-}
+        if ($error = $this->checkEmpty($values)) {
+                return $error;
+        }
 
         $app = $this->getApp();
         $lang = Lang::i('comment');
@@ -129,9 +129,9 @@ return $error;
             return $err;
         }
 
-if (!$this->hasPerm($shortpost)) {
-return $this->context->response->forbidden();
-}
+        if (!$this->hasPerm($shortpost)) {
+                return $this->context->response->forbidden();
+        }
 
         $cm = Manager::i();
         if ($cm->checkduplicate && $cm->is_duplicate($shortpost['id'], $values['content'])) {
@@ -152,57 +152,57 @@ return $this->context->response->forbidden();
             $iduser = $app->options->user;
         } else {
             switch ($shortpost['comstatus']) {
-            case 'reg':
-                return $this->getErrorContent($lang->reg);
+                case 'reg':
+                    return $this->getErrorContent($lang->reg);
 
-            case 'guest':
-                if (!$confirmed && $cm->confirmguest) {
-                    return $this->requestConfirm($values, $shortpost);
-                }
-
-                $iduser = $cm->idguest;
-                break;
-
-
-            case 'comuser':
-                //hook in regservices social plugin
-                $r = $this->oncomuser(
-                    [
-                    'values' => $values,
-                    'confirmid' => $confirmed,
-                    'result' => false
-                    ]
-                );
-                if ($r['result']) {
-                    return $r['result'];
-                }
-
-                if (!$confirmed && $cm->confirmcomuser) {
-                    return $this->requestConfirm($values, $shortpost);
-                }
-
-                if ($err = $this->processcomuser($values)) {
-                    return $err;
-                }
-
-                $users = Users::i();
-                if ($iduser = $users->emailExists($values['email'])) {
-                    if ('comuser' != $users->getValue($iduser, 'status')) {
-                        return $this->getErrorContent($lang->emailregistered);
+                case 'guest':
+                    if (!$confirmed && $cm->confirmguest) {
+                        return $this->requestConfirm($values, $shortpost);
                     }
-                } else {
-                    $iduser = $cm->addcomUser($values['name'], $values['email'], $values['url'], $values['ip']);
-                }
 
-                $cookies = [];
-                foreach ([
-                'name',
-                'email',
-                'url'
-                ] as $field) {
-                    $cookies["comuser_$field"] = $values[$field];
-                }
-                break;
+                    $iduser = $cm->idguest;
+                    break;
+
+
+                case 'comuser':
+                    //hook in regservices social plugin
+                    $r = $this->oncomuser(
+                        [
+                        'values' => $values,
+                        'confirmid' => $confirmed,
+                        'result' => false
+                        ]
+                    );
+                    if ($r['result']) {
+                        return $r['result'];
+                    }
+
+                    if (!$confirmed && $cm->confirmcomuser) {
+                        return $this->requestConfirm($values, $shortpost);
+                    }
+
+                    if ($err = $this->processcomuser($values)) {
+                        return $err;
+                    }
+
+                        $users = Users::i();
+                    if ($iduser = $users->emailExists($values['email'])) {
+                        if ('comuser' != $users->getValue($iduser, 'status')) {
+                            return $this->getErrorContent($lang->emailregistered);
+                        }
+                    } else {
+                        $iduser = $cm->addcomUser($values['name'], $values['email'], $values['url'], $values['ip']);
+                    }
+
+                        $cookies = [];
+                    foreach ([
+                        'name',
+                        'email',
+                        'url'
+                        ] as $field) {
+                        $cookies["comuser_$field"] = $values[$field];
+                    }
+                    break;
             }
         }
 
@@ -221,23 +221,23 @@ return $this->context->response->forbidden();
 
         //subscribe by email
         switch ($user[Users::STATUS]) {
-        case Users::APPROVED:
-            if ($user['email'] != '') {
-                // subscribe if its first comment
-                if (1 == Comments::i()->db->getcount("post = {$shortpost['id']} and author = $iduser")) {
-                    if ('enabled' == UserOptions::i()->getvalue($iduser, 'subscribe')) {
-                        Subscribers::i()->update($shortpost['id'], $iduser, true);
+            case Users::APPROVED:
+                if ($user['email'] != '') {
+                    // subscribe if its first comment
+                    if (1 == Comments::i()->db->getcount("post = {$shortpost['id']} and author = $iduser")) {
+                        if ('enabled' == UserOptions::i()->getvalue($iduser, 'subscribe')) {
+                            Subscribers::i()->update($shortpost['id'], $iduser, true);
+                        }
                     }
                 }
-            }
-            break;
+                break;
 
 
-        case Users::COMUSER:
-            if (('comuser' == $shortpost['comstatus']) && $cm->comuser_subscribe) {
-                Subscribers::i()->update($shortpost['id'], $iduser, $values['subscribe']);
-            }
-            break;
+            case Users::COMUSER:
+                if (('comuser' == $shortpost['comstatus']) && $cm->comuser_subscribe) {
+                    Subscribers::i()->update($shortpost['id'], $iduser, $values['subscribe']);
+                }
+                break;
         }
 
         //$post->lastcommenturl;
@@ -285,7 +285,7 @@ return $this->context->response->forbidden();
         session_write_close();
 
         if ((int)$shortpost['idperm']) {
-$this->getPermHeader($shortpost);
+            $this->getPermHeader($shortpost);
         }
 
         return $this->confirm($confirmid);
@@ -298,16 +298,16 @@ $this->getPermHeader($shortpost);
         $perm->setResponse($this->context->response, $post);
     }
 
-protected function hasPerm(array $shortpost): bool
-{
+    protected function hasPerm(array $shortpost): bool
+    {
         if ((int)$shortpost['idperm']) {
             $post = Post::i((int)$shortpost['id']);
             $perm = Perm::i($post->idperm);
-return $perm->hasperm($post);
+            return $perm->hasperm($post);
         }
 
-return true;
-}
+        return true;
+    }
 
     private function getConfirmform($confirmid)
     {

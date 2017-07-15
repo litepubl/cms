@@ -1,8 +1,8 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
  * @version   7.08
@@ -26,7 +26,8 @@ class GetPerm
         $lang->section = 'perms';
         $theme = Theme::i();
         $result = strtr(
-            $theme->templates['content.admin.combo'], [
+            $theme->templates['content.admin.combo'],
+            [
             '$lang.$name' => $lang->perm,
             '$name' => $name,
             '$value' => static ::items($idperm)
@@ -57,7 +58,6 @@ class GetPerm
         foreach ($groups->items as $id => $item) {
             $checked = in_array($id, $idgroups) ? 'checked="checked"' : '';
             $result .= $theme->getInput('checkbox', "idgroup-$id", "value=\"$id\" $checked", $item['title']);
-
         }
 
         return $result;
