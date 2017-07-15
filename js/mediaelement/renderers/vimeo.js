@@ -6,6 +6,7 @@
  * using a variety of technologies (pure JavaScript, Flash, iframe)
  *
  * Copyright 2010-2017, John Dyer (http://j.hn/)
+ * Maintained by, Rafael Miranda (rafa8626@gmail.com)
  * License: MIT
  *
  */(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
@@ -346,7 +347,7 @@ var vimeoIframeRenderer = {
 		var height = mediaElement.originalNode.height,
 		    width = mediaElement.originalNode.width,
 		    vimeoContainer = document.createElement('iframe'),
-		    standardUrl = '//player.vimeo.com/video/' + VimeoApi.getVimeoId(mediaFiles[0].src);
+		    standardUrl = 'https://player.vimeo.com/video/' + VimeoApi.getVimeoId(mediaFiles[0].src);
 
 		var queryArgs = ~mediaFiles[0].src.indexOf('?') ? '?' + mediaFiles[0].src.slice(mediaFiles[0].src.indexOf('?') + 1) : '';
 		if (queryArgs && mediaElement.originalNode.autoplay && queryArgs.indexOf('autoplay') === -1) {

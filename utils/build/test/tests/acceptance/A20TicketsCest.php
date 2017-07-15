@@ -23,7 +23,7 @@ class A20TicketsCest extends \Page\Editor
 
         $this->screenShot('editor');
         $i->click($this->codeTab);
-        $i->waitForElement($this->codeEditor, 1);
+        $i->waitForElementVisible($this->codeEditor, 1);
         $i->fillField($this->codeEditor, '<?php echo  \'Hello world\';');
         $this->screenShot('code');
         $this->submit();
