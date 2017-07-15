@@ -1,8 +1,6 @@
 <?php
 namespace Codeception\Lib\Connector;
 
-use Codeception\Exception\ConfigurationException;
-use Codeception\Exception\ModuleConfigException;
 use Codeception\Util\Uri;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Cookie\CookieJar;
@@ -82,13 +80,18 @@ class Guzzle6 extends Client
         unset($this->requestOptions['headers'][$name]);
     }
 
-    public function setAuth($username, $password)
+    /**
+     * @param string $username
+     * @param string $password
+     * @param string $type  Default: 'basic'
+     */
+    public function setAuth($username, $password, $type = 'basic')
     {
         if (!$username) {
             unset($this->requestOptions['auth']);
             return;
         }
-        $this->requestOptions['auth'] = [$username, $password];
+        $this->requestOptions['auth'] = [$username, $password, $type];
     }
 
     /**
@@ -155,7 +158,7 @@ class Guzzle6 extends Client
     public function getAbsoluteUri($uri)
     {
         $baseUri = $this->client->getConfig('base_uri');
-        if (strpos($uri, '://') === false) {
+        if (strpos($uri, '://') === false && strpos($uri, '//') !== 0) {
             if (strpos($uri, '/') === 0) {
                 $baseUriPath = $baseUri->getPath();
                 if (!empty($baseUriPath) && strpos($uri, $baseUriPath) === 0) {
@@ -223,7 +226,7 @@ class Guzzle6 extends Client
 
     protected function extractFormData(BrowserKitRequest $request)
     {
-        if (!in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH'])) {
+        if (!in_array(strtoupper($request->getMethod()), ['POST', 'PUT', 'PATCH', 'DELETE'])) {
             return null;
         }
 

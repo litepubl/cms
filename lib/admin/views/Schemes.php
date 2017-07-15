@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\views;
@@ -47,25 +47,25 @@ class Schemes extends \litepubl\admin\Menu
             }
 
             switch ($customadmin[$name]['type']) {
-            case 'text':
-            case 'editor':
-                $value = Theme::quote($value);
-                break;
+                case 'text':
+                case 'editor':
+                    $value = Theme::quote($value);
+                    break;
 
 
-            case 'checkbox':
-                $value = $value ? 'checked="checked"' : '';
-                break;
+                case 'checkbox':
+                    $value = $value ? 'checked="checked"' : '';
+                    break;
 
 
-            case 'combo':
-                $value = $theme->comboItems($customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
-                break;
+                case 'combo':
+                    $value = $theme->comboItems($customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
+                    break;
 
 
-            case 'radio':
-                $value = $theme->getRadioItems("custom-$name", $customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
-                break;
+                case 'radio':
+                    $value = $theme->getRadioItems("custom-$name", $customadmin[$name]['values'], array_search($value, $customadmin[$name]['values']));
+                    break;
             }
 
             $result.= $theme->getinput($customadmin[$name]['type'], "custom-$name", $value, $theme->quote($customadmin[$name]['title']));
@@ -88,20 +88,20 @@ class Schemes extends \litepubl\admin\Menu
             }
 
             switch ($customadmin[$name]['type']) {
-            case 'checkbox':
-                $schema->data['custom'][$name] = isset($_POST["custom-$name"]);
-                break;
+                case 'checkbox':
+                    $schema->data['custom'][$name] = isset($_POST["custom-$name"]);
+                    break;
 
 
-            case 'radio':
-            case 'combo':
-                $schema->data['custom'][$name] = $customadmin[$name]['values'][(int)$_POST["custom-$name"]];
-                break;
+                case 'radio':
+                case 'combo':
+                    $schema->data['custom'][$name] = $customadmin[$name]['values'][(int)$_POST["custom-$name"]];
+                    break;
 
 
-            default:
-                $schema->data['custom'][$name] = $_POST["custom-$name"];
-                break;
+                default:
+                    $schema->data['custom'][$name] = $_POST["custom-$name"];
+                    break;
             }
         }
     }
@@ -115,76 +115,78 @@ class Schemes extends \litepubl\admin\Menu
         $args = new Args();
 
         switch ($this->name) {
-        case 'views':
-            $lang->addsearch('views');
+            case 'views':
+                $lang->addsearch('views');
 
-            $id = $this->getparam('idschema', 0);
-            if (!$id || !$schemes->itemExists($id)) {
-                $adminurl = $this->adminurl . 'schema';
-                $result = $admin->h($admin->link($this->url . '/addschema/', $lang->add));
+                $id = $this->getparam('idschema', 0);
+                if (!$id || !$schemes->itemExists($id)) {
+                    $adminurl = $this->adminurl . 'schema';
+                    $result = $admin->h($admin->link($this->url . '/addschema/', $lang->add));
 
-                $tb = $this->newTable();
-                $tb->setStruct(
-                    [
-                    [
+                    $tb = $this->newTable();
+                    $tb->setStruct(
+                        [
+                        [
                         $lang->name,
                         "<a href=\"$adminurl=\$id\"><span class=\"fa fa-cog\"></span> \$name</a>"
-                    ] ,
+                        ] ,
 
-                    [
+                        [
                         $lang->widgets,
                         "<a href=\"{$this->link}widgets/?idschema=\$id\"><span class=\"fa fa-list-alt\"></span> $lang->widgets</a>"
-                    ] ,
+                        ] ,
 
-                    [
+                        [
                         $lang->delete,
                         "<a href=\"$adminurl=\$id&action=delete\" class=\"confirm-delete-link\"><span class=\"fa fa-remove\"></span> $lang->delete</a>"
-                    ]
-                    ]
+                        ]
+                        ]
+                    );
+
+                    $result.= $tb->build($schemes->items);
+                    return $result;
+                }
+
+                $result = GetSchema::form($this->url);
+                $tabs = $this->newTabs();
+                $menuitems = ['menu' => $lang->stdmenu, 'admin' => $lang->adminmenu, ];
+
+                $itemview = $schemes->items[$id];
+                $args->add($itemview);
+
+                $dirlist = Filer::getDir($this->getApp()->paths->themes);
+                sort($dirlist);
+                $list = [];
+                foreach ($dirlist as $dir) {
+                    if (!Str::begin($dir, 'admin')) {
+                        $list[$dir] = $dir;
+                    }
+                }
+
+                $args->themename = $this->theme->comboItems($list, $itemview['themename']);
+
+                $list = [];
+                foreach ($dirlist as $dir) {
+                    if (Str::begin($dir, 'admin')) {
+                        $list[$dir] = $dir;
+                    }
+                }
+
+                $args->adminname = $this->theme->comboItems($list, $itemview['adminname']);
+                $args->postannounce = $this->theme->comboItems(
+                    [
+                    'excerpt' => $lang->postexcerpt,
+                    'card' => $lang->postcard,
+                    'lite' => $lang->postlite
+                    ],
+                    $itemview['postannounce']
                 );
 
-                $result.= $tb->build($schemes->items);
-                return $result;
-            }
+                    $args->menu = $this->theme->comboItems($menuitems, strpos($itemview['menuclass'], '\admin') ? 'admin' : 'menus');
 
-            $result = GetSchema::form($this->url);
-            $tabs = $this->newTabs();
-            $menuitems = ['menu' => $lang->stdmenu, 'admin' => $lang->adminmenu, ];
-
-            $itemview = $schemes->items[$id];
-            $args->add($itemview);
-
-            $dirlist = Filer::getDir($this->getApp()->paths->themes);
-            sort($dirlist);
-            $list = [];
-            foreach ($dirlist as $dir) {
-                if (!Str::begin($dir, 'admin')) {
-                    $list[$dir] = $dir;
-                }
-            }
-
-            $args->themename = $this->theme->comboItems($list, $itemview['themename']);
-
-            $list = [];
-            foreach ($dirlist as $dir) {
-                if (Str::begin($dir, 'admin')) {
-                    $list[$dir] = $dir;
-                }
-            }
-
-            $args->adminname = $this->theme->comboItems($list, $itemview['adminname']);
-            $args->postannounce = $this->theme->comboItems(
-                [
-                'excerpt' => $lang->postexcerpt,
-                'card' => $lang->postcard,
-                'lite' => $lang->postlite
-                ], $itemview['postannounce']
-            );
-
-            $args->menu = $this->theme->comboItems($menuitems, strpos($itemview['menuclass'], '\admin') ? 'admin' : 'menus');
-
-            $tabs->add(
-                $lang->name, '[text=name]
+                    $tabs->add(
+                        $lang->name,
+                        '[text=name]
       [combo=themename]
       [combo=adminname]' . ($id == 1 ? '' : ('[checkbox=customsidebar] [checkbox=disableajax]')) . '[checkbox=hovermenu]
       [combo=menu]
@@ -192,41 +194,41 @@ class Schemes extends \litepubl\admin\Menu
       [text=perpage]
       [checkbox=invertorder]
       '
-            );
+                    );
 
-            $schema = Schema::i($id);
-            if (count($schema->custom)) {
-                $tabs->add($lang->custom, $this->get_custom($schema));
-            }
+                    $schema = Schema::i($id);
+                if (count($schema->custom)) {
+                    $tabs->add($lang->custom, $this->get_custom($schema));
+                }
 
-            $result.= $admin->help($lang->help);
+                    $result.= $admin->help($lang->help);
 
-            $args->formtitle = $lang->edit;
-            $result.= $admin->form($tabs->get(), $args);
-            break;
-
-
-        case 'addview':
-        case 'addschema':
-            $args->formtitle = $lang->addschema;
-            $result.= $admin->form('[text=name]', $args);
-            break;
+                    $args->formtitle = $lang->edit;
+                    $result.= $admin->form($tabs->get(), $args);
+                break;
 
 
-        case 'defaults':
-            $items = '';
-            $theme = $this->theme;
-            $tml = $theme->templates['content.admin.combo'];
-            foreach ($schemes->defaults as $name => $id) {
-                $args->name = $name;
-                $args->value = GetSchema::combo($id);
-                $args->data['$lang.$name'] = $lang->$name;
-                $items.= $theme->parseArg($tml, $args);
-            }
-            $args->items = $items;
-            $args->formtitle = $lang->defaultsform;
-            $result.= $theme->parseArg($theme->templates['content.admin.form'], $args);
-            break;
+            case 'addview':
+            case 'addschema':
+                $args->formtitle = $lang->addschema;
+                $result.= $admin->form('[text=name]', $args);
+                break;
+
+
+            case 'defaults':
+                $items = '';
+                $theme = $this->theme;
+                $tml = $theme->templates['content.admin.combo'];
+                foreach ($schemes->defaults as $name => $id) {
+                    $args->name = $name;
+                    $args->value = GetSchema::combo($id);
+                    $args->data['$lang.$name'] = $lang->$name;
+                    $items.= $theme->parseArg($tml, $args);
+                }
+                $args->items = $items;
+                $args->formtitle = $lang->defaultsform;
+                $result.= $theme->parseArg($theme->templates['content.admin.form'], $args);
+                break;
         }
 
         return $result;
@@ -236,58 +238,58 @@ class Schemes extends \litepubl\admin\Menu
     {
         $result = '';
         switch ($this->name) {
-        case 'views':
-            $schemes = SchemaItems::i();
-            $idschema = (int)$this->getparam('idschema', 0);
-            if (!$idschema || !$schemes->itemExists($idschema)) {
-                return '';
-            }
-
-            if ($this->action == 'delete') {
-                if ($idschema > 1) {
-                    $schemes->delete($idschema);
+            case 'views':
+                $schemes = SchemaItems::i();
+                $idschema = (int)$this->getparam('idschema', 0);
+                if (!$idschema || !$schemes->itemExists($idschema)) {
+                    return '';
                 }
 
-                return '';
-            }
+                if ($this->action == 'delete') {
+                    if ($idschema > 1) {
+                        $schemes->delete($idschema);
+                    }
 
-            $schema = Schema::i($idschema);
-            if ($idschema > 1) {
-                $schema->customsidebar = isset($_POST['customsidebar']);
-                $schema->disableajax = isset($_POST['disableajax']);
-            }
+                    return '';
+                }
 
-            $schema->name = trim($_POST['name']);
-            $schema->themename = trim($_POST['themename']);
-            $schema->adminname = trim($_POST['adminname']);
-            $schema->menuclass = $_POST['menu'] == 'admin' ? 'litepubl\admin\Menus' : 'litepubl\pages\Menus';
-            $schema->hovermenu = isset($_POST['hovermenu']);
-            $schema->postannounce = $_POST['postannounce'];
-            $schema->perpage = (int)$_POST['perpage'];
-            $schema->invertorder = isset($_POST['invertorder']);
+                $schema = Schema::i($idschema);
+                if ($idschema > 1) {
+                    $schema->customsidebar = isset($_POST['customsidebar']);
+                    $schema->disableajax = isset($_POST['disableajax']);
+                }
 
-            $this->set_custom($idschema);
-            $schema->save();
-            break;
+                $schema->name = trim($_POST['name']);
+                $schema->themename = trim($_POST['themename']);
+                $schema->adminname = trim($_POST['adminname']);
+                $schema->menuclass = $_POST['menu'] == 'admin' ? 'litepubl\admin\Menus' : 'litepubl\pages\Menus';
+                $schema->hovermenu = isset($_POST['hovermenu']);
+                $schema->postannounce = $_POST['postannounce'];
+                $schema->perpage = (int)$_POST['perpage'];
+                $schema->invertorder = isset($_POST['invertorder']);
+
+                $this->set_custom($idschema);
+                $schema->save();
+                break;
 
 
-        case 'addview':
-        case 'addschema':
-            $name = trim($_POST['name']);
-            if ($name) {
+            case 'addview':
+            case 'addschema':
+                $name = trim($_POST['name']);
+                if ($name) {
+                    $schemes = SchemaItems::i();
+                    $id = $schemes->add($name);
+                }
+                break;
+
+
+            case 'defaults':
                 $schemes = SchemaItems::i();
-                $id = $schemes->add($name);
-            }
-            break;
-
-
-        case 'defaults':
-            $schemes = SchemaItems::i();
-            foreach ($schemes->defaults as $name => $id) {
-                $schemes->defaults[$name] = (int)$_POST[$name];
-            }
-            $schemes->save();
-            break;
+                foreach ($schemes->defaults as $name => $id) {
+                    $schemes->defaults[$name] = (int)$_POST[$name];
+                }
+                $schemes->save();
+                break;
         }
 
         Base::clearCache();

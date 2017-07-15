@@ -1,10 +1,10 @@
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- *  copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *  copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
- *  version   7.07
+ *  version   7.08
   */
 
 (function($) {
@@ -55,39 +55,39 @@
         }
       })
 
-    .on('mouseenter.lazypopover focus.lazypopover click.lazypopover', '.lazy-popover', function(event) {
-      var self = $(this)
-        .removeClass('lazy-popover')
-        .addClass('popover-toggle')
-        .initpopover();
+      .on('mouseenter.lazypopover focus.lazypopover click.lazypopover', '.lazy-popover', function(event) {
+        var self = $(this)
+          .removeClass('lazy-popover')
+          .addClass('popover-toggle')
+          .initpopover();
 
-      if (event.type == 'click') {
-        event.preventDefault();
-        var trigger = self.data("bs.popover").options.trigger;
-        if (trigger.indexOf('click') != -1) {
+        if (event.type == 'click') {
+          event.preventDefault();
+          var trigger = self.data("bs.popover").options.trigger;
+          if (trigger.indexOf('click') != -1) {
+            self.trigger(event);
+          }
+        } else {
           self.trigger(event);
         }
-      } else {
-        self.trigger(event);
-      }
-    })
+      })
 
-    .on("click.singlepopover", function(event) {
-      if (!popovers.length) return;
+      .on("click.singlepopover", function(event) {
+        if (!popovers.length) return;
 
-      var target = event.target;
-      for (var i = popovers.length - 1; i >= 0; i--) {
-        if (target === popovers[i]) return;
-        if ($.contains(popovers[i], target)) return;
-      }
+        var target = event.target;
+        for (var i = popovers.length - 1; i >= 0; i--) {
+          if (target === popovers[i]) return;
+          if ($.contains(popovers[i], target)) return;
+        }
 
-      if ($(target).closest(".popover").length) return;
+        if ($(target).closest(".popover").length) return;
 
-      for (var i = popovers.length - 1; i >= 0; i--) {
-        $(popovers[i]).popover("hide");
-      }
+        for (var i = popovers.length - 1; i >= 0; i--) {
+          $(popovers[i]).popover("hide");
+        }
 
-    });
+      });
   });
 
 })(jQuery);

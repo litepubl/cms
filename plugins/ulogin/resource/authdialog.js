@@ -1,10 +1,10 @@
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- *  copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *  copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
- *  version   7.07
+ *  version   7.08
   */
 
 (function($, document, window) {
@@ -20,6 +20,8 @@
     //instancess
     email: false,
     ulogin: false,
+    // message place before form
+    beforeForm: "#before-commentform",
     // opened flag
     dialog: false,
     statusline: false,
@@ -65,15 +67,17 @@
           params: {
             idpost: ltoptions.idpost
           },
-          callback: function(r) {
-            $("#before-commentform").html(r);
-          },
-
+          callback: $.proxy(this.commentsLogged, this),
           error: function(message, code) {
             $.errorbox(message);
           }
         }
       });
+    },
+
+    commentsLogged: function(html) {
+      $(this.beforeForm).html(html);
+      ltoptions.theme.comments.form.off("submit.confirmcomment");
     },
 
     open: function(args) {

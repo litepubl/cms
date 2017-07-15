@@ -10,27 +10,57 @@ class Asserts extends CodeceptionModule
 {
 
     /**
-     * Checks that two variables are equal.
+     * Checks that two variables are equal. If you're comparing floating-point values,
+     * you can specify the optional "delta" parameter which dictates how great of a precision
+     * error are you willing to tolerate in order to consider the two values equal.
+     *
+     * Regular example:
+     * ```php
+     * <?php
+     * $I->assertEquals($element->getChildrenCount(), 5);
+     * ```
+     *
+     * Floating-point example:
+     * ```php
+     * <?php
+     * $I->assertEquals($calculator->add(0.1, 0.2), 0.3, 'Calculator should add the two numbers correctly.', 0.01);
+     * ```
      *
      * @param        $expected
      * @param        $actual
      * @param string $message
+     * @param float  $delta
      */
-    public function assertEquals($expected, $actual, $message = '')
+    public function assertEquals($expected, $actual, $message = '', $delta = 0.0)
     {
-        parent::assertEquals($expected, $actual, $message);
+        parent::assertEquals($expected, $actual, $message, $delta);
     }
 
     /**
-     * Checks that two variables are not equal
+     * Checks that two variables are not equal. If you're comparing floating-point values,
+     * you can specify the optional "delta" parameter which dictates how great of a precision
+     * error are you willing to tolerate in order to consider the two values not equal.
+     *
+     * Regular example:
+     * ```php
+     * <?php
+     * $I->assertNotEquals($element->getChildrenCount(), 0);
+     * ```
+     *
+     * Floating-point example:
+     * ```php
+     * <?php
+     * $I->assertNotEquals($calculator->add(0.1, 0.2), 0.4, 'Calculator should add the two numbers correctly.', 0.01);
+     * ```
      *
      * @param        $expected
      * @param        $actual
      * @param string $message
+     * @param float  $delta
      */
-    public function assertNotEquals($expected, $actual, $message = '')
+    public function assertNotEquals($expected, $actual, $message = '', $delta = 0.0)
     {
-        parent::assertNotEquals($expected, $actual, $message);
+        parent::assertNotEquals($expected, $actual, $message, $delta);
     }
 
     /**
@@ -39,7 +69,6 @@ class Asserts extends CodeceptionModule
      * @param        $expected
      * @param        $actual
      * @param string $message
-     * @return mixed|void
      */
     public function assertSame($expected, $actual, $message = '')
     {
@@ -248,7 +277,7 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertGreaterOrEquals($expected, $actual, $description = null)
+    public function assertGreaterOrEquals($expected, $actual, $description = '')
     {
         $this->assertGreaterThanOrEqual($expected, $actual, $description);
     }
@@ -258,7 +287,7 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertLessOrEquals($expected, $actual, $description = null)
+    public function assertLessOrEquals($expected, $actual, $description = '')
     {
         $this->assertLessThanOrEqual($expected, $actual, $description);
     }
@@ -267,7 +296,7 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertIsEmpty($actual, $description = null)
+    public function assertIsEmpty($actual, $description = '')
     {
         $this->assertEmpty($actual, $description);
     }
@@ -277,7 +306,7 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertArrayHasKey($key, $actual, $description = null)
+    public function assertArrayHasKey($key, $actual, $description = '')
     {
         parent::assertArrayHasKey($key, $actual, $description);
     }
@@ -287,9 +316,19 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertArrayNotHasKey($key, $actual, $description = null)
+    public function assertArrayNotHasKey($key, $actual, $description = '')
     {
         parent::assertArrayNotHasKey($key, $actual, $description);
+    }
+
+    /**
+     * @param $expectedCount
+     * @param $actual
+     * @param $description
+     */
+    public function assertCount($expectedCount, $actual, $description = '')
+    {
+        parent::assertCount($expectedCount, $actual, $description);
     }
 
     /**
@@ -297,7 +336,7 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertInstanceOf($class, $actual, $description = null)
+    public function assertInstanceOf($class, $actual, $description = '')
     {
         parent::assertInstanceOf($class, $actual, $description);
     }
@@ -307,7 +346,7 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertNotInstanceOf($class, $actual, $description = null)
+    public function assertNotInstanceOf($class, $actual, $description = '')
     {
         parent::assertNotInstanceOf($class, $actual, $description);
     }
@@ -317,7 +356,7 @@ class Asserts extends CodeceptionModule
      * @param $actual
      * @param $description
      */
-    public function assertInternalType($type, $actual, $description = null)
+    public function assertInternalType($type, $actual, $description = '')
     {
         parent::assertInternalType($type, $actual, $description);
     }

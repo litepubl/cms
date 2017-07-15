@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\view;
@@ -50,7 +50,8 @@ class Admin extends Base
             foreach ($m as $item) {
                 $name = $item[1];
                 $replace = strtr(
-                    $this->templates['tabs.panel'], [
+                    $this->templates['tabs.panel'],
+                    [
                     '$id' => $name,
                     '$content' => trim($item[2]) ,
                     ]
@@ -70,69 +71,74 @@ class Admin extends Base
                 $varname = '$' . $name;
 
                 switch ($type) {
-                case 'editor':
-                case 'text':
-                case 'email':
-                case 'password':
-                    if (isset($args->data[$varname])) {
-                        $args->data[$varname] = static ::quote($args->data[$varname]);
-                    } else {
-                        $args->data[$varname] = '';
-                    }
+                    case 'editor':
+                    case 'text':
+                    case 'email':
+                    case 'password':
+                        if (isset($args->data[$varname])) {
+                            $args->data[$varname] = static ::quote($args->data[$varname]);
+                        } else {
+                            $args->data[$varname] = '';
+                        }
 
-                    $replace = strtr(
-                        $theme->templates["content.admin.$type"], [
-                        '$name' => $name,
-                        '$value' => $varname
-                        ]
-                    );
-                    break;
-
-
-                case 'calendar':
-                    $replace = $this->getcalendar($name, $args->data[$varname]);
-                    break;
+                            $replace = strtr(
+                                $theme->templates["content.admin.$type"],
+                                [
+                                '$name' => $name,
+                                '$value' => $varname
+                                ]
+                            );
+                        break;
 
 
-                case 'tab':
-                    $replace = strtr(
-                        $this->templates['tabs.tab'], [
-                        '$id' => $name,
-                        '$title' => $lang->__get($name) ,
-                        '$url' => '',
-                        ]
-                    );
-                    break;
+                    case 'calendar':
+                        $replace = $this->getcalendar($name, $args->data[$varname]);
+                        break;
 
 
-                case 'ajaxtab':
-                    $replace = strtr(
-                        $this->templates['tabs.tab'], [
-                        '$id' => $name,
-                        '$title' => $lang->__get($name) ,
-                        '$url' => "\$ajax=$name",
-                        ]
-                    );
-                    break;
+                    case 'tab':
+                        $replace = strtr(
+                            $this->templates['tabs.tab'],
+                            [
+                            '$id' => $name,
+                            '$title' => $lang->__get($name) ,
+                            '$url' => '',
+                            ]
+                        );
+                        break;
 
 
-                case 'tabpanel':
-                    $replace = strtr(
-                        $this->templates['tabs.panel'], [
-                        '$id' => $name,
-                        '$content' => isset($args->data[$varname]) ? $varname : '',
-                        ]
-                    );
-                    break;
+                    case 'ajaxtab':
+                        $replace = strtr(
+                            $this->templates['tabs.tab'],
+                            [
+                            '$id' => $name,
+                            '$title' => $lang->__get($name) ,
+                            '$url' => "\$ajax=$name",
+                            ]
+                        );
+                        break;
 
 
-                default:
-                    $replace = strtr(
-                        $theme->templates["content.admin.$type"], [
-                        '$name' => $name,
-                        '$value' => $varname
-                        ]
-                    );
+                    case 'tabpanel':
+                        $replace = strtr(
+                            $this->templates['tabs.panel'],
+                            [
+                            '$id' => $name,
+                            '$content' => isset($args->data[$varname]) ? $varname : '',
+                            ]
+                        );
+                        break;
+
+
+                    default:
+                        $replace = strtr(
+                            $theme->templates["content.admin.$type"],
+                            [
+                            '$name' => $name,
+                            '$value' => $varname
+                            ]
+                        );
                 }
 
                 $result = str_replace($item[0], $replace, $result);
@@ -158,7 +164,8 @@ class Admin extends Base
     public function getTable(string $head, string $body, string $footer = ''): string
     {
         return strtr(
-            $this->templates['table'], [
+            $this->templates['table'],
+            [
             '$class' => Theme::i()->templates['content.admin.tableclass'],
             '$head' => $head,
             '$body' => $body,
@@ -186,7 +193,8 @@ class Admin extends Base
     public function getSection(string $title, string $content): string
     {
         return strtr(
-            $this->templates['section'], [
+            $this->templates['section'],
+            [
             '$title' => $title,
             '$content' => $content
             ]
@@ -196,7 +204,8 @@ class Admin extends Base
     public function getErr(string $content): string
     {
         return strtr(
-            $this->templates['error'], [
+            $this->templates['error'],
+            [
             '$title' => Lang::get('default', 'error') ,
             '$content' => $content
             ]

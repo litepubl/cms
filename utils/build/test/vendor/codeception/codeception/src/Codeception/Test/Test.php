@@ -2,6 +2,7 @@
 namespace Codeception\Test;
 
 use Codeception\TestInterface;
+use Codeception\Util\ReflectionHelper;
 
 /**
  * The most simple testcase (with only one test in it) which can be executed by PHPUnit/Codeception.
@@ -65,6 +66,11 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     final public function run(\PHPUnit_Framework_TestResult $result = null)
     {
         $this->testResult = $result;
+
+        $status = self::STATUS_PENDING;
+        $time = 0;
+        $e = null;
+        
         $result->startTest($this);
 
         foreach ($this->hooks as $hook) {
@@ -73,10 +79,9 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
             }
         }
 
-        $status = self::STATUS_PENDING;
-        $time = 0;
-        $e = null;
-        if (!$this->ignored) {
+        $failedToStart = ReflectionHelper::readPrivateProperty($result, 'lastTestFailed');
+
+        if (!$this->ignored && !$failedToStart) {
             \PHP_Timer::start();
             try {
                 $this->test();
@@ -128,5 +133,4 @@ abstract class Test implements TestInterface, Interfaces\Descriptive
     {
         $this->ignored = $ignored;
     }
-
 }

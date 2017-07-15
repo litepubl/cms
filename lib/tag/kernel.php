@@ -346,7 +346,8 @@ class Common extends \litepubl\core\Items
         }
 
         if (!in_array(
-            $sortname, [
+            $sortname,
+            [
             'title',
             'itemscount',
             'customorder',
@@ -437,7 +438,9 @@ class Common extends \litepubl\core\Items
     public function getSitemap(int $from, int $count)
     {
         return $this->externalfunc(
-            __class__, 'Getsitemap', [
+            __class__,
+            'Getsitemap',
+            [
             $from,
             $count
             ]
@@ -865,12 +868,18 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     public function getCont_all()
     {
         return sprintf(
-            '<ul>%s</ul>', $this->getSorted(
+            '<ul>%s</ul>',
+            $this->getSorted(
                 [
                 'item' => '<li><a href="$link" title="$title">$title</a>$subcount</li>',
                 'subcount' => '<strong>($itemscount)</strong>',
                 'subitems' => '<ul>$item</ul>'
-                ], 0, 'count', 0, 0, false
+                ],
+                0,
+                'count',
+                0,
+                0,
+                false
             )
         );
     }
@@ -890,4 +899,3 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         return $result;
     }
 }
-

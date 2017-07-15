@@ -1,8 +1,8 @@
 SETLOCAL  
-set less=node D:\OpenServer\modules\node_modules\less\bin\lessc
-set css=node D:\OpenServer\modules\node_modules\clean-css\bin\cleancss
+set less=node C:\OpenServer\domains\builder.cms\node_modules\less\bin\lessc
+set css=node C:\OpenServer\domains\builder.cms\node_modules\clean-css-cli\bin\cleancss 
 rem set css=java -jar d:\OpenServer\domains\cms\build\compress-javascript\com.jar --type css
-set home=d:\OpenServer\domains\cms.cms
+set home=c:\OpenServer\domains\cms.cms
 set lesspath=%home%\utils\less\
 cd %home%\themes\default\css
 del %lesspath%bootstrap\variables.less

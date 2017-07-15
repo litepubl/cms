@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\posts;
@@ -123,67 +123,70 @@ class Ajax extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
         $vars->post = $post;
 
         switch ($_GET['get']) {
-        case 'tags':
-            $result = $theme->getInput('text', 'tags', $post->tagnames, $lang->tags);
-            $result.= $theme->h($lang->addtags);
-            $items = [];
-            $tags = $post->factory->tags;
-            $list = $tags->getsorted(-1, 'name', 0);
-            foreach ($list as $id) {
-                $items[] = '<a href="" class="posteditor-tag">' . $tags->items[$id]['title'] . "</a>";
-            }
-            $result.= sprintf('<p>%s</p>', implode(', ', $items));
-            break;
+            case 'tags':
+                $result = $theme->getInput('text', 'tags', $post->tagnames, $lang->tags);
+                $result.= $theme->h($lang->addtags);
+                $items = [];
+                $tags = $post->factory->tags;
+                $list = $tags->getsorted(-1, 'name', 0);
+                foreach ($list as $id) {
+                    $items[] = '<a href="" class="posteditor-tag">' . $tags->items[$id]['title'] . "</a>";
+                }
+                $result.= sprintf('<p>%s</p>', implode(', ', $items));
+                break;
 
 
-        case 'status':
-        case 'access':
-            $args = new Args();
-            $args->comstatus = $theme->comboItems(
-                [
-                'closed' => $lang->closed,
-                'reg' => $lang->reg,
-                'guest' => $lang->guest,
-                'comuser' => $lang->comuser
-                ], $post->comstatus
-            );
+            case 'status':
+            case 'access':
+                $args = new Args();
+                $args->comstatus = $theme->comboItems(
+                    [
+                    'closed' => $lang->closed,
+                    'reg' => $lang->reg,
+                    'guest' => $lang->guest,
+                    'comuser' => $lang->comuser
+                    ],
+                    $post->comstatus
+                );
 
-            $args->pingenabled = $post->pingenabled;
-            $args->status = $theme->comboItems(
-                [
-                'published' => $lang->published,
-                'draft' => $lang->draft
-                ], $post->status
-            );
+                    $args->pingenabled = $post->pingenabled;
+                    $args->status = $theme->comboItems(
+                        [
+                        'published' => $lang->published,
+                        'draft' => $lang->draft
+                        ],
+                        $post->status
+                    );
 
-            $args->perms = GetPerm::combo($post->idperm);
-            $args->password = $post->password;
-            $admin = Admin::admin();
-            $result = $admin->parseArg(
-                '
+                    $args->perms = GetPerm::combo($post->idperm);
+                    $args->password = $post->password;
+                    $admin = Admin::admin();
+                    $result = $admin->parseArg(
+                        '
 [combo=comstatus]
       [checkbox=pingenabled]
       [combo=status]
       $perms
       [password=password]
-' . $admin->help($lang->notepassword), $args
-            );
-            break;
+' . $admin->help($lang->notepassword),
+                        $args
+                    );
+                break;
 
 
-        case 'view':
-            $result = GetSchema::combo($post->idschema);
-            break;
+            case 'view':
+                $result = GetSchema::combo($post->idschema);
+                break;
 
 
-        default:
-            $name = trim($_GET['get']);
-            if (isset($this->data['events'][$name])) {
-                $r = $this->callEvent($name, ['post'  => $post, 'result' => '']);
-                $result = $r['result'];
-            } else {
-                $result = var_export($_GET, true);
-            }
+            default:
+                $name = trim($_GET['get']);
+                if (isset($this->data['events'][$name])) {
+                    $r = $this->callEvent($name, ['post'  => $post, 'result' => '']);
+                    $result = $r['result'];
+                } else {
+                    $result = var_export($_GET, true);
+                }
         }
 
         return $result;

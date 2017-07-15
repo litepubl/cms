@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\options;
@@ -26,12 +26,14 @@ class Files extends \litepubl\admin\Menu
         $args->previewwidth = $parser->previewwidth;
         $args->previewheight = $parser->previewheight;
         $args->previewmode = $this->theme->getRadioItems(
-            'previewmode', [
+            'previewmode',
+            [
             'fixed' => $lang->fixedsize,
             'max' => $lang->maxsize,
             'min' => $lang->minsize,
             'none' => $lang->disablepreview,
-            ], $parser->previewmode
+            ],
+            $parser->previewmode
         );
 
         $args->maxwidth = $parser->maxwidth;
@@ -51,7 +53,8 @@ class Files extends \litepubl\admin\Menu
         $args->formtitle = $lang->files;
         return $admin->form(
             $admin->getSection(
-                $lang->imagesize, '[checkbox=alwaysresize]
+                $lang->imagesize,
+                '[checkbox=alwaysresize]
       [text=maxwidth]
       [text=maxheight]
       [text=quality_original]
@@ -61,16 +64,19 @@ class Files extends \litepubl\admin\Menu
       [text=midleheight]
 '
             ) . $admin->getSection(
-                $lang->previewoptions, '$previewmode
+                $lang->previewoptions,
+                '$previewmode
       [text=previewwidth]
       [text=previewheight]
       [text=quality_snapshot]
 '
             ) . $admin->getSection(
-                $lang->extfile, '[text=audioext]
+                $lang->extfile,
+                '[text=audioext]
       [text=videoext]
       '
-            ), $args
+            ),
+            $args
         );
     }
 

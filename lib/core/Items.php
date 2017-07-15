@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\core;
@@ -129,6 +129,16 @@ class Items extends Events
         return $this->error(sprintf('Item %d not found in class %s', $id, get_class($this)));
     }
 
+    public function setItem(array $item)
+    {
+        $id = $item[$this->idprop];
+        $this->items[$id] = $item;
+
+        if ($this->dbversion) {
+            $this->db->updateAssoc($item, $this->idprop);
+        }
+    }
+
     public function getValue($id, $name)
     {
         if ($this->dbversion && !isset($this->items[$id])) {
@@ -162,10 +172,10 @@ class Items extends Events
         return false;
     }
 
-    public function indexof($name, $value)
+    public function indexOf($name, $value)
     {
         if ($this->dbversion) {
-            return $this->db->findprop($this->idprop, "$name = " . Str::quote($value));
+            return $this->db->findProp($this->idprop, "$name = " . Str::quote($value));
         }
 
         foreach ($this->items as $id => $item) {

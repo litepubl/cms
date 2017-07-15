@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\widget;
@@ -48,7 +48,8 @@ class Links extends Widget
     [text=url]
     [text=text]
     [text=linktitle]
-    [hidden=mode]', $args
+    [hidden=mode]',
+            $args
         );
 
         $adminurl = $this->adminurl . intval($_GET['idwidget']) . '&idlink';
@@ -95,14 +96,14 @@ class Links extends Widget
         } elseif (isset($_POST['mode'])) {
             extract($_POST, EXTR_SKIP);
             switch ($mode) {
-            case 'add':
-                $_GET['idlink'] = $widget->add($url, $linktitle, $text);
-                break;
+                case 'add':
+                    $_GET['idlink'] = $widget->add($url, $linktitle, $text);
+                    break;
 
 
-            case 'edit':
-                $widget->edit((int)$_GET['idlink'], $url, $linktitle, $text);
-                break;
+                case 'edit':
+                    $widget->edit((int)$_GET['idlink'], $url, $linktitle, $text);
+                    break;
             }
         } else {
             extract($_POST, EXTR_SKIP);

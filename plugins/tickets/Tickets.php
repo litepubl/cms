@@ -1,16 +1,16 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\tickets;
 
-use litepubl\admin\Menus;
+use litepubl\core\Event;
 use litepubl\plugins\polls\Polls;
 use litepubl\post\Post;
 use litepubl\utils\Mailer;
@@ -93,12 +93,11 @@ class Tickets extends \litepubl\post\Posts
         return parent::edit($post);
     }
 
-    public function onExclude(int $id)
+    public function onExclude(Event $event)
     {
         if ($this->getApp()->options->group == 'ticket') {
-            $admin = Menus::i();
-            return $admin->items[$id]['url'] == '/admin/posts/';
+            $admin = $event->target;
+            $event->exclude = $admin->items[$event->id]['url'] == '/admin/posts/';
         }
-        return false;
     }
 }

@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\options;
@@ -34,7 +34,8 @@ class Comments extends \litepubl\admin\Menu
             'reg' => $lang->reg,
             'guest' => $lang->guest,
             'comuser' => $lang->comuser
-            ], $options->comstatus
+            ],
+            $options->comstatus
         );
 
         $args->filterstatus = $cm->filterstatus;
@@ -44,7 +45,8 @@ class Comments extends \litepubl\admin\Menu
         $args->pingenabled = $options->pingenabled;
 
         $tabs->add(
-            $lang->options, '
+            $lang->options,
+            '
     [combo=comstatus]
     [checkbox=filterstatus]
     [checkbox=commentsapproved]
@@ -62,7 +64,8 @@ class Comments extends \litepubl\admin\Menu
         $args->nofollow = $cm->nofollow;
 
         $tabs->add(
-            $lang->templates, '
+            $lang->templates,
+            '
     [checkbox=commentpages]
     [text=commentsperpage]
     [checkbox=comments_invert_order]
@@ -77,7 +80,8 @@ class Comments extends \litepubl\admin\Menu
         $args->rsstemplate = $rss->template;
 
         $tabs->add(
-            $lang->holdrss, '
+            $lang->holdrss,
+            '
     <h4><a href="$site.url/rss/holdcomments.xml">$lang.holdrss</a></h4>
     [text=rsscount]
     [editor=rsstemplate]
@@ -92,7 +96,8 @@ class Comments extends \litepubl\admin\Menu
         $args->confirmemail = $cm->confirmemail;
 
         $tabs->add(
-            $lang->perms, '
+            $lang->perms,
+            '
     [checkbox=canedit]
     [checkbox=candelete]
     [checkbox=confirmlogged]
@@ -114,7 +119,8 @@ class Comments extends \litepubl\admin\Menu
         $args->subscribe_enabled = $subscribe->enabled;
 
         $tabs->add(
-            $lang->subscribe, '
+            $lang->subscribe,
+            '
     [checkbox=sendnotification]
     [checkbox=defaultsubscribe]
     [checkbox=subscribe_enabled]

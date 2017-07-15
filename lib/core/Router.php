@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\core;
@@ -142,25 +142,25 @@ class Router extends Items
     {
         foreach ($this->prefilter as $item) {
             switch ($item['type']) {
-            case 'begin':
-                if (Str::begin($url, $item['url'])) {
-                    return $item;
-                }
-                break;
+                case 'begin':
+                    if (Str::begin($url, $item['url'])) {
+                        return $item;
+                    }
+                    break;
 
 
-            case 'end':
-                if (Str::end($url, $item['url'])) {
-                    return $item;
-                }
-                break;
+                case 'end':
+                    if (Str::end($url, $item['url'])) {
+                        return $item;
+                    }
+                    break;
 
 
-            case 'regexp':
-                if (preg_match($item['url'], $url)) {
-                    return $item;
-                }
-                break;
+                case 'regexp':
+                    if (preg_match($item['url'], $url)) {
+                        return $item;
+                    }
+                    break;
             }
         }
 
@@ -189,7 +189,8 @@ class Router extends Items
         }
 
         if (!in_array(
-            $type, [
+            $type,
+            [
             'normal',
             'get',
             'usernormal',
@@ -217,7 +218,8 @@ class Router extends Items
         $this->items[$item['id']] = $item;
 
         if (in_array(
-            $type, [
+            $type,
+            [
             'begin',
             'end',
             'regexp'

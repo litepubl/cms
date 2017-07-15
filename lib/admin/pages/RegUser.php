@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\pages;
@@ -115,21 +115,21 @@ class RegUser extends Form
 
         if ($this->regstatus) {
             switch ($this->regstatus) {
-            case 'ok':
-                $backurl = $this->backurl;
-                if (!$backurl) {
-                    $backurl = UserGroups::i()->gethome($this->getApp()->options->group);
-                }
-                if (!Str::begin($backurl, 'http')) {
-                    $backurl = $this->getApp()->site->url . $backurl;
-                }
-                return $theme->h($lang->successreg . ' ' . $theme->link($backurl, $lang->continue));
+                case 'ok':
+                    $backurl = $this->backurl;
+                    if (!$backurl) {
+                        $backurl = UserGroups::i()->gethome($this->getApp()->options->group);
+                    }
+                    if (!Str::begin($backurl, 'http')) {
+                        $backurl = $this->getApp()->site->url . $backurl;
+                    }
+                    return $theme->h($lang->successreg . ' ' . $theme->link($backurl, $lang->continue));
 
-            case 'mail':
-                return $theme->h($lang->waitconfirm);
+                case 'mail':
+                    return $theme->h($lang->waitconfirm);
 
-            case 'error':
-                $result.= $theme->h($lang->invalidregdata);
+                case 'error':
+                    $result.= $theme->h($lang->invalidregdata);
             }
         }
 

@@ -2,31 +2,109 @@
 
 
 This module provides integration with [Yii framework](http://www.yiiframework.com/) (2.0).
-
+It initializes Yii framework in test environment and provides actions for functional testing.
 
 ## Config
 
-* configFile *required* - the path to the application config file
-
-The entry script must return the application configuration array.
+* `configFile` *required* - the path to the application config file. File should be configured for test environment and return configuration array.
+* `entryUrl` - initial application url (default: http://localhost/index-test.php).
+* `entryScript` - front script title (like: index-test.php). If not set - taken from entryUrl.
+* `cleanup` - (default: true) wrap all database connection inside a transaction and roll it back after the test. Should be disabled for acceptance testing..
 
 You can use this module by setting params in your functional.suite.yml:
-<pre>
-class_name: TestGuy
+
+```yaml
+actor: FunctionalTester
 modules:
     enabled:
         - Yii2:
             configFile: '/path/to/config.php'
-</pre>
+```
 
-## Parts
+### Parts
 
-* ORM - include only haveRecord/grabRecord/seeRecord/dontSeeRecord actions
+By default all available methods are loaded, but you can specify parts to select only needed actions and avoid conflicts.
 
+* `init` - use module only for initialization (for acceptance tests).
+* `orm` - include only `haveRecord/grabRecord/seeRecord/dontSeeRecord` actions.
+* `fixtures` - use fixtures inside tests with `haveFixtures/grabFixture/grabFixtures` actions.
+* `email` - include email actions `seeEmailsIsSent/grabLastSentEmail/...`
+
+### Example (`functional.suite.yml`)
+
+```yaml
+actor: FunctionalTester
+modules:
+  enabled:
+     - Yii2:
+         configFile: 'config/test.php'
+```
+
+### Example (`unit.suite.yml`)
+
+```yaml
+actor: UnitTester
+modules:
+  enabled:
+     - Asserts
+     - Yii2:
+         configFile: 'config/test.php'
+         part: init
+```
+
+### Example (`acceptance.suite.yml`)
+
+```yaml
+actor: AcceptanceTester
+modules:
+    enabled:
+        - WebDriver:
+            url: http://127.0.0.1:8080/
+            browser: firefox
+        - Yii2:
+            configFile: 'config/test.php'
+            part: ORM # allow to use AR methods
+            cleanup: false # don't wrap test in transaction
+            entryScript: index-test.php
+```
+
+## Fixtures
+
+This module allows to use [fixtures](http://www.yiiframework.com/doc-2.0/guide-test-fixtures.html) inside a test. There are two options for that.
+Fixtures can be loaded using [haveFixtures](#haveFixtures) method inside a test:
+
+```php
+<?php
+$I->haveFixtures(['posts' => PostsFixture::className()]);
+```
+
+or, if you need to load fixtures before the test (probably before the cleanup transaction is started), you
+can specify fixtures with `_fixtures` method of a testcase:
+
+```php
+<?php
+// inside Cest file or Codeception\TestCase\Unit
+public function _fixtures()
+{
+    return ['posts' => PostsFixture::className()]
+}
+```
+
+## URL
+This module provide to use native URL formats of Yii2 for all codeception commands that use url for work.
+This commands allows input like:
+
+```php
+<?php
+$I->amOnPage(['site/view','page'=>'about']);
+$I->amOnPage('index-test.php?site/index');
+$I->amOnPage('http://localhost/index-test.php?site/index');
+$I->sendAjaxPostRequest(['/user/update', 'id' => 1], ['UserForm[name]' => 'G.Hopper');
+```
 
 ## Status
 
-Maintainer: **qiangxue**
+Maintainer: **samdark**
 Stability: **stable**
 
 
@@ -79,7 +157,7 @@ public function seeResponseContains($text)
 ```
 
  * `return` string
- * `throws`  ModuleException
+@throws ModuleException
 
 
 ### _loadPage
@@ -134,8 +212,8 @@ To load arbitrary page for interaction, use `_loadPage` method.
  * `param array` $server
  * `param null` $content
  * `return` mixed|Crawler
- * `throws`  ExternalUrlException
- * `see`  `_loadPage`
+@throws ExternalUrlException
+@see `_loadPage`
 
 
 ### _savePageSource
@@ -158,19 +236,49 @@ Authenticates user for HTTP_AUTH
  * `param` $password
 
 
-### amOnPage
+### amLoggedInAs
  
-Converting $page to valid Yii 2 URL
-
-Allows input like:
+Authorizes user on a site without submitting login form.
+Use it for fast pragmatic authorization in functional tests.
 
 ```php
-$I->amOnPage(['site/view','page'=>'about']);
-$I->amOnPage('index-test.php?site/index');
-$I->amOnPage('http://localhost/index-test.php?site/index');
+<?php
+// User is found by id
+$I->amLoggedInAs(1);
+
+// User object is passed as parameter
+$admin = \app\models\User::findByUsername('admin');
+$I->amLoggedInAs($admin);
+```
+Requires `user` component to be enabled and configured.
+
+ * `param` $user
+@throws ModuleException
+
+
+### amOnPage
+ 
+Opens the page for the given relative URI.
+
+``` php
+<?php
+// opens front page
+$I->amOnPage('/');
+// opens /register page
+$I->amOnPage('/register');
 ```
 
- * `param` $page string|array parameter for \yii\web\UrlManager::createUrl()
+ * `param` $page
+
+
+### amOnRoute
+ 
+Similar to amOnPage but accepts route as first argument and params as second
+
+```
+$I->amOnRoute('site/view', ['page' => 'about']);
+```
+
 
 
 ### attachFile
@@ -180,7 +288,7 @@ Attaches a file relative to the Codeception data directory to the given file upl
 ``` php
 <?php
 // file is stored in 'tests/_data/prices.xls'
-$I->attachFile('input[ * `type="file"]',`  'prices.xls');
+$I->attachFile('input[@type="file"]', 'prices.xls');
 ?>
 ```
 
@@ -222,7 +330,7 @@ $I->click('Submit');
 // CSS button
 $I->click('#form input[type=submit]');
 // XPath
-$I->click('//form/*[ * `type=submit]');` 
+$I->click('//form/*[@type=submit]');
 // link in context
 $I->click('Logout', '#nav');
 // using strict locator
@@ -260,9 +368,10 @@ Give a locator as the second parameter to match a specific region.
 
 ```php
 <?php
-$I->dontSee('Login');                    // I can suppose user is already logged in
-$I->dontSee('Sign Up','h1');             // I can suppose it's not a signup page
-$I->dontSee('Sign Up','//body/h1');      // with XPath
+$I->dontSee('Login');                         // I can suppose user is already logged in
+$I->dontSee('Sign Up','h1');                  // I can suppose it's not a signup page
+$I->dontSee('Sign Up','//body/h1');           // with XPath
+$I->dontSee('Sign Up', ['css' => 'body h1']); // with strict CSS locator
 ```
 
 Note that the search is done after stripping all HTML tags from the body,
@@ -354,6 +463,13 @@ $I->dontSeeElement('input', ['value' => '123456']);
  * `param array` $attributes
 
 
+### dontSeeEmailIsSent
+ 
+Checks that no email was sent
+
+ * `[Part]` email
+
+
 ### dontSeeInCurrentUrl
  
 Checks that the current URI doesn't contain the given string.
@@ -378,7 +494,7 @@ $I->dontSeeInField('Body','Type your comment here');
 $I->dontSeeInField('form textarea[name=body]','Type your comment here');
 $I->dontSeeInField('form input[type=hidden]','hidden_value');
 $I->dontSeeInField('#searchform input','Search');
-$I->dontSeeInField('//form/*[ * `name=search]','Search');` 
+$I->dontSeeInField('//form/*[@name=search]','Search');
 $I->dontSeeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -515,8 +631,8 @@ Fills a text field or textarea with the given string.
 
 ``` php
 <?php
-$I->fillField("//input[ * `type='text']",`  "Hello World!");
-$I->fillField(['name' => 'email'], 'jon * `mail.com');` 
+$I->fillField("//input[@type='text']", "Hello World!");
+$I->fillField(['name' => 'email'], 'jon@mail.com');
 ?>
 ```
 
@@ -548,6 +664,19 @@ $I->grabAttributeFrom('#tooltip', 'title');
 
 
 
+### grabComponent
+ 
+Gets a component from Yii container. Throws exception if component is not available
+
+```php
+<?php
+$mailer = $I->grabComponent('mailer');
+```
+
+ * `param` $component
+@throws ModuleException
+
+
 ### grabCookie
  
 Grabs a cookie value.
@@ -556,6 +685,36 @@ You can set additional cookie params like `domain`, `path` in array passed as la
  * `param` $cookie
 
  * `param array` $params
+
+
+### grabFixture
+ 
+Gets a fixture by name.
+Returns a Fixture instance. If a fixture is an instance of `\yii\test\BaseActiveFixture` a second parameter
+can be used to return a specific model:
+
+```php
+<?php
+$I->haveFixtures(['users' => UserFixture::className()]);
+
+$users = $I->grabFixture('users');
+
+// get first user by key, if a fixture is instance of ActiveFixture
+$user = $I->grabFixture('users', 'user1');
+```
+
+ * `param` $name
+@throws ModuleException if a fixture is not found
+ * `[Part]` fixtures
+
+
+### grabFixtures
+ 
+Returns all loaded fixtures.
+Array of fixture instances
+
+ * `[Part]` fixtures
+ * `return` array
 
 
 ### grabFromCurrentUrl
@@ -572,6 +731,19 @@ $uri = $I->grabFromCurrentUrl();
 
  * `param null` $uri
 
+
+
+### grabLastSentEmail
+ 
+Returns last sent email:
+
+```php
+<?php
+$I->seeEmailIsSent();
+$message = $I->grabLastSentEmail();
+$I->assertEquals('admin@site,com', $message->getTo());
+```
+ * `[Part]` email
 
 
 ### grabMultiple
@@ -600,6 +772,15 @@ $aLinks = $I->grabMultiple('a', 'href');
  * `return` string[]
 
 
+### grabPageSource
+ 
+Grabs current page source code.
+
+@throws ModuleException if no page was opened.
+
+ * `return` string Current page source code.
+
+
 ### grabRecord
  
 Retrieves record from database
@@ -611,6 +792,24 @@ $category = $I->grabRecord('app\models\User', array('name' => 'davert'));
  * `param` $model
  * `param array` $attributes
  * `[Part]` orm
+
+
+### grabSentEmails
+ 
+Returns array of all sent email messages.
+Each message implements `yii\mail\Message` interface.
+Useful to perform additional checks using `Asserts` module:
+
+```php
+<?php
+$I->seeEmailIsSent();
+$messages = $I->grabSentEmails();
+$I->assertEquals('admin@site,com', $messages[0]->getTo());
+```
+
+ * `[Part]` email
+ * `return` array
+@throws ModuleException
 
 
 ### grabTextFrom
@@ -636,6 +835,42 @@ $value = $I->grabTextFrom('~<input value=(.*?)]~sgi'); // match with a regex
  * `param` $field
 
  * `return` array|mixed|null|string
+
+
+### haveFixtures
+ 
+Creates and loads fixtures from a config.
+Signature is the same as for `fixtures()` method of `yii\test\FixtureTrait`
+
+```php
+<?php
+$I->haveFixtures([
+    'posts' => PostsFixture::className(),
+    'user' => [
+        'class' => UserFixture::className(),
+        'dataFile' => '@tests/_data/models/user.php',
+     ],
+]);
+```
+
+Note: if you need to load fixtures before the test (probably before the cleanup transaction is started;
+`cleanup` options is `true` by default), you can specify fixtures with _fixtures method of a testcase
+```php
+<?php
+// inside Cest file or Codeception\TestCase\Unit
+public function _fixtures(){
+    return [
+        'user' => [
+            'class' => UserFixture::className(),
+            'dataFile' => codecept_data_dir() . 'user.php'
+        ]
+    ];
+}
+```
+instead of defining `haveFixtures` in Cest `_before`
+
+ * `param` $fixtures
+ * `[Part]` fixtures
 
 
 ### haveHttpHeader
@@ -697,9 +932,10 @@ parameter to only search within that element.
 
 ``` php
 <?php
-$I->see('Logout');                 // I can suppose user is logged in
-$I->see('Sign Up', 'h1');          // I can suppose it's a signup page
-$I->see('Sign Up', '//body/h1');   // with XPath
+$I->see('Logout');                        // I can suppose user is logged in
+$I->see('Sign Up', 'h1');                 // I can suppose it's a signup page
+$I->see('Sign Up', '//body/h1');          // with XPath
+$I->see('Sign Up', ['css' => 'body h1']); // with strict CSS locator
 ```
 
 Note that the search is done after stripping all HTML tags from the body,
@@ -728,7 +964,7 @@ Checks that the specified checkbox is checked.
 <?php
 $I->seeCheckboxIsChecked('#agree'); // I suppose user agreed to terms
 $I->seeCheckboxIsChecked('#signup_form input[type=checkbox]'); // I suppose user agreed to terms, If there is only one checkbox in form.
-$I->seeCheckboxIsChecked('//form/input[ * `type=checkbox`  and  * `name=agree]');` 
+$I->seeCheckboxIsChecked('//form/input[@type=checkbox and @name=agree]');
 ?>
 ```
 
@@ -798,7 +1034,25 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
 
  * `param` $selector
  * `param array` $attributes
- * `return` 
+@return
+
+
+### seeEmailIsSent
+ 
+Checks that email is sent.
+
+```php
+<?php
+// check that at least 1 email was sent
+$I->seeEmailIsSent();
+
+// check that only 3 emails were sent
+$I->seeEmailIsSent(3);
+```
+
+ * `param int` $num
+@throws ModuleException
+ * `[Part]` email
 
 
 ### seeInCurrentUrl
@@ -828,7 +1082,7 @@ $I->seeInField('Body','Type your comment here');
 $I->seeInField('form textarea[name=body]','Type your comment here');
 $I->seeInField('form input[type=hidden]','hidden_value');
 $I->seeInField('#searchform input','Search');
-$I->seeInField('//form/*[ * `name=search]','Search');` 
+$I->seeInField('//form/*[@name=search]','Search');
 $I->seeInField(['name' => 'search'], 'Search');
 ?>
 ```
@@ -890,9 +1144,9 @@ $form = [
      'checkbox1' => true,
      // ...
 ];
-$I->submitForm('//form[ * `id=my-form]',`  $form, 'submitButton');
+$I->submitForm('//form[@id=my-form]', $form, 'submitButton');
 // $I->amOnPage('/path/to/form-page') may be needed
-$I->seeInFormFields('//form[ * `id=my-form]',`  $form);
+$I->seeInFormFields('//form[@id=my-form]', $form);
 ?>
 ```
 
@@ -1015,7 +1269,7 @@ Selects an option in a select tag or in radio button group.
 <?php
 $I->selectOption('form select[name=account]', 'Premium');
 $I->selectOption('form input[name=payment]', 'Monthly');
-$I->selectOption('//form/select[ * `name=account]',`  'Monthly');
+$I->selectOption('//form/select[@name=account]', 'Monthly');
 ?>
 ```
 
@@ -1313,4 +1567,4 @@ $I->uncheckOption('#notify');
 
  * `param` $option
 
-<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.2/src/Codeception/Module/Yii2.php">Help us to improve documentation. Edit module reference</a></div>
+<p>&nbsp;</p><div class="alert alert-warning">Module reference is taken from the source code. <a href="https://github.com/Codeception/Codeception/tree/2.3/src/Codeception/Module/Yii2.php">Help us to improve documentation. Edit module reference</a></div>

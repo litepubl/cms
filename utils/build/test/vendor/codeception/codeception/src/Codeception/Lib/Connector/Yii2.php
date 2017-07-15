@@ -4,8 +4,6 @@ namespace Codeception\Lib\Connector;
 use Codeception\Lib\Connector\Yii2\Logger;
 use Codeception\Lib\Connector\Yii2\TestMailer;
 use Codeception\Util\Debug;
-use Codeception\Util\Maybe;
-use Codeception\Util\Stub;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\Response;
@@ -72,7 +70,6 @@ class Yii2 extends Client
         $this->app = Yii::createObject($config);
         $this->persistDb();
         $this->mockMailer($config);
-        $this->mockAssetManager();
         \Yii::setLogger(new Logger());
     }
 
@@ -98,7 +95,7 @@ class Yii2 extends Client
         $_REQUEST = $this->remapRequestParameters($request->getParameters());
         $_POST = $_GET = [];
 
-        if (strtoupper($request->getMethod()) == 'GET') {
+        if (strtoupper($request->getMethod()) === 'GET') {
             $_GET = $_REQUEST;
         } else {
             $_POST = $_REQUEST;
@@ -141,11 +138,18 @@ class Yii2 extends Client
         $yiiRequest->setQueryParams($_GET);
 
         try {
+            $app->trigger($app::EVENT_BEFORE_REQUEST);
+            
             $app->handleRequest($yiiRequest)->send();
+            
+            $app->trigger($app::EVENT_AFTER_REQUEST);
         } catch (\Exception $e) {
-            if ($e instanceof ExitException) {
-                // nothing to do
-            } else {
+            if ($e instanceof HttpException) {
+                // Don't discard output and pass exception handling to Yii to be able
+                // to expect error response codes in tests.
+                $app->errorHandler->discardExistingOutput = false;
+                $app->errorHandler->handleException($e);
+            } elseif (!$e instanceof ExitException) {
                 // for exceptions not related to Http, we pass them to Codeception
                 $this->resetApplication();
                 throw $e;
@@ -228,11 +232,32 @@ class Yii2 extends Client
             $this->app->set('mailer', static::$mailer);
             return;
         }
-        $mailerConfig = [];
-        if (isset($config['components']['mailer'])) {
-            $mailerConfig = $config['components']['mailer'];
+        
+        // options that make sense for mailer mock
+        $allowedOptions = [
+            'htmlLayout',
+            'textLayout',
+            'messageConfig',
+            'messageClass',
+            'useFileTransport',
+            'fileTransportPath',
+            'fileTransportCallback',
+            'view',
+            'viewPath',
+        ];
+        
+        $mailerConfig = [
+            'class' => 'Codeception\Lib\Connector\Yii2\TestMailer',
+        ];
+        
+        if (isset($config['components']['mailer']) && is_array($config['components']['mailer'])) {
+            foreach ($config['components']['mailer'] as $name => $value) {
+                if (in_array($name, $allowedOptions, true)) {
+                    $mailerConfig[$name] = $value;
+                }
+            }
         }
-        $mailerConfig['class'] = 'Codeception\Lib\Connector\Yii2\TestMailer';
+        
         $this->app->set('mailer', $mailerConfig);
         static::$mailer = $this->app->get('mailer');
     }
@@ -249,10 +274,4 @@ class Yii2 extends Client
             static::$db = $this->app->get('db');
         }
     }
-
-    private function mockAssetManager()
-    {
-        $this->app->set('assetManager', Stub::make('yii\web\AssetManager'));
-    }
-
 }

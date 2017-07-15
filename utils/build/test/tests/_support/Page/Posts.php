@@ -1,37 +1,36 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace Page;
 
-class Posts extends Base
+trait Posts
 {
-    public $url = '/admin/posts/';
-    public $deleteButton = '#submitbutton-delete';
-    public $screenShotName = '';
+    private $postsUrl = '/admin/posts/';
+    private $deleteButton = '#submitbutton-delete';
 
-    public function delete()
+    private function deletePosts()
     {
         $list = func_get_args();
         if (count($list)) {
-            $this->open();
+            $this->open($this->postsUrl);
             $i = $this->tester;
             $i->wantTo('Delete posts');
-            $i->screenShot($this->screenShotName . '1table');
+            $this->screenShot('table');
             foreach ($list as $id) {
                 $i->checkOption("input[name=checkbox-$id]");
             }
 
-            $i->screenShot($this->screenShotName . '2checked');
+            $this->screenShot('selected');
             $i->click($this->deleteButton);
             $i->checkError();
-            $i->screenShot($this->screenShotName . '3deleted');
+            $this->screenShot('deleted');
         }
     }
 }

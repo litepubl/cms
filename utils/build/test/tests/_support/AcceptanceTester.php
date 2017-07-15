@@ -1,7 +1,5 @@
 <?php
 
-use test\config;
-
 /**
  * Inherited Methods
  * @method void wantToTest($text)
@@ -36,7 +34,15 @@ codecept_debug($text);
 public function checkError()
 {
 $this->wantTo('Check errors');
-$text = htmlspecialchars_decode($this->getVisibleText());
+$m = microtime(true);
+$this->waitForElement('body', 5);
+//codecept_debug(round(microtime(true) - $m, 2));
+$text = htmlspecialchars_decode($this->grabTextFrom('body'));
+return $this->checkErrorInSource($text);
+}
+
+public function checkErrorInSource(string $text)
+{
 foreach (['exception', 'Warning:', 'Parse error', 'Fatal error', 'Notice: Undefined'] as $err) {
 if (strpos($text, $err) !== false) {
 return $this->assertTrue(false, $err);
@@ -58,13 +64,6 @@ $url = substr($url, 0, $i);
 }
 
 return $url;
-}
-
-public function screenShot(string $name)
-{
-if (config::$screenshot) {
-$this->makeScreenshot($name);
-}
 }
 
 public function appendJS(string $js)
@@ -97,8 +96,6 @@ $current = $this->grabFromCurrentUrl();
 $this->waitForUrl(function($url) use ($current) {
 return $url != $current;
 }, $timeout);
-
-$current = $this->grabFromCurrentUrl();
 }
 
 }

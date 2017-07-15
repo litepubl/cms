@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\comments;
@@ -34,26 +34,26 @@ class Pingbacks extends \litepubl\admin\Menu
             }
 
             switch ($action) {
-            case 'delete':
-                $result.= $this->confirmDeleteItem($pingbacks);
-                break;
+                case 'delete':
+                    $result.= $this->confirmDeleteItem($pingbacks);
+                    break;
 
 
-            case 'hold':
-                $pingbacks->setstatus($id, false);
-                $result.= $admin->success($lang->successmoderated);
-                break;
+                case 'hold':
+                    $pingbacks->setstatus($id, false);
+                    $result.= $admin->success($lang->successmoderated);
+                    break;
 
 
-            case 'approve':
-                $pingbacks->setstatus($id, true);
-                $result.= $admin->success($lang->successmoderated);
-                break;
+                case 'approve':
+                    $pingbacks->setstatus($id, true);
+                    $result.= $admin->success($lang->successmoderated);
+                    break;
 
 
-            case 'edit':
-                $result.= $this->editPingback($id);
-                break;
+                case 'edit':
+                    $result.= $this->editPingback($id);
+                    break;
             }
         }
         $result.= $this->getPingList();
@@ -146,7 +146,8 @@ class Pingbacks extends \litepubl\admin\Menu
             '
     [text=title]
     [text=url]
-    ', $args
+    ',
+            $args
         );
     }
 

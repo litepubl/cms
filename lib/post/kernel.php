@@ -90,7 +90,7 @@ class Announce extends \litepubl\core\Events
         $app = $this->getApp();
         if ($schema->perpage) {
             $perpage = $schema->perpage;
-        } else { 
+        } else {
             $perpage = $app->options->perpage;
         }
         
@@ -386,7 +386,6 @@ class Files extends \litepubl\core\Items
         $post = Post::i($event->id);
         $this->itemsPosts->setItems($post->id, $post->files);
     }
-
 }
 
 //FilesItems.php
@@ -449,7 +448,7 @@ class FileView extends \litepubl\core\Events
         }
 
         $tml = $excerpt ? $this->getTml($theme, 'content.excerpts.excerpt.filelist') : $this->getTml($theme, 'content.post.filelist');
-        return $this->getList($list,  $tml);
+        return $this->getList($list, $tml);
     }
 
     public function getTml(Theme $theme, string $basekey): array
@@ -735,7 +734,7 @@ class Meta extends \litepubl\core\Item
         while ($row = $db->fetchassoc($res)) {
             $id = (int)$row['id'];
             if (!isset($instances[$id])) {
-                $instances[$id] = new self();
+                $instances[$id] = new static();
                 $instances[$id]->data['id'] = $id;
             }
 
@@ -846,7 +845,8 @@ class Post extends \litepubl\core\Item
             
             if ($table = $self->getChildTable()) {
                 $items = static::selectChildItems(
-                    $table, [
+                    $table,
+                    [
                     $id
                     ]
                 );
@@ -1897,7 +1897,9 @@ class Posts extends \litepubl\core\Items
     public function getSitemap($from, $count)
     {
         return $this->externalfunc(
-            __class__, 'Getsitemap', [
+            __class__,
+            'Getsitemap',
+            [
             $from,
             $count
             ]
@@ -1969,32 +1971,32 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
             $result = $this->$get();
         } else {
             switch ($name) {
-            case 'catlinks':
-                $result = $this->get_taglinks('categories', false);
-                break;
+                case 'catlinks':
+                    $result = $this->get_taglinks('categories', false);
+                    break;
 
 
-            case 'taglinks':
-                $result = $this->get_taglinks('tags', false);
-                break;
+                case 'taglinks':
+                    $result = $this->get_taglinks('tags', false);
+                    break;
 
 
-            case 'excerptcatlinks':
-                $result = $this->get_taglinks('categories', true);
-                break;
+                case 'excerptcatlinks':
+                    $result = $this->get_taglinks('categories', true);
+                    break;
 
 
-            case 'excerpttaglinks':
-                $result = $this->get_taglinks('tags', true);
-                break;
+                case 'excerpttaglinks':
+                    $result = $this->get_taglinks('tags', true);
+                    break;
 
 
-            default:
-                if (isset($this->post->$name)) {
-                    $result = $this->post->$name;
-                } else {
-                    $result = parent::__get($name);
-                }
+                default:
+                    if (isset($this->post->$name)) {
+                        $result = $this->post->$name;
+                    } else {
+                        $result = parent::__get($name);
+                    }
             }
         }
 
@@ -2375,7 +2377,8 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
 
         $result = strtr(
-            $theme->parse($theme->templates['content.post.prevnext']), [
+            $theme->parse($theme->templates['content.post.prevnext']),
+            [
             '$prev' => $prev,
             '$next' => $next
             ]
@@ -2403,14 +2406,14 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
     {
         $l = Lang::i()->ini['comment'];
         switch ($this->commentscount) {
-        case 0:
-            return $l[0];
+            case 0:
+                return $l[0];
 
-        case 1:
-            return $l[1];
+            case 1:
+                return $l[1];
 
-        default:
-            return sprintf($l[2], $this->commentscount);
+            default:
+                return sprintf($l[2], $this->commentscount);
         }
     }
 
@@ -2567,4 +2570,3 @@ class View extends \litepubl\core\Events implements \litepubl\view\ViewInterface
         }
     }
 }
-

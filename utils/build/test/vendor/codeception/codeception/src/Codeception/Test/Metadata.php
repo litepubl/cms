@@ -17,6 +17,7 @@ class Metadata
 
     protected $current = [];
     protected $services = [];
+    protected $reports = [];
 
     /**
      * @return mixed
@@ -83,17 +84,21 @@ class Metadata
     }
 
     /**
-     * @param null $key
-     * @return array
+     * @param string|null $key
+     * @return mixed
      */
     public function getCurrent($key = null)
     {
-        if ($key && isset($this->current[$key])) {
-            return $this->current[$key];
-        }
         if ($key) {
+            if (isset($this->current[$key])) {
+                return $this->current[$key];
+            }
+            if ($key === 'name') {
+                return $this->getName();
+            }
             return null;
         }
+
         return $this->current;
     }
 
@@ -192,4 +197,20 @@ class Metadata
         $this->services = $services;
     }
 
+    /**
+     * @return array
+     */
+    public function getReports()
+    {
+        return $this->reports;
+    }
+
+    /**
+     * @param $type
+     * @param $report
+     */
+    public function addReport($type, $report)
+    {
+        $this->reports[$type] = $report;
+    }
 }

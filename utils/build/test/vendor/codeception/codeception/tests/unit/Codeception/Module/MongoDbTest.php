@@ -1,14 +1,18 @@
 <?php
 
 use Codeception\Module\MongoDb;
+use Codeception\Exception\ModuleException;
+use Codeception\Test\Unit;
 
-class MongoDbTest extends \PHPUnit_Framework_TestCase
+class MongoDbTest extends Unit
 {
     /**
      * @var array
      */
     private $mongoConfig = array(
-        'dsn' => 'mongodb://localhost:27017/test'
+        'dsn' => 'mongodb://localhost:27017/test?connectTimeoutMS=300',
+        'dump' => 'tests/data/dumps/mongo.js',
+        'populate' => true
     );
 
     /**
@@ -36,7 +40,11 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
 
         $this->module = new MongoDb(make_container());
         $this->module->_setConfig($this->mongoConfig);
-        $this->module->_initialize();
+        try {
+            $this->module->_initialize();
+        } catch (ModuleException $e) {
+            $this->markTestSkipped($e->getMessage());
+        }
 
         $this->db = $mongo->selectDatabase('test');
         $this->userCollection = $this->db->users;
@@ -141,5 +149,22 @@ class MongoDbTest extends \PHPUnit_Framework_TestCase
         $this->module->haveInCollection('stuff', array('name' => 'Ashley', 'email' => 'me@ashleyclarke.me'));
         $this->module->seeInCollection('stuff', array('name' => 'Ashley', 'email' => 'me@ashleyclarke.me'));
         $this->module->dontSeeInCollection('users', array('email' => 'miles@davis.com'));
+    }
+
+    public function testLoadDump()
+    {
+        $testRecords = [
+            ['name' => 'Michael Jordan', 'position' => 'sg'],
+            ['name' => 'Ron Harper','position' => 'pg'],
+            ['name' => 'Steve Kerr','position' => 'pg'],
+            ['name' => 'Toni Kukoc','position' => 'sf'],
+            ['name' => 'Luc Longley','position' => 'c'],
+            ['name' => 'Scottie Pippen','position' => 'sf'],
+            ['name' => 'Dennis Rodman','position' => 'pf']
+        ];
+
+        foreach ($testRecords as $testRecord) {
+            $this->module->haveInCollection('96_bulls', $testRecord);
+        }
     }
 }

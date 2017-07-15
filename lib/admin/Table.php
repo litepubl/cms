@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin;
@@ -22,6 +22,7 @@ class Table
     const LEFT = 'text-left';
     const RIGHT = 'text-right';
     const CENTER = 'text-center';
+    const CHECKBOX = 'text-center col-checkbox';
 
     //current item in items
     public $item;
@@ -44,7 +45,7 @@ class Table
         return $self->buildItems($items, $struct);
     }
 
-    public function __construct()
+    public function __construct($admintheme = null)
     {
         $this->head = '';
         $this->body = '';
@@ -52,6 +53,7 @@ class Table
         $this->callbacks = [];
         $this->args = new Args();
         $this->data = [];
+        $this->admintheme = $admintheme;
     }
 
     public function setStruct(array $struct)
@@ -130,7 +132,7 @@ class Table
             $body.= $this->parseitem($id, $item);
         }
 
-        return $this->getadmintheme()->gettable($this->head, $body, $this->footer);
+        return $this->getAdminTheme()->gettable($this->head, $body, $this->footer);
     }
 
     public function parseItem($id, $item)
@@ -172,10 +174,12 @@ class Table
     public function setOwner(Items $owner)
     {
         $this->addCallback(
-            '$tempcallback' . count($this->callbacks), [
+            '$tempcallback' . count($this->callbacks),
+            [
             $this,
             'itemsCallback'
-            ], $owner
+            ],
+            $owner
         );
     }
 
@@ -191,10 +195,12 @@ class Table
         array_unshift($struct, $this->checkbox('checkbox'));
         $this->setStruct($struct);
         $this->addCallback(
-            '$tempcallback' . count($this->callbacks), [
+            '$tempcallback' . count($this->callbacks),
+            [
             $this,
             'posts_callback'
-            ], false
+            ],
+            false
         );
     }
 
@@ -217,7 +223,7 @@ class Table
 
         $body = '';
         $args = $this->args;
-        $admintheme = $this->getadmintheme();
+        $admintheme = $this->getAdminTheme();
 
         foreach ($props as $k => $v) {
             if (($k === false) || ($v === false)) {
@@ -276,18 +282,18 @@ class Table
             }
 
             switch ($type) {
-            case 'combo':
-                $input = '<select name="$name" id="$name-input">$value</select>';
-                break;
+                case 'combo':
+                    $input = '<select name="$name" id="$name-input">$value</select>';
+                    break;
 
 
-            case 'text':
-                $input = '<input type="text" name="$name" id="$name-input" value="$value" />';
-                break;
+                case 'text':
+                    $input = '<input type="text" name="$name" id="$name-input" value="$value" />';
+                    break;
 
 
-            default:
-                $this->error('Unknown input type ' . $type);
+                default:
+                    $this->error('Unknown input type ' . $type);
             }
 
             $args->name = $name;
@@ -315,7 +321,7 @@ class Table
         $admin = $this->getadmintheme();
 
         return [
-            'text-center col-checkbox',
+            static::CHECKBOX,
             $admin->templates['checkbox.invert'],
             str_replace('$name', $name, $admin->templates['checkbox.id'])
         ];
@@ -323,10 +329,9 @@ class Table
 
     public function nameCheck(): array
     {
-        $admin = Admin::i();
-
+        $admin = $this->getAdminTheme();
         return [
-            'text-center col-checkbox',
+            static::CHECKBOX,
             $admin->templates['checkbox.stub'],
             $admin->templates['checkbox.name']
         ];

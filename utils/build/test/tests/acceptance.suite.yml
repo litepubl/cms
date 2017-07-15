@@ -12,8 +12,11 @@ modules:
         - WebDriver :
             url: 'http://cms.cms'
             browser: phantomjs 
-            wait: 4
+            #wait: 1
             debug: true
             capabilities:
                         webStorageEnabled: true
 
+groups:
+  # requiring a group file
+    admin: groups.txt

@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\regservices;
@@ -40,7 +40,8 @@ function PluginInstall($self)
 
     $names = implode("', '", array_keys($self->items));
     DBManager::i()->createtable(
-        'regservices', "id int unsigned NOT NULL default 0,
+        'regservices',
+        "id int unsigned NOT NULL default 0,
     service enum('$names') default 'google',
     uid varchar(22) NOT NULL default '',
     

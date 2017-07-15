@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\menu;
@@ -64,23 +64,23 @@ class Ajax extends \litepubl\admin\posts\Ajax
         $lang = Lang::admin('menu');
 
         switch ($_GET['get']) {
-        case 'view':
-            $result = GetSchema::combo($id == 0 ? $schemes->defaults['menu'] : $menu->idSchema);
-            break;
+            case 'view':
+                $result = GetSchema::combo($id == 0 ? $schemes->defaults['menu'] : $menu->idSchema);
+                break;
 
 
-        case 'seo':
-            $args = new Args();
-            $args->url = $menu->url;
-            $args->keywords = $menu->keywords;
-            $args->description = $menu->description;
-            $args->head = $menu->data['head'];
-            $result = $admin->parseArg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
-            break;
+            case 'seo':
+                $args = new Args();
+                $args->url = $menu->url;
+                $args->keywords = $menu->keywords;
+                $args->description = $menu->description;
+                $args->head = $menu->data['head'];
+                $result = $admin->parseArg('[text=url] [text=description] [text=keywords] [editor=head]', $args);
+                break;
 
 
-        default:
-            $result = var_export($_GET, true);
+            default:
+                $result = var_export($_GET, true);
         }
         return $result;
     }

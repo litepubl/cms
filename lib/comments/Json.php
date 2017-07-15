@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\comments;
@@ -33,27 +33,27 @@ class Json extends \litepubl\core\Events
 
         $cm = Manager::i();
         switch ($action) {
-        case 'edit':
-            if (!$cm->canedit) {
-                return false;
-            }
+            case 'edit':
+                if (!$cm->canedit) {
+                    return false;
+                }
 
-            if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
-                return false;
-            }
+                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
+                    return false;
+                }
 
-            return $comments->getvalue($id, 'author') == $this->getApp()->options->user;
+                return $comments->getvalue($id, 'author') == $this->getApp()->options->user;
 
-        case 'delete':
-            if (!$cm->candelete) {
-                return false;
-            }
+            case 'delete':
+                if (!$cm->candelete) {
+                    return false;
+                }
 
-            if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
-                return false;
-            }
+                if ('closed' == $this->getApp()->db->getval('posts', $comments->getvalue($id, 'post'), 'comstatus')) {
+                    return false;
+                }
 
-            return $comments->getvalue($id, 'author') == $this->getApp()->options->user;
+                return $comments->getvalue($id, 'author') == $this->getApp()->options->user;
         }
 
         return false;

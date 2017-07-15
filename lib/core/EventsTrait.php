@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\core;
@@ -133,34 +133,35 @@ trait EventsTrait
         $app = $this->getApp();
         $eventName = $event->getName();
 
-        foreach ($this->data['events'][$eventName] as $i => $item) {
-            if ($event->isPropagationStopped()) {
+        if (isset($this->data['events'][$eventName])) {
+            foreach ($this->data['events'][$eventName] as $i => $item) {
+                if ($event->isPropagationStopped()) {
                         break;
-            }
+                }
 
-            if (class_exists($item[0])) {
-                try {
-                    $callback = [$app->classes->getInstance($item[0]), $item[1]];
-                    call_user_func_array($callback, [$event]);
-                    if ($event->once) {
+                if (class_exists($item[0])) {
+                    try {
+                        $callback = [$app->classes->getInstance($item[0]), $item[1]];
+                        call_user_func_array($callback, [$event]);
+                        if ($event->once) {
                                         $event->once = false;
                                         unset($this->data['events'][$eventName][$i]);
                                         $this->save();
+                        }
+                    } catch (\Throwable $e) {
+                        $app->logException($e);
                     }
-                } catch (\Throwable $e) {
-                    $app->logException($e);
-                }
-            } else {
+                } else {
                         unset($this->data['events'][$eventName][$i]);
-                if (!count($this->data['events'][$eventName])) {
-                    unset($this->data['events'][$eventName]);
-                }
+                    if (!count($this->data['events'][$eventName])) {
+                        unset($this->data['events'][$eventName]);
+                    }
 
                         $this->save();
                         $app->getLogger()->warning(sprintf('Event subscriber has been removed from %s:%s', get_class($this), $eventName), is_array($item) ? $item : []);
+                }
             }
         }
-
     }
 
     public function addEvent(string $name, $callable, $method = null)
@@ -233,5 +234,4 @@ trait EventsTrait
         $this->reIndexEvents();
         $this->save();
     }
-
 }

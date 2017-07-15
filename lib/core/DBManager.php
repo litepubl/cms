@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\core;
@@ -37,7 +37,8 @@ class DBManager
     {
         if (! $this->engine) {
             $config = $this->getConfig();
-            $this->engine = isset($config['engine']) && !empty($config['engine']) ? $config['engine'] : 'MyISAM'; // InnoDB
+            $this->engine = isset($config['engine']) && !empty($config['engine']) ? $config['engine'] : 'InnoDB';
+ //'MyISAM';
         }
 
         $this->deleteTable($name);
@@ -360,16 +361,16 @@ class DBManager
         
         $c2 = $s{1};
         switch ($s{0}) {
-        case '/':
-            return $c2 == '*';
+            case '/':
+                return $c2 == '*';
             
-        case '-':
-            return $c2 == '-';
+            case '-':
+                return $c2 == '-';
             
-        case '#':
-            return true;
-        default:
-            return false;
+            case '#':
+                return true;
+            default:
+                return false;
         }
     }
 }

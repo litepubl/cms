@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\regservices;
@@ -44,7 +44,8 @@ class Yandex extends Service
 
         $code = $_REQUEST['code'];
         $resp = Http::post(
-            'https://oauth.yandex.ru/token', [
+            'https://oauth.yandex.ru/token',
+            [
             'code' => $code,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
@@ -57,12 +58,14 @@ class Yandex extends Service
             if ($r = Http::get('https://login.yandex.ru/info?format=json&oauth_token=' . $tokens->access_token)) {
                 $info = json_decode($r);
                 return $this->addUser(
-                    $context, [
+                    $context,
+                    [
                     'service' => $this->name,
                     'uid' => $info->id,
                     'email' => isset($info->default_email) ? $info->default_email : $info->emails[0],
                     'name' => isset($info->real_name) ? $info->real_name : $info->display_name,
-                    ], $info
+                    ],
+                    $info
                 );
             }
         }

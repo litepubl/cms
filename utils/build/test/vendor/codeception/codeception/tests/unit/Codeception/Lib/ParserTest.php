@@ -21,7 +21,7 @@ class ParserTest extends \Codeception\Test\Unit
 
     protected function _before()
     {
-        $cept = new \Codeception\Test\Cept('demo','DemoCept.php');
+        $cept = new \Codeception\Test\Cept('demo', 'DemoCept.php');
 
         $this->testMetadata = $cept->getMetadata();
         $this->scenario = new Codeception\Scenario($cept);
@@ -59,7 +59,6 @@ EOF;
         $this->parser->parseScenarioOptions($code);
         $this->assertContains('davert', $this->testMetadata->getGroups());
         $this->assertContains('windows', $this->testMetadata->getEnv());
-
     }
 
     public function testCommentedInBlockScenarioOptions()
@@ -150,15 +149,6 @@ EOF;
     {
         $classes = Parser::getClassesFromFile(codecept_data_dir('unsetFile.php'));
         $this->assertEquals([], $classes);
-    }
-    /**
-     * @group core
-     * @throws \Codeception\Exception\TestParseException
-     */
-    public function testCeptValidation()
-    {
-        $this->setExpectedException('Codeception\Exception\TestParseException');
-        Parser::validate(codecept_data_dir('Invalid.php'));
     }
 
     /**

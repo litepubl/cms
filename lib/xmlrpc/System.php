@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\xmlrpc;
@@ -37,51 +37,51 @@ class System extends Common
         }
 
         switch ($name) {
-        case 'system.listMethods':
-        case 'mt.listMethods':
-            return [
+            case 'system.listMethods':
+            case 'mt.listMethods':
+                return [
                     'array'
                 ];
 
-        case 'system.methodSignature':
-            return [
+            case 'system.methodSignature':
+                return [
                     'array',
                     'string'
                 ];
 
-        case 'system.methodHelp':
-            return [
+            case 'system.methodHelp':
+                return [
                     'string',
                     'string'
                 ];
 
-        case 'system.multicall':
-            return [
+            case 'system.multicall':
+                return [
                     'array',
                     'array'
                 ];
 
-        case 'methodExist':
-            return [
+            case 'methodExist':
+                return [
                     'boolean',
                     'string'
                 ];
 
-        case 'demo.addTwoNumbers':
-        case 'sample.add':
-            return [
+            case 'demo.addTwoNumbers':
+            case 'sample.add':
+                return [
                     'int',
                     'int',
                     'int'
                 ];
 
-        case 'demo.sayHello':
-            return [
+            case 'demo.sayHello':
+                return [
                     'string'
                 ];
 
-        default:
-            return new IXR_Error(-32601, "server error. requested signature of $name method does not exist.");
+            default:
+                return new IXR_Error(-32601, "server error. requested signature of $name method does not exist.");
         }
     }
 

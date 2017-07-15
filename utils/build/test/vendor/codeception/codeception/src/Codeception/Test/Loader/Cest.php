@@ -2,11 +2,10 @@
 namespace Codeception\Test\Loader;
 
 use Codeception\Exception\TestParseException;
-use Codeception\Lib\ExampleSuite;
 use Codeception\Lib\Parser;
 use Codeception\Test\Cest as CestFormat;
-use Codeception\Test\Descriptor;
 use Codeception\Util\Annotation;
+use Codeception\Util\ReflectionHelper;
 
 class Cest implements LoaderInterface
 {
@@ -41,19 +40,47 @@ class Cest implements LoaderInterface
                 if (strpos($method, '_') === 0) {
                     continue;
                 }
+                $examples = [];
 
+                // example Annotation
                 $rawExamples = Annotation::forMethod($unit, $method)->fetchAll('example');
                 if (count($rawExamples)) {
                     $examples = array_map(
                         function ($v) {
                             return Annotation::arrayValue($v);
-                        }, $rawExamples
+                        },
+                        $rawExamples
                     );
+                }
+
+                // dataProvider Annotation
+                $dataMethod = Annotation::forMethod($testClass, $method)->fetch('dataProvider');
+                // lowercase for back compatible
+                if (empty($dataMethod)) {
+                    $dataMethod = Annotation::forMethod($testClass, $method)->fetch('dataprovider');
+                }
+
+                if (!empty($dataMethod)) {
+                    try {
+                        $data = ReflectionHelper::invokePrivateMethod($unit, $dataMethod);
+                        // allow to mix example and dataprovider annotations
+                        $examples = array_merge($examples, $data);
+                    } catch (\Exception $e) {
+                        throw new TestParseException(
+                            $file,
+                            "DataProvider '$dataMethod' for $testClass->$method is invalid or not callable.\n" .
+                            "Make sure that the dataprovider exist within the test class."
+                        );
+                    }
+                }
+
+                if (count($examples)) {
                     $dataProvider = new \PHPUnit_Framework_TestSuite_DataProvider();
                     foreach ($examples as $k => $example) {
                         if ($example === null) {
                             throw new TestParseException(
-                                $file, "Example for $testClass->$method contains invalid data:\n" .
+                                $file,
+                                "Example for $testClass->$method contains invalid data:\n" .
                                 $rawExamples[$k] . "\n" .
                                 "Make sure this is a valid JSON (Hint: \"-char for strings) or a single-line annotation in Doctrine-style"
                             );
@@ -69,5 +96,4 @@ class Cest implements LoaderInterface
             }
         }
     }
-
 }

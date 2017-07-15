@@ -1,10 +1,10 @@
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- *  copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *  copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
- *  version   7.07
+ *  version   7.08
   */
 
 ;
@@ -33,17 +33,16 @@
         return this.script.done(callback);
       }
 
-      $.load_css(ltoptions.files + "/js/mediaelement/css/mediaelementplayer.min.css");
-      this.script = $.load_script(ltoptions.files + "/js/mediaelement/videoplayer.min.js", callback);
+      $.load_css(ltoptions.files + "/js/mediaelement/mediaelementplayer.min.css");
+      this.script = $.load_script(ltoptions.files + "/files/js/media." + ltoptions.jsmerger + ".js", callback);
     },
 
     player: function(elem, options) {
       return elem.mediaelementplayer($.extend(
         options ? options : {}, {
-          features: ['playpause', 'progress', 'current', 'duration', 'tracks', 'volume', 'fullscreen'],
+          //features: ['playpause', 'progress', 'current', 'duration', 'tracks', 'volume', 'fullscreen'],
           pluginPath: ltoptions.files + "/js/mediaelement/"
-        },
-        "mediaplayer" in lang ? lang.mediaplayer : {}
+        }
       ));
     },
 

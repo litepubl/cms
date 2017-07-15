@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\bootstrap;
@@ -20,7 +20,9 @@ function BbootstrapInstall($self)
     $js = Js::i();
     $js->lock();
     $js->externalfunc(
-        get_class($js), '_switch', [
+        get_class($js),
+        '_switch',
+        [
         $js->externalfunc(get_class($js), '_bootstrap_files', false) ,
         $js->externalfunc(get_class($js), '_pretty_files', false)
         ]
@@ -32,9 +34,9 @@ function BbootstrapInstall($self)
     $js_switch = $js->getExternalFuncName(get_class($js), '_switch');
     $css = Css::i();
     $css->lock();
-    $js_switch($css, [] , $css->externalfunc(get_class($css), '_pretty_files', false));
-    $js_switch($css, [] , $css->externalfunc(get_class($css), '_deprecated_files', false));
-    $js_switch($css, $css->externalfunc(get_class($css), '_bootstrap_files', false) , []);
+    $js_switch($css, [], $css->externalfunc(get_class($css), '_pretty_files', false));
+    $js_switch($css, [], $css->externalfunc(get_class($css), '_deprecated_files', false));
+    $js_switch($css, $css->externalfunc(get_class($css), '_bootstrap_files', false), []);
 
     //default installed plugins
     $plugins = Plugins::i();
@@ -53,7 +55,9 @@ function BootstrapUninstall($self)
     $js = Js::i();
     $js->lock();
     $js->externalfunc(
-        get_class($js), '_switch', [
+        get_class($js),
+        '_switch',
+        [
         $js->externalfunc(get_class($js), '_pretty_files', false) ,
         $js->externalfunc(get_class($js), '_bootstrap_files', false) ,
         ]
@@ -67,9 +71,9 @@ function BootstrapUninstall($self)
     $js_switch = $js->getExternalFuncName(get_class($js), '_switch');
     $css = Css::i();
     $css->lock();
-    $js_switch($css, $css->externalfunc(get_class($css), '_pretty_files', false) , []);
-    $js_switch($css, $css->externalfunc(get_class($css), '_deprecated_files', false) , []);
-    $js_switch($css, [] , $css->externalfunc(get_class($css), '_bootstrap_files', false));
+    $js_switch($css, $css->externalfunc(get_class($css), '_pretty_files', false), []);
+    $js_switch($css, $css->externalfunc(get_class($css), '_deprecated_files', false), []);
+    $js_switch($css, [], $css->externalfunc(get_class($css), '_bootstrap_files', false));
     $css->unlock();
 
     Base::clearcache();

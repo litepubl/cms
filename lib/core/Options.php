@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\core;
@@ -20,7 +20,7 @@ use litepubl\Config;
  * @property       string $password
  * @property       string $solt
  * @property       bool $authenabled
- * @property       bool $usersenabled 
+ * @property       bool $usersenabled
  * @property       bool $reguser
  * @property       bool $xxxcheck
  * @property       string $cookiehash
@@ -94,7 +94,7 @@ class Options extends Events
     {
         try {
                 parent::__set($name, $value);
-        } catch(PropException $e) {
+        } catch (PropException $e) {
                 $this->data[$name] = $value;
         }
 

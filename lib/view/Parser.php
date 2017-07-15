@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\view;
@@ -55,21 +55,20 @@ class Parser extends BaseParser
                 $sidebars[$i][$j] = $theme->replacelang($widget, $lang);
             }
         }
-
     }
 
     public function checkAbout(string $name): bool
     {
         $about = $this->getAbout($name);
         switch ($about['type']) {
-        case 'litepublisher3':
-        case 'litepublisher':
-            $this->error('Litepublisher not supported old themes');
-            break;
+            case 'litepublisher3':
+            case 'litepublisher':
+                $this->error('Litepublisher not supported old themes');
+                break;
 
 
-        default:
-            return true;
+            default:
+                return true;
         }
     }
 
@@ -92,7 +91,8 @@ class Parser extends BaseParser
         if ($s = parent::getfile($filename)) {
             //fix some old tags
             $s = strtr(
-                $s, [
+                $s,
+                [
                 '$options.url$url' => '$link',
                 '$post.icon' => '',
                 '$post.categorieslinks' => '$post.catlinks',
@@ -148,16 +148,16 @@ class Parser extends BaseParser
     {
         $this->parsedtags[] = $name;
         switch ($name) {
-        case 'content.menu':
-            //fix old ver
-            $this->theme->templates['content.author'] = str_replace('menu', 'author', $value);
-            break;
+            case 'content.menu':
+                //fix old ver
+                $this->theme->templates['content.author'] = str_replace('menu', 'author', $value);
+                break;
 
 
-        case 'menu.item':
-            $this->theme->templates['menu.single'] = $value;
-            $this->theme->templates['menu.current'] = $value;
-            break;
+            case 'menu.item':
+                $this->theme->templates['menu.single'] = $value;
+                $this->theme->templates['menu.current'] = $value;
+                break;
         }
 
         $this->theme->templates[$name] = $value;
@@ -283,29 +283,29 @@ class Parser extends BaseParser
         }
         $name = $names[1];
         switch (count($names)) {
-        case 2:
-            $this->theme->templates['custom'][$name] = $value;
-            return;
+            case 2:
+                $this->theme->templates['custom'][$name] = $value;
+                return;
 
-        case 3:
-            return;
+            case 3:
+                return;
 
-        case 4:
-            $tag = $names[3];
-            $admin = & $this->theme->templates['customadmin'];
-            if (!isset($admin[$name])) {
-                $admin[$name] = [];
-            }
-
-            if ($tag == 'values') {
-                $value = explode(',', $value);
-                foreach ($value as $i => $v) {
-                    $value[$i] = trim($v);
+            case 4:
+                $tag = $names[3];
+                $admin = & $this->theme->templates['customadmin'];
+                if (!isset($admin[$name])) {
+                    $admin[$name] = [];
                 }
-            }
 
-            $admin[$name][$tag] = $value;
-            return;
+                if ($tag == 'values') {
+                    $value = explode(',', $value);
+                    foreach ($value as $i => $v) {
+                        $value[$i] = trim($v);
+                    }
+                }
+
+                $admin[$name][$tag] = $value;
+                return;
         }
     }
 
@@ -396,7 +396,8 @@ class Parser extends BaseParser
                 }
 
                 if (in_array(
-                    $widgetname, [
+                    $widgetname,
+                    [
                     'widget',
                     'categories',
                     'tags',
@@ -438,7 +439,8 @@ class Parser extends BaseParser
         $regform = 'content.post.templatecomments.regform';
         if (!in_array($regform, $this->parsedtags) && in_array('content.admin.editor', $this->parsedtags)) {
             $editor = strtr(
-                $templates['content.admin.editor'], [
+                $templates['content.admin.editor'],
+                [
                 '$lang.$name' => $this->replacelang ? Lang::i('comment')->content : '$lang.content',
                 '$name' => 'content',
                 '$value' => ''
@@ -490,26 +492,26 @@ class Parser extends BaseParser
         }
 
         switch ($path) {
-        case '.items':
-            return '.items';
+            case '.items':
+                return '.items';
 
-        case '.items.item':
-        case '.item':
-            return '.item';
+            case '.items.item':
+            case '.item':
+                return '.item';
 
-        case '.items.item.subcount':
-        case '.item.subcount':
-        case '.subcount':
-            return '.subcount';
+            case '.items.item.subcount':
+            case '.item.subcount':
+            case '.subcount':
+                return '.subcount';
 
-        case '.items.item.subitems':
-        case '.item.subitems':
-        case '.subitems':
-            return '.subitems';
+            case '.items.item.subitems':
+            case '.item.subitems':
+            case '.subitems':
+                return '.subitems';
 
-        case '.classes':
-        case '.items.classes':
-            return '.classes';
+            case '.classes':
+            case '.items.classes':
+                return '.classes';
         }
 
         return false;

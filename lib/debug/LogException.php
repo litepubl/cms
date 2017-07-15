@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\debug;
@@ -59,35 +59,35 @@ class LogException
     public static function dump(&$v)
     {
         switch (gettype($v)) {
-        case 'string':
-            if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
-                $v = substr($v, 0, $i);
-            }
+            case 'string':
+                if ((strlen($v) > 60) && ($i = strpos($v, ' ', 50))) {
+                    $v = substr($v, 0, $i);
+                }
 
-            return sprintf('\'%s\'', $v);
+                return sprintf('\'%s\'', $v);
 
-        case 'object':
-            return get_class($v);
+            case 'object':
+                return get_class($v);
 
-        case 'boolean':
-            return $v ? 'true' : 'false';
+            case 'boolean':
+                return $v ? 'true' : 'false';
 
-        case 'integer':
-        case 'double':
-        case 'float':
-            return $v;
+            case 'integer':
+            case 'double':
+            case 'float':
+                return $v;
 
-        case 'array':
-            $result = '';
-            foreach ($v as $k => $item) {
-                $s = static ::dump($item);
-                $result.= "$k = $s;\n";
-            }
+            case 'array':
+                $result = '';
+                foreach ($v as $k => $item) {
+                    $s = static ::dump($item);
+                    $result.= "$k = $s;\n";
+                }
 
-            return "[\n$result]\n";
+                return "[\n$result]\n";
 
-        default:
-            return gettype($v);
+            default:
+                return gettype($v);
         }
     }
 }

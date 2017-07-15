@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\menu;
@@ -24,7 +24,8 @@ class Manager extends \litepubl\admin\Menu
     {
         $result = '';
         if (isset($_GET['action']) && in_array(
-            $_GET['action'], [
+            $_GET['action'],
+            [
             'delete',
             'setdraft',
             'publish'
@@ -37,7 +38,8 @@ class Manager extends \litepubl\admin\Menu
         $lang = Lang::admin();
         $editurl = Link::url("{$this->url}edit/?id");
         $result.= $this->tableItems(
-            $menus->items, [
+            $menus->items,
+            [
             [
                 $lang->menutitle,
                 function (Table $tb) use ($menus) {
@@ -90,18 +92,18 @@ class Manager extends \litepubl\admin\Menu
         $lang = $this->lang;
         $menuitem = Menu::i($id);
         switch ($action) {
-        case 'delete':
-            return $this->confirmDeleteItem($menus);
+            case 'delete':
+                return $this->confirmDeleteItem($menus);
 
-        case 'setdraft':
-            $menuitem->status = 'draft';
-            $menus->edit($menuitem);
-            return $admin->success($lang->confirmedsetdraft);
+            case 'setdraft':
+                $menuitem->status = 'draft';
+                $menus->edit($menuitem);
+                return $admin->success($lang->confirmedsetdraft);
 
-        case 'publish':
-            $menuitem->status = 'published';
-            $menus->edit($menuitem);
-            return $admin->success($lang->confirmedpublish);
+            case 'publish':
+                $menuitem->status = 'published';
+                $menus->edit($menuitem);
+                return $admin->success($lang->confirmedpublish);
         }
 
         return '';

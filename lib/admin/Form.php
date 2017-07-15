@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin;
@@ -64,15 +64,15 @@ class Form
     public function __set(string $k, $v)
     {
         switch ($k) {
-        case 'upload':
-            if ($v) {
-                $this->enctype = 'multipart/form-data';
-                $this->submit = 'upload';
-            } else {
-                $this->enctype = '';
-                $this->submit = 'update';
-            }
-            break;
+            case 'upload':
+                if ($v) {
+                    $this->enctype = 'multipart/form-data';
+                    $this->submit = 'upload';
+                } else {
+                    $this->enctype = '';
+                    $this->submit = 'update';
+                }
+                break;
         }
     }
 
@@ -135,7 +135,8 @@ class Form
         }
 
         return strtr(
-            $admin->templates['form'], [
+            $admin->templates['form'],
+            [
             '$title' => $title,
             '$before' => $this->before,
             '$attr' => $attr,
@@ -158,7 +159,8 @@ class Form
         $a = func_get_args();
         foreach ($a as $name) {
             $result.= strtr(
-                $theme->templates['content.admin.button'], [
+                $theme->templates['content.admin.button'],
+                [
                 '$lang.$name' => $lang->__get($name) ,
                 '$name' => $name,
                 ]

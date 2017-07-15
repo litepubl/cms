@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\users;
@@ -31,45 +31,47 @@ class Groups extends \litepubl\admin\Menu
         $id = $this->idget();
 
         switch ($this->action) {
-        case 'add':
-            $result.= $admin->help($lang->notegroup);
-            $args->name = '';
-            $args->title = '';
-            $args->home = '';
-            $args->action = 'add';
-            $args->formtitle = $lang->editgroup;
-            $result.= $admin->form(
-                '
+            case 'add':
+                $result.= $admin->help($lang->notegroup);
+                $args->name = '';
+                $args->title = '';
+                $args->home = '';
+                $args->action = 'add';
+                $args->formtitle = $lang->editgroup;
+                $result.= $admin->form(
+                    '
       [text=title]
       [text=name]
       [text=home]
       [hidden=action]
-' . $admin->h($lang->parentgroups) . GetPerm::groups([]), $args
-            );
-            break;
+' . $admin->h($lang->parentgroups) . GetPerm::groups([]),
+                    $args
+                );
+                break;
 
 
-        case 'edit':
-            $result.= $admin->help($lang->notegroup);
-            $args->add($groups->items[$id]);
-            $args->id = $id;
-            $args->action = 'edit';
-            $args->formtitle = $lang->editgroup;
-            $result.= $admin->form(
-                '
+            case 'edit':
+                $result.= $admin->help($lang->notegroup);
+                $args->add($groups->items[$id]);
+                $args->id = $id;
+                $args->action = 'edit';
+                $args->formtitle = $lang->editgroup;
+                $result.= $admin->form(
+                    '
       [text=title]
       [text=name]
       [text=home]
       [hidden=id]
       [hidden=action]
-' . $admin->h($lang->parentgroups) . GetPerm::groups($groups->items[$id]['parents']), $args
-            );
-            break;
+' . $admin->h($lang->parentgroups) . GetPerm::groups($groups->items[$id]['parents']),
+                    $args
+                );
+                break;
 
 
-        case 'delete':
-            $result.= $this->confirmDeleteItem($groups);
-            break;
+            case 'delete':
+                $result.= $this->confirmDeleteItem($groups);
+                break;
         }
 
         $tb = $this->newTable();
@@ -97,31 +99,31 @@ class Groups extends \litepubl\admin\Menu
         $groups = UserGroups::i();
         $admin = $this->admintheme;
         switch ($this->action) {
-        case 'add':
-            $groups->lock();
-            $id = $groups->add($_POST['name'], $_POST['title'], $_POST['home']);
-            $groups->items[$id]['parents'] = $admin->check2array('idgroup-');
-            $groups->unlock();
-            $_POST['id'] = $id;
-            $_GET['id'] = $id;
-            $_GET['action'] = 'edit';
-            break;
+            case 'add':
+                $groups->lock();
+                $id = $groups->add($_POST['name'], $_POST['title'], $_POST['home']);
+                $groups->items[$id]['parents'] = $admin->check2array('idgroup-');
+                $groups->unlock();
+                $_POST['id'] = $id;
+                $_GET['id'] = $id;
+                $_GET['action'] = 'edit';
+                break;
 
 
-        case 'edit':
-            $id = $this->idget();
-            if ($groups->itemExists($id)) {
-                foreach ([
+            case 'edit':
+                $id = $this->idget();
+                if ($groups->itemExists($id)) {
+                    foreach ([
                     'name',
                     'title',
                     'home'
-                ] as $name) {
-                    $groups->items[$id][$name] = $_POST[$name];
+                    ] as $name) {
+                        $groups->items[$id][$name] = $_POST[$name];
+                    }
+                    $groups->items[$id]['parents'] = $admin->check2array('idgroup-');
+                    $groups->save();
                 }
-                $groups->items[$id]['parents'] = $admin->check2array('idgroup-');
-                $groups->save();
-            }
-            break;
+                break;
         }
     }
 }

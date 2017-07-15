@@ -11,6 +11,7 @@ namespace Zend\Diactoros;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * HTTP Request encapsulation
@@ -21,7 +22,7 @@ use Psr\Http\Message\StreamInterface;
  */
 class Request implements RequestInterface
 {
-    use MessageTrait, RequestTrait;
+    use RequestTrait;
 
     /**
      * @param null|string|UriInterface $uri URI for the request, if any.
@@ -42,7 +43,7 @@ class Request implements RequestInterface
     {
         $headers = $this->headers;
         if (! $this->hasHeader('host')
-            && ($this->uri && $this->uri->getHost())
+            && $this->uri->getHost()
         ) {
             $headers['Host'] = [$this->getHostFromUri()];
         }
@@ -57,7 +58,7 @@ class Request implements RequestInterface
     {
         if (! $this->hasHeader($header)) {
             if (strtolower($header) === 'host'
-                && ($this->uri && $this->uri->getHost())
+                && $this->uri->getHost()
             ) {
                 return [$this->getHostFromUri()];
             }
@@ -66,9 +67,7 @@ class Request implements RequestInterface
         }
 
         $header = $this->headerNames[strtolower($header)];
-        $value  = $this->headers[$header];
-        $value  = is_array($value) ? $value : [$value];
 
-        return $value;
+        return $this->headers[$header];
     }
 }

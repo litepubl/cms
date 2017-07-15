@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\view;
@@ -75,9 +75,7 @@ function JsInstall($self)
 
     $section = 'media';
     $self->add($section, '/js/mediaelement/mediaelement-and-player.min.js');
-    if ($language != 'en') {
-        $self->add($section, "/lib/languages/$language/mediaplayer.min.js");
-    }
+        $self->add($section, "/js/mediaelement/lang/$language.min.js");
 
     $section = 'admin';
     Js_bootstrap_admin($self, true);
@@ -194,7 +192,6 @@ function Js_bootstrap_admin($js, $add = true)
             }
         }
     }
-
 }
 
 function Js_ui_admin($js, $add = true)

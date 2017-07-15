@@ -7,6 +7,6 @@
 
 (function($) {
   $(function() {
-    $.load_css(ltoptions.files + "/js/fonts/css/font-awesome.min.css?v=4.6.3");
+    $.load_css(ltoptions.files + "/js/fonts/css/font-awesome.min.css?v=4.7.0");
   });
 })(jQuery);

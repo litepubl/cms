@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\service;
@@ -65,22 +65,22 @@ class Backup extends Login
             }
 
             switch ($_GET['action']) {
-            case 'download':
-                if ($s = @file_get_contents($this->getApp()->paths->backup . $filename)) {
-                    $this->sendfile($s, $filename);
-                } else {
-                    return $this->notfound;
-                }
-                break;
+                case 'download':
+                    if ($s = @file_get_contents($this->getApp()->paths->backup . $filename)) {
+                        $this->sendfile($s, $filename);
+                    } else {
+                        return $this->notfound;
+                    }
+                    break;
 
 
-            case 'delete':
-                if ($this->confirmed) {
-                    @unlink($this->getApp()->paths->backup . $filename);
-                    return $admin->succes($lang->backupdeleted);
-                } else {
-                    $result.= $this->confirmDelete($id, sprintf('%s %s?', $lang->confirmdelete, $_GET['id']));
-                }
+                case 'delete':
+                    if ($this->confirmed) {
+                        @unlink($this->getApp()->paths->backup . $filename);
+                        return $admin->succes($lang->backupdeleted);
+                    } else {
+                        $result.= $this->confirmDelete($id, sprintf('%s %s?', $lang->confirmdelete, $_GET['id']));
+                    }
             }
         }
 
@@ -139,34 +139,34 @@ class Backup extends Login
             $filename = $this->getApp()->site->domain . date('-Y-m-d') . '.sql';
 
             switch ($backuper->archtype) {
-            case 'tar':
-                $tar = $backuper->newTar();
-                $tar->addstring($content, $filename, 0644);
-                $content = $tar->savetostring(true);
-                $filename.= '.tar.gz';
-                unset($tar);
-                break;
+                case 'tar':
+                    $tar = $backuper->newTar();
+                    $tar->addstring($content, $filename, 0644);
+                    $content = $tar->savetostring(true);
+                    $filename.= '.tar.gz';
+                    unset($tar);
+                    break;
 
 
-            case 'zip':
-                $tempfile = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
-                $zip = new \ZipArchive();
-                if ($zip->open($tempfile, \ZipArchive::CREATE) === true) {
-                    $zip->addFromString($filename, $content);
-                    $zip->close();
-                    unset($zip);
+                case 'zip':
+                    $tempfile = $this->getApp()->paths->backup . Str::md5Rand() . '.zip';
+                    $zip = new \ZipArchive();
+                    if ($zip->open($tempfile, \ZipArchive::CREATE) === true) {
+                        $zip->addFromString($filename, $content);
+                        $zip->close();
+                        unset($zip);
 
-                    $content = file_get_contents($tempfile);
-                    @unlink($tempfile);
-                    $filename.= '.zip';
-                }
-                break;
+                        $content = file_get_contents($tempfile);
+                        @unlink($tempfile);
+                        $filename.= '.zip';
+                    }
+                    break;
 
 
-            default:
-                $content = gzencode($content);
-                $filename.= '.gz';
-                break;
+                default:
+                    $content = gzencode($content);
+                    $filename.= '.gz';
+                    break;
             }
 
             $this->sendfile($content, $filename);
@@ -216,7 +216,8 @@ class Backup extends Login
 
         $lang = $this->lang;
         return $admin->h($lang->backupheader) . $this->tableItems(
-            $items, [
+            $items,
+            [
             [
                 'right',
                 $lang->download,

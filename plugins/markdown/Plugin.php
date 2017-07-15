@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\markdown;
@@ -33,11 +33,12 @@ class Plugin extends \litepubl\core\Plugin
         $event->content = $this->parser->transform($event->content);
         if ($this->deletep) {
             $event->content = strtr(
-                $event->content, [
+                $event->content,
+                [
                 '<p>' => '',
                 '</p>' => '',
                 '&#95;' => '_'
-                ]            
+                ]
             );
         }
     }

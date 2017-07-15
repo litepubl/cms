@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\postwidget;
@@ -55,7 +55,8 @@ class Admin extends \litepubl\admin\widget\Custom
     [hidden=idwidget]
     [hidden=mode]
 ' . $this->admin->h($lang->cats)
-            . $cats, $args
+            . $cats,
+            $args
         );
 
         $result .= $this->getTableWidgets();
@@ -68,28 +69,28 @@ class Admin extends \litepubl\admin\widget\Custom
         if (isset($_POST['mode'])) {
             extract($_POST, EXTR_SKIP);
             switch ($mode) {
-            case 'add':
-                $_GET['idwidget'] = $widget->add($widgettitle, $content, $template, $this->admin->processCategories());
-                break;
+                case 'add':
+                    $_GET['idwidget'] = $widget->add($widgettitle, $content, $template, $this->admin->processCategories());
+                    break;
 
 
-            case 'edit':
-                $id = isset($_GET['idwidget']) ? (int)$_GET['idwidget'] : 0;
-                if ($id == 0) {
-                    $id = isset($_POST['idwidget']) ? (int)$_POST['idwidget'] : 0;
-                }
-                $item = $widget->items[$id];
-                $item['title'] = $widgettitle;
-                $item['content'] = $content;
-                $item['template'] = $template;
-                $item['cats'] = $this->admin->processCategories();
-                $widget->items[$id] = $item;
-                $widget->save();
+                case 'edit':
+                    $id = isset($_GET['idwidget']) ? (int)$_GET['idwidget'] : 0;
+                    if ($id == 0) {
+                        $id = isset($_POST['idwidget']) ? (int)$_POST['idwidget'] : 0;
+                    }
+                    $item = $widget->items[$id];
+                    $item['title'] = $widgettitle;
+                    $item['content'] = $content;
+                    $item['template'] = $template;
+                    $item['cats'] = $this->admin->processCategories();
+                    $widget->items[$id] = $item;
+                    $widget->save();
 
-                $widgets = Widgets::i();
-                $widgets->items[$id]['title'] = $widgettitle;
-                $widgets->save();
-                break;
+                    $widgets = Widgets::i();
+                    $widgets->items[$id]['title'] = $widgettitle;
+                    $widgets->save();
+                    break;
             }
         } else {
             $this->deleteWidgets($widget);

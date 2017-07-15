@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin;
@@ -150,7 +150,8 @@ class Menu extends \litepubl\pages\Menu
 
     public function getAdminurl(): string
     {
-        return $this->getApp()->site->url . $this->url . $this->getApp()->site->q . 'id';
+        $site = $this->getApp()->site;
+        return $site->url . $this->url . $site->q . 'id';
     }
 
     public function getLang(string $name = ''): Lang

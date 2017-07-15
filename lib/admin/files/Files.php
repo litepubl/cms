@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\files;
@@ -66,30 +66,30 @@ class Files extends \litepubl\admin\Menu
             }
 
             switch ($_GET['action']) {
-            case 'delete':
-                if ($this->confirmed) {
-                    if (('author' == $this->getApp()->options->group) && !AuthorRights::canDeleteFile($id)) {
-                        return AuthorRights::getMessage();
+                case 'delete':
+                    if ($this->confirmed) {
+                        if (('author' == $this->getApp()->options->group) && !AuthorRights::canDeleteFile($id)) {
+                            return AuthorRights::getMessage();
+                        }
+
+                        $files->delete($id);
+                        $result.= $admintheme->success($lang->deleted);
+                    } else {
+                        $item = $files->getitem($id);
+                        return $this->confirmDelete($id, sprintf($lang->confirm, $item['filename']));
                     }
+                    break;
 
-                    $files->delete($id);
-                    $result.= $admintheme->success($lang->deleted);
-                } else {
+
+                case 'edit':
                     $item = $files->getitem($id);
-                    return $this->confirmDelete($id, sprintf($lang->confirm, $item['filename']));
-                }
-                break;
-
-
-            case 'edit':
-                $item = $files->getitem($id);
-                $args->add($item);
-                $args->title = Filter::unescape($item['title']);
-                $args->description = Filter::unescape($item['description']);
-                $args->keywords = Filter::unescape($item['keywords']);
-                $args->formtitle = $this->lang->editfile;
-                $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . ($this->getApp()->options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : ''), $args);
-                break;
+                    $args->add($item);
+                    $args->title = Filter::unescape($item['title']);
+                    $args->description = Filter::unescape($item['description']);
+                    $args->keywords = Filter::unescape($item['keywords']);
+                    $args->formtitle = $this->lang->editfile;
+                    $result.= $admintheme->form('[text=title] [text=description] [text=keywords]' . ($this->getApp()->options->show_file_perm ? AdminPerms::getcombo($item['idperm'], 'idperm') : ''), $args);
+                    break;
             }
         }
 
@@ -108,7 +108,8 @@ class Files extends \litepubl\admin\Menu
 
         $args->adminurl = $this->adminurl;
         $result.= $this->tableItems(
-            $files->items, [
+            $files->items,
+            [
             [
                 'right',
                 'ID',

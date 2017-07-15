@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\pages;
@@ -99,7 +99,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             if (isset($params['slave']) && is_array($params['slave'])) {
                 try {
                     $slaveCallback = $this->getMethod($params['slave']['method']);
-                    $slaveResult = call_user_func_array($slaveCallback,                         [$params['slave']['params']]);
+                    $slaveResult = call_user_func_array($slaveCallback, [$params['slave']['params']]);
                 } catch (\Exception $e) {
                     $slaveResult  = [
                         'error' => [
@@ -109,7 +109,6 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
                     ];
                 }
             }
-
         } catch (\Throwable $e) {
                     $result = [
                         'error' => [
@@ -191,7 +190,7 @@ class Json extends \litepubl\core\Events implements \litepubl\core\ResponsiveInt
             }
         }
 
-        $r = $this->onGetMethod(['name' => $name, 'result' => false]);
+        $r = $this->onGetMethod(['method' => $name, 'result' => false]);
         if (is_callable($r['result'])) {
             return $r['result'];
         }

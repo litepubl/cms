@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\ulogin;
@@ -41,6 +41,7 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
         $this->addEvents('added', 'onadd', 'onphone');
         $this->table = 'ulogin';
         $this->data['url'] = '/admin/ulogin.php';
+        $this->data['remember'] = true;
         $this->data['nets'] = [];
     }
 
@@ -102,7 +103,6 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
 
         if (!($cookies = $this->auth($token))) {
             return $response->forbidden();
-            ;
         }
 
         if (!empty($_GET['backurl'])) {
@@ -125,7 +125,7 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
             }
         }
 
-        setcookie('backurl', '', 0, $this->getApp()->site->subdir, false);
+        $this->getApp()->options->setCookie('backurl', '', 0);
         return $response->redir($backurl);
     }
 
@@ -216,17 +216,13 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
             }
         }
 
-        $expired = time() + 31536000;
+        $expired = $this->remember ? time() + 31536000  : time() + 8 * 3600;
         $cookie = Str::md5Uniq();
         $options = $this->getApp()->options;
         $options->user = $id;
         $options->updateGroup();
         $options->setCookies($cookie, $expired);
-        if ($options->inGroup('admin')) {
-            setcookie('litepubl_user_flag', 'true', $expired, $this->getApp()->site->subdir . '/', false);
-        }
-
-        setcookie('litepubl_regservice', $info['network'], $expired, $this->getApp()->site->subdir . '/', false);
+        $options->setCookie('litepubl_regservice', $info['network'], $expired);
         $this->onAdd(
             [
             'id' => $id,
@@ -285,7 +281,9 @@ class Ulogin extends \litepubl\core\Plugin implements \litepubl\core\ResponsiveI
                 '(',
                 ')',
                 '.'
-                ], '', trim($phone)
+                ],
+                '',
+                trim($phone)
             )
         );
         if (strlen($phone) && ($phone[0] == '9')) {

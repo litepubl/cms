@@ -1,14 +1,18 @@
 <?php
 namespace litepubl;
-
+ini_set('xdebug.default_enable', 0);
             error_reporting(-1);
             ini_set('display_errors', 1);
            Header('Cache-Control: no-cache, must-revalidate');
             Header('Pragma: no-cache');
 
+if (!defined('litepubl\mode')) {
 define('litepubl\mode', 'config');
+}
+
 require (__DIR__ . '/index.php');
 Config::$debug = true;
+Config::$useKernel = false;
 //Config::$classes['storage'] = 'litepubl\core\storageinc';
 Config::$afterInit = function($app) {
 if (file_exists(__DIR__ . '/temp/zdebug.php')) {
@@ -32,6 +36,7 @@ require (__DIR__ . '/lib/core/kernel.php');
 \litepubl\core\litepubl::$app->getLogger();
 } catch (\Throwable $e) {
 echo "<pre>\n";
+echo "error hooked in index.debug.php\n";
 echo $e;
 }
 

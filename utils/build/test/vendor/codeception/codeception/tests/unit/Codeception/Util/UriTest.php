@@ -1,7 +1,6 @@
 <?php
 namespace Codeception\Util;
 
-
 class UriTest extends \Codeception\Test\Unit
 {
     // tests
@@ -97,4 +96,19 @@ class UriTest extends \Codeception\Test\Unit
             Uri::appendPath('http://codeception.com/quickstart?a=b#c', '')
         );
     }
+
+    public function testMergeUrlsWhenBaseUriHasNoTrailingSlashAndUriPathHasNoLeadingSlash()
+    {
+        $this->assertEquals(
+            'http://codeception.com/test',
+            Uri::mergeUrls('http://codeception.com', 'test'));
+    }
+
+    public function testMergeUrlsWhenBaseUriEndsWithSlashButUriPathHasNoLeadingSlash()
+    {
+        $this->assertEquals(
+            'http://codeception.com/test',
+            Uri::mergeUrls('http://codeception.com/', 'test'));
+    }
+
 }

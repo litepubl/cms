@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin;
@@ -40,7 +40,8 @@ class UList
     public function li($name, $value)
     {
         return strtr(
-            is_int($name) ? $this->value : $this->item, [
+            is_int($name) ? $this->value : $this->item,
+            [
             '$name' => $name,
             '$value' => $value,
             '$site.url' => $this->getApp()->site->url,
@@ -51,7 +52,8 @@ class UList
     public function link($url, $title)
     {
         return strtr(
-            $this->link, [
+            $this->link,
+            [
             '$name' => $url,
             '$value' => $title,
             ]

@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\wikiwords;
@@ -80,7 +80,8 @@ class Wiki extends \litepubl\core\Items
         } elseif ($c == 1) {
             $post = Post::i($items[0]);
             $result = strtr(
-                $theme->templates['wiki.link'], [
+                $theme->templates['wiki.link'],
+                [
                 '$id' => $id,
                 '$word' => $word,
                 '$post.link' => $post->link,
@@ -93,7 +94,8 @@ class Wiki extends \litepubl\core\Items
             foreach ($items as $idpost) {
                 $post = Post::i($idpost);
                 $links.= strtr(
-                    $theme->templates['wiki.links.item'], [
+                    $theme->templates['wiki.links.item'],
+                    [
                     '$id' => $id,
                     '$word' => $word,
                     '$post.link' => $post->link,
@@ -103,7 +105,8 @@ class Wiki extends \litepubl\core\Items
             }
 
             $result = strtr(
-                $theme->templates['wiki.links'], [
+                $theme->templates['wiki.links'],
+                [
                 '$id' => $id,
                 '$word' => $word,
                 '$item' => $links,

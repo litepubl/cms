@@ -1,10 +1,10 @@
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- *  copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ *  copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  *  license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  *  link      https://github.com/litepubl\cms
- *  version   7.07
+ *  version   7.08
   */
 
 (function(litepubl) {
@@ -17,6 +17,6 @@
     head: '<li role="presentation"><a href="#tabpanel-%%id%%" aria-controls="tabpanel-%%id%%" role="tab" data-toggle="tab">%%title%%</a></li>',
     tab: '<div role="tabpanel" class="tab-pane fade" id="tabpanel-%%id%%">%%content%%</div>',
     spin: '<span class="fa fa-spin fa-spinner"></span>'
-      //fa-circle-o-notch, fa-refresh 
+    //fa-circle-o-notch, fa-refresh 
   };
 })(litepubl);

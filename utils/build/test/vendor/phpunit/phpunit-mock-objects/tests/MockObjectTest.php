@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the PHPUnit_MockObject package.
+ * This file is part of the phpunit-mock-objects package.
  *
  * (c) Sebastian Bergmann <sebastian@phpunit.de>
  *
@@ -8,7 +8,10 @@
  * file that was distributed with this source code.
  */
 
-class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\ExpectationFailedException;
+
+class Framework_MockObjectTest extends TestCase
 {
     public function testMockedMethodIsNeverCalled()
     {
@@ -29,6 +32,9 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
              ->with('someArg');
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testMockedMethodIsNotCalledWhenExpectsAnyWithParameter()
     {
         $mock = $this->getMockBuilder(SomeClass::class)
@@ -39,6 +45,9 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
              ->with('someArg');
     }
 
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testMockedMethodIsNotCalledWhenMethodSpecifiedDirectlyWithParameter()
     {
         $mock = $this->getMockBuilder(SomeClass::class)
@@ -163,13 +172,9 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
              ->method('doSomething')
              ->will($this->throwException(new Exception));
 
-        try {
-            $mock->doSomething();
-        } catch (Exception $e) {
-            return;
-        }
+        $this->expectException(Exception::class);
 
-        $this->fail();
+        $mock->doSomething();
     }
 
     public function testStubbedWillThrowException()
@@ -181,13 +186,9 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
              ->method('doSomething')
              ->willThrowException(new Exception);
 
-        try {
-            $mock->doSomething();
-        } catch (Exception $e) {
-            return;
-        }
+        $this->expectException(Exception::class);
 
-        $this->fail();
+        $mock->doSomething();
     }
 
     public function testStubbedReturnValue()
@@ -660,7 +661,7 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
         try {
             $mock->__phpunit_verify();
             $this->fail('Expected exception');
-        } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        } catch (ExpectationFailedException $e) {
             $this->assertSame(
                 "Expectation failed for method name is equal to <string:right> when invoked 1 time(s).\n"
                 . "Method was expected to be called 1 times, actually called 0 times.\n",
@@ -685,7 +686,7 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
         try {
             $mock->__phpunit_verify();
             $this->fail('Expected exception');
-        } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        } catch (ExpectationFailedException $e) {
             $this->assertSame(
                 "Expectation failed for method name is equal to <string:right> when invoked 1 time(s).\n"
                 . "Method was expected to be called 1 times, actually called 0 times.\n",
@@ -708,7 +709,7 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
 
         try {
             $mock->right(['second']);
-        } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        } catch (ExpectationFailedException $e) {
             $this->assertSame(
                 "Expectation failed for method name is equal to <string:right> when invoked 1 time(s)\n"
                 . "Parameter 0 for invocation SomeClass::right(Array (...)) does not match expected value.\n"
@@ -720,7 +721,7 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
         try {
             $mock->__phpunit_verify();
             $this->fail('Expected exception');
-        } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        } catch (ExpectationFailedException $e) {
             $this->assertSame(
                 "Expectation failed for method name is equal to <string:right> when invoked 1 time(s).\n"
                 . "Parameter 0 for invocation SomeClass::right(Array (...)) does not match expected value.\n"
@@ -753,7 +754,7 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
         try {
             $mock->right();
             $this->fail('Expected exception');
-        } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        } catch (ExpectationFailedException $e) {
             $this->assertSame(
                 'SomeClass::right() was not expected to be called.',
                 $e->getMessage()
@@ -776,7 +777,7 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
         try {
             $mock->right();
             $this->fail('Expected exception');
-        } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        } catch (ExpectationFailedException $e) {
             $this->assertSame(
                 'SomeClass::right() was not expected to be called.',
                 $e->getMessage()
@@ -799,7 +800,7 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
         try {
             $mock->right();
             $this->fail('Expected exception');
-        } catch (PHPUnit_Framework_ExpectationFailedException $e) {
+        } catch (ExpectationFailedException $e) {
             $this->assertSame(
                 "Expectation failed for method name is equal to <string:right> when invoked 1 time(s)\n" .
                 "Parameter count for invocation SomeClass::right() is too low.\n" .
@@ -859,7 +860,7 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * https://github.com/sebastianbergmann/phpunit-mock-objects/issues/116
+     * @see https://github.com/sebastianbergmann/phpunit-mock-objects/issues/116
      */
     public function testMockArgumentsPassedByReference3()
     {
@@ -877,11 +878,11 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
             ->with($a, $b, $c)
             ->will($this->returnCallback([$foo, 'callback']));
 
-        $foo->bar($a, $b, $c);
+        $this->assertNull($foo->bar($a, $b, $c));
     }
 
     /**
-     * https://github.com/sebastianbergmann/phpunit/issues/796
+     * @see https://github.com/sebastianbergmann/phpunit/issues/796
      */
     public function testMockArgumentsPassedByReference4()
     {
@@ -899,7 +900,7 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
             ->with($this->isInstanceOf(stdClass::class), $b, $c)
             ->will($this->returnCallback([$foo, 'callback']));
 
-        $foo->bar($a, $b, $c);
+        $this->assertNull($foo->bar($a, $b, $c));
     }
 
     /**
@@ -933,8 +934,11 @@ class Framework_MockObjectTest extends PHPUnit_Framework_TestCase
      */
     public function testCreateTwoMocksOfOneWsdlFile()
     {
-        $mock = $this->getMockFromWsdl(__DIR__ . '/_fixture/GoogleSearch.wsdl');
-        $mock = $this->getMockFromWsdl(__DIR__ . '/_fixture/GoogleSearch.wsdl');
+        $a = $this->getMockFromWsdl(__DIR__ . '/_fixture/GoogleSearch.wsdl');
+        $b = $this->getMockFromWsdl(__DIR__ . '/_fixture/GoogleSearch.wsdl');
+
+        $this->assertStringStartsWith('Mock_GoogleSearch_', get_class($a));
+        $this->assertEquals(get_class($a), get_class($b));
     }
 
     /**

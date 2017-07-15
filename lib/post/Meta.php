@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\post;
@@ -123,7 +123,7 @@ class Meta extends \litepubl\core\Item
         while ($row = $db->fetchassoc($res)) {
             $id = (int)$row['id'];
             if (!isset($instances[$id])) {
-                $instances[$id] = new self();
+                $instances[$id] = new static();
                 $instances[$id]->data['id'] = $id;
             }
 

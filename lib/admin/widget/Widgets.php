@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\admin\widget;
@@ -107,7 +107,8 @@ class Widgets extends \litepubl\admin\Menu
                     'ajaxbuttons' => str_replace(
                         '$button',
                         strtr(
-                            $ajax == 'disabled' ? $tmlActiveButton : $tmlButton, [
+                            $ajax == 'disabled' ? $tmlActiveButton : $tmlButton,
+                            [
                             '$name' => "ajax-$id",
                             '$value' => 'disabled',
                             '$title' => $lang->noajax
@@ -115,7 +116,8 @@ class Widgets extends \litepubl\admin\Menu
                         )
 
                         . strtr(
-                            $ajax == 'ajax' ? $tmlActiveButton : $tmlButton, [
+                            $ajax == 'ajax' ? $tmlActiveButton : $tmlButton,
+                            [
                             '$name' => "ajax-$id",
                             '$value' => 'ajax',
                             '$title' => $lang->ajax
@@ -123,7 +125,8 @@ class Widgets extends \litepubl\admin\Menu
                         )
 
                         . (($widgetItem['cache'] == 'cache') || ($widgetItem['cache'] == 'nocache') ? strtr(
-                            $ajax == 'inline' ? $tmlActiveButton : $tmlButton, [
+                            $ajax == 'inline' ? $tmlActiveButton : $tmlButton,
+                            [
                             '$name' => "ajax-$id",
                             '$value' => 'inline',
                             '$title' => $lang->inline
@@ -200,7 +203,8 @@ class Widgets extends \litepubl\admin\Menu
       [checkbox=customsidebar]
       [checkbox=disableajax]
       [hidden=idschema]
-      [hidden=action]', $args
+      [hidden=action]',
+                $args
             );
         }
 
@@ -230,75 +234,75 @@ class Widgets extends \litepubl\admin\Menu
         $schema = Schema::i($idschema);
 
         switch ($_POST['action']) {
-        case 'options':
-            $schema->disableajax = isset($_POST['disableajax']);
-            $schema->customsidebar = isset($_POST['customsidebar']);
-            $schema->save();
-            break;
+            case 'options':
+                $schema->disableajax = isset($_POST['disableajax']);
+                $schema->customsidebar = isset($_POST['customsidebar']);
+                $schema->save();
+                break;
 
 
-        case 'edit':
-            if (($schema->id > 1) && !isset($_POST['customsidebar'])) {
-                $schema->customsidebar = false;
-            } else {
-                $sidebars = Sidebars::i($idschema);
-                $newItems = array_fill(0, count($sidebars->items), []);
+            case 'edit':
+                if (($schema->id > 1) && !isset($_POST['customsidebar'])) {
+                    $schema->customsidebar = false;
+                } else {
+                    $sidebars = Sidebars::i($idschema);
+                    $newItems = array_fill(0, count($sidebars->items), []);
 
-                foreach ($sidebars->items as $i => $items) {
-                    foreach ($items as $j => $item) {
-                        $id = $item['id'];
-                        if (!isset($_POST["sidebar-$id"])) {
-                            Arr::append($newItems[$i], $j, $item);
+                    foreach ($sidebars->items as $i => $items) {
+                        foreach ($items as $j => $item) {
+                            $id = $item['id'];
+                            if (!isset($_POST["sidebar-$id"])) {
+                                Arr::append($newItems[$i], $j, $item);
+                                continue;
+                            }
+
+                            $item['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] == 'ajax' ? 'ajax' : 'disabled');
+
+                            $i2 = (int)$_POST["sidebar-$id"];
+                            if ($i2 >= count($sidebars->items)) {
+                                $i2 = count($sidebars->items) - 1;
+                            }
+
+                            $j2 = (int)$_POST["order-$id"];
+                            if ($j2 > count($sidebars->items[$i2])) {
+                                $j2 = count($sidebars->items[$i2]);
+                            }
+
+                            Arr::append($newItems[$i2], $j2, $item);
+                        }
+                    }
+
+                    foreach ($newItems as $i => $items) {
+                        ksort($items);
+                        Arr::reIndex($items);
+                        $sidebars->items[$i] = $items;
+                    }
+
+                    $sidebars->save();
+                }
+                break;
+
+
+            case 'add':
+                $idschema = (int)$this->getParam('id_view', 1);
+                $_GET['idschema'] = $idschema;
+                $schema = Schema::i($idschema);
+                $widgets = WidgetItems::i();
+
+                foreach ($_POST as $key => $value) {
+                    if (Str::begin($key, 'addwidget-')) {
+                        $id = (int)$value;
+                        if (!$widgets->itemExists($id) || $widgets->subclass($id)) {
                             continue;
                         }
 
-                        $item['ajax'] = $_POST["ajax-$id"] == 'inline' ? 'inline' : ($_POST["ajax-$id"] == 'ajax' ? 'ajax' : 'disabled');
-
-                        $i2 = (int)$_POST["sidebar-$id"];
-                        if ($i2 >= count($sidebars->items)) {
-                            $i2 = count($sidebars->items) - 1;
-                        }
-
-                        $j2 = (int)$_POST["order-$id"];
-                        if ($j2 > count($sidebars->items[$i2])) {
-                            $j2 = count($sidebars->items[$i2]);
-                        }
-
-                        Arr::append($newItems[$i2], $j2, $item);
-                    }
-                }
-
-                foreach ($newItems as $i => $items) {
-                    ksort($items);
-                    Arr::reIndex($items);
-                    $sidebars->items[$i] = $items;
-                }
-
-                $sidebars->save();
-            }
-            break;
-
-
-        case 'add':
-            $idschema = (int)$this->getParam('id_view', 1);
-            $_GET['idschema'] = $idschema;
-            $schema = Schema::i($idschema);
-            $widgets = WidgetItems::i();
-
-            foreach ($_POST as $key => $value) {
-                if (Str::begin($key, 'addwidget-')) {
-                    $id = (int)$value;
-                    if (!$widgets->itemExists($id) || $widgets->subclass($id)) {
-                        continue;
-                    }
-
-                    $schema->sidebars[0][] = [
+                        $schema->sidebars[0][] = [
                         'id' => $id,
                         'ajax' => false
-                    ];
+                        ];
+                    }
                 }
-            }
-            break;
+                break;
         }
 
         $schema->save();

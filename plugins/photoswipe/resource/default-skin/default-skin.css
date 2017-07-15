@@ -60,6 +60,8 @@
 }
 
 
+
+
 /* pswp__ui--over-close class it added when mouse is over element that should close gallery */
 
 .pswp__ui--over-close .pswp__button--close {
@@ -125,12 +127,16 @@
 }
 
 
+
+
 /* no arrows on touch screens */
 
 .pswp--touch .pswp__button--arrow--left,
 .pswp--touch .pswp__button--arrow--right {
     visibility: hidden;
 }
+
+
 
 
 /*
@@ -175,6 +181,8 @@
     right: 6px;
     background-position: -94px -44px;
 }
+
+
 
 
 /*
@@ -266,6 +274,8 @@
 }
 
 
+
+
 /* increase size of share links on touch devices */
 
 .pswp--touch .pswp__share-tooltip a {
@@ -311,6 +321,8 @@ a.pswp__share--download:hover {
 }
 
 
+
+
 /*
 
 	3. Index indicator ("1 of X" counter)
@@ -328,6 +340,8 @@ a.pswp__share--download:hover {
     opacity: 0.75;
     padding: 0 10px;
 }
+
+
 
 
 /*
@@ -364,11 +378,15 @@ a.pswp__share--download:hover {
 }
 
 
+
+
 /* Fake caption element, used to calculate height of next/prev image */
 
 .pswp__caption--fake {
     visibility: hidden;
 }
+
+
 
 
 /*
@@ -523,6 +541,8 @@ a.pswp__share--download:hover {
 }
 
 
+
+
 /*
 	
 	6. Additional styles
@@ -538,6 +558,8 @@ a.pswp__share--download:hover {
     opacity: 1;
     z-index: 1550;
 }
+
+
 
 
 /* top black bar with buttons and "1 of X" indicator */
@@ -561,6 +583,8 @@ a.pswp__share--download:hover {
 }
 
 
+
+
 /* pswp--has_mouse class is added only when two subsequent mousemove events occur */
 
 .pswp--has_mouse .pswp__button--arrow--left,
@@ -574,12 +598,16 @@ a.pswp__share--download:hover {
 }
 
 
+
+
 /* pswp__ui--fit class is added when main image "fits" between top bar and bottom bar (caption) */
 
 .pswp__ui--fit .pswp__top-bar,
 .pswp__ui--fit .pswp__caption {
     background-color: rgba(0, 0, 0, 0.3);
 }
+
+
 
 
 /* pswp__ui--idle class is added when mouse isn't moving for several seconds (JS option timeToIdle) */
@@ -594,6 +622,8 @@ a.pswp__share--download:hover {
 }
 
 
+
+
 /*
 	pswp__ui--hidden class is added when controls are hidden
 	e.g. when user taps to toggle visibility of controls
@@ -606,6 +636,8 @@ a.pswp__share--download:hover {
     /* Force paint & create composition layer for controls. */
     opacity: 0.001;
 }
+
+
 
 
 /* pswp__ui--one-slide class is added when there is just one item in gallery */

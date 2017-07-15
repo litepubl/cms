@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\regservices;
@@ -73,11 +73,13 @@ class Twitter extends Service
             if ($r = $oauth->get_data('https://api.twitter.com/1/account/verify_credentials.json')) {
                 $info = json_decode($r);
                 return $this->addUser(
-                    $context, [
+                    $context,
+                    [
                     'uid' => $info->id,
                     'name' => $info->name,
                     'website' => 'http://twitter.com/account/redirect_by_id?id=' . $info->id_str
-                    ], $info
+                    ],
+                    $info
                 );
             }
         }

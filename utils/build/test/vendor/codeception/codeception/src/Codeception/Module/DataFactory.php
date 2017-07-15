@@ -157,10 +157,7 @@ EOF;
 
     public function _beforeSuite($settings = [])
     {
-        $store = null;
-        if ($this->ormModule instanceof DataMapper) { // for Doctrine
-            $store = new RepositoryStore($this->ormModule->_getEntityManager());
-        }
+        $store = $this->getStore();
         $this->factoryMuffin = new FactoryMuffin($store);
 
         if ($this->config['factories']) {
@@ -169,9 +166,19 @@ EOF;
                 if ($realpath === false) {
                     throw new ModuleException($this, 'The path to one of your factories is not correct. Please specify the directory relative to the codeception.yml file (ie. _support/factories).');
                 }
-                $this->factoryMuffin->loadFactories($realpath);                
+                $this->factoryMuffin->loadFactories($realpath);
             }
         }
+    }
+    
+    /**
+     * @return StoreInterface|null
+     */
+    protected function getStore()
+    {
+        return $this->ormModule instanceof DataMapper
+            ? new RepositoryStore($this->ormModule->_getEntityManager()) // for Doctrine
+            : null;
     }
 
     public function _inject(ORM $orm)
@@ -181,8 +188,9 @@ EOF;
 
     public function _after(TestInterface $test)
     {
-        if ($this->ormModule->_getConfig('cleanup')) {
-            return; // don't delete records if ORM is set with cleanup
+        $skipCleanup = array_key_exists('cleanup', $this->config) && $this->config['cleanup'] === false;
+        if ($skipCleanup || $this->ormModule->_getConfig('cleanup')) {
+            return;
         }
         $this->factoryMuffin->deleteSaved();
     }
@@ -251,6 +259,6 @@ EOF;
      */
     public function haveMultiple($name, $times, array $extraAttrs = [])
     {
-        return $this->factoryMuffin->seed($name, $times, $extraAttrs);
+        return $this->factoryMuffin->seed($times, $name, $extraAttrs);
     }
 }

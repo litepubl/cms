@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\regservices;
@@ -59,7 +59,8 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
             $service = static ::iGet($classname);
             if ($service->valid()) {
                 $buttons .= strtr(
-                    $tml, [
+                    $tml,
+                    [
                     '$url' => $url,
                     '$name' => $name,
                     '$icon' => $service->icon,
@@ -71,7 +72,8 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         }
 
         return strtr(
-            $theme->templates['regservices'], [
+            $theme->templates['regservices'],
+            [
             '$title' => $this->title,
             '$button' => $buttons
             ]
@@ -130,26 +132,26 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         $email = strtolower(trim($values['email']));
         $host = substr($email, strpos($email, '@') + 1);
         switch ($host) {
-        case 'gmail.com':
-            $name = 'google';
-            break;
+            case 'gmail.com':
+                $name = 'google';
+                break;
 
 
-        case 'yandex.ru':
-            $name = 'yandex';
-            break;
+            case 'yandex.ru':
+                $name = 'yandex';
+                break;
 
 
-        case 'mail.ru':
-        case 'inbox.ru':
-        case 'list.ru':
-        case 'bk.ru':
-            $name = 'mailru';
-            break;
+            case 'mail.ru':
+            case 'inbox.ru':
+            case 'list.ru':
+            case 'bk.ru':
+                $name = 'mailru';
+                break;
 
 
-        default:
-            return false;
+            default:
+                return false;
         }
 
         if (!isset($this->items[$name])) {
@@ -168,7 +170,8 @@ class Plugin extends \litepubl\core\Items implements \litepubl\core\ResponsiveIn
         }
 
         $event->result = $form->sendResult(
-            $url, [
+            $url,
+            [
             ini_get('session.name') => $service->session_id
             ]
         );

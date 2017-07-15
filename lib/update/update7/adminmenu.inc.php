@@ -1,23 +1,23 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 return [
-  'events' => 
+  'events' =>
   [
   ],
-  'coclasses' => 
+  'coclasses' =>
   [
   ],
-  'items' => 
+  'items' =>
   [
-    1 => 
+    1 =>
     [
       'parent' => 0,
       'url' => '/admin/posts/',
@@ -30,7 +30,7 @@ return [
       'status' => 'published',
       'idurl' => 36,
     ],
-    2 => 
+    2 =>
     [
       'parent' => 1,
       'url' => '/admin/posts/editor/',
@@ -43,7 +43,7 @@ return [
       'status' => 'published',
       'idurl' => 37,
     ],
-    3 => 
+    3 =>
     [
       'parent' => 1,
       'url' => '/admin/posts/addcat/',
@@ -56,7 +56,7 @@ return [
       'status' => 'published',
       'idurl' => 38,
     ],
-    4 => 
+    4 =>
     [
       'parent' => 1,
       'url' => '/admin/posts/categories/',
@@ -69,7 +69,7 @@ return [
       'status' => 'published',
       'idurl' => 39,
     ],
-    5 => 
+    5 =>
     [
       'parent' => 1,
       'url' => '/admin/posts/addtag/',
@@ -82,7 +82,7 @@ return [
       'status' => 'published',
       'idurl' => 40,
     ],
-    6 => 
+    6 =>
     [
       'parent' => 1,
       'url' => '/admin/posts/tags/',
@@ -95,7 +95,7 @@ return [
       'status' => 'published',
       'idurl' => 41,
     ],
-    7 => 
+    7 =>
     [
       'parent' => 1,
       'url' => '/admin/posts/staticpages/',
@@ -108,7 +108,7 @@ return [
       'status' => 'published',
       'idurl' => 42,
     ],
-    8 => 
+    8 =>
     [
       'parent' => 0,
       'url' => '/admin/comments/',
@@ -121,7 +121,7 @@ return [
       'status' => 'published',
       'idurl' => 43,
     ],
-    9 => 
+    9 =>
     [
       'parent' => 8,
       'url' => '/admin/comments/hold/',
@@ -134,7 +134,7 @@ return [
       'status' => 'published',
       'idurl' => 44,
     ],
-    10 => 
+    10 =>
     [
       'parent' => 8,
       'url' => '/admin/comments/authors/',
@@ -147,7 +147,7 @@ return [
       'status' => 'published',
       'idurl' => 45,
     ],
-    11 => 
+    11 =>
     [
       'parent' => 8,
       'url' => '/admin/comments/pingback/',
@@ -160,7 +160,7 @@ return [
       'status' => 'published',
       'idurl' => 46,
     ],
-    12 => 
+    12 =>
     [
       'parent' => 0,
       'url' => '/admin/plugins/',
@@ -173,7 +173,7 @@ return [
       'status' => 'published',
       'idurl' => 47,
     ],
-    13 => 
+    13 =>
     [
       'parent' => 0,
       'url' => '/admin/files/',
@@ -186,7 +186,7 @@ return [
       'status' => 'published',
       'idurl' => 48,
     ],
-    14 => 
+    14 =>
     [
       'parent' => 13,
       'url' => '/admin/files/thumbnail/',
@@ -199,7 +199,7 @@ return [
       'status' => 'published',
       'idurl' => 49,
     ],
-    15 => 
+    15 =>
     [
       'parent' => 13,
       'url' => '/admin/files/image/',
@@ -212,7 +212,7 @@ return [
       'status' => 'published',
       'idurl' => 50,
     ],
-    16 => 
+    16 =>
     [
       'parent' => 13,
       'url' => '/admin/files/video/',
@@ -225,7 +225,7 @@ return [
       'status' => 'published',
       'idurl' => 51,
     ],
-    17 => 
+    17 =>
     [
       'parent' => 13,
       'url' => '/admin/files/audio/',
@@ -238,7 +238,7 @@ return [
       'status' => 'published',
       'idurl' => 52,
     ],
-    18 => 
+    18 =>
     [
       'parent' => 13,
       'url' => '/admin/files/bin/',
@@ -251,7 +251,7 @@ return [
       'status' => 'published',
       'idurl' => 53,
     ],
-    19 => 
+    19 =>
     [
       'parent' => 0,
       'url' => '/admin/views/',
@@ -264,7 +264,7 @@ return [
       'status' => 'published',
       'idurl' => 54,
     ],
-    20 => 
+    20 =>
     [
       'parent' => 19,
       'url' => '/admin/views/addschema/',
@@ -277,7 +277,7 @@ return [
       'status' => 'published',
       'idurl' => 55,
     ],
-    21 => 
+    21 =>
     [
       'parent' => 19,
       'url' => '/admin/views/widgets/',
@@ -290,7 +290,7 @@ return [
       'status' => 'published',
       'idurl' => 56,
     ],
-    22 => 
+    22 =>
     [
       'parent' => 19,
       'url' => '/admin/views/addcustom/',
@@ -303,7 +303,7 @@ return [
       'status' => 'published',
       'idurl' => 57,
     ],
-    23 => 
+    23 =>
     [
       'parent' => 19,
       'url' => '/admin/views/group/',
@@ -316,7 +316,7 @@ return [
       'status' => 'published',
       'idurl' => 58,
     ],
-    24 => 
+    24 =>
     [
       'parent' => 19,
       'url' => '/admin/views/defaults/',
@@ -329,7 +329,7 @@ return [
       'status' => 'published',
       'idurl' => 59,
     ],
-    25 => 
+    25 =>
     [
       'parent' => 19,
       'url' => '/admin/views/spec/',
@@ -342,7 +342,7 @@ return [
       'status' => 'published',
       'idurl' => 60,
     ],
-    26 => 
+    26 =>
     [
       'parent' => 19,
       'url' => '/admin/views/headers/',
@@ -355,7 +355,7 @@ return [
       'status' => 'published',
       'idurl' => 61,
     ],
-    27 => 
+    27 =>
     [
       'parent' => 19,
       'url' => '/admin/views/jsmerger/',
@@ -368,7 +368,7 @@ return [
       'status' => 'published',
       'idurl' => 62,
     ],
-    28 => 
+    28 =>
     [
       'parent' => 19,
       'url' => '/admin/views/cssmerger/',
@@ -381,7 +381,7 @@ return [
       'status' => 'published',
       'idurl' => 63,
     ],
-    29 => 
+    29 =>
     [
       'parent' => 0,
       'url' => '/admin/menu/',
@@ -394,7 +394,7 @@ return [
       'status' => 'published',
       'idurl' => 64,
     ],
-    30 => 
+    30 =>
     [
       'parent' => 29,
       'url' => '/admin/menu/edit/',
@@ -407,7 +407,7 @@ return [
       'status' => 'published',
       'idurl' => 65,
     ],
-    31 => 
+    31 =>
     [
       'parent' => 29,
       'url' => '/admin/menu/editfake/',
@@ -420,7 +420,7 @@ return [
       'status' => 'published',
       'idurl' => 66,
     ],
-    32 => 
+    32 =>
     [
       'parent' => 0,
       'url' => '/admin/options/',
@@ -433,7 +433,7 @@ return [
       'status' => 'published',
       'idurl' => 67,
     ],
-    33 => 
+    33 =>
     [
       'parent' => 32,
       'url' => '/admin/options/home/',
@@ -446,7 +446,7 @@ return [
       'status' => 'published',
       'idurl' => 68,
     ],
-    34 => 
+    34 =>
     [
       'parent' => 32,
       'url' => '/admin/options/mail/',
@@ -459,7 +459,7 @@ return [
       'status' => 'published',
       'idurl' => 69,
     ],
-    35 => 
+    35 =>
     [
       'parent' => 32,
       'url' => '/admin/options/rss/',
@@ -472,7 +472,7 @@ return [
       'status' => 'published',
       'idurl' => 70,
     ],
-    36 => 
+    36 =>
     [
       'parent' => 32,
       'url' => '/admin/options/view/',
@@ -485,7 +485,7 @@ return [
       'status' => 'published',
       'idurl' => 71,
     ],
-    37 => 
+    37 =>
     [
       'parent' => 32,
       'url' => '/admin/options/files/',
@@ -498,7 +498,7 @@ return [
       'status' => 'published',
       'idurl' => 72,
     ],
-    38 => 
+    38 =>
     [
       'parent' => 32,
       'url' => '/admin/options/comments/',
@@ -511,7 +511,7 @@ return [
       'status' => 'published',
       'idurl' => 73,
     ],
-    39 => 
+    39 =>
     [
       'parent' => 32,
       'url' => '/admin/options/ping/',
@@ -524,7 +524,7 @@ return [
       'status' => 'published',
       'idurl' => 74,
     ],
-    40 => 
+    40 =>
     [
       'parent' => 32,
       'url' => '/admin/options/links/',
@@ -537,7 +537,7 @@ return [
       'status' => 'published',
       'idurl' => 75,
     ],
-    41 => 
+    41 =>
     [
       'parent' => 32,
       'url' => '/admin/options/cache/',
@@ -550,7 +550,7 @@ return [
       'status' => 'published',
       'idurl' => 76,
     ],
-    42 => 
+    42 =>
     [
       'parent' => 32,
       'url' => '/admin/options/catstags/',
@@ -563,7 +563,7 @@ return [
       'status' => 'published',
       'idurl' => 77,
     ],
-    43 => 
+    43 =>
     [
       'parent' => 32,
       'url' => '/admin/options/secure/',
@@ -576,7 +576,7 @@ return [
       'status' => 'published',
       'idurl' => 78,
     ],
-    44 => 
+    44 =>
     [
       'parent' => 32,
       'url' => '/admin/options/robots/',
@@ -589,7 +589,7 @@ return [
       'status' => 'published',
       'idurl' => 79,
     ],
-    45 => 
+    45 =>
     [
       'parent' => 32,
       'url' => '/admin/options/local/',
@@ -602,7 +602,7 @@ return [
       'status' => 'published',
       'idurl' => 80,
     ],
-    46 => 
+    46 =>
     [
       'parent' => 32,
       'url' => '/admin/options/parser/',
@@ -615,7 +615,7 @@ return [
       'status' => 'published',
       'idurl' => 81,
     ],
-    47 => 
+    47 =>
     [
       'parent' => 32,
       'url' => '/admin/options/notfound404/',
@@ -628,7 +628,7 @@ return [
       'status' => 'published',
       'idurl' => 82,
     ],
-    48 => 
+    48 =>
     [
       'parent' => 32,
       'url' => '/admin/options/redir/',
@@ -641,7 +641,7 @@ return [
       'status' => 'published',
       'idurl' => 83,
     ],
-    49 => 
+    49 =>
     [
       'parent' => 0,
       'url' => '/admin/service/',
@@ -654,7 +654,7 @@ return [
       'status' => 'published',
       'idurl' => 84,
     ],
-    50 => 
+    50 =>
     [
       'parent' => 49,
       'url' => '/admin/service/backup/',
@@ -667,7 +667,7 @@ return [
       'status' => 'published',
       'idurl' => 85,
     ],
-    51 => 
+    51 =>
     [
       'parent' => 49,
       'url' => '/admin/service/upload/',
@@ -680,7 +680,7 @@ return [
       'status' => 'published',
       'idurl' => 86,
     ],
-    52 => 
+    52 =>
     [
       'parent' => 49,
       'url' => '/admin/service/run/',
@@ -693,7 +693,7 @@ return [
       'status' => 'published',
       'idurl' => 87,
     ],
-    53 => 
+    53 =>
     [
       'id' => 53,
       'idurl' => 0,
@@ -705,7 +705,7 @@ return [
       'status' => 'published',
       'group' => 'commentator',
     ],
-    54 => 
+    54 =>
     [
       'parent' => 19,
       'url' => '/admin/views/bootstraptheme/',
@@ -718,7 +718,7 @@ return [
       'status' => 'published',
       'idurl' => 91,
     ],
-    55 => 
+    55 =>
     [
       'parent' => 19,
       'url' => '/admin/views/bootstrapheader/',
@@ -733,171 +733,171 @@ return [
     ],
   ],
   'autoid' => 55,
-  'tree' => 
+  'tree' =>
   [
-    1 => 
+    1 =>
     [
-      2 => 
+      2 =>
       [
       ],
-      3 => 
+      3 =>
       [
       ],
-      4 => 
+      4 =>
       [
       ],
-      5 => 
+      5 =>
       [
       ],
-      6 => 
+      6 =>
       [
       ],
-      7 => 
+      7 =>
       [
       ],
     ],
-    8 => 
+    8 =>
     [
-      9 => 
+      9 =>
       [
       ],
-      10 => 
+      10 =>
       [
       ],
-      11 => 
+      11 =>
       [
       ],
     ],
-    12 => 
+    12 =>
     [
     ],
-    13 => 
+    13 =>
     [
-      14 => 
+      14 =>
       [
       ],
-      15 => 
+      15 =>
       [
       ],
-      16 => 
+      16 =>
       [
       ],
-      17 => 
+      17 =>
       [
       ],
-      18 => 
-      [
-      ],
-    ],
-    19 => 
-    [
-      20 => 
-      [
-      ],
-      21 => 
-      [
-      ],
-      22 => 
-      [
-      ],
-      23 => 
-      [
-      ],
-      24 => 
-      [
-      ],
-      25 => 
-      [
-      ],
-      26 => 
-      [
-      ],
-      27 => 
-      [
-      ],
-      28 => 
-      [
-      ],
-      54 => 
-      [
-      ],
-      55 => 
+      18 =>
       [
       ],
     ],
-    29 => 
+    19 =>
     [
-      30 => 
+      20 =>
       [
       ],
-      31 => 
+      21 =>
+      [
+      ],
+      22 =>
+      [
+      ],
+      23 =>
+      [
+      ],
+      24 =>
+      [
+      ],
+      25 =>
+      [
+      ],
+      26 =>
+      [
+      ],
+      27 =>
+      [
+      ],
+      28 =>
+      [
+      ],
+      54 =>
+      [
+      ],
+      55 =>
       [
       ],
     ],
-    32 => 
+    29 =>
     [
-      33 => 
+      30 =>
       [
       ],
-      34 => 
-      [
-      ],
-      35 => 
-      [
-      ],
-      36 => 
-      [
-      ],
-      37 => 
-      [
-      ],
-      38 => 
-      [
-      ],
-      39 => 
-      [
-      ],
-      40 => 
-      [
-      ],
-      41 => 
-      [
-      ],
-      42 => 
-      [
-      ],
-      43 => 
-      [
-      ],
-      44 => 
-      [
-      ],
-      45 => 
-      [
-      ],
-      46 => 
-      [
-      ],
-      47 => 
-      [
-      ],
-      48 => 
+      31 =>
       [
       ],
     ],
-    49 => 
+    32 =>
     [
-      50 => 
+      33 =>
       [
       ],
-      51 => 
+      34 =>
       [
       ],
-      52 => 
+      35 =>
+      [
+      ],
+      36 =>
+      [
+      ],
+      37 =>
+      [
+      ],
+      38 =>
+      [
+      ],
+      39 =>
+      [
+      ],
+      40 =>
+      [
+      ],
+      41 =>
+      [
+      ],
+      42 =>
+      [
+      ],
+      43 =>
+      [
+      ],
+      44 =>
+      [
+      ],
+      45 =>
+      [
+      ],
+      46 =>
+      [
+      ],
+      47 =>
+      [
+      ],
+      48 =>
       [
       ],
     ],
-    53 => 
+    49 =>
+    [
+      50 =>
+      [
+      ],
+      51 =>
+      [
+      ],
+      52 =>
+      [
+      ],
+    ],
+    53 =>
     [
     ],
   ],

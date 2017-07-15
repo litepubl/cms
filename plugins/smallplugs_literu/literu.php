@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\plugins\smallplugs_literu;
@@ -18,18 +18,18 @@ use litepubl\widget\View;
 class literu extends \litepubl\core\Plugin
 {
 
-    protected function create() 
+    protected function create()
     {
         parent::create();
         $this->data['idfeature'] = 0;
     }
 
-    public function onMenuContent($menu, &$content) 
+    public function onMenuContent($menu, &$content)
     {
         $content = Theme::i()->parse($content);
     }
 
-    public function onuploaded() 
+    public function onuploaded()
     {
         $links = Links::i();
         foreach ($links->items as $id => $item) {
@@ -69,5 +69,4 @@ class literu extends \litepubl\core\Plugin
 
         return '';
     }
-
 }

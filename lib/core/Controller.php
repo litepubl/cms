@@ -1,11 +1,11 @@
 <?php
 /**
- * Lite Publisher CMS
+ * LitePubl CMS
  *
- * @copyright 2010 - 2016 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
+ * @copyright 2010 - 2017 Vladimir Yushko http://litepublisher.com/ http://litepublisher.ru/
  * @license   https://github.com/litepubl/cms/blob/master/LICENSE.txt MIT
  * @link      https://github.com/litepubl\cms
- * @version   7.07
+ * @version   7.08
   */
 
 namespace litepubl\core;
@@ -85,7 +85,13 @@ class Controller
         }
 
         $filename = $this->getCacheFileName($context);
-        return $this->getApp()->cache->includePhp($filename);
+        $cache = $this->getApp()->cache;
+        if ($context->request->isPostMethod()) {
+                $cache->delete($filename);
+                return false;
+        } else {
+                return $cache->includePhp($filename);
+        }
     }
 
     public function getCacheFileName(Context $context)
@@ -96,12 +102,12 @@ class Controller
             return md5($context->request->url) . $ext;
         } else {
             switch ($context->itemRoute['type']) {
-            case 'usernormal':
-            case 'userget':
-                return sprintf('%s-%d%s', md5($context->request->url), $this->getApp()->options->user, $ext);
+                case 'usernormal':
+                case 'userget':
+                    return sprintf('%s-%d%s', md5($context->request->url), $this->getApp()->options->user, $ext);
 
-            default:
-                return md5($context->request->url) . $ext;
+                default:
+                    return md5($context->request->url) . $ext;
             }
         }
     }
@@ -136,29 +142,29 @@ class Controller
 
         $cache = $this->getApp()->cache;
         switch ($response->status) {
-        case 404:
-            $errorPages = new ErrorPages();
-            $content = $errorPages->notfound();
-            if ($this->cache && $response->cache) {
-                $cache->savePhp($this->getCacheFileName($context), $content);
-            }
-            break;
+            case 404:
+                $errorPages = new ErrorPages();
+                $content = $errorPages->notfound();
+                if ($this->cache && $response->cache) {
+                    $cache->savePhp($this->getCacheFileName($context), $content);
+                }
+                break;
 
 
-        case 403:
-            $errorPages = new ErrorPages();
-            $content = $errorPages->forbidden();
-            if ($this->cache && $response->cache) {
-                $cache->savePhp($this->getCacheFileName($context), $content);
-            }
-            break;
+            case 403:
+                $errorPages = new ErrorPages();
+                $content = $errorPages->forbidden();
+                if ($this->cache && $response->cache) {
+                    $cache->savePhp($this->getCacheFileName($context), $content);
+                }
+                break;
 
 
-        default:
-            $response->send();
-            if ($this->cache && $response->cache) {
-                $cache->savePhp($this->getCacheFileName($context), $response->getString());
-            }
+            default:
+                $response->send();
+                if ($this->cache && $response->cache) {
+                    $cache->savePhp($this->getCacheFileName($context), $response->getString());
+                }
         }
     }
 }
