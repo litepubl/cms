@@ -1,1 +1,0 @@
-php %~dp0codesniffer/vendor/squizlabs/php_codesniffer/scripts/phpcbf %* --no-patch=true --default_standard=PSR2 --encoding=utf-8 --extensions=php
