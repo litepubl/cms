@@ -178,5 +178,30 @@ abstract class TestsForDb extends \Codeception\Test\Unit
         $this->assertTrue($this->module->isPopulated());
         $this->module->seeInDatabase('users', ['name' => 'davert']);
     }
+    
+    public function testUpdateInDatabase()
+    {
+        $this->module->seeInDatabase('users', ['name' => 'davert']);
+        $this->module->dontSeeInDatabase('users', ['name' => 'user1']);
+        
+        $this->module->updateInDatabase('users', ['name' => 'user1'], ['name' => 'davert']);
+        
+        $this->module->dontSeeInDatabase('users', ['name' => 'davert']);
+        $this->module->seeInDatabase('users', ['name' => 'user1']);
+        
+        $this->module->updateInDatabase('users', ['name' => 'davert'], ['name' => 'user1']);
+    }
+
+    public function testInsertInDatabase()
+    {
+        $testData = ['status' => 'test'];
+        $this->module->_insertInDatabase('no_pk', $testData);
+        $this->module->seeInDatabase('no_pk', $testData);
+        $this->module->_reconfigure(['cleanup' => false]);
+        $this->module->_after(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
+
+        $this->module->_before(\Codeception\Util\Stub::makeEmpty('\Codeception\TestInterface'));
+        $this->module->seeInDatabase('no_pk', $testData);
+    }
 
 }

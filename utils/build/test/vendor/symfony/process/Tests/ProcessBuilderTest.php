@@ -14,11 +14,11 @@ namespace Symfony\Component\Process\Tests;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Process\ProcessBuilder;
 
+/**
+ * @group legacy
+ */
 class ProcessBuilderTest extends TestCase
 {
-    /**
-     * @group legacy
-     */
     public function testInheritEnvironmentVars()
     {
         $proc = ProcessBuilder::create()
@@ -209,5 +209,18 @@ class ProcessBuilderTest extends TestCase
     {
         $builder = ProcessBuilder::create();
         $builder->setInput(array());
+    }
+
+    public function testDoesNotPrefixExec()
+    {
+        if ('\\' === DIRECTORY_SEPARATOR) {
+            $this->markTestSkipped('This test cannot run on Windows.');
+        }
+
+        $builder = ProcessBuilder::create(array('command', '-v', 'ls'));
+        $process = $builder->getProcess();
+        $process->run();
+
+        $this->assertTrue($process->isSuccessful());
     }
 }
