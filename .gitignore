@@ -4,6 +4,7 @@ old/
 /plugins/shop*
 /plugins/imgresize
 /plugins/smalplugs*
+/utils/build/test/vendor/*
 /temp/
 /themes/shop*
 .sonar/*

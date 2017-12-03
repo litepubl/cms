@@ -149,17 +149,17 @@
     },
     {
         "name": "composer/installers",
-        "version": "v1.3.0",
-        "version_normalized": "1.3.0.0",
+        "version": "v1.4.0",
+        "version_normalized": "1.4.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/composer/installers.git",
-            "reference": "79ad876c7498c0bbfe7eed065b8651c93bfd6045"
+            "reference": "9ce17fb70e9a38dd8acff0636a29f5cf4d575c1b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/composer/installers/zipball/79ad876c7498c0bbfe7eed065b8651c93bfd6045",
-            "reference": "79ad876c7498c0bbfe7eed065b8651c93bfd6045",
+            "url": "https://api.github.com/repos/composer/installers/zipball/9ce17fb70e9a38dd8acff0636a29f5cf4d575c1b",
+            "reference": "9ce17fb70e9a38dd8acff0636a29f5cf4d575c1b",
             "shasum": ""
         },
         "require": {
@@ -173,7 +173,7 @@
             "composer/composer": "1.0.*@dev",
             "phpunit/phpunit": "4.1.*"
         },
-        "time": "2017-04-24T06:37:16+00:00",
+        "time": "2017-08-09T07:53:48+00:00",
         "type": "composer-plugin",
         "extra": {
             "class": "Composer\\Installers\\Plugin",
@@ -207,6 +207,7 @@
             "Hurad",
             "ImageCMS",
             "Kanboard",
+            "Lan Management System",
             "MODX Evo",
             "Mautic",
             "Maya",
@@ -230,6 +231,7 @@
             "croogo",
             "dokuwiki",
             "drupal",
+            "eZ Platform",
             "elgg",
             "expressionengine",
             "fuelphp",
@@ -246,6 +248,7 @@
             "mediawiki",
             "modulework",
             "moodle",
+            "osclass",
             "phpbb",
             "piwik",
             "ppi",
@@ -265,17 +268,17 @@
     },
     {
         "name": "monolog/monolog",
-        "version": "1.22.1",
-        "version_normalized": "1.22.1.0",
+        "version": "1.23.0",
+        "version_normalized": "1.23.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/Seldaek/monolog.git",
-            "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0"
+            "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1e044bc4b34e91743943479f1be7a1d5eb93add0",
-            "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0",
+            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
+            "reference": "fd8c787753b3a2ad11bc60c063cff1358a32a3b4",
             "shasum": ""
         },
         "require": {
@@ -296,7 +299,7 @@
             "phpunit/phpunit-mock-objects": "2.3.0",
             "ruflin/elastica": ">=0.90 <3.0",
             "sentry/sentry": "^0.13",
-            "swiftmailer/swiftmailer": "~5.3"
+            "swiftmailer/swiftmailer": "^5.3|^6.0"
         },
         "suggest": {
             "aws/aws-sdk-php": "Allow sending log messages to AWS services like DynamoDB",
@@ -311,7 +314,7 @@
             "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
             "sentry/sentry": "Allow sending log messages to a Sentry server"
         },
-        "time": "2017-03-13T07:08:03+00:00",
+        "time": "2017-06-19T01:22:40+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -345,22 +348,22 @@
     },
     {
         "name": "zendframework/zend-diactoros",
-        "version": "1.4.0",
-        "version_normalized": "1.4.0.0",
+        "version": "1.6.1",
+        "version_normalized": "1.6.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/zendframework/zend-diactoros.git",
-            "reference": "b03f285a333f51e58c95cce54109a4a9ed691436"
+            "reference": "c8664b92a6d5bc229e48b0923486c097e45a7877"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/b03f285a333f51e58c95cce54109a4a9ed691436",
-            "reference": "b03f285a333f51e58c95cce54109a4a9ed691436",
+            "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/c8664b92a6d5bc229e48b0923486c097e45a7877",
+            "reference": "c8664b92a6d5bc229e48b0923486c097e45a7877",
             "shasum": ""
         },
         "require": {
-            "php": "^5.4 || ^7.0",
-            "psr/http-message": "~1.0"
+            "php": "^5.6 || ^7.0",
+            "psr/http-message": "^1.0"
         },
         "provide": {
             "psr/http-message-implementation": "1.0"
@@ -368,15 +371,15 @@
         "require-dev": {
             "ext-dom": "*",
             "ext-libxml": "*",
-            "phpunit/phpunit": "^4.6 || ^5.5",
-            "zendframework/zend-coding-standard": "~1.0.0"
+            "phpunit/phpunit": "^5.7.16 || ^6.0.8",
+            "zendframework/zend-coding-standard": "~1.0"
         },
-        "time": "2017-04-06T16:18:34+00:00",
+        "time": "2017-10-12T15:24:51+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
-                "dev-master": "1.4-dev",
-                "dev-develop": "1.5-dev"
+                "dev-master": "1.6-dev",
+                "dev-develop": "1.7-dev"
             }
         },
         "installation-source": "dist",

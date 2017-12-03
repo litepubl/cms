@@ -24,9 +24,9 @@ function LangInstall($self)
 
 function LangPreinstall($language)
 {
-    $lang = new lang();
-    lang::$self = $lang;
-    lang::$self->getApp()->classes->instances[get_class($lang) ] = $lang;
+    $lang = new Lang();
+    Lang::$self = $lang;
+    Lang::$self->getApp()->classes->instances[get_class($lang) ] = $lang;
     preloadlanguage($lang, $language);
 }
 

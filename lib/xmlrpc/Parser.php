@@ -31,7 +31,7 @@ class Parser extends IXR_Server
     header('Date: " . date('r') . "');
     Header( 'Cache-Control: no-cache, must-revalidate');
     Header( 'Pragma: no-cache');
-    header('X-Pingback: " . $this->getApp()->site->url . "/rpc.xml');
+    header('X-Pingback: " . $this->owner->getApp()->site->url . "/rpc.xml');
     echo'$head';
     ?>" . $xml;
     }

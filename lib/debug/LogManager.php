@@ -49,7 +49,7 @@ class LogManager
 
         if (!Config::$debug && $app->installed) {
             $handler = new MailerHandler('[error] ' . $app->site->name, Logger::WARNING);
-            $handler->setFormatter(new LineFormatter(static ::format, null, true, false));
+            $handler->setFormatter(new LineFormatter(static ::FORMAT, null, true, false));
             $logger->pushHandler($handler);
         }
     }
