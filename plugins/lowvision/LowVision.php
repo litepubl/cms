@@ -31,7 +31,9 @@ class LowVision extends \litepubl\core\Plugin
 
     public function uninstall()
     {
-        Custom::i()->delete($this->idwidget);
+        if (isset($this->idwidget)) {
+                Custom::i()->delete($this->idwidget);
+        }
 
         $plugindir = basename(dirname(__file__));
         Js::i()->deletefile('default', "plugins/$plugindir/resource/lowvision.min.js");
